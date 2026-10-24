@@ -1,0 +1,58 @@
+{
+  "created_at": "2026-10-24T17:09:42+00:00",
+  "files": [
+    {
+      "csv_file": "digikala-comments.csv",
+      "csv_size_bytes": 1278526959,
+      "csv_sha256": "c7a8aa3020334fde8ec24944576a03fe5785e6fe12cd01042f5836632ddf8297",
+      "columns": [
+        "id",
+        "title",
+        "body",
+        "created_at",
+        "rate",
+        "recommendation_status",
+        "is_buyer",
+        "product_id",
+        "advantages",
+        "disadvantages",
+        "likes",
+        "dislikes",
+        "seller_title",
+        "seller_code",
+        "true_to_size_rate"
+      ],
+      "rows_pandas": 6156289,
+      "parquet_dir": "comments_raw",
+      "parquet_size_bytes": 451269291,
+      "seconds": 60.1,
+      "rows_csv_module": 6156289,
+      "row_counts_match": true
+    },
+    {
+      "csv_file": "digikala-products.csv",
+      "csv_size_bytes": 258733765,
+      "csv_sha256": "0f646e1b0ba5a07510a168d98ae397ae25a947b1423ccdaefc029170b7831acd",
+      "columns": [
+        "id",
+        "title_fa",
+        "Rate",
+        "Rate_cnt",
+        "Category1",
+        "Category2",
+        "Brand",
+        "Price",
+        "Seller",
+        "Is_Fake",
+        "min_price_last_month",
+        "sub_category"
+      ],
+      "rows_pandas": 1283496,
+      "parquet_dir": "products_raw",
+      "parquet_size_bytes": 47341422,
+      "seconds": 9.1,
+      "rows_csv_module": 1283496,
+      "row_counts_match": true
+    }
+  ]
+}
