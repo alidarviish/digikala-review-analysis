@@ -7,8 +7,9 @@ Colors follow a fixed role:
 """
 
 import matplotlib as mpl
+from matplotlib import font_manager
 
-from digikala_reviews.config import FIGURES_DIR
+from digikala_reviews.config import FIGURES_DIR, PROJECT_ROOT
 
 SURFACE = "#fcfcfb"
 INK = "#0b0b0b"
@@ -28,6 +29,8 @@ RECOMMENDATION_COLORS = {
     "missing": NEUTRAL,
 }
 RATING_BAND_COLORS = {"low": "#86b6ef", "medium": "#3987e5", "high": "#1c5cab"}
+
+PERSIAN_FONT_PATH = PROJECT_ROOT / "assets" / "fonts" / "Vazirmatn-Regular.ttf"
 
 
 def apply_style() -> None:
@@ -132,3 +135,15 @@ def stacked_hbar(ax, shares, colors, xlabel="Share of reviews (%)"):
     ax.spines["left"].set_visible(False)
     ax.tick_params(axis="y", length=0)
     ax.legend(ncols=len(shares.columns), loc="lower left", bbox_to_anchor=(0, 1.0), fontsize=9)
+
+
+def use_persian_ticks(ax, axis: str = "y") -> None:
+    """Draw the tick labels of one axis with a Persian font.
+
+    matplotlib 3.11 joins Persian letters and lays them out right to left by itself,
+    so the text needs no preprocessing; it only needs a font with good Persian glyphs.
+    """
+    font = font_manager.FontProperties(fname=PERSIAN_FONT_PATH, size=10)
+    labels = ax.get_yticklabels() if axis == "y" else ax.get_xticklabels()
+    for label in labels:
+        label.set_fontproperties(font)
