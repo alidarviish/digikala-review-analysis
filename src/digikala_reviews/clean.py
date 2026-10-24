@@ -26,6 +26,7 @@ CLEANING_RULES = [
     "P5 identical copies of an id: keep the first copy",
     "P6 copies of an id that differ only in metadata (likes, seller, ...): keep the first copy",
     "P7 ids whose copies disagree on body, rate or recommendation: exclude every copy",
+    "P8 a rate of exactly 0 means no rating was recorded: rating_band is left empty, the review is kept",
 ]
 
 COLUMNS = ["src_row", "id", "product_id", "body", "rate", "recommendation_status", "is_buyer", "created_at"]

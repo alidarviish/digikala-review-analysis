@@ -38,7 +38,8 @@ EXCLUDED_ROWS_PARQUET = INTERIM_DIR / "excluded_rows.parquet"
 
 # How rate == 0 is treated for rating_band:
 #   "low"     -> follow the project bands as written (0 <= rate < 2.5 is low)
-#   "invalid" -> treat 0 as "no rating given" and leave rating_band empty
-# The project brief requires evidence and approval before changing the bands,
-# so the default stays "low" until the zero-rating analysis is done.
-RATE_ZERO_POLICY = "low"
+#   "invalid" -> treat 0 as "no rating recorded" and leave rating_band empty
+# The data shows that 0 means "no rating recorded": zero-rated reviews are 80% recommended,
+# zeros appear only between late 1397 and early 1401, and their texts read like 4-5 star reviews.
+# See section 4 of notebooks/01_descriptive_analysis.ipynb for the full evidence.
+RATE_ZERO_POLICY = "invalid"
