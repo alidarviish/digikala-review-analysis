@@ -12,15 +12,11 @@ import numpy as np
 import pandas as pd
 
 from digikala_reviews.config import RATE_MAX, RATE_MIN, RECOMMENDATION_CLASSES
+from digikala_reviews.dates import DATE_PATTERN, JALALI_MONTHS
 
 EXPECTED_COMMENT_COLUMNS = [
     "id", "title", "body", "created_at", "rate", "recommendation_status", "is_buyer", "product_id",
     "advantages", "disadvantages", "likes", "dislikes", "seller_title", "seller_code", "true_to_size_rate",
-]  # fmt: skip
-
-JALALI_MONTHS = [
-    "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور",
-    "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند",
 ]  # fmt: skip
 
 # Zero-width characters that make a text look non-empty although nothing is visible
@@ -115,7 +111,7 @@ def check_recommendation_labels(path: Path) -> dict:
 def check_dates(path: Path) -> dict:
     """Dates are Persian (Jalali) text like '23 شهریور 1402'. Only the format is checked here."""
     dates = load(path, ["created_at"])["created_at"]
-    parts = dates.str.extract(r"^(\d{1,2}) (\S+) (\d{4})$")
+    parts = dates.str.extract(DATE_PATTERN)
     day, month, year = pd.to_numeric(parts[0]), parts[1], pd.to_numeric(parts[2])
     matches = parts[0].notna()
     return {
