@@ -106,3 +106,29 @@ def hbar(ax, labels, values, colors=None, value_labels=None, xlabel=None):
 def save(fig, name: str) -> None:
     FIGURES_DIR.mkdir(parents=True, exist_ok=True)
     fig.savefig(FIGURES_DIR / f"{name}.png")
+
+
+def stacked_hbar(ax, shares, colors, xlabel="Share of reviews (%)"):
+    """100% stacked horizontal bars. `shares` is a DataFrame of percentages, one row per bar."""
+    left = [0.0] * len(shares)
+    positions = range(len(shares))
+    for column in shares.columns:
+        ax.barh(
+            positions,
+            shares[column],
+            left=left,
+            height=0.6,
+            color=colors[column],
+            edgecolor=SURFACE,
+            linewidth=2,  # thin gap between segments instead of an outline
+            label=column,
+        )
+        left = [a + b for a, b in zip(left, shares[column], strict=True)]
+    ax.set_yticks(list(positions), shares.index)
+    ax.invert_yaxis()
+    ax.set_xlim(0, 100)
+    ax.set_xlabel(xlabel)
+    ax.grid(axis="y", visible=False)
+    ax.spines["left"].set_visible(False)
+    ax.tick_params(axis="y", length=0)
+    ax.legend(ncols=len(shares.columns), loc="lower left", bbox_to_anchor=(0, 1.0), fontsize=9)
