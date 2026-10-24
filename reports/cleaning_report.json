@@ -1,0 +1,35 @@
+{
+  "created_at": "2026-10-24T17:17:54+00:00",
+  "rules": [
+    "P1 a value is missing when it is empty, only whitespace / invisible characters, or the text 'nan'",
+    "P2 reviews without a body are excluded from every task",
+    "P3 reviews without a recommendation label are kept; they can still be used for rating_band",
+    "P4 a rate outside [0, 5] leaves rating_band empty; the review is kept for recommendation",
+    "P5 identical copies of an id: keep the first copy",
+    "P6 copies of an id that differ only in metadata (likes, seller, ...): keep the first copy",
+    "P7 ids whose copies disagree on body, rate or recommendation: exclude every copy"
+  ],
+  "rate_zero_policy": "low",
+  "rows_raw": 6156289,
+  "rows_excluded": {
+    "duplicate_id_extra_copy": 2984,
+    "missing_body": 845,
+    "duplicate_id_conflict": 490
+  },
+  "rows_clean": 6151970,
+  "recommendation": {
+    "recommended": 4160043,
+    "NaN": 893858,
+    "no_idea": 593625,
+    "not_recommended": 504444
+  },
+  "rating_band": {
+    "high": 4001982,
+    "low": 1091627,
+    "medium": 1058360,
+    "NaN": 1
+  },
+  "rate_is_zero": 528914,
+  "products": 331585,
+  "seconds": 98.5
+}
