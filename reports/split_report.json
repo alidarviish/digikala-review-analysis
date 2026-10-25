@@ -1,0 +1,365 @@
+{
+  "created_at": "2026-10-25T16:35:34+00:00",
+  "method": "StratifiedGroupKFold, 20 folds, groups = product_id, strata = recommendation x rating_band (missing as its own class); 14 folds train, 3 validation, 3 test, which folds go where is drawn with the seed",
+  "seed": 2026,
+  "sklearn_version": "1.9.1",
+  "reviews": 6151963,
+  "left_out_empty_after_normalization": 7,
+  "left_out_ids": [
+    37192644,
+    45529007,
+    21911690,
+    49390954,
+    37192534,
+    41747438,
+    25524542
+  ],
+  "products_in_several_parts": 0,
+  "sizes": {
+    "train": {
+      "reviews": 4306373,
+      "reviews_pct": 70.0,
+      "products": 232095
+    },
+    "validation": {
+      "reviews": 922795,
+      "reviews_pct": 15.0,
+      "products": 49779
+    },
+    "test": {
+      "reviews": 922795,
+      "reviews_pct": 15.0,
+      "products": 49711
+    }
+  },
+  "max_gap_pp": {
+    "recommendation": 0.0,
+    "rating_band": 0.0,
+    "year": 0.092,
+    "category": 0.59,
+    "label_combination": 0.0
+  },
+  "words_per_review": {
+    "train": {
+      "mean": 10.09,
+      "median": 6.0
+    },
+    "validation": {
+      "mean": 10.1,
+      "median": 6.0
+    },
+    "test": {
+      "mean": 10.04,
+      "median": 6.0
+    }
+  },
+  "shares_pct": {
+    "recommendation": {
+      "missing": {
+        "train": 14.53,
+        "validation": 14.53,
+        "test": 14.53,
+        "all": 14.53,
+        "max_gap_pp": 0.0
+      },
+      "no_idea": {
+        "train": 9.65,
+        "validation": 9.65,
+        "test": 9.65,
+        "all": 9.65,
+        "max_gap_pp": 0.0
+      },
+      "not_recommended": {
+        "train": 8.2,
+        "validation": 8.2,
+        "test": 8.2,
+        "all": 8.2,
+        "max_gap_pp": 0.0
+      },
+      "recommended": {
+        "train": 67.62,
+        "validation": 67.62,
+        "test": 67.62,
+        "all": 67.62,
+        "max_gap_pp": 0.0
+      }
+    },
+    "rating_band": {
+      "high": {
+        "train": 65.05,
+        "validation": 65.05,
+        "test": 65.05,
+        "all": 65.05,
+        "max_gap_pp": 0.0
+      },
+      "low": {
+        "train": 9.15,
+        "validation": 9.15,
+        "test": 9.15,
+        "all": 9.15,
+        "max_gap_pp": 0.0
+      },
+      "medium": {
+        "train": 17.2,
+        "validation": 17.2,
+        "test": 17.2,
+        "all": 17.2,
+        "max_gap_pp": 0.0
+      },
+      "missing": {
+        "train": 8.6,
+        "validation": 8.6,
+        "test": 8.6,
+        "all": 8.6,
+        "max_gap_pp": 0.0
+      }
+    },
+    "year": {
+      "1395": {
+        "train": 0.06,
+        "validation": 0.05,
+        "test": 0.06,
+        "all": 0.06,
+        "max_gap_pp": 0.01
+      },
+      "1396": {
+        "train": 0.11,
+        "validation": 0.1,
+        "test": 0.09,
+        "all": 0.1,
+        "max_gap_pp": 0.02
+      },
+      "1397": {
+        "train": 0.28,
+        "validation": 0.26,
+        "test": 0.25,
+        "all": 0.27,
+        "max_gap_pp": 0.02
+      },
+      "1398": {
+        "train": 2.24,
+        "validation": 2.25,
+        "test": 2.3,
+        "all": 2.25,
+        "max_gap_pp": 0.04
+      },
+      "1399": {
+        "train": 11.14,
+        "validation": 11.06,
+        "test": 11.09,
+        "all": 11.12,
+        "max_gap_pp": 0.06
+      },
+      "1400": {
+        "train": 20.39,
+        "validation": 20.3,
+        "test": 20.36,
+        "all": 20.37,
+        "max_gap_pp": 0.07
+      },
+      "1401": {
+        "train": 35.15,
+        "validation": 35.26,
+        "test": 35.28,
+        "all": 35.19,
+        "max_gap_pp": 0.09
+      },
+      "1402": {
+        "train": 30.63,
+        "validation": 30.72,
+        "test": 30.58,
+        "all": 30.64,
+        "max_gap_pp": 0.08
+      }
+    },
+    "category": {
+      "beauty": {
+        "train": 36.58,
+        "validation": 36.63,
+        "test": 36.42,
+        "all": 36.56,
+        "max_gap_pp": 0.14
+      },
+      "book & stationary & art": {
+        "train": 24.73,
+        "validation": 24.48,
+        "test": 23.99,
+        "all": 24.58,
+        "max_gap_pp": 0.59
+      },
+      "clothe": {
+        "train": 23.87,
+        "validation": 24.03,
+        "test": 24.44,
+        "all": 23.98,
+        "max_gap_pp": 0.46
+      },
+      "rural goods": {
+        "train": 2.4,
+        "validation": 2.54,
+        "test": 2.54,
+        "all": 2.44,
+        "max_gap_pp": 0.09
+      },
+      "toys and kids": {
+        "train": 9.78,
+        "validation": 9.75,
+        "test": 9.9,
+        "all": 9.79,
+        "max_gap_pp": 0.1
+      },
+      "travel": {
+        "train": 2.64,
+        "validation": 2.57,
+        "test": 2.71,
+        "all": 2.64,
+        "max_gap_pp": 0.07
+      }
+    },
+    "label_combination": {
+      "missing|high": {
+        "train": 11.09,
+        "validation": 11.09,
+        "test": 11.09,
+        "all": 11.09,
+        "max_gap_pp": 0.0
+      },
+      "missing|low": {
+        "train": 1.22,
+        "validation": 1.22,
+        "test": 1.22,
+        "all": 1.22,
+        "max_gap_pp": 0.0
+      },
+      "missing|medium": {
+        "train": 1.81,
+        "validation": 1.81,
+        "test": 1.81,
+        "all": 1.81,
+        "max_gap_pp": 0.0
+      },
+      "missing|missing": {
+        "train": 0.41,
+        "validation": 0.41,
+        "test": 0.41,
+        "all": 0.41,
+        "max_gap_pp": 0.0
+      },
+      "no_idea|high": {
+        "train": 1.65,
+        "validation": 1.65,
+        "test": 1.65,
+        "all": 1.65,
+        "max_gap_pp": 0.0
+      },
+      "no_idea|low": {
+        "train": 1.36,
+        "validation": 1.36,
+        "test": 1.36,
+        "all": 1.36,
+        "max_gap_pp": 0.0
+      },
+      "no_idea|medium": {
+        "train": 6.3,
+        "validation": 6.3,
+        "test": 6.3,
+        "all": 6.3,
+        "max_gap_pp": 0.0
+      },
+      "no_idea|missing": {
+        "train": 0.33,
+        "validation": 0.33,
+        "test": 0.33,
+        "all": 0.33,
+        "max_gap_pp": 0.0
+      },
+      "not_recommended|high": {
+        "train": 0.21,
+        "validation": 0.21,
+        "test": 0.21,
+        "all": 0.21,
+        "max_gap_pp": 0.0
+      },
+      "not_recommended|low": {
+        "train": 5.96,
+        "validation": 5.96,
+        "test": 5.96,
+        "all": 5.96,
+        "max_gap_pp": 0.0
+      },
+      "not_recommended|medium": {
+        "train": 1.1,
+        "validation": 1.1,
+        "test": 1.1,
+        "all": 1.1,
+        "max_gap_pp": 0.0
+      },
+      "not_recommended|missing": {
+        "train": 0.93,
+        "validation": 0.93,
+        "test": 0.93,
+        "all": 0.93,
+        "max_gap_pp": 0.0
+      },
+      "recommended|high": {
+        "train": 52.11,
+        "validation": 52.11,
+        "test": 52.11,
+        "all": 52.11,
+        "max_gap_pp": 0.0
+      },
+      "recommended|low": {
+        "train": 0.61,
+        "validation": 0.61,
+        "test": 0.61,
+        "all": 0.61,
+        "max_gap_pp": 0.0
+      },
+      "recommended|medium": {
+        "train": 7.99,
+        "validation": 7.99,
+        "test": 7.99,
+        "all": 7.99,
+        "max_gap_pp": 0.0
+      },
+      "recommended|missing": {
+        "train": 6.92,
+        "validation": 6.92,
+        "test": 6.92,
+        "all": 6.92,
+        "max_gap_pp": 0.0
+      }
+    }
+  },
+  "stability_seeds": {
+    "2027": {
+      "sizes_pct": {
+        "train": 70.0,
+        "validation": 15.0,
+        "test": 15.0
+      },
+      "max_gap_pp": {
+        "recommendation": 0.0,
+        "rating_band": 0.0,
+        "year": 0.202,
+        "category": 1.128
+      },
+      "same_part_as_main_split_pct": 53.57
+    },
+    "2028": {
+      "sizes_pct": {
+        "train": 70.0,
+        "validation": 15.0,
+        "test": 15.0
+      },
+      "max_gap_pp": {
+        "recommendation": 0.0,
+        "rating_band": 0.0,
+        "year": 0.201,
+        "category": 0.53
+      },
+      "same_part_as_main_split_pct": 53.57
+    }
+  },
+  "seconds": 780
+}
