@@ -8,13 +8,14 @@ notebooks/01_descriptive_analysis.ipynb for how often each pattern occurs):
    their standard letters
 2. Arabic yeh and kaf become Persian yeh and kaf
 3. Persian and Arabic digits become Latin digits
-4. HTML tags and URLs are removed
+4. HTML tags and URLs are removed, then Latin letters are lowercased
 5. Tatweel and invisible characters are removed; a zero-width space becomes a normal space,
-   because it separates words. The half-space is kept.
+   because it separates words. The half-space is kept. Letters and marks that were split
+   by a removed character are joined again (NFC).
 6. A Persian/Arabic character repeated three or more times is kept once (خیییلی -> خیلی)
-7. Latin letters are lowercased
-8. All whitespace (line breaks, tabs, repeated spaces) becomes a single space
-9. Half-spaces are kept, but repeated ones and ones next to a space are cleaned up
+7. All whitespace (line breaks, tabs, repeated spaces) becomes a single space
+8. Any run of spaces and half-spaces becomes one space if it holds a space, otherwise
+   one half-space
 
 Not changed on purpose: emoji, punctuation, negation words, stopwords and spelling.
 A misspelled word can also be a real word (for example a name), so spelling is left
@@ -26,7 +27,7 @@ Invisible characters are written as escape codes so that they can be read in the
 import re
 import unicodedata
 
-NORMALIZER_VERSION = "1"
+NORMALIZER_VERSION = "2"
 
 ZWNJ = "\u200c"  # half-space
 ZERO_WIDTH_SPACE = "\u200b"
@@ -44,8 +45,12 @@ HTML_TAG = re.compile(r"<[A-Za-z/][^>]*>")
 URL = re.compile(r"https?://\S+|www\.\S+")
 REPEATED_PERSIAN_CHAR = re.compile(r"([\u0600-\u06ff])\1{2,}")
 WHITESPACE = re.compile(r"\s+")
-REPEATED_ZWNJ = re.compile(ZWNJ + "{2,}")
-ZWNJ_NEXT_TO_SPACE = re.compile(f" ?{ZWNJ} | {ZWNJ}")
+SPACES_AND_HALF_SPACES = re.compile(f"[ {ZWNJ}]+")
+
+
+def _clean_gap(match: re.Match) -> str:
+    """A run of spaces and half-spaces becomes one space, or one half-space if it has no space."""
+    return " " if " " in match.group() else ZWNJ
 
 
 def normalize(text: str) -> str:
@@ -53,10 +58,10 @@ def normalize(text: str) -> str:
     text = text.translate(ARABIC_TO_PERSIAN).translate(TO_LATIN_DIGITS)
     text = HTML_TAG.sub(" ", text)
     text = URL.sub(" ", text)
-    text = text.translate(REMOVE_INVISIBLE)
-    text = REPEATED_PERSIAN_CHAR.sub(r"\1", text)
     text = text.lower()
+    text = text.translate(REMOVE_INVISIBLE)
+    text = unicodedata.normalize("NFC", text)  # rejoin a letter and a mark that an invisible char split
+    text = REPEATED_PERSIAN_CHAR.sub(r"\1", text)
     text = WHITESPACE.sub(" ", text)
-    text = REPEATED_ZWNJ.sub(ZWNJ, text)
-    text = ZWNJ_NEXT_TO_SPACE.sub(" ", text)
+    text = SPACES_AND_HALF_SPACES.sub(_clean_gap, text)
     return text.strip(" " + ZWNJ)
