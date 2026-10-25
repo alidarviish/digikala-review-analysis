@@ -1,0 +1,151 @@
+{
+  "created_at": "2026-10-25T17:37:27+00:00",
+  "seeds": {
+    "SPLIT_SEED": 2026,
+    "MASK_SEED": "digikala-semi-supervised-v1"
+  },
+  "inputs": {
+    "comments_clean_sha256": "c17f9d624bea25c7c61f28c58536b26f34c6cc91b0b1cd96144c8d2bdbab14f1",
+    "split_assignment_sha256": "4bf98fa1b6a73f3c7c3394b7e438660aeca12a746ffb7ad90fbde27332fabfbb",
+    "normalizer_version": "2",
+    "mask_rate": 0.2,
+    "rating_band_edges": [
+      2.5,
+      4.0
+    ],
+    "rate_zero_policy": "invalid"
+  },
+  "split": {
+    "strategy": "StratifiedGroupKFold, 20 folds, groups = product_id, strata = recommendation x rating_band (missing as its own class); 14 folds train, 3 validation, 3 test, which folds go where is drawn with the seed",
+    "fractions": {
+      "train": 0.7,
+      "validation": 0.15,
+      "test": 0.15
+    },
+    "sklearn_version": "1.9.1",
+    "products_in_several_parts": 0,
+    "left_out_empty_after_normalization": 7
+  },
+  "masking": {
+    "rate": 0.2,
+    "rule": "inside each recommendation class of the train part, sort by stable_hash(id) = int(sha256(f'{MASK_SEED}|{id}').hexdigest()[:16], 16) and mask the first floor(rate * class_count) rows; ties broken by id",
+    "rounding": "floor",
+    "applies_to": "train rows with a recommendation label; validation and test are never masked",
+    "per_class": {
+      "recommended": {
+        "train_labeled": 2912027,
+        "rate_times_count": 582405.4,
+        "masked": 582405
+      },
+      "not_recommended": {
+        "train_labeled": 353110,
+        "rate_times_count": 70622.0,
+        "masked": 70622
+      },
+      "no_idea": {
+        "train_labeled": 415536,
+        "rate_times_count": 83107.2,
+        "masked": 83107
+      }
+    },
+    "masked_total": 736134,
+    "masked_rows_rating_band": "masked rows leave supervised training completely, rating band included, so the hidden label cannot leak through the rating; their true labels are kept only in audit/masked_labels_reference.csv"
+  },
+  "rating_band": {
+    "edges": [
+      2.5,
+      4.0
+    ],
+    "definition": "low: 0 < rate < 2.5, medium: 2.5 <= rate < 4.0, high: 4.0 <= rate <= 5",
+    "encoding": {
+      "low": 0,
+      "medium": 1,
+      "high": 2
+    },
+    "rate_zero_policy": "invalid",
+    "rate_zero_meaning": "a rate of exactly 0 means no rating was recorded, so there is no band"
+  },
+  "text": {
+    "body": "raw text in every file; normalize with digikala_reviews.normalize before modeling",
+    "normalizer_version": "2",
+    "text_seen_in_train": "true when the normalized text is identical to the text of any train row",
+    "how_to_read": "digikala_reviews.standard_files.read_split_file(name). Plain pd.read_csv turns texts such as 'NA' or 'null' into missing values; only an empty label cell is missing"
+  },
+  "files": {
+    "train_supervised.csv": "train rows with at least one label; masked rows removed. A missing label means that head skips the row",
+    "train_pseudo_unlabeled.csv": "masked train rows, id and body only",
+    "natural_unlabeled.csv": "train rows without a recommendation label, id and body only. Rows among them that have a rating band are also in train_supervised for the band head",
+    "validation.csv": "every validation row",
+    "test.csv": "every test row",
+    "audit/masked_labels_reference.csv": "true labels of the masked rows, only for checking pseudo-labels; never used for training"
+  },
+  "rows_per_part": {
+    "train": 4306373,
+    "validation": 922795,
+    "test": 922795
+  },
+  "row_counts": {
+    "train_supervised.csv": 3552498,
+    "train_pseudo_unlabeled.csv": 736134,
+    "natural_unlabeled.csv": 625700,
+    "validation.csv": 922795,
+    "test.csv": 922795,
+    "audit/masked_labels_reference.csv": 736134
+  },
+  "class_counts": {
+    "train_supervised.csv": {
+      "recommendation_status": {
+        "missing": 607959,
+        "no_idea": 332429,
+        "not_recommended": 282488,
+        "recommended": 2329622
+      },
+      "rating_band": {
+        "high": 2337036,
+        "low": 325584,
+        "medium": 607911,
+        "missing": 281967
+      }
+    },
+    "validation.csv": {
+      "recommendation_status": {
+        "missing": 134078,
+        "no_idea": 89045,
+        "not_recommended": 75666,
+        "recommended": 624006
+      },
+      "rating_band": {
+        "high": 600296,
+        "low": 84407,
+        "medium": 158755,
+        "missing": 79337
+      }
+    },
+    "test.csv": {
+      "recommendation_status": {
+        "missing": 134078,
+        "no_idea": 89041,
+        "not_recommended": 75668,
+        "recommended": 624008
+      },
+      "rating_band": {
+        "high": 600297,
+        "low": 84406,
+        "medium": 158755,
+        "missing": 79337
+      }
+    }
+  },
+  "text_seen_in_train_pct": {
+    "validation": 36.86,
+    "test": 36.94
+  },
+  "sha256": {
+    "train_supervised.csv": "ffc5d0095d2efadf5949c805449fdbb3ed6aa7fbb3b4c40385d043f8463fda0a",
+    "train_pseudo_unlabeled.csv": "633df12954d6ca8d5170bde05bd311e57f1a6e4f35b2c406a210d34c6bcb913d",
+    "natural_unlabeled.csv": "dc74ef74776e740cf99ce400cfac1a0568e1e381bda5fd8282dfc58296146188",
+    "validation.csv": "af17de315193748e43fc245f79b5971d0c7fd71bd774726afc6d785415399a6e",
+    "test.csv": "e1396ecb1bd89f00e9bfe848c95e9ffb6e93403b248a95e4210ea3960f7947a6",
+    "audit/masked_labels_reference.csv": "62722cb4b2bbeb530aea79f68877baecaa49cd0892a656644b729a8a812f69c9"
+  }
+}

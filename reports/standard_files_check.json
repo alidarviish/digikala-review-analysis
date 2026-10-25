@@ -1,0 +1,281 @@
+{
+  "created_at": "2026-10-25T17:41:31+00:00",
+  "passed": true,
+  "rebuild_check": "identical",
+  "checks": [
+    {
+      "check": "every id of the split is in the cleaned data",
+      "passed": true,
+      "detail": "6,151,963"
+    },
+    {
+      "check": "no product in more than one part",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "rows per part match the manifest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "file hashes match the manifest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "files are rebuilt byte for byte",
+      "passed": true,
+      "detail": "identical"
+    },
+    {
+      "check": "recommended: floor(0.2 x class count) rows masked",
+      "passed": true,
+      "detail": "582,405"
+    },
+    {
+      "check": "not_recommended: floor(0.2 x class count) rows masked",
+      "passed": true,
+      "detail": "70,622"
+    },
+    {
+      "check": "no_idea: floor(0.2 x class count) rows masked",
+      "passed": true,
+      "detail": "83,107"
+    },
+    {
+      "check": "validation and test rows are never masked",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_supervised.csv: columns are exactly as expected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_supervised.csv: row count matches the manifest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_supervised.csv: holds exactly the expected rows",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_supervised.csv: product_id is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_supervised.csv: body is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_supervised.csv: rate is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_supervised.csv: recommendation_status is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_supervised.csv: rating_band is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_supervised.csv: rating_band follows from rate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_pseudo_unlabeled.csv: columns are exactly as expected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_pseudo_unlabeled.csv: row count matches the manifest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_pseudo_unlabeled.csv: holds exactly the expected rows",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "train_pseudo_unlabeled.csv: body is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "natural_unlabeled.csv: columns are exactly as expected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "natural_unlabeled.csv: row count matches the manifest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "natural_unlabeled.csv: holds exactly the expected rows",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "natural_unlabeled.csv: body is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "validation.csv: columns are exactly as expected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "validation.csv: row count matches the manifest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "validation.csv: holds exactly the expected rows",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "validation.csv: product_id is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "validation.csv: body is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "validation.csv: rate is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "validation.csv: recommendation_status is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "validation.csv: rating_band is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "validation.csv: rating_band follows from rate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "validation.csv: text_seen_in_train is always True or False",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "validation.csv: text_seen_in_train is right for every row",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test.csv: columns are exactly as expected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test.csv: row count matches the manifest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test.csv: holds exactly the expected rows",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test.csv: product_id is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test.csv: body is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test.csv: rate is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test.csv: recommendation_status is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test.csv: rating_band is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test.csv: rating_band follows from rate",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test.csv: text_seen_in_train is always True or False",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "test.csv: text_seen_in_train is right for every row",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "audit/masked_labels_reference.csv: columns are exactly as expected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "audit/masked_labels_reference.csv: row count matches the manifest",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "audit/masked_labels_reference.csv: holds exactly the expected rows",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "audit/masked_labels_reference.csv: recommendation_status is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "check": "audit/masked_labels_reference.csv: rating_band is identical to the cleaned data",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "sha256": {
+    "train_supervised.csv": "ffc5d0095d2efadf5949c805449fdbb3ed6aa7fbb3b4c40385d043f8463fda0a",
+    "train_pseudo_unlabeled.csv": "633df12954d6ca8d5170bde05bd311e57f1a6e4f35b2c406a210d34c6bcb913d",
+    "natural_unlabeled.csv": "dc74ef74776e740cf99ce400cfac1a0568e1e381bda5fd8282dfc58296146188",
+    "validation.csv": "af17de315193748e43fc245f79b5971d0c7fd71bd774726afc6d785415399a6e",
+    "test.csv": "e1396ecb1bd89f00e9bfe848c95e9ffb6e93403b248a95e4210ea3960f7947a6",
+    "audit/masked_labels_reference.csv": "62722cb4b2bbeb530aea79f68877baecaa49cd0892a656644b729a8a812f69c9"
+  },
+  "seconds": 214
+}

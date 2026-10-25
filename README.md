@@ -46,6 +46,19 @@ uv run python scripts/run_quality_gate.py  # schema and quality checks -> report
 uv run python scripts/build_clean.py       # cleaning rules -> data/interim/comments_clean.parquet
 ```
 
+Then split the data and write the standard files:
+
+```bash
+uv run python scripts/check_normalization.py    # what normalization changes -> reports/normalization_report.json
+uv run python scripts/build_splits.py           # product-grouped split -> reports/split_report.json (about 15 min)
+uv run python scripts/plot_split_balance.py     # reports/figures/split_balance.png
+uv run python scripts/build_standard_files.py   # masking and the standard CSV files -> data/splits/
+uv run python scripts/verify_standard_files.py  # checks every file against the source data
+```
+
+Read the CSV files with `digikala_reviews.standard_files.read_split_file`. Plain `pd.read_csv` turns reviews
+such as `NA` or `null` into missing values.
+
 ## What the data looks like
 
 The full audit is in [`notebooks/01_descriptive_analysis.ipynb`](notebooks/01_descriptive_analysis.ipynb).
@@ -76,3 +89,29 @@ positive reviews are full of stretched spellings like `عالیییی`, which a 
 
 **Limits.** The reviews cover six product groups (beauty, books, clothing, toys, travel and local goods). There are
 no electronics or appliances, so results should not be assumed to carry over to them.
+
+## Split and semi-supervised setup
+
+Products are split 70/15/15 into train, validation and test with `StratifiedGroupKFold`, balanced on the
+combination of both targets. No product is in more than one part, and the class shares of both targets are the
+same in every part to within 0.01 percentage points. Two other seeds give the same balance, so it does not depend
+on a lucky seed.
+
+![Class shares after the split](reports/figures/split_balance.png)
+
+For the semi-supervised experiment, 20% of the labeled training rows of each recommendation class (736,134 rows)
+have their labels hidden, using the hash rule shared by everyone working on this dataset. Validation and test are
+never masked. The full record of seeds, rules, counts and file hashes is in
+[`reports/split_manifest.json`](reports/split_manifest.json).
+
+| File | Rows | Contents |
+|---|---:|---|
+| `train_supervised.csv` | 3,552,498 | train rows with at least one label, masked rows removed |
+| `train_pseudo_unlabeled.csv` | 736,134 | masked train rows, `id` and `body` only |
+| `natural_unlabeled.csv` | 625,700 | train rows that never had a recommendation label |
+| `validation.csv` | 922,795 | every validation row |
+| `test.csv` | 922,795 | every test row |
+
+About 37% of validation and test reviews have exactly the same normalized text as some training review, mostly
+short ones like `عالی`. That is not leakage, since the products differ, but it makes part of the test easy, so
+results are reported both for all reviews and for texts never seen in training.
