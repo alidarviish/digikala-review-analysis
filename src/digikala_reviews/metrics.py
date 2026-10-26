@@ -73,3 +73,30 @@ def bootstrap_macro_f1(
         scores.append(macro_f1_from_codes(true_codes[rows], predicted_codes[rows], len(labels)))
     low, high = np.percentile(scores, [2.5, 97.5])
     return [float(low), float(high)]
+
+
+def bootstrap_difference(y_true, y_pred_a, y_pred_b, labels: list[str], rounds: int = 1000, seed: int = 2026):
+    """95% interval of Macro F1(a) - Macro F1(b), resampling the same reviews for both models."""
+    code = {label: i for i, label in enumerate(labels)}
+    true_codes = np.array([code[v] for v in y_true])
+    codes_a = np.array([code[v] for v in y_pred_a])
+    codes_b = np.array([code[v] for v in y_pred_b])
+    rng = np.random.default_rng(seed)
+    differences = []
+    for _ in range(rounds):
+        rows = rng.integers(0, len(true_codes), len(true_codes))
+        differences.append(
+            macro_f1_from_codes(true_codes[rows], codes_a[rows], len(labels))
+            - macro_f1_from_codes(true_codes[rows], codes_b[rows], len(labels))
+        )
+    low, high = np.percentile(differences, [2.5, 97.5])
+    return [float(low), float(high)]
+
+
+def bootstrap_mean_difference(values_a, values_b, rounds: int = 1000, seed: int = 2026) -> list[float]:
+    """95% interval of mean(a) - mean(b) for two measurements of the same reviews (paired)."""
+    difference = np.asarray(values_a, dtype=float) - np.asarray(values_b, dtype=float)
+    rng = np.random.default_rng(seed)
+    means = [difference[rng.integers(0, len(difference), len(difference))].mean() for _ in range(rounds)]
+    low, high = np.percentile(means, [2.5, 97.5])
+    return [float(low), float(high)]

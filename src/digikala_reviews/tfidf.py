@@ -39,13 +39,15 @@ FEATURE_SETUPS = {
 }
 
 
-def make_vectorizer(setup_name: str):
+def make_vectorizer(setup_name: str, sublinear_tf: bool = True, stop_words=None, extra_parts=()):
+    """The vectorizer of a named setup. The other arguments are used only by the experiments."""
     parts = []
-    for part in FEATURE_SETUPS[setup_name]:
+    for part in [*FEATURE_SETUPS[setup_name], *extra_parts]:
         options = {k: v for k, v in part.items() if k != "token"}
         if part["analyzer"] == "word":
             options["token_pattern"] = TOKEN_PATTERNS[part["token"]]
-        parts.append(TfidfVectorizer(sublinear_tf=True, dtype=np.float32, **options))
+            options["stop_words"] = stop_words
+        parts.append(TfidfVectorizer(sublinear_tf=sublinear_tf, dtype=np.float32, **options))
     return parts[0] if len(parts) == 1 else make_union(*parts)
 
 
@@ -56,8 +58,8 @@ def drop_pruned_terms(vectorizer) -> None:
             part[1].stop_words_ = None
 
 
-def load_cache(name: str, cache_dir=CACHE_DIR) -> pd.DataFrame:
-    columns = ["id", "text", "recommendation_status", "rating_band"]
+def load_cache(name: str, cache_dir=CACHE_DIR, extra_columns=()) -> pd.DataFrame:
+    columns = ["id", "text", "recommendation_status", "rating_band", *extra_columns]
     return pd.read_parquet(cache_dir / name, columns=columns)
 
 

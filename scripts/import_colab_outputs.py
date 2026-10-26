@@ -70,7 +70,7 @@ def main():
             problems.append(f"{relative}: missing from the downloaded folder")
         elif file_sha256(source) != expected:
             problems.append(f"{relative}: damaged in the download (hash differs)")
-        elif relative.startswith("reports/tfidf_runs/") and (
+        elif relative.startswith(("reports/tfidf_runs/", "reports/tfidf_experiments/")) and (
             run_problems := check_run_file(relative, source, local_cache_hashes)
         ):
             problems += run_problems

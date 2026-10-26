@@ -6,6 +6,7 @@ artifacts/**/*.safetensors
 artifacts/**/*.bin
 artifacts/**/*.pt
 artifacts/**/*.joblib
+artifacts/**/*.npz
 artifacts/**/checkpoints/
 
 # Python
