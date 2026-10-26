@@ -5,6 +5,7 @@ data/
 artifacts/**/*.safetensors
 artifacts/**/*.bin
 artifacts/**/*.pt
+artifacts/**/*.joblib
 artifacts/**/checkpoints/
 
 # Python

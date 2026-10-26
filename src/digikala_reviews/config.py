@@ -1,13 +1,19 @@
+import os
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+# On Colab the cache and the outputs live elsewhere (see notebooks/colab_tfidf.ipynb);
+# these two variables point the code there. Locally they are not set.
+OUTPUT_ROOT = Path(os.environ.get("DIGIKALA_OUTPUT_DIR", PROJECT_ROOT))
 
 DATA_DIR = PROJECT_ROOT / "data"
 RAW_DIR = DATA_DIR / "raw"
 INTERIM_DIR = DATA_DIR / "interim"
 SPLITS_DIR = DATA_DIR / "splits"
-ARTIFACTS_DIR = PROJECT_ROOT / "artifacts"
-REPORTS_DIR = PROJECT_ROOT / "reports"
+CACHE_DIR = Path(os.environ.get("DIGIKALA_CACHE_DIR", DATA_DIR / "cache"))  # scripts/cache_normalized.py
+ARTIFACTS_DIR = OUTPUT_ROOT / "artifacts"
+REPORTS_DIR = OUTPUT_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 
 COMMENTS_CSV = RAW_DIR / "digikala-comments.csv"
