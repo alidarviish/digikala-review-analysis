@@ -28,8 +28,29 @@ so the choice is made on our own reviews in two steps.
 - Unknown tokens are rare (well under 1%) for all but possibly ParsBERT, whose vocabulary is
   the oldest.
 
-## Step 2: a small equal fine-tuning run (later, on a GPU)
+## Step 2: a small equal fine-tuning run (`scripts/pilot_transformers.py`, on a GPU)
 
-The models left after step 1 are fine-tuned with the same settings on the same sample, and
-scored on a fixed sample of 50,000 validation reviews (enough to see a difference of about
-one point; see reports/tfidf_analysis/sample.json). The best one becomes the main model.
+Step 1 left every candidate in (reports/tokenizers/compare.json): at most 0.4% of reviews
+are longer than 128 tokens with any tokenizer, and unknown tokens are under 0.3%. The
+Persian tokenizers use about 20% fewer tokens than XLM-R and mmBERT. TookaBERT-Large is
+added, as the GPU is large enough.
+
+Same settings for every model: 100,000 training reviews and 50,000 validation reviews
+(fixed samples, seed 2026); one encoder with two linear heads on the first token; the sum
+of the two cross-entropies, without class weights; full fine-tuning, 1 epoch, batch 64,
+learning rate 3e-5 (2e-5 for the large model), AdamW with weight decay 0.01, 6% warmup then
+linear decay, 128 tokens; per-class offsets tuned on the other half of the sample, as for
+TF-IDF. The final TF-IDF model is scored on the same 50,000 reviews, and each model is
+compared with it (paired bootstrap). A sample of 50,000 is enough to see a difference of
+about one point (reports/tfidf_analysis/sample.json).
+
+Expected, before running:
+
+- TookaBERT-Large scores highest.
+- TookaBERT-Base, FaBERT and XLM-R are within one point of each other.
+- ParsBERT is the lowest of the Persian models.
+- Even with 100,000 training reviews, the best model matches or beats the final TF-IDF
+  model (trained on all of train) with offsets, most of all on the rating band.
+- A base model takes under 10 minutes, the large one two to three times as long.
+
+The best model becomes the main model, fine-tuned afterwards on more data.
