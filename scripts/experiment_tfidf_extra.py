@@ -25,7 +25,7 @@ from digikala_reviews.experiments import compare, majority_rows, nested_samples,
 from digikala_reviews.ingest import file_sha256
 from digikala_reviews.metrics import bootstrap_macro_f1, classification_report
 from digikala_reviews.provenance import check_cache, environment, git_commit
-from digikala_reviews.resources import peak_memory_gb
+from digikala_reviews.resources import peak_memory_gb_if_known
 from digikala_reviews.spelling import SPELLING_FIXES, fix_spelling, load_fixes
 from digikala_reviews.tfidf import HEADS, drop_pruned_terms, head_rows, load_cache, make_vectorizer
 from digikala_reviews.tuning import fingerprint, finished, fit_logistic, save_json
@@ -83,7 +83,7 @@ class Runner:
             "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
             "fingerprint": self.spec(experiment, head, variant, spec_extra),
             **result,
-            "process_peak_memory_gb": peak_memory(),
+            "process_peak_memory_gb": peak_memory_gb_if_known(),
             **self.context,
         }
         save_json(self.path(experiment, head, variant), record)
@@ -273,14 +273,6 @@ class Runner:
                 )
                 self.save(experiment, head, name, result, extra)
             x_train = x_validation = None
-
-
-def peak_memory():
-    """Peak memory of this process in GB, or None where the system does not report it (molab)."""
-    try:
-        return round(peak_memory_gb(), 2)
-    except RuntimeError:
-        return None
 
 
 def scores(head, y_true, predicted, converged, minutes):

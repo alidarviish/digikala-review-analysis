@@ -35,7 +35,7 @@ from digikala_reviews.experiments import (
 )
 from digikala_reviews.metrics import bootstrap_mean_difference
 from digikala_reviews.provenance import check_cache, environment, git_commit
-from digikala_reviews.resources import peak_memory_gb, require_free_memory
+from digikala_reviews.resources import peak_memory_gb_if_known, require_free_memory
 from digikala_reviews.tfidf import (
     FEATURE_SETUPS,
     HEADS,
@@ -159,7 +159,7 @@ class Experiments:
             "fingerprint": self.spec(experiment, head, variant),
             **result,
             **(extra or {}),
-            "process_peak_memory_gb": round(peak_memory_gb(), 2),
+            "process_peak_memory_gb": peak_memory_gb_if_known(),
             **self.context,
         }
         save_json(self.path(experiment, head, variant), record)

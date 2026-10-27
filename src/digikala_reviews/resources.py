@@ -37,3 +37,15 @@ def peak_memory_gb(status: Path = PROCESS_STATUS) -> float:
         if line.startswith("VmHWM:"):
             return int(line.split()[1]) / 1024**2  # the value is in kB
     raise RuntimeError("VmHWM not found in /proc/self/status")
+
+
+def peak_memory_gb_if_known(status: Path = PROCESS_STATUS) -> float | None:
+    """peak_memory_gb rounded to 0.01, or None where the system does not report it.
+
+    The sandbox that runs molab notebooks has no VmHWM line; a result file then records the
+    peak as unknown instead of the run stopping.
+    """
+    try:
+        return round(peak_memory_gb(status), 2)
+    except RuntimeError:
+        return None
