@@ -26,6 +26,9 @@ RESULT_FOLDERS = (
     "reports/tfidf_experiments/",
     "reports/tfidf_extra/",
     "reports/tfidf_final/",
+    "reports/tokenizers/",
+    "reports/transformer_pilot/",
+    "reports/transformer_pilot_smoke/",
 )
 
 
