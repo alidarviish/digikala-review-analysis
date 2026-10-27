@@ -13,7 +13,7 @@ from pathlib import Path
 from digikala_reviews.config import PROJECT_ROOT
 from digikala_reviews.ingest import file_sha256
 
-LIBRARIES = ["numpy", "pandas", "pyarrow", "scipy", "scikit-learn", "joblib"]
+LIBRARIES = ["numpy", "pandas", "pyarrow", "scipy", "scikit-learn", "joblib", "transformers", "tokenizers"]
 
 
 def git_commit(root: Path = PROJECT_ROOT) -> dict:
