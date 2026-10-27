@@ -40,7 +40,7 @@ import pandas as pd
 
 from digikala_reviews.config import ARTIFACTS_DIR, CACHE_DIR, REPORTS_DIR, SPLIT_SEED
 from digikala_reviews.experiments import compare, cross_fitted_offsets, product_half
-from digikala_reviews.finetune import IGNORE, fixed_sample, label_codes, linear_warmup
+from digikala_reviews.finetune import IGNORE, batches, build_model, fixed_sample, label_codes, linear_warmup
 from digikala_reviews.metrics import bootstrap_macro_f1, classification_report
 from digikala_reviews.provenance import check_cache, environment, git_commit, library_version
 from digikala_reviews.tfidf import HEADS, load_cache
@@ -78,35 +78,6 @@ def safe_name(model_name):
     return model_name.replace("/", "__")
 
 
-def build_model(torch, name, dropout):
-    from transformers import AutoModel
-
-    class TwoHeads(torch.nn.Module):
-        def __init__(self):
-            super().__init__()
-            self.encoder = AutoModel.from_pretrained(name)
-            size = self.encoder.config.hidden_size
-            self.dropout = torch.nn.Dropout(dropout)
-            self.heads = torch.nn.ModuleDict({head: torch.nn.Linear(size, 3) for head in HEADS})
-
-        def forward(self, input_ids, attention_mask):
-            first = self.encoder(input_ids=input_ids, attention_mask=attention_mask).last_hidden_state[:, 0]
-            first = self.dropout(first)
-            return {head: layer(first) for head, layer in self.heads.items()}
-
-    return TwoHeads()
-
-
-def batches(torch, tokenizer, encoded, order, size, labels=None):
-    for start in range(0, len(order), size):
-        rows = order[start : start + size]
-        padded = tokenizer.pad({"input_ids": [encoded[i] for i in rows]}, return_tensors="pt")
-        batch = {"input_ids": padded["input_ids"], "attention_mask": padded["attention_mask"]}
-        if labels is not None:
-            batch["labels"] = {head: torch.as_tensor(codes[rows]) for head, codes in labels.items()}
-        yield batch
-
-
 def train_and_score(name, learning_rate, settings, train, validation, device, torch):
     from transformers import AutoTokenizer
 
@@ -123,7 +94,7 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
         head: label_codes(train[HEADS[head]["column"]].to_numpy(), HEADS[head]["labels"]) for head in HEADS
     }
 
-    model = build_model(torch, name, settings["dropout"]).to(device)
+    model = build_model(torch, name, settings["dropout"], list(HEADS)).to(device)
     no_decay = [p for n, p in model.named_parameters() if p.ndim < 2]  # biases and norm weights
     decay = [p for n, p in model.named_parameters() if p.ndim >= 2]
     optimizer = torch.optim.AdamW(

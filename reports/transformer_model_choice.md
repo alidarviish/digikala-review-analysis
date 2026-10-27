@@ -88,3 +88,36 @@ Expected:
 
 The model with the best mean over seeds becomes the main model; a lead smaller than the
 spread between seeds counts as a tie, and a tie goes to the faster model.
+
+## Result of step 3 and the choice
+
+Mean of three seeds with 100,000 training reviews: TookaBERT-Large 0.6949 (seeds 0.6910 to
+0.6974), FaBERT 0.6925 (0.6899 to 0.6947), TookaBERT-Base 0.6875. With 500,000 reviews:
+FaBERT 0.7057 in 4.3 minutes, TookaBERT-Large 0.7037 in 11 minutes. On the same 50,000
+reviews FaBERT with 500,000 reviews beats the final TF-IDF model by 2.7 points on
+recommendation and 1.7 on the rating band, both intervals above zero
+(reports/transformer_pilot/summary.json).
+
+The seeds moved the large model by up to 0.6 point on the mean (expected 0.3 to 0.5), and
+the large model did not gain more from more data. Its lead over FaBERT (0.25 point) is
+smaller than the spread between seeds, so by the rule above it is a tie, and FaBERT is
+chosen: 2.6 times faster, a third of the memory, and fewer tokens per review.
+
+## Training the chosen model (written before running)
+
+`scripts/train_transformer.py`: FaBERT on every labeled training review, with the settings
+of the comparison runs, up to 4 epochs. Four checks per epoch on the same 50,000 validation
+reviews (mean Macro F1 of the two heads with offsets); the best check is kept, and training
+stops after two checks in a row without gain. The kept model then scores the whole
+validation set and is compared with the final TF-IDF model on the same reviews. The test set
+is not read.
+
+Expected:
+
+- The best check comes in the second epoch.
+- On the whole validation set, with offsets: recommendation about 0.73 to 0.74 and rating
+  band about 0.69 to 0.70, about 3 and 2.5 points above TF-IDF.
+- no_idea and medium stay the weakest classes, with higher recall than with TF-IDF.
+
+If the score is still rising at the end of the fourth epoch, more epochs are tried in a
+separate run.

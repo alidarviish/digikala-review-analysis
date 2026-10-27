@@ -27,3 +27,35 @@ def linear_warmup(step: int, total: int, warmup: int) -> float:
     if step < warmup:
         return (step + 1) / warmup
     return max(0.0, (total - step) / max(1, total - warmup))
+
+
+def build_model(torch, name: str, dropout: float, heads: list[str], classes: int = 3):
+    """One encoder with a linear head per task on the first token. torch is passed in, so this
+    module can be imported (and tested) where PyTorch is not installed."""
+    from transformers import AutoModel
+
+    class TwoHeads(torch.nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.encoder = AutoModel.from_pretrained(name)
+            size = self.encoder.config.hidden_size
+            self.dropout = torch.nn.Dropout(dropout)
+            self.heads = torch.nn.ModuleDict({head: torch.nn.Linear(size, classes) for head in heads})
+
+        def forward(self, input_ids, attention_mask):
+            first = self.encoder(input_ids=input_ids, attention_mask=attention_mask).last_hidden_state[:, 0]
+            first = self.dropout(first)
+            return {head: layer(first) for head, layer in self.heads.items()}
+
+    return TwoHeads()
+
+
+def batches(torch, tokenizer, encoded, order, size, labels=None):
+    """Padded batches of the given rows, in the given order, with their labels if any."""
+    for start in range(0, len(order), size):
+        rows = order[start : start + size]
+        padded = tokenizer.pad({"input_ids": [encoded[i] for i in rows]}, return_tensors="pt")
+        batch = {"input_ids": padded["input_ids"], "attention_mask": padded["attention_mask"]}
+        if labels is not None:
+            batch["labels"] = {head: torch.as_tensor(codes[rows]) for head, codes in labels.items()}
+        yield batch
