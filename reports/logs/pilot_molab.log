@@ -1,0 +1,631 @@
+Code fd1e045528a053dcb677f749dd8e013d878a7edd, device NVIDIA RTX PRO 6000 Blackwell Server Edition, torch 2.14.1+cu130
+/marimo/work_gpu/outputs/artifacts/tfidf_final/validation_predictions.parquet not found: TF-IDF is not compared in this run
+hf-internal-testing/tiny-random-BertModel (lr 0.001):
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 18805.63it/s]
+    step 10/10, loss 1.7170
+  recommendation: without offsets 0.2990, with offsets 0.2990
+  rating_band: without offsets 0.2796, with offsets 0.2796
+  0.01 min, peak GPU memory 0.12 GB
+Done
+Code fd1e045528a053dcb677f749dd8e013d878a7edd, device NVIDIA RTX PRO 6000 Blackwell Server Edition, torch 2.14.1+cu130
+/marimo/work_gpu/outputs/artifacts/tfidf_final/validation_predictions.parquet not found: TF-IDF is not compared in this run
+PartAI/TookaBERT-Base (lr 3e-05):
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 5817.22it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: PartAI/TookaBERT-Base
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/1563, loss 1.4047
+    step 200/1563, loss 0.9964
+    step 300/1563, loss 0.9439
+    step 400/1563, loss 0.9571
+    step 500/1563, loss 0.9236
+    step 600/1563, loss 0.9131
+    step 700/1563, loss 0.8916
+    step 800/1563, loss 0.9208
+    step 900/1563, loss 0.8581
+    step 1000/1563, loss 0.8852
+    step 1100/1563, loss 0.8830
+    step 1200/1563, loss 0.8778
+    step 1300/1563, loss 0.8747
+    step 1400/1563, loss 0.8644
+    step 1500/1563, loss 0.8490
+    step 1563/1563, loss 0.8221
+  recommendation: without offsets 0.6816, with offsets 0.7050
+  rating_band: without offsets 0.6508, with offsets 0.6702
+  0.87 min, peak GPU memory 4.75 GB
+sbunlp/fabert (lr 3e-05):
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 5232.39it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sbunlp/fabert
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/1563, loss 1.6445
+    step 200/1563, loss 1.0576
+    step 300/1563, loss 0.9258
+    step 400/1563, loss 0.9321
+    step 500/1563, loss 0.9003
+    step 600/1563, loss 0.8850
+    step 700/1563, loss 0.8658
+    step 800/1563, loss 0.8965
+    step 900/1563, loss 0.8306
+    step 1000/1563, loss 0.8532
+    step 1100/1563, loss 0.8674
+    step 1200/1563, loss 0.8550
+    step 1300/1563, loss 0.8705
+    step 1400/1563, loss 0.8470
+    step 1500/1563, loss 0.8272
+    step 1563/1563, loss 0.8022
+  recommendation: without offsets 0.6945, with offsets 0.7003
+  rating_band: without offsets 0.6578, with offsets 0.6795
+  0.86 min, peak GPU memory 4.77 GB
+FacebookAI/xlm-roberta-base (lr 3e-05):
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 5295.67it/s]
+[transformers] [1mXLMRobertaModel LOAD REPORT[0m from: FacebookAI/xlm-roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+    step 100/1563, loss 1.5803
+    step 200/1563, loss 1.0953
+    step 300/1563, loss 0.9704
+    step 400/1563, loss 0.9755
+    step 500/1563, loss 0.9491
+    step 600/1563, loss 0.9229
+    step 700/1563, loss 0.9030
+    step 800/1563, loss 0.9303
+    step 900/1563, loss 0.8696
+    step 1000/1563, loss 0.8921
+    step 1100/1563, loss 0.8973
+    step 1200/1563, loss 0.8800
+    step 1300/1563, loss 0.8913
+    step 1400/1563, loss 0.8734
+    step 1500/1563, loss 0.8494
+    step 1563/1563, loss 0.8408
+  recommendation: without offsets 0.6823, with offsets 0.7037
+  rating_band: without offsets 0.6523, with offsets 0.6708
+  1.22 min, peak GPU memory 6.48 GB
+jhu-clsp/mmBERT-base (lr 3e-05):
+Loading weights:   0%|          | 0/134 [00:00<?, ?it/s]Loading weights: 100%|██████████| 134/134 [00:00<00:00, 15312.68it/s]
+[transformers] [1mModernBertModel LOAD REPORT[0m from: jhu-clsp/mmBERT-base
+Key               | Status     |  | 
+------------------+------------+--+-
+head.norm.weight  | UNEXPECTED |  | 
+decoder.weight    | UNEXPECTED |  | 
+head.dense.weight | UNEXPECTED |  | 
+decoder.bias      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+    step 100/1563, loss 1.4933
+    step 200/1563, loss 1.0340
+    step 300/1563, loss 0.9609
+    step 400/1563, loss 0.9572
+    step 500/1563, loss 0.9173
+    step 600/1563, loss 0.8889
+    step 700/1563, loss 0.8840
+    step 800/1563, loss 0.9106
+    step 900/1563, loss 0.8432
+    step 1000/1563, loss 0.8700
+    step 1100/1563, loss 0.8724
+    step 1200/1563, loss 0.8663
+    step 1300/1563, loss 0.8696
+    step 1400/1563, loss 0.8431
+    step 1500/1563, loss 0.8321
+    step 1563/1563, loss 0.8012
+  recommendation: without offsets 0.6844, with offsets 0.6963
+  rating_band: without offsets 0.6508, with offsets 0.6736
+  1.78 min, peak GPU memory 8.55 GB
+HooshvareLab/bert-fa-zwnj-base (lr 3e-05):
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 15814.84it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: HooshvareLab/bert-fa-zwnj-base
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.decoder.bias               | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.decoder.weight             | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/1563, loss 1.3137
+    step 200/1563, loss 1.0536
+    step 300/1563, loss 0.9852
+    step 400/1563, loss 0.9959
+    step 500/1563, loss 0.9587
+    step 600/1563, loss 0.9388
+    step 700/1563, loss 0.9220
+    step 800/1563, loss 0.9488
+    step 900/1563, loss 0.8885
+    step 1000/1563, loss 0.9108
+    step 1100/1563, loss 0.9043
+    step 1200/1563, loss 0.9083
+    step 1300/1563, loss 0.9096
+    step 1400/1563, loss 0.9112
+    step 1500/1563, loss 0.8844
+    step 1563/1563, loss 0.8534
+  recommendation: without offsets 0.6663, with offsets 0.6873
+  rating_band: without offsets 0.6362, with offsets 0.6592
+  0.86 min, peak GPU memory 4.7 GB
+PartAI/TookaBERT-Large (lr 2e-05):
+Loading weights:   0%|          | 0/389 [00:00<?, ?it/s]Loading weights: 100%|██████████| 389/389 [00:00<00:00, 4922.36it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: PartAI/TookaBERT-Large
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/1563, loss 1.5053
+    step 200/1563, loss 1.0159
+    step 300/1563, loss 0.9345
+    step 400/1563, loss 0.9551
+    step 500/1563, loss 0.9123
+    step 600/1563, loss 0.8872
+    step 700/1563, loss 0.8807
+    step 800/1563, loss 0.9031
+    step 900/1563, loss 0.8431
+    step 1000/1563, loss 0.8681
+    step 1100/1563, loss 0.8587
+    step 1200/1563, loss 0.8672
+    step 1300/1563, loss 0.8673
+    step 1400/1563, loss 0.8516
+    step 1500/1563, loss 0.8324
+    step 1563/1563, loss 0.8033
+  recommendation: without offsets 0.7002, with offsets 0.7154
+  rating_band: without offsets 0.6587, with offsets 0.6772
+  2.2 min, peak GPU memory 12.68 GB
+Done
+Code 49d95d78da34d4cd9d2fc53200b9e4d06587fab7, device NVIDIA RTX PRO 6000 Blackwell Server Edition, torch 2.14.1+cu130
+/marimo/work_gpu/outputs/artifacts/tfidf_final/validation_predictions.parquet not found: TF-IDF is not compared in this run
+PartAI/TookaBERT-Large (lr 2e-05, seed 2027, 100,000 rows):
+Loading weights:   0%|          | 0/389 [00:00<?, ?it/s]Loading weights: 100%|██████████| 389/389 [00:00<00:00, 6069.97it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: PartAI/TookaBERT-Large
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/1563, loss 1.3874
+    step 200/1563, loss 0.9992
+    step 300/1563, loss 0.9280
+    step 400/1563, loss 0.9137
+    step 500/1563, loss 0.9265
+    step 600/1563, loss 0.8857
+    step 700/1563, loss 0.9092
+    step 800/1563, loss 0.8759
+    step 900/1563, loss 0.8739
+    step 1000/1563, loss 0.8959
+    step 1100/1563, loss 0.8498
+    step 1200/1563, loss 0.8685
+    step 1300/1563, loss 0.8677
+    step 1400/1563, loss 0.8476
+    step 1500/1563, loss 0.8592
+    step 1563/1563, loss 0.8452
+  recommendation: without offsets 0.6884, with offsets 0.7057
+  rating_band: without offsets 0.6497, with offsets 0.6763
+  2.22 min, peak GPU memory 12.68 GB
+sbunlp/fabert (lr 3e-05, seed 2027, 100,000 rows):
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 5748.10it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sbunlp/fabert
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/1563, loss 1.6340
+    step 200/1563, loss 1.0729
+    step 300/1563, loss 0.9262
+    step 400/1563, loss 0.8917
+    step 500/1563, loss 0.9024
+    step 600/1563, loss 0.8595
+    step 700/1563, loss 0.8910
+    step 800/1563, loss 0.8542
+    step 900/1563, loss 0.8533
+    step 1000/1563, loss 0.8801
+    step 1100/1563, loss 0.8283
+    step 1200/1563, loss 0.8655
+    step 1300/1563, loss 0.8579
+    step 1400/1563, loss 0.8447
+    step 1500/1563, loss 0.8521
+    step 1563/1563, loss 0.8370
+  recommendation: without offsets 0.6882, with offsets 0.7072
+  rating_band: without offsets 0.6558, with offsets 0.6783
+  0.86 min, peak GPU memory 4.77 GB
+PartAI/TookaBERT-Base (lr 3e-05, seed 2027, 100,000 rows):
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 6283.48it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: PartAI/TookaBERT-Base
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/1563, loss 1.3658
+    step 200/1563, loss 1.0208
+    step 300/1563, loss 0.9388
+    step 400/1563, loss 0.9287
+    step 500/1563, loss 0.9329
+    step 600/1563, loss 0.8862
+    step 700/1563, loss 0.9207
+    step 800/1563, loss 0.8849
+    step 900/1563, loss 0.8903
+    step 1000/1563, loss 0.9057
+    step 1100/1563, loss 0.8642
+    step 1200/1563, loss 0.8844
+    step 1300/1563, loss 0.8805
+    step 1400/1563, loss 0.8608
+    step 1500/1563, loss 0.8739
+    step 1563/1563, loss 0.8492
+  recommendation: without offsets 0.6769, with offsets 0.7047
+  rating_band: without offsets 0.6474, with offsets 0.6718
+  0.85 min, peak GPU memory 4.75 GB
+PartAI/TookaBERT-Large (lr 2e-05, seed 2028, 100,000 rows):
+Loading weights:   0%|          | 0/389 [00:00<?, ?it/s]Loading weights: 100%|██████████| 389/389 [00:00<00:00, 5745.28it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: PartAI/TookaBERT-Large
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/1563, loss 1.4449
+    step 200/1563, loss 0.9791
+    step 300/1563, loss 0.9911
+    step 400/1563, loss 0.9066
+    step 500/1563, loss 0.9065
+    step 600/1563, loss 0.8850
+    step 700/1563, loss 0.8986
+    step 800/1563, loss 0.8643
+    step 900/1563, loss 0.8652
+    step 1000/1563, loss 0.8498
+    step 1100/1563, loss 0.8636
+    step 1200/1563, loss 0.8750
+    step 1300/1563, loss 0.8531
+    step 1400/1563, loss 0.8138
+    step 1500/1563, loss 0.8424
+    step 1563/1563, loss 0.8040
+  recommendation: without offsets 0.7004, with offsets 0.7155
+  rating_band: without offsets 0.6581, with offsets 0.6793
+  2.19 min, peak GPU memory 12.69 GB
+sbunlp/fabert (lr 3e-05, seed 2028, 100,000 rows):
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 6021.07it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sbunlp/fabert
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/1563, loss 1.5540
+    step 200/1563, loss 1.0553
+    step 300/1563, loss 0.9950
+    step 400/1563, loss 0.8934
+    step 500/1563, loss 0.8993
+    step 600/1563, loss 0.8842
+    step 700/1563, loss 0.8935
+    step 800/1563, loss 0.8677
+    step 900/1563, loss 0.8622
+    step 1000/1563, loss 0.8452
+    step 1100/1563, loss 0.8697
+    step 1200/1563, loss 0.8808
+    step 1300/1563, loss 0.8487
+    step 1400/1563, loss 0.8207
+    step 1500/1563, loss 0.8481
+    step 1563/1563, loss 0.8196
+  recommendation: without offsets 0.6925, with offsets 0.7118
+  rating_band: without offsets 0.6552, with offsets 0.6776
+  0.85 min, peak GPU memory 4.78 GB
+PartAI/TookaBERT-Base (lr 3e-05, seed 2028, 100,000 rows):
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 6178.84it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: PartAI/TookaBERT-Base
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/1563, loss 1.3487
+    step 200/1563, loss 0.9764
+    step 300/1563, loss 1.0047
+    step 400/1563, loss 0.9256
+    step 500/1563, loss 0.9300
+    step 600/1563, loss 0.9153
+    step 700/1563, loss 0.9326
+    step 800/1563, loss 0.8845
+    step 900/1563, loss 0.8929
+    step 1000/1563, loss 0.8778
+    step 1100/1563, loss 0.8867
+    step 1200/1563, loss 0.8934
+    step 1300/1563, loss 0.8701
+    step 1400/1563, loss 0.8372
+    step 1500/1563, loss 0.8719
+    step 1563/1563, loss 0.8332
+  recommendation: without offsets 0.6847, with offsets 0.7051
+  rating_band: without offsets 0.6480, with offsets 0.6682
+  0.86 min, peak GPU memory 4.76 GB
+Done
+Code 49d95d78da34d4cd9d2fc53200b9e4d06587fab7, device NVIDIA RTX PRO 6000 Blackwell Server Edition, torch 2.14.1+cu130
+/marimo/work_gpu/outputs/artifacts/tfidf_final/validation_predictions.parquet not found: TF-IDF is not compared in this run
+PartAI/TookaBERT-Large (lr 2e-05, seed 2026, 500,000 rows):
+Loading weights:   0%|          | 0/389 [00:00<?, ?it/s]Loading weights: 100%|██████████| 389/389 [00:00<00:00, 6178.28it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: PartAI/TookaBERT-Large
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/7813, loss 1.7765
+    step 200/7813, loss 1.1743
+    step 300/7813, loss 1.0087
+    step 400/7813, loss 0.9336
+    step 500/7813, loss 0.9287
+    step 600/7813, loss 0.9516
+    step 700/7813, loss 0.9262
+    step 800/7813, loss 0.9129
+    step 900/7813, loss 0.8894
+    step 1000/7813, loss 0.9402
+    step 1100/7813, loss 0.8688
+    step 1200/7813, loss 0.8758
+    step 1300/7813, loss 0.8933
+    step 1400/7813, loss 0.8987
+    step 1500/7813, loss 0.8704
+    step 1600/7813, loss 0.8974
+    step 1700/7813, loss 0.8268
+    step 1800/7813, loss 0.8551
+    step 1900/7813, loss 0.8794
+    step 2000/7813, loss 0.8566
+    step 2100/7813, loss 0.8651
+    step 2200/7813, loss 0.8783
+    step 2300/7813, loss 0.8595
+    step 2400/7813, loss 0.8624
+    step 2500/7813, loss 0.8521
+    step 2600/7813, loss 0.8359
+    step 2700/7813, loss 0.8445
+    step 2800/7813, loss 0.8488
+    step 2900/7813, loss 0.8340
+    step 3000/7813, loss 0.8565
+    step 3100/7813, loss 0.8374
+    step 3200/7813, loss 0.8371
+    step 3300/7813, loss 0.8038
+    step 3400/7813, loss 0.8708
+    step 3500/7813, loss 0.8343
+    step 3600/7813, loss 0.8276
+    step 3700/7813, loss 0.8318
+    step 3800/7813, loss 0.8580
+    step 3900/7813, loss 0.8268
+    step 4000/7813, loss 0.8321
+    step 4100/7813, loss 0.8319
+    step 4200/7813, loss 0.8509
+    step 4300/7813, loss 0.8462
+    step 4400/7813, loss 0.8161
+    step 4500/7813, loss 0.8246
+    step 4600/7813, loss 0.8557
+    step 4700/7813, loss 0.8381
+    step 4800/7813, loss 0.8176
+    step 4900/7813, loss 0.8366
+    step 5000/7813, loss 0.8322
+    step 5100/7813, loss 0.8147
+    step 5200/7813, loss 0.8020
+    step 5300/7813, loss 0.8448
+    step 5400/7813, loss 0.8042
+    step 5500/7813, loss 0.8454
+    step 5600/7813, loss 0.8139
+    step 5700/7813, loss 0.8077
+    step 5800/7813, loss 0.8227
+    step 5900/7813, loss 0.8248
+    step 6000/7813, loss 0.8088
+    step 6100/7813, loss 0.8082
+    step 6200/7813, loss 0.8087
+    step 6300/7813, loss 0.8294
+    step 6400/7813, loss 0.8139
+    step 6500/7813, loss 0.8106
+    step 6600/7813, loss 0.7990
+    step 6700/7813, loss 0.8183
+    step 6800/7813, loss 0.7834
+    step 6900/7813, loss 0.8085
+    step 7000/7813, loss 0.8014
+    step 7100/7813, loss 0.8364
+    step 7200/7813, loss 0.8250
+    step 7300/7813, loss 0.8073
+    step 7400/7813, loss 0.8294
+    step 7500/7813, loss 0.8183
+    step 7600/7813, loss 0.8111
+    step 7700/7813, loss 0.8164
+    step 7800/7813, loss 0.8107
+    step 7813/7813, loss 0.7999
+  recommendation: without offsets 0.7042, with offsets 0.7197
+  rating_band: without offsets 0.6683, with offsets 0.6877
+  11.03 min, peak GPU memory 12.68 GB
+sbunlp/fabert (lr 3e-05, seed 2026, 500,000 rows):
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 5573.43it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sbunlp/fabert
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/7813, loss 1.9473
+    step 200/7813, loss 1.2935
+    step 300/7813, loss 1.0701
+    step 400/7813, loss 0.9385
+    step 500/7813, loss 0.9130
+    step 600/7813, loss 0.9229
+    step 700/7813, loss 0.8947
+    step 800/7813, loss 0.8823
+    step 900/7813, loss 0.8729
+    step 1000/7813, loss 0.9140
+    step 1100/7813, loss 0.8607
+    step 1200/7813, loss 0.8677
+    step 1300/7813, loss 0.8770
+    step 1400/7813, loss 0.8798
+    step 1500/7813, loss 0.8552
+    step 1600/7813, loss 0.8859
+    step 1700/7813, loss 0.8141
+    step 1800/7813, loss 0.8364
+    step 1900/7813, loss 0.8624
+    step 2000/7813, loss 0.8561
+    step 2100/7813, loss 0.8516
+    step 2200/7813, loss 0.8734
+    step 2300/7813, loss 0.8473
+    step 2400/7813, loss 0.8490
+    step 2500/7813, loss 0.8393
+    step 2600/7813, loss 0.8393
+    step 2700/7813, loss 0.8290
+    step 2800/7813, loss 0.8403
+    step 2900/7813, loss 0.8288
+    step 3000/7813, loss 0.8519
+    step 3100/7813, loss 0.8323
+    step 3200/7813, loss 0.8376
+    step 3300/7813, loss 0.7980
+    step 3400/7813, loss 0.8626
+    step 3500/7813, loss 0.8349
+    step 3600/7813, loss 0.8263
+    step 3700/7813, loss 0.8350
+    step 3800/7813, loss 0.8491
+    step 3900/7813, loss 0.8243
+    step 4000/7813, loss 0.8294
+    step 4100/7813, loss 0.8188
+    step 4200/7813, loss 0.8511
+    step 4300/7813, loss 0.8430
+    step 4400/7813, loss 0.8061
+    step 4500/7813, loss 0.8164
+    step 4600/7813, loss 0.8537
+    step 4700/7813, loss 0.8424
+    step 4800/7813, loss 0.8165
+    step 4900/7813, loss 0.8368
+    step 5000/7813, loss 0.8269
+    step 5100/7813, loss 0.8197
+    step 5200/7813, loss 0.8001
+    step 5300/7813, loss 0.8426
+    step 5400/7813, loss 0.7968
+    step 5500/7813, loss 0.8459
+    step 5600/7813, loss 0.8127
+    step 5700/7813, loss 0.8055
+    step 5800/7813, loss 0.8142
+    step 5900/7813, loss 0.8208
+    step 6000/7813, loss 0.8073
+    step 6100/7813, loss 0.8143
+    step 6200/7813, loss 0.8111
+    step 6300/7813, loss 0.8261
+    step 6400/7813, loss 0.8120
+    step 6500/7813, loss 0.8117
+    step 6600/7813, loss 0.8023
+    step 6700/7813, loss 0.8228
+    step 6800/7813, loss 0.7879
+    step 6900/7813, loss 0.8079
+    step 7000/7813, loss 0.8058
+    step 7100/7813, loss 0.8390
+    step 7200/7813, loss 0.8219
+    step 7300/7813, loss 0.8099
+    step 7400/7813, loss 0.8340
+    step 7500/7813, loss 0.8140
+    step 7600/7813, loss 0.8123
+    step 7700/7813, loss 0.8244
+    step 7800/7813, loss 0.8082
+    step 7813/7813, loss 0.8042
+  recommendation: without offsets 0.7034, with offsets 0.7241
+  rating_band: without offsets 0.6683, with offsets 0.6872
+  4.3 min, peak GPU memory 4.78 GB
+Done
