@@ -150,3 +150,22 @@ not to a higher score: for the rating band the reference with offsets is the bet
 for recommendation the two are equal within the interval, while the spelling fixes would
 also have to run on every text the service receives. Both heads now share one vectorizer.
 The test set has not been read.
+
+## Analyses of the final model (written before running them)
+
+`scripts/analyze_tfidf.py` looks at the final model from several sides without fitting
+anything. All of it is report only: nothing here changes the model. The aim is to
+understand the problem and to inform the design of the Transformer, the semi-supervised
+step and the service. Expected outcomes, written before the analyses were run:
+
+| Analysis | Question it answers | Expected |
+|---|---|---|
+| ceiling | Best possible per-class recall on validation texts that appear more than once | Well below 90% for no_idea and medium, above 90% for the large classes |
+| length | Where the errors are, by review length | Very short reviews (1 to 3 words) score lowest |
+| sample | Is a sample of 20,000 or 50,000 validation reviews enough to choose an epoch | Standard deviation of Macro F1 about 0.005 to 0.01 at 20,000, about half that at 50,000 |
+| labels | How consistent the two labels are with each other | no_idea mostly high and medium; a few percent of recommended reviews in low |
+| words | What each class is recognized by | medium and no_idea led by hedging words ("معمولی", "ولی", "نسبت به قیمت") |
+| seen | How much of the score comes from texts already seen in training | New texts a few points lower |
+| category | Whether some product categories are harder | Small differences between categories |
+| calibration | Whether the model's confidence can be read as a probability | Close to calibrated (logistic regression) |
+| unlabeled | How many unlabeled reviews the model is confident about, and how often it is right on the masked ones | Most confident predictions are recommended or high; accuracy at 0.9 above 90% but with few minority-class reviews |
