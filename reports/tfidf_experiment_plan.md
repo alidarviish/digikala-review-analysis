@@ -128,3 +128,25 @@ outcome: close to the sum of the single gains, about +2.5 points for each head a
 reference, and less than 0.5 point against the reference with offsets. Logistic regression
 stays the model (decision D48): the linear SVM of E6 did not converge and was scored
 without offsets.
+
+### Result of the combined run, and the model kept
+
+Scored on validation with `scripts/final_tfidf.py` (commit d4e095c), paired 95% intervals:
+
+| Head | Final vs reference | Final vs reference with offsets | Final without offsets vs reference |
+|---|---|---|---|
+| recommendation | +0.0226 [+0.0217, +0.0236] | +0.0005 [-0.0002, +0.0011] | +0.0041 [+0.0034, +0.0047] |
+| rating band | +0.0185 [+0.0175, +0.0195] | -0.0033 [-0.0041, -0.0025] | +0.0052 [+0.0044, +0.0059] |
+
+The expectation held for recommendation and failed for the rating band: next to the offsets,
+the other changes add nothing measurable to recommendation and make the rating band worse.
+Without offsets they do help, but the offsets stay in every case. Almost all of the gain
+comes from the offsets.
+
+The model kept is therefore the reference with offsets for both heads
+(`scripts/fit_final_tfidf.py`), not the combination. This choice was made after seeing
+validation results, which is a departure from the plan above. It moves to the simpler model,
+not to a higher score: for the rating band the reference with offsets is the better one, and
+for recommendation the two are equal within the interval, while the spelling fixes would
+also have to run on every text the service receives. Both heads now share one vectorizer.
+The test set has not been read.
