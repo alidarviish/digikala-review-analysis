@@ -22,6 +22,11 @@ artifacts/transformer_pilot/, and finished models are skipped. The test set is n
 Usage:
     python scripts/pilot_transformers.py            # all candidates, needs a GPU
     python scripts/pilot_transformers.py --smoke    # a tiny model on a few rows, CPU is fine
+    python scripts/pilot_transformers.py --models PartAI/TookaBERT-Large,sbunlp/fabert --seeds 2027,2028
+    python scripts/pilot_transformers.py --models sbunlp/fabert --train-rows 500000
+
+Other seeds or sample sizes are saved under their own names (<model>__seed<s>__n<rows>);
+the validation sample is the same in every run.
 """
 
 import argparse
@@ -203,11 +208,19 @@ def scores(head, log_proba, y_true, half_a, tfidf_with_offsets):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--smoke", action="store_true", help="a tiny model on a few rows, to test the code")
+    parser.add_argument("--models", help="comma-separated model names (default: all candidates)")
+    parser.add_argument("--seeds", help="comma-separated training seeds (default: 2026)")
+    parser.add_argument("--train-rows", type=int, help="training sample size (default: 100,000)")
     args = parser.parse_args()
     import torch
 
     settings = dict(SETTINGS)
     models = MODELS
+    if args.models:
+        models = {name: MODELS[name] for name in args.models.split(",")}
+    if args.train_rows:
+        settings["train_rows"] = args.train_rows
+    seeds = [int(s) for s in args.seeds.split(",")] if args.seeds else [SETTINGS["seed"]]
     results_dir, arrays_dir = REPORTS_DIR / "transformer_pilot", ARTIFACTS_DIR / "transformer_pilot"
     if args.smoke:
         settings.update({k: v for k, v in SMOKE.items() if k != "models"})
@@ -240,14 +253,15 @@ def main():
     arrays_dir.mkdir(parents=True, exist_ok=True)
 
     train_all = load_cache(CACHE_FILES[0])
-    train = train_all.iloc[fixed_sample(len(train_all), settings["train_rows"], settings["seed"])]
+    # the samples always use the split seed; a run's own seed only changes the training itself
+    train = train_all.iloc[fixed_sample(len(train_all), settings["train_rows"], SPLIT_SEED)]
     train = train.reset_index(drop=True)
     del train_all
     validation_all = load_cache(CACHE_FILES[1], extra_columns=["product_id"])
     validation_all = validation_all[
         validation_all["recommendation_status"].notna() | validation_all["rating_band"].notna()
     ]
-    rows = fixed_sample(len(validation_all), settings["validation_rows"], settings["seed"])
+    rows = fixed_sample(len(validation_all), settings["validation_rows"], SPLIT_SEED)
     validation = validation_all.iloc[rows].reset_index(drop=True)
     del validation_all
 
@@ -278,17 +292,22 @@ def main():
             print(f"TF-IDF on the same {labeled.sum():,} {head} reviews: {tfidf_f1:.4f}", flush=True)
         per_head[head] = info
 
-    for name, learning_rate in models.items():
+    runs = [(seed, name, lr) for seed in seeds for name, lr in models.items()]
+    for seed, name, learning_rate in runs:
+        settings = {**settings, "seed": seed}
+        tag = safe_name(name)
+        if seed != SETTINGS["seed"] or settings["train_rows"] != SETTINGS["train_rows"]:
+            tag += f"__seed{seed}__n{settings['train_rows']}"
         spec = json.loads(
             json.dumps(
                 {"model": name, "learning_rate": learning_rate, "settings": settings, "data": context["data"]}
             )
         )
-        path = results_dir / f"{safe_name(name)}.json"
+        path = results_dir / f"{tag}.json"
         if finished(path, spec):
-            print(f"{name}: already done", flush=True)
+            print(f"{tag}: already done", flush=True)
             continue
-        print(f"{name} (lr {learning_rate}):", flush=True)
+        print(f"{name} (lr {learning_rate}, seed {seed}, {settings['train_rows']:,} rows):", flush=True)
         try:
             run = train_and_score(name, learning_rate, settings, train, validation, device, torch)
         except Exception as error:  # one model failing (no access, out of memory) should not stop the rest
@@ -315,7 +334,7 @@ def main():
             if "tfidf_macro_f1" in info:
                 result["heads"][head]["tfidf_with_offsets_macro_f1"] = info["tfidf_macro_f1"]
         np.savez_compressed(
-            arrays_dir / f"{safe_name(name)}.npz",
+            arrays_dir / f"{tag}.npz",
             ids=validation["id"].to_numpy(),
             **{head: run["log_proba"][head].astype(np.float32) for head in HEADS},
         )

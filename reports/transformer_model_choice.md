@@ -54,3 +54,37 @@ Expected, before running:
 - A base model takes under 10 minutes, the large one two to three times as long.
 
 The best model becomes the main model, fine-tuned afterwards on more data.
+
+## Result of step 2 (one seed)
+
+Macro F1 with offsets on the same 50,000 validation reviews (reports/transformer_pilot/):
+
+| Model | Recommendation | Rating band | Mean | Minutes |
+|---|---|---|---|---|
+| TookaBERT-Large | 0.7154 | 0.6772 | 0.6963 | 2.2 |
+| FaBERT | 0.7003 | 0.6795 | 0.6899 | 0.9 |
+| TookaBERT-Base | 0.7050 | 0.6702 | 0.6876 | 0.9 |
+| XLM-R base | 0.7037 | 0.6708 | 0.6873 | 1.2 |
+| mmBERT-base | 0.6963 | 0.6736 | 0.6850 | 1.8 |
+| ParsBERT | 0.6873 | 0.6592 | 0.6733 | 0.9 |
+
+Four of five expectations held; the large model led on the mean and on recommendation but
+not on the rating band. ParsBERT is dropped (lowest), and so are XLM-R and mmBERT (slower and
+not better). The lead of the large model (0.6 points on the mean) is within what one
+training run can change, so the choice is not yet made.
+
+## Step 3: seeds and more data (written before running)
+
+- TookaBERT-Large, FaBERT and TookaBERT-Base again with training seeds 2027 and 2028 (same
+  samples, so only the training randomness changes). With seed 2026, three runs per model.
+- TookaBERT-Large and FaBERT on 500,000 training reviews (seed 2026).
+
+Expected:
+
+- Between seeds, Macro F1 moves by about 0.3 to 0.5 points.
+- The large model stays ahead on the mean of three seeds and on recommendation; on the
+  rating band it is level with FaBERT.
+- With 500,000 reviews every model gains one to two points, the large one the most.
+
+The model with the best mean over seeds becomes the main model; a lead smaller than the
+spread between seeds counts as a tie, and a tie goes to the faster model.
