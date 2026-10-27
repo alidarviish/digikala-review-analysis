@@ -1,0 +1,196 @@
+{
+  "experiment": "E1",
+  "head": "recommendation",
+  "variant": "offsets",
+  "created_at": "2026-10-27T07:02:51+00:00",
+  "reference_model": {
+    "run": "recommendation__word123_min5_persian__balanced__C0.5",
+    "setup": "word123_min5_persian",
+    "C": 0.5,
+    "class_weight": "balanced"
+  },
+  "converged": true,
+  "fingerprint": {
+    "experiment": "E1",
+    "variant": "offsets",
+    "reference_run": "recommendation__word123_min5_persian__balanced__C0.5",
+    "reference_fingerprint": {
+      "setup_parts": [
+        {
+          "analyzer": "word",
+          "ngram_range": [
+            1,
+            3
+          ],
+          "min_df": 5,
+          "token": "persian",
+          "token_pattern": "(?u)[\\wً-ٰٟ]+(?:‌[\\wً-ٰٟ]+)*|[^\\w\\s‌ً-ٰٟ][︎️\\U0001f3fb-\\U0001f3ff]*"
+        }
+      ],
+      "max_iter": 2000,
+      "data_sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      },
+      "normalizer_version": "2",
+      "sklearn": "1.9.1"
+    },
+    "spec": {
+      "offset_grid": "-2..2 step 0.1, 3 passes, first class fixed at 0",
+      "halves": "product_id even/odd"
+    }
+  },
+  "variant_scores": {
+    "rows": 788717,
+    "macro_f1": 0.701891691668743,
+    "accuracy": 0.8518746267672689,
+    "balanced_accuracy": 0.7066692241505184,
+    "per_class": {
+      "recommended": {
+        "precision": 0.9400316958248609,
+        "recall": 0.9201466011544761,
+        "f1": 0.9299828637881719,
+        "support": 624006
+      },
+      "not_recommended": {
+        "precision": 0.7328111030695219,
+        "recall": 0.6824597573546903,
+        "f1": 0.706739750774979,
+        "support": 75666
+      },
+      "no_idea": {
+        "precision": 0.4288001191318268,
+        "recall": 0.5174013139423886,
+        "f1": 0.46895246044307826,
+        "support": 89045
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "recommended",
+        "not_recommended",
+        "no_idea"
+      ],
+      "rows_are_true_class": [
+        [
+          574177,
+          5787,
+          44042
+        ],
+        [
+          6697,
+          51639,
+          17330
+        ],
+        [
+          29932,
+          13041,
+          46072
+        ]
+      ]
+    }
+  },
+  "reference_scores": {
+    "rows": 788717,
+    "macro_f1": 0.680154493083228,
+    "accuracy": 0.8109397920927278,
+    "balanced_accuracy": 0.7355986149822938,
+    "per_class": {
+      "recommended": {
+        "precision": 0.9633163184472808,
+        "recall": 0.847721015503056,
+        "f1": 0.90182954532862,
+        "support": 624006
+      },
+      "not_recommended": {
+        "precision": 0.636975026532955,
+        "recall": 0.7773240292866016,
+        "f1": 0.7001857098640508,
+        "support": 75666
+      },
+      "no_idea": {
+        "precision": 0.35179148670306687,
+        "recall": 0.5817508001572239,
+        "f1": 0.438448224057013,
+        "support": 89045
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "recommended",
+        "not_recommended",
+        "no_idea"
+      ],
+      "rows_are_true_class": [
+        [
+          528983,
+          13828,
+          81195
+        ],
+        [
+          2594,
+          58817,
+          14255
+        ],
+        [
+          17550,
+          19693,
+          51802
+        ]
+      ]
+    }
+  },
+  "macro_f1_difference": 0.02173719858551504,
+  "difference_interval_95": [
+    0.020719194157333424,
+    0.022734919470612455
+  ],
+  "direction": "better",
+  "verdict": "better",
+  "offsets_per_half": {
+    "tuned_on_a": {
+      "no_idea": 0.0,
+      "not_recommended": -0.4,
+      "recommended": 0.8
+    },
+    "tuned_on_b": {
+      "no_idea": 0.0,
+      "not_recommended": -0.4,
+      "recommended": 0.8
+    }
+  },
+  "offsets_for_test": {
+    "no_idea": 0.0,
+    "not_recommended": -0.4,
+    "recommended": 0.8
+  },
+  "rows_per_half": {
+    "a": 398143,
+    "b": 390574
+  },
+  "note": "each review is predicted with offsets tuned on the other half of validation",
+  "process_peak_memory_gb": 6.1,
+  "code": {
+    "commit": "92c13ad345386c6476dcd8813add9d621fb67bdb",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.16",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0"
+    },
+    "machine": "762df40a12e8"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+Code d4e095cb0cb7422a46f5eb57b3cc77df8b76c3fc, data checked against cache_info.json
+recommendation:
+ reference
+  features: 1,192,046 columns (125s)
+  fitted in 9.4 min, converged: True
+ final
+  features: 1,189,719 columns (117s)
+  fitted in 6.3 min, converged: True
+  final_vs_reference: +0.0226 [+0.0217, +0.0236]
+  final_vs_reference_with_offsets: +0.0005 [-0.0002, +0.0011]
+  final_without_offsets_vs_reference: +0.0041 [+0.0034, +0.0047]
+  final macro F1 0.7021, train 0.7755
+rating_band:
+ reference
+  features: 1,192,046 columns (118s)
+  fitted in 11.3 min, converged: True
+ final
+  features: 1,320,870 columns (258s)
+  fitted in 13.0 min, converged: True
+  final_vs_reference: +0.0185 [+0.0175, +0.0195]
+  final_vs_reference_with_offsets: -0.0033 [-0.0041, -0.0025]
+  final_without_offsets_vs_reference: +0.0052 [+0.0044, +0.0059]
+  final macro F1 0.6650, train 0.7576
+Done

@@ -1,0 +1,127 @@
+{
+  "experiment": "E10",
+  "head": "recommendation",
+  "variant": "by_time",
+  "created_at": "2026-10-27T11:47:46+00:00",
+  "fingerprint": {
+    "experiment": "E10",
+    "head": "recommendation",
+    "variant": "by_time",
+    "base": {
+      "setup_parts": [
+        {
+          "analyzer": "word",
+          "ngram_range": [
+            1,
+            3
+          ],
+          "min_df": 5,
+          "token": "persian",
+          "token_pattern": "(?u)[\\wً-ٰٟ]+(?:‌[\\wً-ٰٟ]+)*|[^\\w\\s‌ً-ٰٟ][︎️\\U0001f3fb-\\U0001f3ff]*"
+        }
+      ],
+      "max_iter": 2000,
+      "data_sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      },
+      "normalizer_version": "2",
+      "sklearn": "1.9.1"
+    },
+    "reference": {
+      "C": 0.5,
+      "class_weight": "balanced",
+      "stage2_macro_f1": 0.6802
+    },
+    "seed": 2026,
+    "years_sha256": "1143b300eb07698a39274b9d419f9666f23992a8154c0691f40ef98a9cb16e68"
+  },
+  "scores": {
+    "rows": 1203324,
+    "macro_f1": 0.6780000576730619,
+    "accuracy": 0.8138148993953416,
+    "balanced_accuracy": 0.7401117236893079,
+    "per_class": {
+      "recommended": {
+        "precision": 0.9658250052719191,
+        "recall": 0.8488378835067258,
+        "f1": 0.9035604997297015,
+        "support": 965824
+      },
+      "not_recommended": {
+        "precision": 0.6090215096178389,
+        "recall": 0.7809128054585845,
+        "f1": 0.684338375564372,
+        "support": 100832
+      },
+      "no_idea": {
+        "precision": 0.35841666814685874,
+        "recall": 0.5905844821026136,
+        "f1": 0.4461012977251122,
+        "support": 136668
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "recommended",
+        "not_recommended",
+        "no_idea"
+      ],
+      "rows_are_true_class": [
+        [
+          819828,
+          19980,
+          126016
+        ],
+        [
+          3625,
+          78741,
+          18466
+        ],
+        [
+          25384,
+          30570,
+          80714
+        ]
+      ]
+    }
+  },
+  "macro_f1_interval_95": [
+    0.6769560067182977,
+    0.6791266060769108
+  ],
+  "converged": true,
+  "minutes": 6.4,
+  "verdict": "report only",
+  "split": "by_time",
+  "newest_year": 1402,
+  "train_reviews": 2529932,
+  "validation_reviews": 1203324,
+  "validation_share_of_pool": 0.305,
+  "validation_texts_seen_in_train": 0.3914,
+  "products_in_both_parts": 122868,
+  "process_peak_memory_gb": null,
+  "code": {
+    "commit": "2d9bb4816017f831069f51dc67ce876000b54cf7",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0"
+    },
+    "machine": "7dee5178-9452-4fa3-8f33-62bd0ad22d8b-ww55j"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}

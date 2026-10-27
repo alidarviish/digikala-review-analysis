@@ -1,0 +1,299 @@
+{
+  "experiment": "E7",
+  "head": "rating_band",
+  "variant": "zero_as_low",
+  "created_at": "2026-10-27T14:18:43+00:00",
+  "reference_model": {
+    "run": "rating_band__word123_min5_persian__unweighted__C1",
+    "setup": "word123_min5_persian",
+    "C": 1.0,
+    "class_weight": null
+  },
+  "converged": true,
+  "fingerprint": {
+    "experiment": "E7",
+    "variant": "zero_as_low",
+    "reference_run": "rating_band__word123_min5_persian__unweighted__C1",
+    "reference_fingerprint": {
+      "setup_parts": [
+        {
+          "analyzer": "word",
+          "ngram_range": [
+            1,
+            3
+          ],
+          "min_df": 5,
+          "token": "persian",
+          "token_pattern": "(?u)[\\wً-ٰٟ]+(?:‌[\\wً-ٰٟ]+)*|[^\\w\\s‌ً-ٰٟ][︎️\\U0001f3fb-\\U0001f3ff]*"
+        }
+      ],
+      "max_iter": 2000,
+      "data_sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      },
+      "normalizer_version": "2",
+      "sklearn": "1.9.1"
+    },
+    "spec": {
+      "rate_zero_policy": "low"
+    }
+  },
+  "variant_scores": {
+    "rows": 843458,
+    "macro_f1": 0.6356121228991148,
+    "accuracy": 0.7934336979434661,
+    "balanced_accuracy": 0.6317716086087894,
+    "per_class": {
+      "low": {
+        "precision": 0.6529325041845411,
+        "recall": 0.6978449654649496,
+        "f1": 0.6746420799450235,
+        "support": 84407
+      },
+      "medium": {
+        "precision": 0.5661732694819329,
+        "recall": 0.24575603917986835,
+        "f1": 0.3427404300177893,
+        "support": 158755
+      },
+      "high": {
+        "precision": 0.8348396618615151,
+        "recall": 0.9517138211815505,
+        "f1": 0.8894538587345315,
+        "support": 600296
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "rows_are_true_class": [
+        [
+          58903,
+          10744,
+          14760
+        ],
+        [
+          21475,
+          39015,
+          98265
+        ],
+        [
+          9835,
+          19151,
+          571310
+        ]
+      ]
+    },
+    "ordinal": {
+      "mean_distance": 0.2357260231096273,
+      "share_off_by_two": 0.02915972105309334
+    }
+  },
+  "reference_scores": {
+    "rows": 843458,
+    "macro_f1": 0.6465362908436274,
+    "accuracy": 0.796301653431469,
+    "balanced_accuracy": 0.6270526338658181,
+    "per_class": {
+      "low": {
+        "precision": 0.7176625681990236,
+        "recall": 0.6514033196298885,
+        "f1": 0.6829295557722285,
+        "support": 84407
+      },
+      "medium": {
+        "precision": 0.5487074539542242,
+        "recall": 0.27529211678372334,
+        "f1": 0.3666381436553078,
+        "support": 158755
+      },
+      "high": {
+        "precision": 0.8337662526648185,
+        "recall": 0.9544624651838426,
+        "f1": 0.890041173103346,
+        "support": 600296
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "rows_are_true_class": [
+        [
+          54983,
+          13790,
+          15634
+        ],
+        [
+          16450,
+          43704,
+          98601
+        ],
+        [
+          5181,
+          22155,
+          572960
+        ]
+      ]
+    },
+    "ordinal": {
+      "mean_distance": 0.22837651667302936,
+      "share_off_by_two": 0.024678170104498385
+    }
+  },
+  "macro_f1_difference": -0.010924167944512564,
+  "difference_interval_95": [
+    -0.01166685269449975,
+    -0.010137797880186396
+  ],
+  "direction": "worse",
+  "verdict": "report only",
+  "scored_with_zeros_as_low": {
+    "variant_scores": {
+      "rows": 922794,
+      "macro_f1": 0.5683526166789529,
+      "accuracy": 0.7361317910606268,
+      "balanced_accuracy": 0.5395656757747604,
+      "per_class": {
+        "low": {
+          "precision": 0.6877835724898537,
+          "recall": 0.42122716696286255,
+          "f1": 0.5224712717686895,
+          "support": 163743
+        },
+        "medium": {
+          "precision": 0.5290528171401451,
+          "recall": 0.24575603917986835,
+          "f1": 0.33561290322580645,
+          "support": 158755
+        },
+        "high": {
+          "precision": 0.7630020593883804,
+          "recall": 0.9517138211815505,
+          "f1": 0.8469736750423628,
+          "support": 600296
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "rows_are_true_class": [
+          [
+            68973,
+            15579,
+            79191
+          ],
+          [
+            21475,
+            39015,
+            98265
+          ],
+          [
+            9835,
+            19151,
+            571310
+          ]
+        ]
+      },
+      "ordinal": {
+        "mean_distance": 0.3603426116771457,
+        "share_off_by_two": 0.09647440273777246
+      }
+    },
+    "reference_scores": {
+      "rows": 922794,
+      "macro_f1": 0.5682168023935067,
+      "accuracy": 0.7353623885720973,
+      "balanced_accuracy": 0.5359775268054515,
+      "per_class": {
+        "low": {
+          "precision": 0.7411166297648256,
+          "recall": 0.37817799844878863,
+          "f1": 0.5008046971669807,
+          "support": 163743
+        },
+        "medium": {
+          "precision": 0.5089553976941888,
+          "recall": 0.27529211678372334,
+          "f1": 0.3573142565150741,
+          "support": 158755
+        },
+        "high": {
+          "precision": 0.7605303642703642,
+          "recall": 0.9544624651838426,
+          "f1": 0.8465314534984653,
+          "support": 600296
+        }
+      },
+      "confusion_matrix": {
+        "labels": [
+          "low",
+          "medium",
+          "high"
+        ],
+        "rows_are_true_class": [
+          [
+            61924,
+            20011,
+            81808
+          ],
+          [
+            16450,
+            43704,
+            98601
+          ],
+          [
+            5181,
+            22155,
+            572960
+          ]
+        ]
+      },
+      "ordinal": {
+        "mean_distance": 0.3589045875894295,
+        "share_off_by_two": 0.09426697616152684
+      }
+    },
+    "macro_f1_difference": 0.00013581428544617857,
+    "difference_interval_95": [
+      -0.0005133117894788624,
+      0.000799091127230711
+    ],
+    "direction": "no measurable difference"
+  },
+  "train_rows": 3552498,
+  "note": "the headline compares both models on reviews with a real rating; the zeros-as-low scoring favours the variant by construction, since the reference never learned to call a zero low. Training lacks the zero-rated reviews without a recommendation label (not in train_supervised.csv), while validation includes them.",
+  "process_peak_memory_gb": null,
+  "code": {
+    "commit": "7efaee54f132f9a8eb062a17504d36a12e16e6b2",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0"
+    },
+    "machine": "7dee5178-9452-4fa3-8f33-62bd0ad22d8b-ww55j"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}

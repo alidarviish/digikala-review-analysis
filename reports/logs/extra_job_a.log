@@ -1,0 +1,13 @@
+Code facba4992bc88dbe1d15d6ea0d9889482b43db92, data checked against cache_info.json
+  features for reference: 1,192,046 columns (119s)
+Code 2d9bb4816017f831069f51dc67ce876000b54cf7, data checked against cache_info.json
+  features for reference: 1,192,046 columns (119s)
+  reference recommendation fit: macro F1 0.6795 [0.6781, 0.6809] (9.5 min)
+  reference rating_band fit: macro F1 0.6465 [0.6452, 0.6479] (11.9 min)
+  E11 recommendation majority_only: +0.0027 [+0.0019, +0.0034] better
+  E11 rating_band majority_only: +0.0014 [+0.0006, +0.0022] better
+  spelling fixes change 2.04% of train reviews
+  features for E8: 1,189,719 columns (121s)
+  E8 recommendation spelling_fixed: +0.0009 [+0.0006, +0.0012] better
+  E8 rating_band spelling_fixed: -0.0000 [-0.0004, +0.0004] no measurable difference
+Done

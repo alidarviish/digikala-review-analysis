@@ -1,0 +1,41 @@
+Code facba4992bc88dbe1d15d6ea0d9889482b43db92, data checked against cache_info.json
+  features for E12 recommendation n10000: 5,010 columns (12s)
+Traceback (most recent call last):
+  File "/marimo/work/repo/scripts/experiment_tfidf_extra.py", line 328, in <module>
+    main()
+    ~~~~^^
+  File "/marimo/work/repo/scripts/experiment_tfidf_extra.py", line 323, in main
+    actions[step]()
+    ~~~~~~~~~~~~~^^
+  File "/marimo/work/repo/scripts/experiment_tfidf_extra.py", line 230, in learning_curve
+    self.save("E12", head, variant, result, extra)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/marimo/work/repo/scripts/experiment_tfidf_extra.py", line 86, in save
+    "process_peak_memory_gb": round(peak_memory_gb(), 2),
+                                    ~~~~~~~~~~~~~~^^
+  File "/marimo/work/repo/src/digikala_reviews/resources.py", line 39, in peak_memory_gb
+    raise RuntimeError("VmHWM not found in /proc/self/status")
+RuntimeError: VmHWM not found in /proc/self/status
+Code 2d9bb4816017f831069f51dc67ce876000b54cf7, data checked against cache_info.json
+  features for E12 recommendation n10000: 5,010 columns (12s)
+  E12 recommendation n10000: macro F1 0.6150 [0.6136, 0.6164] (0.0 min)
+  features for E12 recommendation n100000: 45,482 columns (15s)
+  E12 recommendation n100000: macro F1 0.6487 [0.6473, 0.6499] (0.1 min)
+  features for E12 recommendation n1000000: 384,420 columns (41s)
+  E12 recommendation n1000000: macro F1 0.6720 [0.6706, 0.6733] (2.1 min)
+  features for E12 rating_band n10000: 4,881 columns (13s)
+  E12 rating_band n10000: macro F1 0.5496 [0.5481, 0.5510] (0.0 min)
+  features for E12 rating_band n100000: 44,715 columns (17s)
+  E12 rating_band n100000: macro F1 0.6074 [0.6060, 0.6087] (0.1 min)
+  features for E12 rating_band n1000000: 376,865 columns (46s)
+  E12 rating_band n1000000: macro F1 0.6355 [0.6342, 0.6368] (1.8 min)
+  features for E9 by_product: 1,059,776 columns (115s)
+  E9 recommendation by_product: macro F1 0.6808 [0.6798, 0.6819] (7.9 min)
+  E9 rating_band by_product: macro F1 0.6448 [0.6438, 0.6459] (8.6 min)
+  features for E9 random: 1,060,012 columns (113s)
+  E9 recommendation random: macro F1 0.6803 [0.6791, 0.6814] (7.0 min)
+  E9 rating_band random: macro F1 0.6464 [0.6452, 0.6475] (9.1 min)
+  features for E10 by_time: 1,121,741 columns (114s)
+  E10 recommendation by_time: macro F1 0.6780 [0.6770, 0.6791] (6.4 min)
+  E10 rating_band by_time: macro F1 0.6708 [0.6697, 0.6719] (11.0 min)
+Done

@@ -1,0 +1,185 @@
+{
+  "experiment": "E8",
+  "head": "rating_band",
+  "variant": "spelling_fixed",
+  "created_at": "2026-10-27T11:53:29+00:00",
+  "fingerprint": {
+    "experiment": "E8",
+    "head": "rating_band",
+    "variant": "spelling_fixed",
+    "base": {
+      "setup_parts": [
+        {
+          "analyzer": "word",
+          "ngram_range": [
+            1,
+            3
+          ],
+          "min_df": 5,
+          "token": "persian",
+          "token_pattern": "(?u)[\\wً-ٰٟ]+(?:‌[\\wً-ٰٟ]+)*|[^\\w\\s‌ً-ٰٟ][︎️\\U0001f3fb-\\U0001f3ff]*"
+        }
+      ],
+      "max_iter": 2000,
+      "data_sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      },
+      "normalizer_version": "2",
+      "sklearn": "1.9.1"
+    },
+    "reference": {
+      "C": 1.0,
+      "class_weight": null,
+      "stage2_macro_f1": 0.6459
+    },
+    "seed": 2026,
+    "fixes_sha256": "7aac991b19c78ad5c370a97255cb85ce6ca280d303258a5f38d831f2de5453e6"
+  },
+  "variant_scores": {
+    "rows": 843458,
+    "macro_f1": 0.6465044863695711,
+    "accuracy": 0.7962637143758196,
+    "balanced_accuracy": 0.6272469985677347,
+    "per_class": {
+      "low": {
+        "precision": 0.7173219425163113,
+        "recall": 0.6525643607757651,
+        "f1": 0.6834125339652841,
+        "support": 84407
+      },
+      "medium": {
+        "precision": 0.5480309025814961,
+        "recall": 0.27480079367578975,
+        "f1": 0.36605135089780166,
+        "support": 158755
+      },
+      "high": {
+        "precision": 0.8338471122133827,
+        "recall": 0.9543758412516492,
+        "f1": 0.8900495742456279,
+        "support": 600296
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "rows_are_true_class": [
+        [
+          55081,
+          13790,
+          15536
+        ],
+        [
+          16507,
+          43626,
+          98622
+        ],
+        [
+          5199,
+          22189,
+          572908
+        ]
+      ]
+    },
+    "ordinal": {
+      "mean_distance": 0.22831960808955515,
+      "share_off_by_two": 0.024583322465374684
+    }
+  },
+  "reference_scores": {
+    "rows": 843458,
+    "macro_f1": 0.6465362908436274,
+    "accuracy": 0.796301653431469,
+    "balanced_accuracy": 0.6270526338658181,
+    "per_class": {
+      "low": {
+        "precision": 0.7176625681990236,
+        "recall": 0.6514033196298885,
+        "f1": 0.6829295557722285,
+        "support": 84407
+      },
+      "medium": {
+        "precision": 0.5487074539542242,
+        "recall": 0.27529211678372334,
+        "f1": 0.3666381436553078,
+        "support": 158755
+      },
+      "high": {
+        "precision": 0.8337662526648185,
+        "recall": 0.9544624651838426,
+        "f1": 0.890041173103346,
+        "support": 600296
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "rows_are_true_class": [
+        [
+          54983,
+          13790,
+          15634
+        ],
+        [
+          16450,
+          43704,
+          98601
+        ],
+        [
+          5181,
+          22155,
+          572960
+        ]
+      ]
+    },
+    "ordinal": {
+      "mean_distance": 0.22837651667302936,
+      "share_off_by_two": 0.024678170104498385
+    }
+  },
+  "macro_f1_difference": -3.1804474056262855e-05,
+  "difference_interval_95": [
+    -0.0004361853277987188,
+    0.0003757080965811954
+  ],
+  "direction": "no measurable difference",
+  "converged": true,
+  "verdict": "no measurable difference",
+  "minutes": 12.1,
+  "fixes": 590,
+  "reviews_changed_share": {
+    "train": 0.020383121960941285,
+    "validation": 0.020236347184369226
+  },
+  "process_peak_memory_gb": null,
+  "code": {
+    "commit": "2d9bb4816017f831069f51dc67ce876000b54cf7",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0"
+    },
+    "machine": "7dee5178-9452-4fa3-8f33-62bd0ad22d8b-ww55j"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}

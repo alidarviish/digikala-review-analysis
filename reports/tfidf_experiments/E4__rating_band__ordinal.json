@@ -1,0 +1,190 @@
+{
+  "experiment": "E4",
+  "head": "rating_band",
+  "variant": "ordinal",
+  "created_at": "2026-10-27T16:34:04+00:00",
+  "reference_model": {
+    "run": "rating_band__word123_min5_persian__unweighted__C1",
+    "setup": "word123_min5_persian",
+    "C": 1.0,
+    "class_weight": null
+  },
+  "converged": true,
+  "fingerprint": {
+    "experiment": "E4",
+    "variant": "ordinal",
+    "reference_run": "rating_band__word123_min5_persian__unweighted__C1",
+    "reference_fingerprint": {
+      "setup_parts": [
+        {
+          "analyzer": "word",
+          "ngram_range": [
+            1,
+            3
+          ],
+          "min_df": 5,
+          "token": "persian",
+          "token_pattern": "(?u)[\\wً-ٰٟ]+(?:‌[\\wً-ٰٟ]+)*|[^\\w\\s‌ً-ٰٟ][︎️\\U0001f3fb-\\U0001f3ff]*"
+        }
+      ],
+      "max_iter": 2000,
+      "data_sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      },
+      "normalizer_version": "2",
+      "sklearn": "1.9.1"
+    },
+    "spec": {
+      "method": "Frank and Hall, two binary logistic regressions"
+    }
+  },
+  "variant_scores": {
+    "rows": 843458,
+    "macro_f1": 0.6448679990735212,
+    "accuracy": 0.7957515371245516,
+    "balanced_accuracy": 0.6226888795769419,
+    "per_class": {
+      "low": {
+        "precision": 0.7237110891651672,
+        "recall": 0.6337862973450069,
+        "f1": 0.6757702462008767,
+        "support": 84407
+      },
+      "medium": {
+        "precision": 0.5425328729890546,
+        "recall": 0.27912821643412805,
+        "f1": 0.36860996618600606,
+        "support": 158755
+      },
+      "high": {
+        "precision": 0.8335608502299157,
+        "recall": 0.9551521249516906,
+        "f1": 0.890223784833681,
+        "support": 600296
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "rows_are_true_class": [
+        [
+          53496,
+          15254,
+          15657
+        ],
+        [
+          15612,
+          44313,
+          98830
+        ],
+        [
+          4811,
+          22111,
+          573374
+        ]
+      ]
+    },
+    "ordinal": {
+      "mean_distance": 0.2285152313452478,
+      "share_off_by_two": 0.024266768469799326
+    }
+  },
+  "reference_scores": {
+    "rows": 843458,
+    "macro_f1": 0.6465362908436274,
+    "accuracy": 0.796301653431469,
+    "balanced_accuracy": 0.6270526338658181,
+    "per_class": {
+      "low": {
+        "precision": 0.7176625681990236,
+        "recall": 0.6514033196298885,
+        "f1": 0.6829295557722285,
+        "support": 84407
+      },
+      "medium": {
+        "precision": 0.5487074539542242,
+        "recall": 0.27529211678372334,
+        "f1": 0.3666381436553078,
+        "support": 158755
+      },
+      "high": {
+        "precision": 0.8337662526648185,
+        "recall": 0.9544624651838426,
+        "f1": 0.890041173103346,
+        "support": 600296
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "rows_are_true_class": [
+        [
+          54983,
+          13790,
+          15634
+        ],
+        [
+          16450,
+          43704,
+          98601
+        ],
+        [
+          5181,
+          22155,
+          572960
+        ]
+      ]
+    },
+    "ordinal": {
+      "mean_distance": 0.22837651667302936,
+      "share_off_by_two": 0.024678170104498385
+    }
+  },
+  "macro_f1_difference": -0.0016682917701061895,
+  "difference_interval_95": [
+    -0.002399593461523608,
+    -0.0008932369105614708
+  ],
+  "direction": "worse",
+  "verdict": "worse",
+  "two_step_errors": {
+    "variant_share": 0.024266768469799326,
+    "reference_share": 0.024678170104498385,
+    "difference": -0.0004114016346990594,
+    "difference_interval_95": [
+      -0.0005525171377827942,
+      -0.0002584005368376375
+    ]
+  },
+  "process_peak_memory_gb": null,
+  "code": {
+    "commit": "7efaee54f132f9a8eb062a17504d36a12e16e6b2",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0"
+    },
+    "machine": "7dee5178-9452-4fa3-8f33-62bd0ad22d8b-ww55j"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}

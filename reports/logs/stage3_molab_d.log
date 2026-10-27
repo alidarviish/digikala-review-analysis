@@ -1,0 +1,17 @@
+Code 7efaee54f132f9a8eb062a17504d36a12e16e6b2, data checked against cache_info.json
+Reference for recommendation: recommendation__word123_min5_persian__balanced__C0.5 (macro F1 0.6802)
+Reference for rating_band: rating_band__word123_min5_persian__unweighted__C1 (macro F1 0.6459)
+  features word123_min5_persian : 1,192,046 columns (117s)
+  E1 rating_band offsets: +0.0217 [+0.0209, +0.0226] better
+  E4 rating_band ordinal: -0.0017 [-0.0024, -0.0009] worse
+  E7 rating_band zero_as_low: -0.0109 [-0.0117, -0.0101] report only
+  features word123_min5_persian {'sublinear_tf': False}: 1,192,046 columns (117s)
+  E5 recommendation plain_tf: -0.0001 [-0.0004, +0.0002] no measurable difference
+  E5 rating_band plain_tf: -0.0003 [-0.0008, +0.0002] no measurable difference
+  features word123_min5_persian {'stop_words': '100 words'}: 645,850 columns (81s)
+  E3 recommendation frequent_words_removed: -0.0714 [-0.0727, -0.0701] worse
+  E3 rating_band frequent_words_removed: -0.0798 [-0.0812, -0.0785] worse
+  features word123_min5_persian {'extra_parts': [{'analyzer': 'char_wb', 'ngram_range': (3, 4), 'min_df': 5}]}: 1,320,870 columns (254s)
+  E2 recommendation word_plus_char: -0.0003 [-0.0009, +0.0003] no measurable difference
+  E2 rating_band word_plus_char: +0.0017 [+0.0011, +0.0024] better
+Done

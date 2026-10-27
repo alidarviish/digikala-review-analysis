@@ -1,0 +1,36 @@
+/usr/local/lib/python3.13/dist-packages/pandas/core/arrays/masked.py:63: UserWarning: Pandas requires version '1.5.0' or newer of 'bottleneck' (version '1.4.2' currently installed).
+  from pandas.core import (
+Code a7c13899484660f825e18f1b235cabc1604f7c0a, data checked against cache_info.json
+word12_min2: 0 done, 4 to run
+  features: 1,372,120 columns (168s)
+  rating_band__word12_min2__unweighted__C1: macro F1 0.6436 [0.6422, 0.6449] (34.1 min, peak so far 3.6 GB)
+  rating_band__word12_min2__balanced__C1: macro F1 0.6422 [0.6410, 0.6434] (36.4 min, peak so far 3.6 GB)
+  recommendation__word12_min2__unweighted__C1: macro F1 0.6756 [0.6741, 0.6770] (18.4 min, peak so far 3.6 GB)
+  recommendation__word12_min2__balanced__C1: macro F1 0.6768 [0.6755, 0.6781] (29.6 min, peak so far 3.7 GB)
+word12_min5: 0 done, 4 to run
+  features: 535,961 columns (156s)
+  rating_band__word12_min5__unweighted__C1: macro F1 0.6431 [0.6418, 0.6444] (18.6 min, peak so far 3.7 GB)
+  rating_band__word12_min5__balanced__C1: macro F1 0.6400 [0.6388, 0.6411] (26.5 min, peak so far 3.7 GB)
+  recommendation__word12_min5__unweighted__C1: macro F1 0.6782 [0.6767, 0.6796] (13.1 min, peak so far 3.7 GB)
+  recommendation__word12_min5__balanced__C1: macro F1 0.6751 [0.6738, 0.6764] (18.0 min, peak so far 3.7 GB)
+word12_min5_persian: 0 done, 4 to run
+  features: 535,112 columns (177s)
+  rating_band__word12_min5_persian__unweighted__C1: macro F1 0.6431 [0.6418, 0.6444] (21.5 min, peak so far 3.7 GB)
+  rating_band__word12_min5_persian__balanced__C1: macro F1 0.6404 [0.6392, 0.6416] (28.3 min, peak so far 3.7 GB)
+  recommendation__word12_min5_persian__unweighted__C1: macro F1 0.6759 [0.6743, 0.6772] (14.5 min, peak so far 3.7 GB)
+  recommendation__word12_min5_persian__balanced__C1: macro F1 0.6735 [0.6721, 0.6748] (21.6 min, peak so far 3.7 GB)
+word123_min5_persian: 0 done, 4 to run
+  features: 1,192,046 columns (299s)
+  rating_band__word123_min5_persian__unweighted__C1: macro F1 0.6459 [0.6447, 0.6472] (39.4 min, peak so far 6.3 GB)
+/usr/local/lib/python3.13/dist-packages/pandas/core/arrays/masked.py:63: UserWarning: Pandas requires version '1.5.0' or newer of 'bottleneck' (version '1.4.2' currently installed).
+  from pandas.core import (
+Code a7c13899484660f825e18f1b235cabc1604f7c0a, data checked against cache_info.json
+word12_min2: 4 done, 0 to run
+word12_min5: 4 done, 0 to run
+word12_min5_persian: 4 done, 0 to run
+word123_min5_persian: 1 done, 3 to run
+  features: 1,192,046 columns (253s)
+  rating_band__word123_min5_persian__balanced__C1: macro F1 0.6443 [0.6431, 0.6455] (51.1 min, peak so far 6.0 GB)
+  recommendation__word123_min5_persian__unweighted__C1: macro F1 0.6783 [0.6767, 0.6797] (24.4 min, peak so far 6.0 GB)
+  recommendation__word123_min5_persian__balanced__C1: macro F1 0.6789 [0.6775, 0.6803] (40.7 min, peak so far 6.0 GB)
+Done

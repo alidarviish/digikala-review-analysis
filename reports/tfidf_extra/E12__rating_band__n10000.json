@@ -1,0 +1,126 @@
+{
+  "experiment": "E12",
+  "head": "rating_band",
+  "variant": "n10000",
+  "created_at": "2026-10-27T10:56:26+00:00",
+  "fingerprint": {
+    "experiment": "E12",
+    "head": "rating_band",
+    "variant": "n10000",
+    "base": {
+      "setup_parts": [
+        {
+          "analyzer": "word",
+          "ngram_range": [
+            1,
+            3
+          ],
+          "min_df": 5,
+          "token": "persian",
+          "token_pattern": "(?u)[\\wً-ٰٟ]+(?:‌[\\wً-ٰٟ]+)*|[^\\w\\s‌ً-ٰٟ][︎️\\U0001f3fb-\\U0001f3ff]*"
+        }
+      ],
+      "max_iter": 2000,
+      "data_sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      },
+      "normalizer_version": "2",
+      "sklearn": "1.9.1"
+    },
+    "reference": {
+      "C": 1.0,
+      "class_weight": null,
+      "stage2_macro_f1": 0.6459
+    },
+    "seed": 2026,
+    "sizes": [
+      10000,
+      100000,
+      1000000
+    ]
+  },
+  "scores": {
+    "rows": 843458,
+    "macro_f1": 0.5495873046218733,
+    "accuracy": 0.759797168323734,
+    "balanced_accuracy": 0.5172509020071853,
+    "per_class": {
+      "low": {
+        "precision": 0.7049234588332643,
+        "recall": 0.4037105927233523,
+        "f1": 0.5133976662372784,
+        "support": 84407
+      },
+      "medium": {
+        "precision": 0.495898345945222,
+        "recall": 0.18658309974488993,
+        "f1": 0.27114656707264045,
+        "support": 158755
+      },
+      "high": {
+        "precision": 0.7848395264527744,
+        "recall": 0.9614590135533136,
+        "f1": 0.8642176805557011,
+        "support": 600296
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "rows_are_true_class": [
+        [
+          34076,
+          11233,
+          39098
+        ],
+        [
+          10006,
+          29621,
+          119128
+        ],
+        [
+          4258,
+          18878,
+          577160
+        ]
+      ]
+    }
+  },
+  "macro_f1_interval_95": [
+    0.5481433095258175,
+    0.5510101955857604
+  ],
+  "converged": true,
+  "minutes": 0.0,
+  "verdict": "report only",
+  "training_reviews": 10000,
+  "features": 4881,
+  "process_peak_memory_gb": null,
+  "code": {
+    "commit": "2d9bb4816017f831069f51dc67ce876000b54cf7",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0"
+    },
+    "machine": "7dee5178-9452-4fa3-8f33-62bd0ad22d8b-ww55j"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}

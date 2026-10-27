@@ -1,0 +1,9 @@
+Code 4da9c604f2964ab386e28c0cbb394e4a832728f4, data checked against cache_info.json
+features: 1,192,046 columns (120s)
+recommendation:
+  fitted in 9.2 min, converged: True
+  macro F1 without offsets 0.6795, with offsets 0.7017
+rating_band:
+  fitted in 11.2 min, converged: True
+  macro F1 without offsets 0.6465, with offsets 0.6683
+Done

@@ -1,0 +1,7 @@
+/usr/local/lib/python3.13/dist-packages/pandas/core/arrays/masked.py:63: UserWarning: Pandas requires version '1.5.0' or newer of 'bottleneck' (version '1.4.2' currently installed).
+  from pandas.core import (
+Code 92c13ad345386c6476dcd8813add9d621fb67bdb, data checked against cache_info.json
+Reference for recommendation: recommendation__word123_min5_persian__balanced__C0.5 (macro F1 0.6802)
+Reference for rating_band: rating_band__word123_min5_persian__unweighted__C1 (macro F1 0.6459)
+  features word123_min5_persian : 1,192,046 columns (258s)
+  E1 recommendation offsets: +0.0217 [+0.0207, +0.0227] better

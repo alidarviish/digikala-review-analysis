@@ -1,0 +1,177 @@
+{
+  "experiment": "E8",
+  "head": "recommendation",
+  "variant": "spelling_fixed",
+  "created_at": "2026-10-27T11:40:51+00:00",
+  "fingerprint": {
+    "experiment": "E8",
+    "head": "recommendation",
+    "variant": "spelling_fixed",
+    "base": {
+      "setup_parts": [
+        {
+          "analyzer": "word",
+          "ngram_range": [
+            1,
+            3
+          ],
+          "min_df": 5,
+          "token": "persian",
+          "token_pattern": "(?u)[\\wً-ٰٟ]+(?:‌[\\wً-ٰٟ]+)*|[^\\w\\s‌ً-ٰٟ][︎️\\U0001f3fb-\\U0001f3ff]*"
+        }
+      ],
+      "max_iter": 2000,
+      "data_sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      },
+      "normalizer_version": "2",
+      "sklearn": "1.9.1"
+    },
+    "reference": {
+      "C": 0.5,
+      "class_weight": "balanced",
+      "stage2_macro_f1": 0.6802
+    },
+    "seed": 2026,
+    "fixes_sha256": "7aac991b19c78ad5c370a97255cb85ce6ca280d303258a5f38d831f2de5453e6"
+  },
+  "variant_scores": {
+    "rows": 788717,
+    "macro_f1": 0.6803832040542762,
+    "accuracy": 0.8110260080611931,
+    "balanced_accuracy": 0.7360103604471618,
+    "per_class": {
+      "recommended": {
+        "precision": 0.9635363061223374,
+        "recall": 0.847652105909238,
+        "f1": 0.9018869307898033,
+        "support": 624006
+      },
+      "not_recommended": {
+        "precision": 0.6370062460082919,
+        "recall": 0.7777072925752649,
+        "f1": 0.7003600226129906,
+        "support": 75666
+      },
+      "no_idea": {
+        "precision": 0.3520399508756217,
+        "recall": 0.5826716828569825,
+        "f1": 0.43890265876003487,
+        "support": 89045
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "recommended",
+        "not_recommended",
+        "no_idea"
+      ],
+      "rows_are_true_class": [
+        [
+          528940,
+          13820,
+          81246
+        ],
+        [
+          2569,
+          58846,
+          14251
+        ],
+        [
+          17448,
+          19713,
+          51884
+        ]
+      ]
+    }
+  },
+  "reference_scores": {
+    "rows": 788717,
+    "macro_f1": 0.6795010041265139,
+    "accuracy": 0.80964528468386,
+    "balanced_accuracy": 0.7354917378040282,
+    "per_class": {
+      "recommended": {
+        "precision": 0.9634978267734934,
+        "recall": 0.8458364182395682,
+        "f1": 0.9008413487180932,
+        "support": 624006
+      },
+      "not_recommended": {
+        "precision": 0.6374263293282537,
+        "recall": 0.7761478074696694,
+        "f1": 0.6999803336134304,
+        "support": 75666
+      },
+      "no_idea": {
+        "precision": 0.3498161727639954,
+        "recall": 0.5844909877028469,
+        "f1": 0.4376813300480183,
+        "support": 89045
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "recommended",
+        "not_recommended",
+        "no_idea"
+      ],
+      "rows_are_true_class": [
+        [
+          527807,
+          13808,
+          82391
+        ],
+        [
+          2594,
+          58728,
+          14344
+        ],
+        [
+          17402,
+          19597,
+          52046
+        ]
+      ]
+    }
+  },
+  "macro_f1_difference": 0.0008821999277622838,
+  "difference_interval_95": [
+    0.000558746743302932,
+    0.0012191755654801766
+  ],
+  "direction": "better",
+  "converged": true,
+  "verdict": "better",
+  "minutes": 10.2,
+  "fixes": 590,
+  "reviews_changed_share": {
+    "train": 0.020383121960941285,
+    "validation": 0.020236347184369226
+  },
+  "process_peak_memory_gb": null,
+  "code": {
+    "commit": "2d9bb4816017f831069f51dc67ce876000b54cf7",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0"
+    },
+    "machine": "7dee5178-9452-4fa3-8f33-62bd0ad22d8b-ww55j"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}

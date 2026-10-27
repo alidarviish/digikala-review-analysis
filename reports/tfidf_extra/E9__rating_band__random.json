@@ -1,0 +1,127 @@
+{
+  "experiment": "E9",
+  "head": "rating_band",
+  "variant": "random",
+  "created_at": "2026-10-27T11:38:47+00:00",
+  "fingerprint": {
+    "experiment": "E9",
+    "head": "rating_band",
+    "variant": "random",
+    "base": {
+      "setup_parts": [
+        {
+          "analyzer": "word",
+          "ngram_range": [
+            1,
+            3
+          ],
+          "min_df": 5,
+          "token": "persian",
+          "token_pattern": "(?u)[\\wً-ٰٟ]+(?:‌[\\wً-ٰٟ]+)*|[^\\w\\s‌ً-ٰٟ][︎️\\U0001f3fb-\\U0001f3ff]*"
+        }
+      ],
+      "max_iter": 2000,
+      "data_sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      },
+      "normalizer_version": "2",
+      "sklearn": "1.9.1"
+    },
+    "reference": {
+      "C": 1.0,
+      "class_weight": null,
+      "stage2_macro_f1": 0.6459
+    },
+    "seed": 2026,
+    "years_sha256": "1143b300eb07698a39274b9d419f9666f23992a8154c0691f40ef98a9cb16e68"
+  },
+  "scores": {
+    "rows": 1254658,
+    "macro_f1": 0.6463907788237072,
+    "accuracy": 0.7978397300300162,
+    "balanced_accuracy": 0.6264408861136089,
+    "per_class": {
+      "low": {
+        "precision": 0.7171931125173202,
+        "recall": 0.6493766980981301,
+        "f1": 0.681602200908378,
+        "support": 125140
+      },
+      "medium": {
+        "precision": 0.5494642689173358,
+        "recall": 0.275008452777861,
+        "f1": 0.3665550465780932,
+        "support": 233651
+      },
+      "high": {
+        "precision": 0.8351135485080163,
+        "recall": 0.9549375074648357,
+        "f1": 0.8910150889846506,
+        "support": 895867
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "rows_are_true_class": [
+        [
+          81263,
+          20122,
+          23755
+        ],
+        [
+          24239,
+          64256,
+          145156
+        ],
+        [
+          7805,
+          32565,
+          855497
+        ]
+      ]
+    }
+  },
+  "macro_f1_interval_95": [
+    0.6452350998435687,
+    0.6474915974507514
+  ],
+  "converged": true,
+  "minutes": 9.1,
+  "verdict": "report only",
+  "split": "random",
+  "newest_year": 1402,
+  "train_reviews": 2859331,
+  "validation_reviews": 1254658,
+  "validation_share_of_pool": 0.305,
+  "validation_texts_seen_in_train": 0.3611,
+  "products_in_both_parts": 154139,
+  "process_peak_memory_gb": null,
+  "code": {
+    "commit": "2d9bb4816017f831069f51dc67ce876000b54cf7",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0"
+    },
+    "machine": "7dee5178-9452-4fa3-8f33-62bd0ad22d8b-ww55j"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}
