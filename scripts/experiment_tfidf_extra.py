@@ -83,7 +83,7 @@ class Runner:
             "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
             "fingerprint": self.spec(experiment, head, variant, spec_extra),
             **result,
-            "process_peak_memory_gb": round(peak_memory_gb(), 2),
+            "process_peak_memory_gb": peak_memory(),
             **self.context,
         }
         save_json(self.path(experiment, head, variant), record)
@@ -273,6 +273,14 @@ class Runner:
                 )
                 self.save(experiment, head, name, result, extra)
             x_train = x_validation = None
+
+
+def peak_memory():
+    """Peak memory of this process in GB, or None where the system does not report it (molab)."""
+    try:
+        return round(peak_memory_gb(), 2)
+    except RuntimeError:
+        return None
 
 
 def scores(head, y_true, predicted, converged, minutes):
