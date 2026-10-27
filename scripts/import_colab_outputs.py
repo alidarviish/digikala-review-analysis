@@ -1,6 +1,6 @@
-"""Copy the outputs of a Colab run into the project, checking every file on the way.
+"""Copy the outputs of a Colab or molab run into the project, checking every file on the way.
 
-Give the folder that was downloaded from Google Drive (the one holding outputs_manifest.json).
+Give the folder that was downloaded (the one holding outputs_manifest.json).
 Each file is checked against its hash before and after copying. Every result file must
 come from a commit of this repository with no uncommitted changes, and from the same cache
 that was built here. Nothing is copied if a check fails, and an existing file with
@@ -21,6 +21,7 @@ from digikala_reviews.config import CACHE_DIR, PROJECT_ROOT
 from digikala_reviews.ingest import file_sha256
 
 ALLOWED_TOP_FOLDERS = {"reports", "artifacts"}
+RESULT_FOLDERS = ("reports/tfidf_runs/", "reports/tfidf_experiments/", "reports/tfidf_extra/")
 
 
 def commit_known(commit):
@@ -70,7 +71,7 @@ def main():
             problems.append(f"{relative}: missing from the downloaded folder")
         elif file_sha256(source) != expected:
             problems.append(f"{relative}: damaged in the download (hash differs)")
-        elif relative.startswith(("reports/tfidf_runs/", "reports/tfidf_experiments/")) and (
+        elif relative.startswith(RESULT_FOLDERS) and (
             run_problems := check_run_file(relative, source, local_cache_hashes)
         ):
             problems += run_problems

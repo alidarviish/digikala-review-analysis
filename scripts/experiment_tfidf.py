@@ -26,18 +26,14 @@ from sklearn.svm import LinearSVC
 from digikala_reviews.clean import rating_band
 from digikala_reviews.config import ARTIFACTS_DIR, CACHE_DIR, REPORTS_DIR
 from digikala_reviews.experiments import (
+    compare,
     cross_fitted_offsets,
     most_common_words,
     ordinal_probabilities,
     product_half,
     search_offsets,
 )
-from digikala_reviews.metrics import (
-    bootstrap_difference,
-    bootstrap_mean_difference,
-    classification_report,
-    ordinal_distance_error,
-)
+from digikala_reviews.metrics import bootstrap_mean_difference
 from digikala_reviews.provenance import check_cache, environment, git_commit
 from digikala_reviews.resources import peak_memory_gb, require_free_memory
 from digikala_reviews.tfidf import (
@@ -103,25 +99,6 @@ def reference_runs(data):
             )
         references[head] = best_run(runs)
     return references
-
-
-def compare(head, y_true, variant, reference):
-    """Scores of a variant next to the reference on the same reviews, with the paired interval."""
-    labels = HEADS[head]["labels"]
-    scores = classification_report(y_true, variant, labels)
-    reference_scores = classification_report(y_true, reference, labels)
-    result = {
-        "variant_scores": scores,
-        "reference_scores": reference_scores,
-        "macro_f1_difference": scores["macro_f1"] - reference_scores["macro_f1"],
-        "difference_interval_95": bootstrap_difference(y_true, variant, reference, labels),
-    }
-    if head == "rating_band":
-        scores["ordinal"] = ordinal_distance_error(y_true, variant)
-        reference_scores["ordinal"] = ordinal_distance_error(y_true, reference)
-    low, high = result["difference_interval_95"]
-    result["direction"] = "better" if low > 0 else "worse" if high < 0 else "no measurable difference"
-    return result
 
 
 def fit_quietly(model, x, y):

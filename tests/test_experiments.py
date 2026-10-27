@@ -1,9 +1,13 @@
 import numpy as np
 
 from digikala_reviews.experiments import (
+    compare,
     cross_fitted_offsets,
+    majority_rows,
     most_common_words,
+    nested_samples,
     ordinal_probabilities,
+    pool_splits,
     predict_with_offsets,
     product_half,
     search_offsets,
@@ -72,3 +76,35 @@ def test_bootstrap_difference_is_zero_for_identical_models():
     y = ["a", "b"] * 500
     low, high = bootstrap_difference(y, y, y, labels, rounds=50)
     assert low == high == 0
+
+
+def test_majority_rows_keeps_the_majority_and_ties():
+    texts = ["عالی", "عالی", "عالی", "بد", "بد", "خوب", "متوسط", "متوسط"]
+    labels = ["rec", "rec", "not", "not", "rec", "rec", "rec", "no"]
+    # عالی: majority rec, the "not" row goes; بد: a tie, both stay; خوب: single label; متوسط: a tie
+    assert majority_rows(texts, labels).tolist() == [0, 1, 3, 4, 5, 6, 7]
+
+
+def test_nested_samples_are_inside_each_other():
+    samples = nested_samples(1_000, [10, 100, 5_000], seed=1)
+    assert sorted(samples) == [10, 100]  # a size above the number of rows is the full set, skipped
+    assert set(samples[10]) <= set(samples[100]) and len(set(samples[100])) == 100
+
+
+def test_pool_splits_have_about_the_same_size():
+    rng = np.random.default_rng(3)
+    product_id = rng.integers(0, 300, 6_000)
+    newest = rng.random(6_000) < 0.3
+    splits = pool_splits(product_id, newest, seed=2026)
+    assert splits["by_time"].tolist() == newest.tolist()
+    assert splits["random"].sum() == newest.sum()
+    assert 0.8 * newest.sum() < splits["by_product"].sum() <= newest.sum()
+    in_both = set(product_id[splits["by_product"]]) & set(product_id[~splits["by_product"]])
+    assert not in_both  # a product is never in both parts
+
+
+def test_compare_reads_the_interval():
+    y = np.array(["recommended", "not_recommended", "no_idea"] * 200)
+    worse = np.array(["recommended"] * 600)
+    result = compare("recommendation", y, y, worse)
+    assert result["direction"] == "better" and result["macro_f1_difference"] > 0

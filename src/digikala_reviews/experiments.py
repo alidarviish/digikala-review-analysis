@@ -1,9 +1,16 @@
 """Building blocks of the TF-IDF experiments (see reports/tfidf_experiment_plan.md)."""
 
 import numpy as np
+import pandas as pd
 from sklearn.feature_extraction.text import CountVectorizer
 
-from digikala_reviews.metrics import macro_f1_from_codes
+from digikala_reviews.metrics import (
+    bootstrap_difference,
+    classification_report,
+    macro_f1_from_codes,
+    ordinal_distance_error,
+)
+from digikala_reviews.tfidf import HEADS
 
 OFFSET_GRID = np.round(np.arange(-2.0, 2.01, 0.1), 2)
 
@@ -70,3 +77,63 @@ def most_common_words(texts, token_pattern: str, k: int) -> list[str]:
     words = counter.get_feature_names_out()
     order = sorted(range(len(words)), key=lambda i: (-in_texts[i], words[i]))
     return [str(words[i]) for i in order if any(ch.isalpha() for ch in words[i])][:k]
+
+
+def compare(head: str, y_true, variant, reference) -> dict:
+    """Scores of a variant next to the reference on the same reviews, with the paired interval."""
+    labels = HEADS[head]["labels"]
+    scores = classification_report(y_true, variant, labels)
+    reference_scores = classification_report(y_true, reference, labels)
+    result = {
+        "variant_scores": scores,
+        "reference_scores": reference_scores,
+        "macro_f1_difference": scores["macro_f1"] - reference_scores["macro_f1"],
+        "difference_interval_95": bootstrap_difference(y_true, variant, reference, labels),
+    }
+    if head == "rating_band":
+        scores["ordinal"] = ordinal_distance_error(y_true, variant)
+        reference_scores["ordinal"] = ordinal_distance_error(y_true, reference)
+    low, high = result["difference_interval_95"]
+    result["direction"] = "better" if low > 0 else "worse" if high < 0 else "no measurable difference"
+    return result
+
+
+def majority_rows(texts, labels) -> np.ndarray:
+    """Positions of the rows to keep when conflicting labels are removed (E11).
+
+    A text that comes with more than one label keeps only the rows with its most common
+    label. If the top labels of a text are tied, all its rows are kept, since there is no
+    majority to trust. Texts with a single label are never touched.
+    """
+    table = pd.DataFrame({"text": np.asarray(texts), "label": np.asarray(labels)})
+    counts = table.groupby(["text", "label"]).size().rename("n").reset_index()
+    top = counts.groupby("text")["n"].transform("max")
+    tied = (counts["n"] == top).groupby(counts["text"]).transform("sum") > 1
+    counts["keep"] = (counts["n"] == top) | tied
+    keep = table.merge(counts[["text", "label", "keep"]], on=["text", "label"], how="left")["keep"]
+    return np.flatnonzero(keep.to_numpy())
+
+
+def nested_samples(n_rows: int, sizes: list[int], seed: int) -> dict[int, np.ndarray]:
+    """Random samples of row positions, each sample inside the next larger one (E12)."""
+    order = np.random.default_rng(seed).permutation(n_rows)
+    return {size: np.sort(order[:size]) for size in sizes if size < n_rows}
+
+
+def pool_splits(product_id, newest, seed: int) -> dict[str, np.ndarray]:
+    """Three ways to choose about the same number of validation reviews from one pool (E9, E10).
+
+    `newest` marks the reviews of the latest year; their number sets the size of every split.
+    Returns, for each way, True for the reviews that go to validation:
+    by_product (whole products drawn at random), random (single reviews drawn at random)
+    and by_time (the newest reviews).
+    """
+    product_id, newest = np.asarray(product_id), np.asarray(newest, dtype=bool)
+    n_rows, size = len(product_id), int(newest.sum())
+    rng = np.random.default_rng(seed)
+    random = np.zeros(n_rows, dtype=bool)
+    random[rng.permutation(n_rows)[:size]] = True
+    products, reviews = np.unique(product_id, return_counts=True)
+    order = rng.permutation(len(products))
+    chosen = products[order][np.cumsum(reviews[order]) <= size]  # whole products, up to the size
+    return {"by_product": np.isin(product_id, chosen), "random": random, "by_time": newest}

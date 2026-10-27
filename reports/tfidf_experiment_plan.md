@@ -55,3 +55,57 @@ exactly one thing in that model and is scored on the same validation reviews.
   with zeros labeled `low`, and on the reviews with a real rating only. Training reviews
   that have neither a recommendation nor a rating band are not in `train_supervised.csv`,
   so about 17,700 zero-rated reviews are missing from this variant; the report notes it.
+
+## Experiments added after stage 1
+
+E8 to E12 were added after the stage 1 scores and the first stage 3 result (E1) were seen.
+They come from a discussion with classmates about spelling, conflicting labels, how the
+test set should be chosen and how much data is needed. Their expected outcomes were written
+down here before any of them was run. They run on a second machine (molab, 4 CPUs and
+32 GB of memory, see `notebooks/molab_tfidf_extra.py`) next to stage 3, so the reference
+models are fitted again there; if they do not reproduce the stage 2 scores (0.6802 and
+0.6459) to three decimals, the report says so before any result is read.
+
+None of them reads the test set. E9 and E10 build their own splits, but only out of the
+reviews that are already in train and validation.
+
+| # | Question | Why we ask | Expected outcome |
+|---|---|---|---|
+| E8 | Does fixing frequent misspellings help? | Misspellings split one word over several features (`پشنهاد`, `پیسنهاد` and `پیشنهد` for `پیشنهاد`), and `و` joined to the next word (`وقیمت`) hides a frequent word | No measurable difference: the list changes about 2% of the reviews, in similar shares across classes |
+| E9 | How much higher is the score with a random split instead of a split by product? | The model never sees the product, but reviews of one product share names and complaints, so a random split may reward remembering products | Random split higher, by less than 1 point: most reviews are short and general, and 37% of the test texts already appear in train with the split by product |
+| E10 | How does the model do on the newest reviews when it is trained only on older ones? | A deployed model always meets reviews written after it was trained; the reviews carry a date (1395 to 1402) | Lower than a split by product of the same size, by 1 to 2 points |
+| E11 | Does removing conflicting labels from the training reviews help? | The same text sometimes comes with different labels (`عالی`: about 94,000 recommended, 293 not recommended) | No measurable difference: on such texts the model already predicts the majority label |
+| E12 | How much training data is needed? | Most reviews are short and repeat the same phrases, so far fewer than 3.5 million may be enough | Large gain from 10,000 to 100,000 reviews, less than 1 point from 1,000,000 to all |
+
+### Details of E8 to E12
+
+- **Reference.** For each head the stage 3 reference: features `word123_min5_persian`;
+  recommendation with balanced class weights and C = 0.5, rating band without weights and
+  C = 1. Fitted on train and scored on validation as in stage 2.
+- **E8.** The list is `resources/spelling_fixes.csv` (590 rows marked `fix`). It was built
+  from word counts on the training reviews only: a word seen in at least 30 reviews, not in
+  the hazm word list even after removing common prefixes and suffixes, one letter away from
+  a word seen at least 5 times more often. Every row was checked by hand, with example
+  sentences for the unclear ones; spoken forms (`قیمتشم`, `اینا`) and formal verbs (`دارد`)
+  are left alone. Only whole words are replaced, after normalization, in train and
+  validation alike. Compared with the reference on the same validation reviews; adopted only
+  if the whole interval is above zero, and then the same step runs before every model.
+- **E9 and E10.** Report only. The pool is train plus validation. The validation share is
+  the share of reviews from the newest year (1402) in the pool, so that all three splits
+  have about the same size: (a) by product: whole products drawn at random (seed 2026) for
+  validation; (b) random: single reviews drawn at random (seed 2026); (c) by time: every
+  review from 1402 in validation, everything older in train. Each split gets its own
+  features (fitted on its own training part) and the reference model settings. Reported for
+  each: Macro F1 with its bootstrap interval, the sizes, and the share of validation texts
+  that also appear in its training part. E9 reads (b) against (a), E10 reads (c) against
+  (a). The validation sets differ, so there is no paired interval; the gap is read next to
+  the two intervals.
+- **E11.** For each head, training texts that occur more than once with more than one label
+  keep only the rows with the most common label of that text; a text whose top labels are
+  tied is kept whole. The removed rows are counted in the report. Same features and model
+  settings as the reference; scored on the untouched validation reviews and compared with
+  the reference.
+- **E12.** Report only. Random samples of 10,000, 100,000 and 1,000,000 labeled training
+  reviews of each head (seed 2026, each sample inside the next); all of them is the
+  reference. Features are fitted on the sample itself, as they would be for a smaller data
+  set. Scored on the full validation set, with a bootstrap interval.
