@@ -109,3 +109,22 @@ reviews that are already in train and validation.
   reviews of each head (seed 2026, each sample inside the next); all of them is the
   reference. Features are fitted on the sample itself, as they would be for a smaller data
   set. Scored on the full validation set, with a bootstrap interval.
+
+## The final model (written after stages 3 and E8 to E12, before it was fitted)
+
+Adopted changes, each with its whole interval above zero against the reference:
+
+| Head | Adopted | Not adopted |
+|---|---|---|
+| recommendation | E1 offsets (+0.0217), E11 conflicts removed (+0.0027), E8 spelling fixes (+0.0009) | E2, E3, E5 (no difference or worse); E6 and E7 are report only |
+| rating band | E1 offsets (+0.0217), E11 conflicts removed (+0.0014), E2 character n-grams (+0.0017) | E3, E4, E5, E8 (no difference or worse); E6 and E7 are report only |
+
+`scripts/final_tfidf.py` fits each head with all of its adopted changes together and scores
+it on validation against the reference, refitted on the same machine. Three comparisons are
+reported: the final model against the reference, against the reference with offsets (does
+anything add to E1?), and the final model without offsets against the reference. Training
+scores on 300,000 training reviews are reported next to validation scores. Expected
+outcome: close to the sum of the single gains, about +2.5 points for each head against the
+reference, and less than 0.5 point against the reference with offsets. Logistic regression
+stays the model (decision D48): the linear SVM of E6 did not converge and was scored
+without offsets.

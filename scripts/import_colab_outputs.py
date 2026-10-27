@@ -21,7 +21,12 @@ from digikala_reviews.config import CACHE_DIR, PROJECT_ROOT
 from digikala_reviews.ingest import file_sha256
 
 ALLOWED_TOP_FOLDERS = {"reports", "artifacts"}
-RESULT_FOLDERS = ("reports/tfidf_runs/", "reports/tfidf_experiments/", "reports/tfidf_extra/")
+RESULT_FOLDERS = (
+    "reports/tfidf_runs/",
+    "reports/tfidf_experiments/",
+    "reports/tfidf_extra/",
+    "reports/tfidf_final/",
+)
 
 
 def commit_known(commit):
