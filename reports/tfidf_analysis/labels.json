@@ -1,0 +1,73 @@
+{
+  "created_at": "2026-10-27T19:22:49+00:00",
+  "counts": {
+    "missing": {
+      "high": 477450,
+      "low": 52717,
+      "medium": 77792,
+      "missing": 0
+    },
+    "no_idea": {
+      "high": 57109,
+      "low": 46793,
+      "medium": 216928,
+      "missing": 11599
+    },
+    "not_recommended": {
+      "high": 7029,
+      "low": 205360,
+      "medium": 37995,
+      "missing": 32104
+    },
+    "recommended": {
+      "high": 1795448,
+      "low": 20714,
+      "medium": 275196,
+      "missing": 238264
+    }
+  },
+  "row_shares": {
+    "missing": {
+      "high": 0.7853325635445811,
+      "low": 0.08671143942272423,
+      "medium": 0.12795599703269464,
+      "missing": 0.0
+    },
+    "no_idea": {
+      "high": 0.1717930746114208,
+      "low": 0.14076088427904906,
+      "medium": 0.6525543800330296,
+      "missing": 0.034891661076500546
+    },
+    "not_recommended": {
+      "high": 0.024882472883803915,
+      "low": 0.7269689331936224,
+      "medium": 0.1345012885503101,
+      "missing": 0.1136473053722636
+    },
+    "recommended": {
+      "high": 0.7707035733694135,
+      "low": 0.008891571250614906,
+      "medium": 0.11812903552593511,
+      "missing": 0.1022758198540364
+    }
+  },
+  "code": {
+    "commit": "e852320215f16dd533feebf705253b69e57fea39",
+    "uncommitted_changes": true
+  },
+  "model_files": {
+    "artifacts/tfidf_final/model.joblib": {
+      "sha256": "54116e1f9058ee06abd916fd3d9eace6018d69fa000c11f3cdbc3b347f1e32fe",
+      "size": 42402678
+    },
+    "artifacts/tfidf_final/validation_predictions.parquet": {
+      "sha256": "162ad1d52f2cd93ebe157b2f2034848bddd4a8841cd17cc027ba1266cfe77b80",
+      "size": 29273125
+    },
+    "artifacts/tfidf_final/train_unlabeled_predictions.parquet": {
+      "sha256": "d14cf0c493e930956b80abf718521d7b71c9e8904e070aeb9c9c3a6c88af1814",
+      "size": 16543058
+    }
+  }
+}

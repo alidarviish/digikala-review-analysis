@@ -1,0 +1,173 @@
+{
+  "created_at": "2026-10-27T19:24:50+00:00",
+  "thresholds": [
+    0.8,
+    0.9,
+    0.95
+  ],
+  "masked_training_reviews": {
+    "recommendation": {
+      "rows_with_label": 736134,
+      "true_classes": {
+        "recommended": 0.791167097294786,
+        "no_idea": 0.11289656502756291,
+        "not_recommended": 0.09593633767765108
+      },
+      "confident": {
+        "0.8": {
+          "kept": 366939,
+          "share": 0.4984676702882899,
+          "predicted_classes": {
+            "recommended": 0.8398752926235696,
+            "not_recommended": 0.09770561319456367,
+            "no_idea": 0.06241909418186674
+          },
+          "accuracy": 0.9449118245811974
+        },
+        "0.9": {
+          "kept": 219086,
+          "share": 0.29761700994655865,
+          "predicted_classes": {
+            "recommended": 0.8875966515432296,
+            "not_recommended": 0.0965328683713245,
+            "no_idea": 0.0158704800854459
+          },
+          "accuracy": 0.9774563413454077
+        },
+        "0.95": {
+          "kept": 109788,
+          "share": 0.14914132481314543,
+          "predicted_classes": {
+            "recommended": 0.8842860786242577,
+            "not_recommended": 0.11097752031187379,
+            "no_idea": 0.004736401063868547
+          },
+          "accuracy": 0.9858545560534849
+        }
+      }
+    },
+    "rating_band": {
+      "rows_with_label": 665601,
+      "true_classes": {
+        "high": 0.6976341682178963,
+        "medium": 0.1997277648320841,
+        "low": 0.1026380669500196
+      },
+      "confident": {
+        "0.8": {
+          "kept": 400293,
+          "share": 0.6014008392415275,
+          "predicted_classes": {
+            "high": 0.9297139845063491,
+            "low": 0.05663601411965735,
+            "medium": 0.01365000137399355
+          },
+          "accuracy": 0.8914220333605634
+        },
+        "0.9": {
+          "kept": 225309,
+          "share": 0.33850459960246454,
+          "predicted_classes": {
+            "high": 0.9439969109090183,
+            "low": 0.05453399553502079,
+            "medium": 0.0014690935559609247
+          },
+          "accuracy": 0.9277170463674331
+        },
+        "0.95": {
+          "kept": 103719,
+          "share": 0.1558275904032596,
+          "predicted_classes": {
+            "high": 0.9408015889084932,
+            "low": 0.05883203656032164,
+            "medium": 0.0003663745311852216
+          },
+          "accuracy": 0.94693354158833
+        }
+      }
+    }
+  },
+  "no_recommendation_label": {
+    "rows": 625700,
+    "confident": {
+      "0.8": {
+        "kept": 310651,
+        "share": 0.4964855361994566,
+        "predicted_classes": {
+          "recommended": 0.8716598369231067,
+          "not_recommended": 0.0721999929180978,
+          "no_idea": 0.05614017015879556
+        }
+      },
+      "0.9": {
+        "kept": 195430,
+        "share": 0.31233818123701457,
+        "predicted_classes": {
+          "recommended": 0.9252264237834519,
+          "not_recommended": 0.06571662487847311,
+          "no_idea": 0.009056951338075015
+        }
+      },
+      "0.95": {
+        "kept": 92622,
+        "share": 0.1480294070640882,
+        "predicted_classes": {
+          "recommended": 0.9203644922372655,
+          "not_recommended": 0.07810239467944981,
+          "no_idea": 0.0015331130832847487
+        }
+      }
+    }
+  },
+  "no_rating_band_label": {
+    "rows": 281967,
+    "note": "training reviews with a recommendation but rate 0 (no rating recorded)",
+    "confident": {
+      "0.8": {
+        "kept": 166788,
+        "share": 0.5915160284714168,
+        "predicted_classes": {
+          "high": 0.9460093052257956,
+          "low": 0.04852267549224165,
+          "medium": 0.005468019281962731
+        }
+      },
+      "0.9": {
+        "kept": 91531,
+        "share": 0.3246160011632567,
+        "predicted_classes": {
+          "high": 0.9538079994755875,
+          "low": 0.045623886989107514,
+          "medium": 0.0005681135353049786
+        }
+      },
+      "0.95": {
+        "kept": 37309,
+        "share": 0.13231690233254245,
+        "predicted_classes": {
+          "high": 0.9467152697740492,
+          "low": 0.0531775174890777,
+          "medium": 0.00010721273687314052
+        }
+      }
+    }
+  },
+  "code": {
+    "commit": "e852320215f16dd533feebf705253b69e57fea39",
+    "uncommitted_changes": true
+  },
+  "model_files": {
+    "artifacts/tfidf_final/model.joblib": {
+      "sha256": "54116e1f9058ee06abd916fd3d9eace6018d69fa000c11f3cdbc3b347f1e32fe",
+      "size": 42402678
+    },
+    "artifacts/tfidf_final/validation_predictions.parquet": {
+      "sha256": "162ad1d52f2cd93ebe157b2f2034848bddd4a8841cd17cc027ba1266cfe77b80",
+      "size": 29273125
+    },
+    "artifacts/tfidf_final/train_unlabeled_predictions.parquet": {
+      "sha256": "d14cf0c493e930956b80abf718521d7b71c9e8904e070aeb9c9c3a6c88af1814",
+      "size": 16543058
+    }
+  }
+}

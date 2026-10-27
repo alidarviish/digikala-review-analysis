@@ -1,0 +1,85 @@
+{
+  "created_at": "2026-10-27T19:23:14+00:00",
+  "recommendation": {
+    "new": {
+      "rows": 505197,
+      "share": 0.6405301267755101,
+      "macro_f1": 0.6902146525337578,
+      "recall": {
+        "recommended": 0.8824946259529755,
+        "not_recommended": 0.6799687377881986,
+        "no_idea": 0.5446304149122676
+      },
+      "class_share": {
+        "recommended": 0.7412652885903914,
+        "not_recommended": 0.12663376860907724,
+        "no_idea": 0.13210094280053128
+      }
+    },
+    "seen_in_train": {
+      "rows": 283520,
+      "share": 0.3594698732244899,
+      "macro_f1": 0.7301651278735256,
+      "recall": {
+        "recommended": 0.9596747367957006,
+        "not_recommended": 0.709349071935677,
+        "no_idea": 0.5067688721534875
+      },
+      "class_share": {
+        "recommended": 0.8800825338600452,
+        "not_recommended": 0.04123518623024831,
+        "no_idea": 0.07868227990970654
+      }
+    }
+  },
+  "rating_band": {
+    "new": {
+      "rows": 528697,
+      "share": 0.6268207782723029,
+      "macro_f1": 0.6641768955924108,
+      "recall": {
+        "low": 0.6627584078987967,
+        "medium": 0.4838154720721058,
+        "high": 0.8422481211936146
+      },
+      "class_share": {
+        "low": 0.1287334711564469,
+        "medium": 0.202297346116963,
+        "high": 0.6689691827265901
+      }
+    },
+    "seen_in_train": {
+      "rows": 314761,
+      "share": 0.3731792217276972,
+      "macro_f1": 0.6668363656433138,
+      "recall": {
+        "low": 0.5788572127737673,
+        "medium": 0.38454856083859384,
+        "high": 0.9358917174207466
+      },
+      "class_share": {
+        "low": 0.05193146546109588,
+        "medium": 0.16457248515540362,
+        "high": 0.7834960493835005
+      }
+    }
+  },
+  "code": {
+    "commit": "e852320215f16dd533feebf705253b69e57fea39",
+    "uncommitted_changes": true
+  },
+  "model_files": {
+    "artifacts/tfidf_final/model.joblib": {
+      "sha256": "54116e1f9058ee06abd916fd3d9eace6018d69fa000c11f3cdbc3b347f1e32fe",
+      "size": 42402678
+    },
+    "artifacts/tfidf_final/validation_predictions.parquet": {
+      "sha256": "162ad1d52f2cd93ebe157b2f2034848bddd4a8841cd17cc027ba1266cfe77b80",
+      "size": 29273125
+    },
+    "artifacts/tfidf_final/train_unlabeled_predictions.parquet": {
+      "sha256": "d14cf0c493e930956b80abf718521d7b71c9e8904e070aeb9c9c3a6c88af1814",
+      "size": 16543058
+    }
+  }
+}

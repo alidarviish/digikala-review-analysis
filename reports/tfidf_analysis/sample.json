@@ -1,0 +1,51 @@
+{
+  "created_at": "2026-10-27T19:22:47+00:00",
+  "recommendation": {
+    "full": 0.7016757031931711,
+    "20000": {
+      "std": 0.004611745448309272,
+      "p05": 0.6938502719939793,
+      "p95": 0.7092796601403307,
+      "largest_gap_to_full": 0.018242677121562245
+    },
+    "50000": {
+      "std": 0.0028124545830051813,
+      "p05": 0.6968671371228935,
+      "p95": 0.7059909083512154,
+      "largest_gap_to_full": 0.010792993035177223
+    }
+  },
+  "rating_band": {
+    "full": 0.6682810859846451,
+    "20000": {
+      "std": 0.004161868257699003,
+      "p05": 0.6609370452602102,
+      "p95": 0.6748558597413139,
+      "largest_gap_to_full": 0.01212912945415967
+    },
+    "50000": {
+      "std": 0.0025746351245672225,
+      "p05": 0.6639976752139513,
+      "p95": 0.6724756433882729,
+      "largest_gap_to_full": 0.0077142639172542715
+    }
+  },
+  "code": {
+    "commit": "e852320215f16dd533feebf705253b69e57fea39",
+    "uncommitted_changes": true
+  },
+  "model_files": {
+    "artifacts/tfidf_final/model.joblib": {
+      "sha256": "54116e1f9058ee06abd916fd3d9eace6018d69fa000c11f3cdbc3b347f1e32fe",
+      "size": 42402678
+    },
+    "artifacts/tfidf_final/validation_predictions.parquet": {
+      "sha256": "162ad1d52f2cd93ebe157b2f2034848bddd4a8841cd17cc027ba1266cfe77b80",
+      "size": 29273125
+    },
+    "artifacts/tfidf_final/train_unlabeled_predictions.parquet": {
+      "sha256": "d14cf0c493e930956b80abf718521d7b71c9e8904e070aeb9c9c3a6c88af1814",
+      "size": 16543058
+    }
+  }
+}

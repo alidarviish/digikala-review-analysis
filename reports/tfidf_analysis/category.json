@@ -1,0 +1,205 @@
+{
+  "created_at": "2026-10-27T19:34:26+00:00",
+  "recommendation": {
+    "book & stationary & art": {
+      "rows": 195142,
+      "share": 0.24741700762123803,
+      "macro_f1": 0.6806746040734112,
+      "recall": {
+        "recommended": 0.9354974476758519,
+        "not_recommended": 0.6189032313956511,
+        "no_idea": 0.49971064814814814
+      },
+      "class_share": {
+        "recommended": 0.8522973014522758,
+        "not_recommended": 0.05915179715284254,
+        "no_idea": 0.08855090139488167
+      }
+    },
+    "beauty": {
+      "rows": 289605,
+      "share": 0.3671849345202398,
+      "macro_f1": 0.7031502450922003,
+      "recall": {
+        "recommended": 0.9105256013346937,
+        "not_recommended": 0.6732075188534123,
+        "no_idea": 0.5512794564117391
+      },
+      "class_share": {
+        "recommended": 0.7885464684656688,
+        "not_recommended": 0.09203225082439875,
+        "no_idea": 0.11942128070993249
+      }
+    },
+    "travel": {
+      "rows": 20455,
+      "share": 0.025934524043478204,
+      "macro_f1": 0.6837558927003972,
+      "recall": {
+        "recommended": 0.9002044229697083,
+        "not_recommended": 0.6834817012858556,
+        "no_idea": 0.5109170305676856
+      },
+      "class_share": {
+        "recommended": 0.7891957956489856,
+        "not_recommended": 0.09885113664140797,
+        "no_idea": 0.11195306770960645
+      }
+    },
+    "toys and kids": {
+      "rows": 74959,
+      "share": 0.09503915853214778,
+      "macro_f1": 0.7007541234371573,
+      "recall": {
+        "recommended": 0.9114900458370391,
+        "not_recommended": 0.7265671641791045,
+        "no_idea": 0.5030803351404632
+      },
+      "class_share": {
+        "recommended": 0.7799997331874758,
+        "not_recommended": 0.11172774450032684,
+        "no_idea": 0.10827252231219733
+      }
+    },
+    "rural goods": {
+      "rows": 18526,
+      "share": 0.023488779879221572,
+      "macro_f1": 0.693331688104548,
+      "recall": {
+        "recommended": 0.9150885349012101,
+        "not_recommended": 0.7133367399080225,
+        "no_idea": 0.4819773429454171
+      },
+      "class_share": {
+        "recommended": 0.7895390262334017,
+        "not_recommended": 0.10563532332937493,
+        "no_idea": 0.10482565043722336
+      }
+    },
+    "clothe": {
+      "rows": 190030,
+      "share": 0.24093559540367457,
+      "macro_f1": 0.708634506216705,
+      "recall": {
+        "recommended": 0.8937979183621022,
+        "not_recommended": 0.7104634495938844,
+        "no_idea": 0.5542042525773195
+      },
+      "class_share": {
+        "recommended": 0.7371572909540599,
+        "not_recommended": 0.13216860495711202,
+        "no_idea": 0.13067410408882807
+      }
+    }
+  },
+  "rating_band": {
+    "beauty": {
+      "rows": 318255,
+      "share": 0.3773216923664249,
+      "macro_f1": 0.666988960158737,
+      "recall": {
+        "low": 0.6361484843572702,
+        "medium": 0.4569167926409572,
+        "high": 0.8777061466602731
+      },
+      "class_share": {
+        "low": 0.0969191371698795,
+        "medium": 0.19538420449011012,
+        "high": 0.7076966583400104
+      }
+    },
+    "book & stationary & art": {
+      "rows": 195070,
+      "share": 0.23127411204825848,
+      "macro_f1": 0.6452808492050311,
+      "recall": {
+        "low": 0.581605611847233,
+        "medium": 0.3984103955087365,
+        "high": 0.9081802117793987
+      },
+      "class_share": {
+        "low": 0.06577126159840058,
+        "medium": 0.1625365253498744,
+        "high": 0.771692213051725
+      }
+    },
+    "toys and kids": {
+      "rows": 84091,
+      "share": 0.09969791026939101,
+      "macro_f1": 0.6672113086250032,
+      "recall": {
+        "low": 0.6858844803744283,
+        "medium": 0.4224971008890607,
+        "high": 0.8796815846403462
+      },
+      "class_share": {
+        "low": 0.11179555481561641,
+        "medium": 0.1845857463937877,
+        "high": 0.7036186987905959
+      }
+    },
+    "rural goods": {
+      "rows": 21758,
+      "share": 0.02579618665066903,
+      "macro_f1": 0.6581708128792422,
+      "recall": {
+        "low": 0.6608996539792388,
+        "medium": 0.4232157733962788,
+        "high": 0.8773114547175765
+      },
+      "class_share": {
+        "low": 0.10625976652265834,
+        "medium": 0.165502343965438,
+        "high": 0.7282378895119037
+      }
+    },
+    "travel": {
+      "rows": 22547,
+      "share": 0.02673162149152655,
+      "macro_f1": 0.6526494038494494,
+      "recall": {
+        "low": 0.6326963906581741,
+        "medium": 0.4606971975393028,
+        "high": 0.852116686705056
+      },
+      "class_share": {
+        "low": 0.10444848538608241,
+        "medium": 0.19466004346476248,
+        "high": 0.7008914711491551
+      }
+    },
+    "clothe": {
+      "rows": 201737,
+      "share": 0.23917847717373006,
+      "macro_f1": 0.681763864295756,
+      "recall": {
+        "low": 0.6758175817581759,
+        "medium": 0.49614315076774274,
+        "high": 0.859121434661003
+      },
+      "class_share": {
+        "low": 0.1321720854379712,
+        "medium": 0.20499462171044477,
+        "high": 0.662833292851584
+      }
+    }
+  },
+  "code": {
+    "commit": "e852320215f16dd533feebf705253b69e57fea39",
+    "uncommitted_changes": true
+  },
+  "model_files": {
+    "artifacts/tfidf_final/model.joblib": {
+      "sha256": "54116e1f9058ee06abd916fd3d9eace6018d69fa000c11f3cdbc3b347f1e32fe",
+      "size": 42402678
+    },
+    "artifacts/tfidf_final/validation_predictions.parquet": {
+      "sha256": "162ad1d52f2cd93ebe157b2f2034848bddd4a8841cd17cc027ba1266cfe77b80",
+      "size": 29273125
+    },
+    "artifacts/tfidf_final/train_unlabeled_predictions.parquet": {
+      "sha256": "d14cf0c493e930956b80abf718521d7b71c9e8904e070aeb9c9c3a6c88af1814",
+      "size": 16543058
+    }
+  }
+}

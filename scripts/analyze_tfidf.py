@@ -76,7 +76,9 @@ def product_categories():
     products = pd.read_parquet(PRODUCTS_RAW_DIR, columns=["id", "sub_category"])
     pairs = products.value_counts(["id", "sub_category"]).reset_index()
     pairs = pairs.sort_values(["id", "count", "sub_category"], ascending=[True, False, True])
-    return pairs.drop_duplicates("id").set_index("id")["sub_category"]
+    categories = pairs.drop_duplicates("id").set_index("id")["sub_category"]
+    categories.index = categories.index.astype(str)  # compared as text, whatever type each file stores
+    return categories
 
 
 def predict_pool(bundle, bodies):
@@ -185,7 +187,8 @@ def main():
         return result
 
     def category():
-        groups = validation["product_id"].map(product_categories()).fillna("unknown").to_numpy()
+        groups = validation["product_id"].astype(str).map(product_categories()).fillna("unknown").to_numpy()
+        assert (groups == "unknown").mean() < 0.01, "most products were not found in the product file"
         result = {}
         for head in HEADS:
             rows, y_true, y_pred = labeled(head)
