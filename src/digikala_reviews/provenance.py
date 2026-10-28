@@ -6,6 +6,7 @@ to one commit, one set of library versions and one exact data file.
 
 import json
 import platform
+import re
 import subprocess
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
@@ -48,6 +49,20 @@ def environment() -> dict:
         "libraries": {name: library_version(name) for name in LIBRARIES},
         "machine": platform.node(),
     }
+
+
+def machine_kind(environment: dict | None) -> str:
+    """Where a result was made, from its recorded environment: Colab, molab CPU, molab GPU or local.
+
+    Colab machines are named by a 12-character container id, molab machines by a longer
+    name; results made on this machine record no environment.
+    """
+    name = (environment or {}).get("machine") or ""
+    if not name:
+        return "local"
+    if re.fullmatch(r"[0-9a-f]{12}", name):
+        return "Colab"
+    return "molab GPU" if (environment or {}).get("gpu") else "molab CPU"
 
 
 def check_cache(cache_dir: Path, names: list[str]) -> dict:

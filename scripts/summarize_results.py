@@ -13,6 +13,7 @@ Usage:
 import json
 
 from digikala_reviews.config import REPORTS_DIR
+from digikala_reviews.provenance import machine_kind
 
 OUT = REPORTS_DIR / "results_summary.md"
 
@@ -21,10 +22,6 @@ NOT_MEASURED = [
     (
         "E6 linear SVM with offsets against logistic regression with offsets",
         "never run: E6 compared the SVM without offsets against the reference without offsets",
-    ),
-    (
-        "E6 rating band: SVM C=1, Complement Naive Bayes alpha 0.1 and 1",
-        "run on molab, lost when the notebook was relaunched before the download",
     ),
     (
         "Transformer pilot runs on the whole validation set",
@@ -45,6 +42,11 @@ def load(path):
 
 def short(code):
     return code["commit"][:7] + (" (uncommitted)" if code["uncommitted_changes"] else "")
+
+
+def source(run):
+    """The commit a result was made with, and on which machine."""
+    return f"{short(run['code'])} · {machine_kind(run.get('environment'))}"
 
 
 def interval(values):
@@ -70,10 +72,10 @@ def tfidf_tuning():
                 run["C"],
                 "yes" if run["converged"] else "**no**",
                 f"{run['validation']['macro_f1']:.4f}",
-                short(run["code"]),
+                source(run),
             ]
         )
-    header = ["Head", "Stage", "Features", "Class weight", "C", "Converged", "Macro F1", "Commit"]
+    header = ["Head", "Stage", "Features", "Class weight", "C", "Converged", "Macro F1", "Made with"]
     return ["## TF-IDF stages 1 and 2 (no offsets)", ""] + table(header, rows)
 
 
@@ -100,7 +102,7 @@ def tfidf_experiments():
                     result,
                     verdict,
                     "yes" if converged else "**no**",
-                    short(run["code"]),
+                    source(run),
                 ]
             )
     # E1, E2, ..., E12, then the reference
@@ -112,7 +114,7 @@ def tfidf_experiments():
         "Difference to reference [95%]",
         "Verdict",
         "Converged",
-        "Commit",
+        "Made with",
     ]
     return ["## TF-IDF experiments (each against the reference, no offsets unless named)", ""] + table(
         header, rows
@@ -136,7 +138,7 @@ def tfidf_final():
                     f"{found['variant_scores']['macro_f1']:.4f}",
                     f"{found['reference_scores']['macro_f1']:.4f}",
                     f"{found['macro_f1_difference']:+.4f} {interval(found['difference_interval_95'])}",
-                    short(run["code"]),
+                    source(run),
                 ]
             )
     chosen = load(REPORTS_DIR / "tfidf_final" / "chosen_model.json")
@@ -147,22 +149,23 @@ def tfidf_final():
                 head,
                 f"{found['validation_without_offsets']['macro_f1']:.4f}",
                 f"{found['validation_with_offsets']['macro_f1']:.4f}",
-                short(chosen["code"]),
+                source(chosen),
             ]
         )
     return (
         ["## TF-IDF combined run (final_tfidf.py)", ""]
-        + table(["Head", "Comparison", "Variant", "Reference", "Difference [95%]", "Commit"], rows)
+        + table(["Head", "Comparison", "Variant", "Reference", "Difference [95%]", "Made with"], rows)
         + ["## TF-IDF model kept: reference with offsets (fit_final_tfidf.py)", ""]
-        + table(["Head", "Without offsets", "With offsets", "Commit"], kept)
+        + table(["Head", "Without offsets", "With offsets", "Made with"], kept)
     )
 
 
 def transformer_pilot():
     summary = load(REPORTS_DIR / "transformer_pilot" / "summary.json")
     rows = []
-    for run in summary["runs"].values():
-        row = [run["model"], run["seed"], f"{run['train_rows']:,}", run["train_minutes"]]
+    for tag, run in summary["runs"].items():
+        machine = machine_kind(load(REPORTS_DIR / "transformer_pilot" / f"{tag}.json").get("environment"))
+        row = [run["model"], run["seed"], f"{run['train_rows']:,}", run["train_minutes"], machine]
         for head in ("recommendation", "rating_band"):
             found = run[head]
             difference = f"{found['difference']:+.4f} {interval(found['difference_interval_95'])}"
@@ -175,6 +178,7 @@ def transformer_pilot():
         "Seed",
         "Training reviews",
         "Minutes",
+        "Machine",
         "Recommendation (vs TF-IDF [95%])",
         "Rating band (vs TF-IDF [95%])",
         "Mean",
@@ -183,7 +187,7 @@ def transformer_pilot():
     return (
         ["## Transformer pilot (1 epoch)", "", note, ""]
         + table(header, rows)
-        + [f"Commit {short(summary['code'])}", ""]
+        + [f"Summary made with {source(summary)}", ""]
     )
 
 
@@ -226,7 +230,7 @@ def transformer_final():
             "",
         ]
         + table(["Epoch", "Step", "Mean", "Recommendation", "Rating band", ""], checks)
-        + [f"Commit {short(run['code'])}. Whole validation set:", ""]
+        + [f"Trained with {source(run)}. Whole validation set (compared with {source(comparison)}):", ""]
         + table(
             [
                 "Head",

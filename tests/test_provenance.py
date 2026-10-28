@@ -40,3 +40,14 @@ def test_new_script_counts(tmp_path):
     repo = make_repo(tmp_path)
     (repo / "scripts" / "other.py").write_text("print(3)\n")
     assert git_commit(repo)["uncommitted_changes"] is True
+
+
+def test_machine_kind_reads_the_recorded_environment():
+    from digikala_reviews.provenance import machine_kind
+
+    assert machine_kind(None) == "local"
+    assert machine_kind({"machine": "419fdab673b8"}) == "Colab"
+    assert machine_kind({"machine": "7dee5178-9452-4fa3-8f33-62bd0ad22d8b-ww55j"}) == "molab CPU"
+    assert (
+        machine_kind({"machine": "bb4baea4-610b-426e-bd9a-9221e6c0aecf-lfj27", "gpu": "RTX"}) == "molab GPU"
+    )

@@ -168,8 +168,9 @@ def _(
 
 
 @app.cell
-def _(PROJECT, mo, sys):
-    mo.stop(not (PROJECT / "src").exists(), mo.md("Click *Set up* first."))
+def _(PROJECT, mo, refresh_button, sys):
+    refresh_button  # so that Refresh, clicked after Set up, loads the code
+    mo.stop(not (PROJECT / "src").exists(), mo.md("Click *Set up* first, then *Refresh*."))
     if str(PROJECT / "src") not in sys.path:
         sys.path.insert(0, str(PROJECT / "src"))
     from digikala_reviews import pipeline

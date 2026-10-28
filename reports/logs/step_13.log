@@ -1,0 +1,8 @@
+Code 927438a0b74c153890cd42102d7b75e26517d926, data checked against cache_info.json
+Reference for recommendation: recommendation__word123_min5_persian__balanced__C0.5 (macro F1 0.6802)
+Reference for rating_band: rating_band__word123_min5_persian__unweighted__C1 (macro F1 0.6459)
+  features word123_min5_persian : 1,192,046 columns (119s)
+  E6 rating_band svc_C1: -0.0076 [-0.0086, -0.0068] not converged
+  E6 rating_band complement_nb_alpha0.1: -0.0209 [-0.0222, -0.0196] report only
+  E6 rating_band complement_nb_alpha1: -0.0208 [-0.0220, -0.0195] report only
+Done
