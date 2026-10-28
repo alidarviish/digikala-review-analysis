@@ -1,0 +1,171 @@
+{
+  "created_at": "2026-10-28T06:38:10+00:00",
+  "recommendation": {
+    "expected_calibration_error": 0.010912737748500146,
+    "bins": [
+      {
+        "bin": "0.3-0.4",
+        "rows": 1578,
+        "mean_confidence": 0.3790455758571625,
+        "accuracy": 0.34917617237008874
+      },
+      {
+        "bin": "0.4-0.5",
+        "rows": 26243,
+        "mean_confidence": 0.46624958515167236,
+        "accuracy": 0.4361544030789163
+      },
+      {
+        "bin": "0.5-0.6",
+        "rows": 54553,
+        "mean_confidence": 0.5490711331367493,
+        "accuracy": 0.5213095521786153
+      },
+      {
+        "bin": "0.6-0.7",
+        "rows": 44721,
+        "mean_confidence": 0.6483210921287537,
+        "accuracy": 0.6302855481764719
+      },
+      {
+        "bin": "0.7-0.8",
+        "rows": 42687,
+        "mean_confidence": 0.7488462328910828,
+        "accuracy": 0.7317684540960948
+      },
+      {
+        "bin": "0.8-0.9",
+        "rows": 59790,
+        "mean_confidence": 0.8571451902389526,
+        "accuracy": 0.8386853988961365
+      },
+      {
+        "bin": "0.9-1.0",
+        "rows": 559145,
+        "mean_confidence": 0.9771300554275513,
+        "accuracy": 0.9706623505530766
+      }
+    ],
+    "confident": {
+      "0.8": {
+        "kept": 618935,
+        "share": 0.7847364770887403,
+        "predicted_classes": {
+          "recommended": 0.9344599998384322,
+          "not_recommended": 0.06330390105584593,
+          "no_idea": 0.0022360991057219256
+        },
+        "accuracy": 0.9579131895917988
+      },
+      "0.9": {
+        "kept": 559145,
+        "share": 0.7089298189337874,
+        "predicted_classes": {
+          "recommended": 0.95824696635041,
+          "not_recommended": 0.04129698021085765,
+          "no_idea": 0.0004560534387323503
+        },
+        "accuracy": 0.9706623505530766
+      },
+      "0.95": {
+        "kept": 463985,
+        "share": 0.5882781783580169,
+        "predicted_classes": {
+          "recommended": 0.9794605429054819,
+          "not_recommended": 0.02053945709451814
+        },
+        "accuracy": 0.9810597325344569
+      }
+    }
+  },
+  "rating_band": {
+    "expected_calibration_error": 0.01294752606582004,
+    "bins": [
+      {
+        "bin": "0.3-0.4",
+        "rows": 1562,
+        "mean_confidence": 0.3794584572315216,
+        "accuracy": 0.3501920614596671
+      },
+      {
+        "bin": "0.4-0.5",
+        "rows": 28456,
+        "mean_confidence": 0.4688509702682495,
+        "accuracy": 0.4548425639583919
+      },
+      {
+        "bin": "0.5-0.6",
+        "rows": 64443,
+        "mean_confidence": 0.5482739210128784,
+        "accuracy": 0.5320360628772713
+      },
+      {
+        "bin": "0.6-0.7",
+        "rows": 76852,
+        "mean_confidence": 0.6523082852363586,
+        "accuracy": 0.627153489824598
+      },
+      {
+        "bin": "0.7-0.8",
+        "rows": 104479,
+        "mean_confidence": 0.7591824531555176,
+        "accuracy": 0.7414025785085998
+      },
+      {
+        "bin": "0.8-0.9",
+        "rows": 231262,
+        "mean_confidence": 0.8557789921760559,
+        "accuracy": 0.8415044408506369
+      },
+      {
+        "bin": "0.9-1.0",
+        "rows": 336404,
+        "mean_confidence": 0.941605806350708,
+        "accuracy": 0.9346559493941808
+      }
+    ],
+    "confident": {
+      "0.8": {
+        "kept": 567666,
+        "share": 0.6730222488849474,
+        "predicted_classes": {
+          "high": 0.9150592073508014,
+          "low": 0.07607994842037395,
+          "medium": 0.008860844228824697
+        },
+        "accuracy": 0.8967068663615577
+      },
+      "0.9": {
+        "kept": 336404,
+        "share": 0.3988390648971259,
+        "predicted_classes": {
+          "high": 0.9252654546319307,
+          "low": 0.07473454536806934
+        },
+        "accuracy": 0.9346559493941808
+      },
+      "0.95": {
+        "kept": 122860,
+        "share": 0.14566226178422637,
+        "predicted_classes": {
+          "high": 0.9445629171414618,
+          "low": 0.05543708285853818
+        },
+        "accuracy": 0.958709099788377
+      }
+    }
+  },
+  "code": {
+    "commit": "ed54f13c8cde70cceeba1f70cdc3626d9236ed0b",
+    "uncommitted_changes": true
+  },
+  "model": "transformer",
+  "model_files": {
+    "artifacts/transformer_final/validation_predictions.parquet": {
+      "sha256": "18c8b1c5ec363c950f316e69c1175dfd32f5682f2337000e282d67608ea9a6e7"
+    },
+    "artifacts/transformer_final/model.pt": {
+      "sha256": "a580f069bcc18cec3713682b673d49ce2d32aa2bf73ad30c898708ad7205e255"
+    }
+  }
+}

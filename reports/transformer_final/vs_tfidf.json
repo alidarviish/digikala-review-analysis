@@ -1,0 +1,248 @@
+{
+  "created_at": "2026-10-28T06:36:50+00:00",
+  "validation_reviews": 922795,
+  "kept_step": 69385,
+  "heads": {
+    "recommendation": {
+      "transformer": {
+        "rows": 788717,
+        "macro_f1": 0.7297703155751964,
+        "accuracy": 0.8739890226786033,
+        "balanced_accuracy": 0.7262532774971523,
+        "per_class": {
+          "recommended": {
+            "precision": 0.9455611134752342,
+            "recall": 0.9436351573542562,
+            "f1": 0.9445971536991243,
+            "support": 624006
+          },
+          "not_recommended": {
+            "precision": 0.7745405194692693,
+            "recall": 0.7089974361007586,
+            "f1": 0.7403211227566602,
+            "support": 75666
+          },
+          "no_idea": {
+            "precision": 0.48438259287213475,
+            "recall": 0.5261272390364422,
+            "f1": 0.5043926702698047,
+            "support": 89045
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "recommended",
+            "not_recommended",
+            "no_idea"
+          ],
+          "rows_are_true_class": [
+            [
+              588834,
+              3673,
+              31499
+            ],
+            [
+              3648,
+              53647,
+              18371
+            ],
+            [
+              30253,
+              11943,
+              46849
+            ]
+          ]
+        }
+      },
+      "tfidf": {
+        "rows": 788717,
+        "macro_f1": 0.7016757031931711,
+        "accuracy": 0.8487023862805037,
+        "balanced_accuracy": 0.7110033290736869,
+        "per_class": {
+          "recommended": {
+            "precision": 0.9431736002740456,
+            "recall": 0.9133566023403621,
+            "f1": 0.9280256617967328,
+            "support": 624006
+          },
+          "not_recommended": {
+            "precision": 0.7296573875802997,
+            "recall": 0.6845082335527185,
+            "f1": 0.7063620866007501,
+            "support": 75666
+          },
+          "no_idea": {
+            "precision": 0.4200116346713205,
+            "recall": 0.5351451513279802,
+            "f1": 0.47063936118203054,
+            "support": 89045
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "recommended",
+            "not_recommended",
+            "no_idea"
+          ],
+          "rows_are_true_class": [
+            [
+              569940,
+              6067,
+              47999
+            ],
+            [
+              6069,
+              51794,
+              17803
+            ],
+            [
+              28270,
+              13123,
+              47652
+            ]
+          ]
+        }
+      },
+      "macro_f1_difference": 0.028094612382025375,
+      "difference_interval_95": [
+        0.026805223057291,
+        0.029443011039443495
+      ],
+      "direction": "better"
+    },
+    "rating_band": {
+      "transformer": {
+        "rows": 843458,
+        "macro_f1": 0.6908045650690342,
+        "accuracy": 0.7953081244116482,
+        "balanced_accuracy": 0.678700995087977,
+        "per_class": {
+          "low": {
+            "precision": 0.7498347915730486,
+            "recall": 0.6721480445934579,
+            "f1": 0.7088693001143257,
+            "support": 84407
+          },
+          "medium": {
+            "precision": 0.48817372617168325,
+            "recall": 0.46360744543478943,
+            "f1": 0.475573547513739,
+            "support": 158755
+          },
+          "high": {
+            "precision": 0.8759298575433934,
+            "recall": 0.9003474952356837,
+            "f1": 0.887970847579038,
+            "support": 600296
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "rows_are_true_class": [
+            [
+              56734,
+              21365,
+              6308
+            ],
+            [
+              14908,
+              73600,
+              70247
+            ],
+            [
+              4020,
+              55801,
+              540475
+            ]
+          ]
+        },
+        "ordinal": {
+          "mean_distance": 0.21693670579922178,
+          "share_off_by_two": 0.012244830210870014
+        }
+      },
+      "tfidf": {
+        "rows": 843458,
+        "macro_f1": 0.6682810859846451,
+        "accuracy": 0.7764796824501042,
+        "balanced_accuracy": 0.6595514526161529,
+        "per_class": {
+          "low": {
+            "precision": 0.7138652329186452,
+            "recall": 0.6465103605151231,
+            "f1": 0.6785203605843954,
+            "support": 84407
+          },
+          "medium": {
+            "precision": 0.4513540748205064,
+            "recall": 0.4514251519637177,
+            "f1": 0.45138961059410776,
+            "support": 158755
+          },
+          "high": {
+            "precision": 0.8692232443052439,
+            "recall": 0.8807188453696176,
+            "f1": 0.8749332867754324,
+            "support": 600296
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "rows_are_true_class": [
+            [
+              54570,
+              21496,
+              8341
+            ],
+            [
+              15887,
+              71666,
+              71202
+            ],
+            [
+              5986,
+              65618,
+              528692
+            ]
+          ]
+        },
+        "ordinal": {
+          "mean_distance": 0.24050634412146188,
+          "share_off_by_two": 0.0169860265715661
+        }
+      },
+      "macro_f1_difference": 0.02252347908438912,
+      "difference_interval_95": [
+        0.02153803437516324,
+        0.023537032981573395
+      ],
+      "direction": "better"
+    }
+  },
+  "loss": {
+    "recommendation": {
+      "transformer_validation": 0.3116984963417053,
+      "tfidf_validation": 0.5004088282585144
+    },
+    "rating_band": {
+      "transformer_validation": 0.49327054619789124,
+      "tfidf_validation": 0.5219767689704895
+    },
+    "transformer_training_both_heads_near_kept_step": 0.78738,
+    "transformer_validation_both_heads": 0.8049690425395966
+  },
+  "note": "validation loss is unweighted; the training loss is the logged mean over steps",
+  "code": {
+    "commit": "ed54f13c8cde70cceeba1f70cdc3626d9236ed0b",
+    "uncommitted_changes": true
+  }
+}

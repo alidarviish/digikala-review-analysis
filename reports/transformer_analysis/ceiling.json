@@ -1,0 +1,62 @@
+{
+  "created_at": "2026-10-28T06:37:20+00:00",
+  "recommendation": {
+    "repeated_rows": 242219,
+    "repeated_share": 0.30710508331885833,
+    "distinct_repeated_texts": 24884,
+    "texts_with_conflicting_labels": 4959,
+    "ceiling": {
+      "macro_f1": 0.743655191330514,
+      "accuracy": 0.9312357824943542,
+      "recall": {
+        "recommended": 0.9850694104653926,
+        "not_recommended": 0.796271637816245,
+        "no_idea": 0.3759535833243795
+      }
+    },
+    "model_on_same_rows": {
+      "macro_f1": 0.7310402535409343,
+      "recall": {
+        "recommended": 0.9710242179381434,
+        "not_recommended": 0.7077230359520639,
+        "no_idea": 0.4572364886644461
+      }
+    }
+  },
+  "rating_band": {
+    "repeated_rows": 272842,
+    "repeated_share": 0.323480244422366,
+    "distinct_repeated_texts": 26003,
+    "texts_with_conflicting_labels": 9721,
+    "ceiling": {
+      "macro_f1": 0.6983825097622157,
+      "accuracy": 0.8539081226497387,
+      "recall": {
+        "low": 0.658773848126084,
+        "medium": 0.3681110358835477,
+        "high": 0.9659220238675902
+      }
+    },
+    "model_on_same_rows": {
+      "macro_f1": 0.6587099783067552,
+      "recall": {
+        "low": 0.5532011160545962,
+        "medium": 0.34764161588806136,
+        "high": 0.950062943917202
+      }
+    }
+  },
+  "code": {
+    "commit": "ed54f13c8cde70cceeba1f70cdc3626d9236ed0b",
+    "uncommitted_changes": true
+  },
+  "model": "transformer",
+  "model_files": {
+    "artifacts/transformer_final/validation_predictions.parquet": {
+      "sha256": "18c8b1c5ec363c950f316e69c1175dfd32f5682f2337000e282d67608ea9a6e7"
+    },
+    "artifacts/transformer_final/model.pt": {
+      "sha256": "a580f069bcc18cec3713682b673d49ce2d32aa2bf73ad30c898708ad7205e255"
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "created_at": "2026-10-28T06:37:53+00:00",
+  "recommendation": {
+    "new": {
+      "rows": 505197,
+      "share": 0.6405301267755101,
+      "macro_f1": 0.727173047733833,
+      "recall": {
+        "recommended": 0.9264456520287861,
+        "not_recommended": 0.7103868698710434,
+        "no_idea": 0.5459190553965566
+      },
+      "class_share": {
+        "recommended": 0.7412652885903914,
+        "not_recommended": 0.12663376860907724,
+        "no_idea": 0.13210094280053128
+      }
+    },
+    "seen_in_train": {
+      "rows": 283520,
+      "share": 0.3594698732244899,
+      "macro_f1": 0.7303162573893013,
+      "recall": {
+        "recommended": 0.9694334344604262,
+        "not_recommended": 0.7013942348815329,
+        "no_idea": 0.4669176976869285
+      },
+      "class_share": {
+        "recommended": 0.8800825338600452,
+        "not_recommended": 0.04123518623024831,
+        "no_idea": 0.07868227990970654
+      }
+    }
+  },
+  "rating_band": {
+    "new": {
+      "rows": 528697,
+      "share": 0.6268207782723029,
+      "macro_f1": 0.69631585880567,
+      "recall": {
+        "low": 0.6966985498302993,
+        "medium": 0.5151373487667595,
+        "high": 0.8682714981254347
+      },
+      "class_share": {
+        "low": 0.1287334711564469,
+        "medium": 0.202297346116963,
+        "high": 0.6689691827265901
+      }
+    },
+    "seen_in_train": {
+      "rows": 314761,
+      "share": 0.3731792217276972,
+      "macro_f1": 0.6629105525052622,
+      "recall": {
+        "low": 0.5699253640034259,
+        "medium": 0.3572131812127179,
+        "high": 0.9463493556732383
+      },
+      "class_share": {
+        "low": 0.05193146546109588,
+        "medium": 0.16457248515540362,
+        "high": 0.7834960493835005
+      }
+    }
+  },
+  "code": {
+    "commit": "ed54f13c8cde70cceeba1f70cdc3626d9236ed0b",
+    "uncommitted_changes": true
+  },
+  "model": "transformer",
+  "model_files": {
+    "artifacts/transformer_final/validation_predictions.parquet": {
+      "sha256": "18c8b1c5ec363c950f316e69c1175dfd32f5682f2337000e282d67608ea9a6e7"
+    },
+    "artifacts/transformer_final/model.pt": {
+      "sha256": "a580f069bcc18cec3713682b673d49ce2d32aa2bf73ad30c898708ad7205e255"
+    }
+  }
+}

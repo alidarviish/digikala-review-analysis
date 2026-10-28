@@ -1,0 +1,46 @@
+{
+  "created_at": "2026-10-28T06:37:40+00:00",
+  "recommendation": {
+    "full": 0.7297703155751964,
+    "20000": {
+      "std": 0.004596729159335323,
+      "p05": 0.7218265876526961,
+      "p95": 0.7375542550283138,
+      "largest_gap_to_full": 0.013536190342409604
+    },
+    "50000": {
+      "std": 0.0027327321950415366,
+      "p05": 0.7252796424637513,
+      "p95": 0.7340459719120415,
+      "largest_gap_to_full": 0.009777322586579373
+    }
+  },
+  "rating_band": {
+    "full": 0.6908045650690342,
+    "20000": {
+      "std": 0.004130557838235009,
+      "p05": 0.6834985839088629,
+      "p95": 0.6968131918164605,
+      "largest_gap_to_full": 0.013482197181757694
+    },
+    "50000": {
+      "std": 0.0025278590525724446,
+      "p05": 0.6866338179407024,
+      "p95": 0.6948199385622038,
+      "largest_gap_to_full": 0.009024847962656235
+    }
+  },
+  "code": {
+    "commit": "ed54f13c8cde70cceeba1f70cdc3626d9236ed0b",
+    "uncommitted_changes": true
+  },
+  "model": "transformer",
+  "model_files": {
+    "artifacts/transformer_final/validation_predictions.parquet": {
+      "sha256": "18c8b1c5ec363c950f316e69c1175dfd32f5682f2337000e282d67608ea9a6e7"
+    },
+    "artifacts/transformer_final/model.pt": {
+      "sha256": "a580f069bcc18cec3713682b673d49ce2d32aa2bf73ad30c898708ad7205e255"
+    }
+  }
+}
