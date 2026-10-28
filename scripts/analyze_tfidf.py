@@ -20,8 +20,13 @@ The test set is not read.
 Scores use the labels with offsets, except calibration and the unlabeled pools, which
 use the model's own probabilities (offsets move the decision, not the probabilities).
 
+The same analyses (except labels, words and unlabeled) also run on the saved validation
+predictions of the fine-tuned Transformer with --model transformer, written to
+reports/transformer_analysis/.
+
 Usage:
     uv run python scripts/analyze_tfidf.py [--redo]
+    uv run python scripts/analyze_tfidf.py --model transformer
 """
 
 import argparse
@@ -49,6 +54,7 @@ from digikala_reviews.config import (
     PSEUDO_LABEL_THRESHOLD,
     REPORTS_DIR,
 )
+from digikala_reviews.ingest import file_sha256
 from digikala_reviews.metrics import classification_report
 from digikala_reviews.normalize import normalize
 from digikala_reviews.provenance import git_commit
@@ -99,10 +105,23 @@ def predict_pool(bundle, bodies):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--redo", action="store_true", help="run every analysis again")
+    parser.add_argument(
+        "--model",
+        choices=["tfidf", "transformer"],
+        default="tfidf",
+        help="whose saved predictions to analyze",
+    )
     args = parser.parse_args()
+    global MODEL_DIR, OUT_DIR
+    if args.model == "transformer":
+        MODEL_DIR, OUT_DIR = ARTIFACTS_DIR / "transformer_final", REPORTS_DIR / "transformer_analysis"
+        files = [MODEL_DIR / "validation_predictions.parquet", MODEL_DIR / "model.pt"]
+        model_files = {str(p.relative_to(ARTIFACTS_DIR.parent)): {"sha256": file_sha256(p)} for p in files}
+    else:
+        summary = json.loads((REPORTS_DIR / "tfidf_final" / "chosen_model.json").read_text(encoding="utf-8"))
+        model_files = summary["files"]
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    summary = json.loads((REPORTS_DIR / "tfidf_final" / "chosen_model.json").read_text(encoding="utf-8"))
-    context = {"code": git_commit(), "model_files": summary["files"]}
+    context = {"code": git_commit(), "model": args.model, "model_files": model_files}
 
     def run(name, compute):
         path = OUT_DIR / f"{name}.json"
@@ -255,7 +274,7 @@ def main():
         }
         return result
 
-    for name, compute in [
+    analyses = [
         ("ceiling", ceiling),
         ("length", length),
         ("sample", sample),
@@ -265,7 +284,11 @@ def main():
         ("category", category),
         ("calibration", calibration_check),
         ("unlabeled", unlabeled),
-    ]:
+    ]
+    if args.model == "transformer":
+        # labels does not depend on the model; words and unlabeled need the TF-IDF model itself
+        analyses = [(n, c) for n, c in analyses if n not in ("labels", "words", "unlabeled")]
+    for name, compute in analyses:
         run(name, compute)
     print("Done", flush=True)
 

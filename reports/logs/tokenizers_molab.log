@@ -1,0 +1,12 @@
+50,000 reviews, 508,731 words
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (608 > 512). Running this sequence through the model will result in indexing errors
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+PartAI/TookaBERT-Base: 11.4 tokens per review, 1.12 per word, >128: 0.20%, >256: 0.03%, unknown 0.077%
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (604 > 512). Running this sequence through the model will result in indexing errors
+sbunlp/fabert: 11.4 tokens per review, 1.12 per word, >128: 0.21%, >256: 0.03%, unknown 0.068%
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (733 > 512). Running this sequence through the model will result in indexing errors
+FacebookAI/xlm-roberta-base: 13.9 tokens per review, 1.36 per word, >128: 0.32%, >256: 0.04%, unknown 0.005%
+jhu-clsp/mmBERT-base: 14.7 tokens per review, 1.45 per word, >128: 0.41%, >256: 0.06%, unknown 0.000%
+[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (608 > 512). Running this sequence through the model will result in indexing errors
+HooshvareLab/bert-fa-zwnj-base: 11.6 tokens per review, 1.14 per word, >128: 0.21%, >256: 0.03%, unknown 0.238%
+Done

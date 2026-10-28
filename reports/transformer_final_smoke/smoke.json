@@ -1,0 +1,353 @@
+{
+  "created_at": "2026-10-27T21:21:22+00:00",
+  "fingerprint": {
+    "settings": {
+      "model": "hf-internal-testing/tiny-random-BertModel",
+      "learning_rate": 0.001,
+      "max_epochs": 2,
+      "checks_per_epoch": 4,
+      "patience": 2,
+      "batch_size": 64,
+      "max_length": 128,
+      "weight_decay": 0.01,
+      "warmup_share": 0.06,
+      "dropout": 0.1,
+      "selection_rows": 400,
+      "train_rows": 2000,
+      "seed": 2026
+    },
+    "data": {
+      "normalizer_version": "2",
+      "sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      }
+    }
+  },
+  "training_reviews": 2000,
+  "steps_per_epoch": 32,
+  "kept_step": 24,
+  "kept_epoch": 0.75,
+  "stopped_at_step": 40,
+  "train_minutes_this_session": 0.0,
+  "checks": [
+    {
+      "step": 8,
+      "epoch": 0.25,
+      "score": 0.28930096903221203,
+      "recommendation_macro_f1": 0.2989634478996181,
+      "rating_band_macro_f1": 0.27963849016480596,
+      "kept": true
+    },
+    {
+      "step": 16,
+      "epoch": 0.5,
+      "score": 0.28930096903221203,
+      "recommendation_macro_f1": 0.2989634478996181,
+      "rating_band_macro_f1": 0.27963849016480596,
+      "kept": false
+    },
+    {
+      "step": 24,
+      "epoch": 0.75,
+      "score": 0.3578652148931052,
+      "recommendation_macro_f1": 0.3678848283499447,
+      "rating_band_macro_f1": 0.3478456014362657,
+      "kept": true
+    },
+    {
+      "step": 32,
+      "epoch": 1.0,
+      "score": 0.28930096903221203,
+      "recommendation_macro_f1": 0.2989634478996181,
+      "rating_band_macro_f1": 0.27963849016480596,
+      "kept": false
+    },
+    {
+      "step": 40,
+      "epoch": 1.25,
+      "score": 0.33006995109960513,
+      "recommendation_macro_f1": 0.3199811720404801,
+      "rating_band_macro_f1": 0.34015873015873016,
+      "kept": false
+    }
+  ],
+  "heads": {
+    "recommendation": {
+      "without_offsets": {
+        "rows": 42,
+        "macro_f1": 0.27230046948356806,
+        "accuracy": 0.6904761904761905,
+        "balanced_accuracy": 0.3333333333333333,
+        "per_class": {
+          "recommended": {
+            "precision": 0.6904761904761905,
+            "recall": 1.0,
+            "f1": 0.8169014084507042,
+            "support": 29
+          },
+          "not_recommended": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 10
+          },
+          "no_idea": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 3
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "recommended",
+            "not_recommended",
+            "no_idea"
+          ],
+          "rows_are_true_class": [
+            [
+              29,
+              0,
+              0
+            ],
+            [
+              10,
+              0,
+              0
+            ],
+            [
+              3,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "with_offsets": {
+        "rows": 42,
+        "macro_f1": 0.27230046948356806,
+        "accuracy": 0.6904761904761905,
+        "balanced_accuracy": 0.3333333333333333,
+        "per_class": {
+          "recommended": {
+            "precision": 0.6904761904761905,
+            "recall": 1.0,
+            "f1": 0.8169014084507042,
+            "support": 29
+          },
+          "not_recommended": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 10
+          },
+          "no_idea": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 3
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "recommended",
+            "not_recommended",
+            "no_idea"
+          ],
+          "rows_are_true_class": [
+            [
+              29,
+              0,
+              0
+            ],
+            [
+              10,
+              0,
+              0
+            ],
+            [
+              3,
+              0,
+              0
+            ]
+          ]
+        }
+      },
+      "with_offsets_interval_95": [
+        0.23589743589743592,
+        0.30303030303030304
+      ],
+      "offsets_per_half": {
+        "tuned_on_a": {
+          "recommended": 0.0,
+          "not_recommended": -2.0,
+          "no_idea": -2.0
+        },
+        "tuned_on_b": {
+          "recommended": 0.0,
+          "not_recommended": -2.0,
+          "no_idea": -2.0
+        }
+      },
+      "offsets_for_test": {
+        "recommended": 0.0,
+        "not_recommended": -2.0,
+        "no_idea": -2.0
+      }
+    },
+    "rating_band": {
+      "without_offsets": {
+        "rows": 1467,
+        "macro_f1": 0.20751173708920187,
+        "accuracy": 0.45194274028629855,
+        "balanced_accuracy": 0.3333333333333333,
+        "per_class": {
+          "low": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 212
+          },
+          "medium": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 592
+          },
+          "high": {
+            "precision": 0.45194274028629855,
+            "recall": 1.0,
+            "f1": 0.6225352112676056,
+            "support": 663
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "rows_are_true_class": [
+            [
+              0,
+              0,
+              212
+            ],
+            [
+              0,
+              0,
+              592
+            ],
+            [
+              0,
+              0,
+              663
+            ]
+          ]
+        }
+      },
+      "with_offsets": {
+        "rows": 1467,
+        "macro_f1": 0.28050736310262575,
+        "accuracy": 0.46966598500340834,
+        "balanced_accuracy": 0.35159084423790304,
+        "per_class": {
+          "low": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 212
+          },
+          "medium": {
+            "precision": 0.4574468085106383,
+            "recall": 0.14527027027027026,
+            "f1": 0.2205128205128205,
+            "support": 592
+          },
+          "high": {
+            "precision": 0.47146207974980453,
+            "recall": 0.9095022624434389,
+            "f1": 0.6210092687950567,
+            "support": 663
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "rows_are_true_class": [
+            [
+              0,
+              42,
+              170
+            ],
+            [
+              0,
+              86,
+              506
+            ],
+            [
+              0,
+              60,
+              603
+            ]
+          ]
+        }
+      },
+      "with_offsets_interval_95": [
+        0.26452497449505546,
+        0.2960449088982837
+      ],
+      "offsets_per_half": {
+        "tuned_on_a": {
+          "low": 0.0,
+          "medium": 1.5,
+          "high": 0.0
+        },
+        "tuned_on_b": {
+          "low": 0.0,
+          "medium": 1.5,
+          "high": 0.0
+        }
+      },
+      "offsets_for_test": {
+        "low": 0.0,
+        "medium": 1.5,
+        "high": 0.0
+      }
+    }
+  },
+  "validation_reviews": 1500,
+  "code": {
+    "commit": "2e54cacaf34b308c8fda4f1173172c75d2fa139d",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": "5.21.0",
+      "tokenizers": "0.23.3"
+    },
+    "machine": "bb4baea4-610b-426e-bd9a-9221e6c0aecf-lfj27",
+    "torch": "2.14.1+cu130",
+    "cuda": "13.0",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "transformers": "5.21.0"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}
