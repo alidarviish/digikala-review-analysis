@@ -141,6 +141,8 @@ def _(
     assert len(COMMIT) == 40 and CACHE_FOLDER_URL, "fill in COMMIT and CACHE_FOLDER_URL first"
     _lines = [run(f"rm -rf {PROJECT} && git clone -q {REPO_URL} {PROJECT}")]
     _lines.append(run(f"git -C {PROJECT} checkout -q {COMMIT} && git -C {PROJECT} log -1 --oneline"))
+    if not ROOTS["reports"].exists():  # start from the results in the repository, so finished work is skipped
+        shutil.copytree(PROJECT / "reports", ROOTS["reports"])
     _venv = PYTHON.parent.parent
     run(f"uv venv -q --clear --python 3.13 {_venv}")
     run(f"uv pip install -q --python {PYTHON} -r {PROJECT}/requirements.txt gdown")
@@ -259,21 +261,33 @@ def _(mo):
 
 
 @app.cell
-def _(ENV_EXTRA, PLACE, PROJECT, PYTHON, ROOTS, download_button, io, mo, os, subprocess, zipfile):
+def _(ENV_EXTRA, PLACE, PROJECT, PYTHON, ROOTS, download_button, io, mo, os, shutil, subprocess, zipfile):
     mo.stop(not download_button.value)
     assert PLACE == "molab", "on your own machine the outputs are already in the project"
+    # Only files that are new or changed here; the ones copied from the repository stay out
+    _outputs = ROOTS["reports"].parent
+    _new = _outputs.parent / "download"
+    shutil.rmtree(_new, ignore_errors=True)
+    for _file in sorted(_outputs.rglob("*")):
+        _relative = _file.relative_to(_outputs)
+        if not _file.is_file() or _file.suffix == ".tmp" or _relative.name == "outputs_manifest.json":
+            continue
+        _in_repo = PROJECT / _relative
+        if _in_repo.is_file() and _in_repo.read_bytes() == _file.read_bytes():
+            continue
+        (_new / _relative).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(_file, _new / _relative)
     subprocess.run(
         [str(PYTHON), "scripts/write_outputs_manifest.py"],
         cwd=PROJECT,
-        env={**os.environ, **ENV_EXTRA},
+        env={**os.environ, **ENV_EXTRA, "DIGIKALA_OUTPUT_DIR": str(_new)},
         check=True,
     )
-    _outputs = ROOTS["reports"].parent
     _buffer = io.BytesIO()
     with zipfile.ZipFile(_buffer, "w", zipfile.ZIP_DEFLATED) as _zip:
-        for _file in sorted(_outputs.rglob("*")):
-            if _file.is_file() and _file.suffix != ".tmp":
-                _zip.write(_file, _file.relative_to(_outputs))
+        for _file in sorted(_new.rglob("*")):
+            if _file.is_file():
+                _zip.write(_file, _file.relative_to(_new))
     mo.download(data=_buffer.getvalue(), filename="molab_outputs.zip", label="Download molab_outputs.zip")
     return
 
