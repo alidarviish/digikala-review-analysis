@@ -27,6 +27,10 @@ Usage:
 
 Other seeds or sample sizes are saved under their own names (<model>__seed<s>__n<rows>);
 the validation sample is the same in every run.
+
+With --whole-validation the same runs are scored on every labeled validation review instead of
+the 50,000-review sample (training is unchanged), and saved apart, in
+reports/transformer_pilot_whole/ and artifacts/transformer_pilot_whole/.
 """
 
 import argparse
@@ -182,6 +186,9 @@ def main():
     parser.add_argument("--models", help="comma-separated model names (default: all candidates)")
     parser.add_argument("--seeds", help="comma-separated training seeds (default: 2026)")
     parser.add_argument("--train-rows", type=int, help="training sample size (default: 100,000)")
+    parser.add_argument(
+        "--whole-validation", action="store_true", help="score on every labeled validation review"
+    )
     args = parser.parse_args()
     import torch
 
@@ -193,8 +200,15 @@ def main():
         settings["train_rows"] = args.train_rows
     seeds = [int(s) for s in args.seeds.split(",")] if args.seeds else [SETTINGS["seed"]]
     results_dir, arrays_dir = REPORTS_DIR / "transformer_pilot", ARTIFACTS_DIR / "transformer_pilot"
+    if args.whole_validation:
+        settings["validation_rows"] = "all"
+        results_dir, arrays_dir = (
+            results_dir.with_name("transformer_pilot_whole"),
+            arrays_dir.with_name("transformer_pilot_whole"),
+        )
     if args.smoke:
-        settings.update({k: v for k, v in SMOKE.items() if k != "models"})
+        keep = {"models"} | ({"validation_rows"} if args.whole_validation else set())
+        settings.update({k: v for k, v in SMOKE.items() if k not in keep})
         models = SMOKE["models"]
         results_dir, arrays_dir = (
             results_dir.with_name("transformer_pilot_smoke"),
@@ -232,7 +246,10 @@ def main():
     validation_all = validation_all[
         validation_all["recommendation_status"].notna() | validation_all["rating_band"].notna()
     ]
-    rows = fixed_sample(len(validation_all), settings["validation_rows"], SPLIT_SEED)
+    if settings["validation_rows"] == "all":
+        rows = np.arange(len(validation_all))
+    else:
+        rows = fixed_sample(len(validation_all), settings["validation_rows"], SPLIT_SEED)
     validation = validation_all.iloc[rows].reset_index(drop=True)
     del validation_all
 

@@ -9,10 +9,13 @@ Runs of the same model and sample size are also averaged over their seeds.
 
 Writes reports/transformer_pilot/summary.json and prints a table. Nothing is trained.
 
+With --whole-validation it reads and writes reports/transformer_pilot_whole/ instead.
+
 Usage:
-    uv run python scripts/summarize_pilot.py
+    uv run python scripts/summarize_pilot.py [--whole-validation]
 """
 
+import argparse
 import json
 import re
 from collections import defaultdict
@@ -27,17 +30,22 @@ from digikala_reviews.provenance import git_commit
 from digikala_reviews.tfidf import HEADS, load_cache
 from digikala_reviews.tuning import save_json
 
-RUNS_DIR = REPORTS_DIR / "transformer_pilot"
-ARRAYS_DIR = ARTIFACTS_DIR / "transformer_pilot"
 NAME = re.compile(r"^(?P<model>.+?)(?:__seed(?P<seed>\d+)__n(?P<rows>\d+))?$")
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--whole-validation", action="store_true", help="the runs scored on all of validation"
+    )
+    args = parser.parse_args()
+    folder = "transformer_pilot_whole" if args.whole_validation else "transformer_pilot"
+    runs_dir, arrays_dir = REPORTS_DIR / folder, ARTIFACTS_DIR / folder
     validation = load_cache("validation.parquet", extra_columns=["product_id"]).set_index("id")
     tfidf = pd.read_parquet(ARTIFACTS_DIR / "tfidf_final" / "validation_predictions.parquet").set_index("id")
     runs, groups = {}, defaultdict(list)
-    for path in sorted(ARRAYS_DIR.glob("*.npz")):
-        record = json.loads((RUNS_DIR / f"{path.stem}.json").read_text(encoding="utf-8"))
+    for path in sorted(arrays_dir.glob("*.npz")):
+        record = json.loads((runs_dir / f"{path.stem}.json").read_text(encoding="utf-8"))
         arrays = np.load(path)
         rows = validation.loc[arrays["ids"]]
         result = {"model": record["model"], "seed": record["fingerprint"]["settings"]["seed"]}
@@ -84,7 +92,7 @@ def main():
     averaged.sort(key=lambda a: (a["train_rows"], -a["mean_macro_f1"]))
 
     save_json(
-        RUNS_DIR / "summary.json",
+        runs_dir / "summary.json",
         {
             "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
             "runs": runs,

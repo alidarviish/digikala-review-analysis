@@ -211,14 +211,29 @@ def _(mo, pipeline):
     step_choice = mo.ui.dropdown(
         {f"{_s.number}. {_s.title}": _s.number for _s in pipeline.STEPS}, label="Step"
     )
+    smoke_box = mo.ui.checkbox(label="test run (--smoke)")
     start_button = mo.ui.run_button(label="Start")
     log_button = mo.ui.run_button(label="Show its log")
-    mo.hstack([step_choice, start_button, log_button], justify="start")
-    return log_button, start_button, step_choice
+    mo.hstack([step_choice, smoke_box, start_button, log_button], justify="start")
+    return log_button, smoke_box, start_button, step_choice
 
 
 @app.cell
-def _(ENV_EXTRA, LOGS, PLACE, PROJECT, PYTHON, ROOTS, mo, os, pipeline, shutil, start_button, step_choice):
+def _(
+    ENV_EXTRA,
+    LOGS,
+    PLACE,
+    PROJECT,
+    PYTHON,
+    ROOTS,
+    mo,
+    os,
+    pipeline,
+    shutil,
+    smoke_box,
+    start_button,
+    step_choice,
+):
     mo.stop(not start_button.value)
     mo.stop(step_choice.value is None, mo.md("Choose a step first."))
     _step = pipeline.STEPS[step_choice.value - 1]
@@ -226,24 +241,27 @@ def _(ENV_EXTRA, LOGS, PLACE, PROJECT, PYTHON, ROOTS, mo, os, pipeline, shutil, 
     _state = pipeline.status(pipeline.STEPS, ROOTS, _running)[_step.number]
     if _running:
         _message = f"Step {min(_running)} is running; one step at a time."
-    elif _state != "ready":
+    elif smoke_box.value and not _step.smoke:
+        _message = f"Step {_step.number} has no test run."
+    elif _state != "ready" and not smoke_box.value:  # a test run writes apart, so it may run anytime
         _message = f"Step {_step.number} is {_state}."
     elif _step.place == "local" and PLACE != "local":
         _message = f"Step {_step.number} needs the raw data, so it runs only on your own machine."
     elif _step.place == "gpu" and shutil.which("nvidia-smi") is None:
         _message = f"Step {_step.number} needs a CUDA GPU, and this machine has none."
     else:
-        pipeline.start(_step, PYTHON, PROJECT, {**os.environ, **ENV_EXTRA}, LOGS)
-        _message = f"Started step {_step.number}: {' '.join(_step.command)} (log: reports/logs/{_step.log})"
+        pipeline.start(_step, PYTHON, PROJECT, {**os.environ, **ENV_EXTRA}, LOGS, smoke=smoke_box.value)
+        _what = "test run of step" if smoke_box.value else "step"
+        _message = f"Started {_what} {_step.number}: {' '.join(_step.command)}"
     mo.md(_message)
     return
 
 
 @app.cell
-def _(LOGS, Path, log_button, mo, pipeline, run, step_choice):
+def _(LOGS, Path, log_button, mo, pipeline, run, smoke_box, step_choice):
     mo.stop(not log_button.value or step_choice.value is None)
     _step = pipeline.STEPS[step_choice.value - 1]
-    _log = LOGS / _step.log
+    _log = LOGS / (_step.log.replace(".log", "_smoke.log") if smoke_box.value else _step.log)
     _tail = run(f"tail -n 30 '{_log}'") if _log.exists() else "(not started)"
     _used = "memory unknown"
     for _path in ["/sys/fs/cgroup/memory/memory.usage_in_bytes", "/sys/fs/cgroup/memory.current"]:

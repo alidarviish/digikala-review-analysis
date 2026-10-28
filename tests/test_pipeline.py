@@ -60,3 +60,16 @@ def test_status_moves_from_waiting_to_done(tmp_path):
 
     (roots["reports"] / "runs" / "y.json").write_text("{}")
     assert status(steps, roots, running=set()) == {1: "done", 2: "done"}
+
+
+def test_test_runs_only_where_the_script_has_one(tmp_path):
+    import pytest
+
+    from digikala_reviews.pipeline import start
+
+    for step in STEPS:
+        has_smoke = "--smoke" in (PROJECT_ROOT / step.command[0]).read_text(encoding="utf-8")
+        assert has_smoke or not step.smoke, step.title
+    plain = next(step for step in STEPS if not step.smoke)
+    with pytest.raises(AssertionError):
+        start(plain, tmp_path / "python", tmp_path, {}, tmp_path, smoke=True)

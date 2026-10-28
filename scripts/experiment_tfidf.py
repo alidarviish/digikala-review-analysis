@@ -8,6 +8,8 @@ test set is never read here.
 
 Usage:
     python scripts/experiment_tfidf.py [--experiments E1 E4 ...]
+
+E13 (added after E6) is run the same way, on the reference features.
 """
 
 import argparse
@@ -51,8 +53,8 @@ RUNS_DIR = REPORTS_DIR / "tfidf_runs"
 EXPERIMENTS_DIR = REPORTS_DIR / "tfidf_experiments"
 PREDICTIONS_DIR = ARTIFACTS_DIR / "tfidf"  # reference predictions, so a restart need not refit them
 CACHE_FILES = ["train_supervised.parquet", "validation.parquet"]
-ALL_EXPERIMENTS = ["E1", "E2", "E3", "E4", "E5", "E6", "E7"]
-REPORT_ONLY = {"E6", "E7"}  # the plan never adopts these, whatever they show
+ALL_EXPERIMENTS = ["E1", "E2", "E3", "E4", "E5", "E6", "E7", "E13"]
+REPORT_ONLY = {"E6", "E7", "E13"}  # the plan never adopts these, whatever they show
 CHAR_PART = {"analyzer": "char_wb", "ngram_range": (3, 4), "min_df": 5}
 STOPWORD_COUNT = 100
 NEGATION_WORDS = ["نه", "نیست", "نبود", "نداره", "نکنید", "نخرید", "نیستم", "نشد", "نکرد"]
@@ -65,6 +67,7 @@ REFERENCE_FEATURE_JOBS = [
     ("E6", "complement_nb_alpha0.1"),
     ("E6", "complement_nb_alpha1"),
     ("E7", "zero_as_low"),
+    ("E13", "svc_C0.1_with_offsets"),
 ]
 BAND_ONLY = {"E4", "E7"}
 # What each experiment changes, as stored in its fingerprint
@@ -79,6 +82,12 @@ SPECS = {
     "E5": {"sublinear_tf": False},
     "E6": {"svc_C": [0.1, 1.0], "complement_nb_alpha": [0.1, 1.0], "svc_max_iter": MAX_ITER},
     "E7": {"rate_zero_policy": "low"},
+    "E13": {
+        "svc_C": 0.1,
+        "svc_max_iter": MAX_ITER,
+        "offsets": "as E1, on the SVM decision values and on the reference log probabilities",
+        "compared_with": "the reference with offsets",
+    },
 }
 
 
@@ -259,6 +268,9 @@ class Experiments:
                     elif experiment == "E6":
                         data = (x_train_head, y_train, x_validation_head, y_validation, labels_all[rows])
                         self.other_model(variant, head, *data)
+                    elif experiment == "E13":
+                        data = (x_train_head, y_train, x_validation_head, y_validation, rows)
+                        self.svm_with_offsets(head, *data, log_proba_all[rows], classes)
                 x_train_head = x_validation_head = None  # free the copies before E7 and the next head
                 if ("E7", "zero_as_low") in needs_matrix[head]:
                     self.zero_as_low(head, x_train, x_validation, labels_all)
@@ -322,6 +334,37 @@ class Experiments:
         model, converged = fit_quietly(model, x_train_head, y_train)
         result = compare(head, y_validation, model.predict(x_validation_head), reference_labels)
         self.save("E6", head, variant, result, converged)
+
+    def svm_with_offsets(
+        self, head, x_train_head, y_train, x_validation_head, y_validation, rows, log_proba, classes
+    ):
+        """E13: the E6 SVM (C = 0.1) against the reference, both with offsets tuned the E1 way.
+
+        E6 compared the SVM with the reference without offsets, while offsets alone add about
+        two points to the reference. Here both get offsets, each tuned on the other product half.
+        """
+        model = LinearSVC(C=0.1, class_weight=self.references[head]["class_weight"], max_iter=MAX_ITER)
+        model, converged = fit_quietly(model, x_train_head, y_train)
+        assert list(model.classes_.astype(str)) == classes, "SVM and reference classes differ"
+        code = {label: i for i, label in enumerate(classes)}
+        true_codes = np.array([code[v] for v in y_validation])
+        half_a = product_half(self.validation["product_id"].to_numpy()[rows])
+        svm_codes, svm_offsets = cross_fitted_offsets(
+            model.decision_function(x_validation_head), true_codes, half_a
+        )
+        reference_codes, reference_offsets = cross_fitted_offsets(log_proba, true_codes, half_a)
+        labels = np.array(classes)
+        result = compare(head, y_validation, labels[svm_codes], labels[reference_codes])
+
+        def named(per_half):
+            return {k: dict(zip(classes, v.tolist(), strict=True)) for k, v in per_half.items()}
+
+        extra = {
+            "svm_offsets_per_half": named(svm_offsets),
+            "reference_offsets_per_half": named(reference_offsets),
+            "note": "both models predict each review with offsets tuned on the other half of validation",
+        }
+        self.save("E13", head, "svc_C0.1_with_offsets", result, converged, extra)
 
     def zero_as_low(self, head, x_train, x_validation, reference_labels_all):
         """Train with a rating of 0 counted as low; score on both readings of the validation labels."""

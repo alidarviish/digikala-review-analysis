@@ -28,6 +28,23 @@ PILOT_SEED_MODELS = ["PartAI__TookaBERT-Base", "sbunlp__fabert", "PartAI__TookaB
 PILOT_LARGE_MODELS = ["sbunlp__fabert", "PartAI__TookaBERT-Large"]
 
 
+PILOT_ARGS = ["scripts/pilot_transformers.py"]
+PILOT_SEED_ARGS = [
+    *PILOT_ARGS,
+    "--models",
+    ",".join(m.replace("__", "/") for m in PILOT_SEED_MODELS),
+    "--seeds",
+    "2027,2028",
+]
+PILOT_LARGE_ARGS = [
+    *PILOT_ARGS,
+    "--models",
+    ",".join(m.replace("__", "/") for m in PILOT_LARGE_MODELS),
+    "--train-rows",
+    "500000",
+]
+
+
 @dataclass
 class Step:
     number: int
@@ -37,6 +54,7 @@ class Step:
     needs: list[int]  # numbers of the steps that must be done first
     outputs: list[tuple[str, int]]  # (path or pattern, how many files it must match)
     note: str = ""
+    smoke: bool = False  # the script has a --smoke test run (a tiny model on a few rows)
     log: str = field(init=False)
 
     def __post_init__(self):
@@ -139,11 +157,11 @@ STEPS = [
     ),
     Step(
         13,
-        "TF-IDF experiments E1 to E7",
+        "TF-IDF experiments E1 to E7 and E13",
         ["scripts/experiment_tfidf.py"],
         "any",
         [12],
-        [("reports/tfidf_experiments/*.json", 18)],
+        [("reports/tfidf_experiments/*.json", 20)],
         "plan and expected outcomes: reports/tfidf_experiment_plan.md",
     ),
     Step(
@@ -216,17 +234,12 @@ STEPS = [
         [17, 19],
         files(*[f"reports/transformer_pilot/{m}.json" for m in PILOT_MODELS]),
         "settings and reasons: reports/transformer_model_choice.md",
+        smoke=True,
     ),
     Step(
         21,
         "Transformer pilot: two more seeds",
-        [
-            "scripts/pilot_transformers.py",
-            "--models",
-            ",".join(m.replace("__", "/") for m in PILOT_SEED_MODELS),
-            "--seeds",
-            "2027,2028",
-        ],
+        PILOT_SEED_ARGS,
         "gpu",
         [20],
         files(
@@ -240,13 +253,7 @@ STEPS = [
     Step(
         22,
         "Transformer pilot: 500,000 reviews",
-        [
-            "scripts/pilot_transformers.py",
-            "--models",
-            ",".join(m.replace("__", "/") for m in PILOT_LARGE_MODELS),
-            "--train-rows",
-            "500000",
-        ],
+        PILOT_LARGE_ARGS,
         "gpu",
         [20],
         files(*[f"reports/transformer_pilot/{m}__seed2026__n500000.json" for m in PILOT_LARGE_MODELS]),
@@ -267,6 +274,7 @@ STEPS = [
         [23],
         files("reports/transformer_final/fabert.json", "artifacts/transformer_final/model.pt"),
         "FaBERT was chosen after step 23 (reports/transformer_model_choice.md)",
+        smoke=True,
     ),
     Step(
         25,
@@ -300,6 +308,66 @@ STEPS = [
         "any",
         [27],
         files("reports/results_summary.md"),
+    ),
+    # Added after the first results: the pilot runs scored on all of validation, and FaBERT
+    # trained for every epoch
+    Step(
+        29,
+        "Pilot on all of validation: six models",
+        [*PILOT_ARGS, "--whole-validation"],
+        "gpu",
+        [19],
+        files(*[f"reports/transformer_pilot_whole/{m}.json" for m in PILOT_MODELS]),
+        smoke=True,
+    ),
+    Step(
+        30,
+        "Pilot on all of validation: two more seeds",
+        [*PILOT_SEED_ARGS, "--whole-validation"],
+        "gpu",
+        [29],
+        files(
+            *[
+                f"reports/transformer_pilot_whole/{m}__seed{s}__n100000.json"
+                for m in PILOT_SEED_MODELS
+                for s in (2027, 2028)
+            ]
+        ),
+    ),
+    Step(
+        31,
+        "Pilot on all of validation: 500,000 reviews",
+        [*PILOT_LARGE_ARGS, "--whole-validation"],
+        "gpu",
+        [29],
+        files(*[f"reports/transformer_pilot_whole/{m}__seed2026__n500000.json" for m in PILOT_LARGE_MODELS]),
+    ),
+    Step(
+        32,
+        "Pilot summary on all of validation",
+        ["scripts/summarize_pilot.py", "--whole-validation"],
+        "local",
+        [17, 30, 31],
+        files("reports/transformer_pilot_whole/summary.json"),
+        "reads the TF-IDF predictions, which stay on your machine",
+    ),
+    Step(
+        33,
+        "FaBERT for every epoch (no early stopping)",
+        ["scripts/train_transformer.py", "--no-early-stop"],
+        "gpu",
+        [23],
+        files("reports/transformer_final/fabert_no_early_stop.json"),
+        smoke=True,
+    ),
+    Step(
+        34,
+        "FaBERT for every epoch against the first run",
+        ["scripts/compare_fabert_runs.py"],
+        "local",
+        [24, 33],
+        files("reports/transformer_final/no_early_stop_vs_first.json"),
+        "reads both runs' predictions; the first run's stay on your machine",
     ),
 ]
 
@@ -346,15 +414,23 @@ def running_steps(steps: list[Step]) -> set[int]:
         for i, part in enumerate(parts):
             if part.endswith(".py") and "scripts/" in part:
                 commands.add(tuple(["scripts/" + part.split("scripts/")[-1], *parts[i + 1 :]]))
-    return {step.number for step in steps if tuple(step.command) in commands}
+    return {
+        step.number
+        for step in steps
+        if tuple(step.command) in commands or tuple([*step.command, "--smoke"]) in commands
+    }
 
 
-def start(step: Step, python: Path, project: Path, env: dict, log_dir: Path):
-    """Start a step in the background; it keeps running if the notebook tab is closed."""
+def start(step: Step, python: Path, project: Path, env: dict, log_dir: Path, smoke: bool = False):
+    """Start a step in the background; it keeps running if the notebook tab is closed.
+
+    smoke=True runs the script's --smoke test instead, with a log of its own."""
+    assert step.smoke or not smoke, f"step {step.number} has no test run"
     log_dir.mkdir(parents=True, exist_ok=True)
-    with open(log_dir / step.log, "a") as log:
+    log_name = step.log.replace(".log", "_smoke.log") if smoke else step.log
+    with open(log_dir / log_name, "a") as log:
         subprocess.Popen(
-            [str(python), *step.command],
+            [str(python), *step.command, *(["--smoke"] if smoke else [])],
             cwd=project,
             env=env,
             stdout=log,

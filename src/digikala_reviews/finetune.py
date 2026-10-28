@@ -29,6 +29,11 @@ def linear_warmup(step: int, total: int, warmup: int) -> float:
     return max(0.0, (total - step) / max(1, total - warmup))
 
 
+def mean_log_loss(log_proba: np.ndarray, codes: np.ndarray) -> float:
+    """Mean cross-entropy of the true class: the loss of training, computed on held-out reviews."""
+    return float(-log_proba[np.arange(len(codes)), codes].mean())
+
+
 def build_model(torch, name: str, dropout: float, heads: list[str], classes: int = 3):
     """One encoder with a linear head per task on the first token. torch is passed in, so this
     module can be imported (and tested) where PyTorch is not installed."""

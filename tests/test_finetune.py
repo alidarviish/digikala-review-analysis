@@ -1,6 +1,6 @@
 import numpy as np
 
-from digikala_reviews.finetune import IGNORE, fixed_sample, label_codes, linear_warmup
+from digikala_reviews.finetune import IGNORE, fixed_sample, label_codes, linear_warmup, mean_log_loss
 
 
 def test_fixed_sample_is_sorted_repeatable_and_bounded():
@@ -19,3 +19,8 @@ def test_linear_warmup_rises_then_falls_to_zero():
     assert factors[0] == 0.5 and factors[1] == 1.0
     assert factors[2] == 1.0 and factors[-1] == 0.125
     assert all(a >= b for a, b in zip(factors[1:], factors[2:], strict=False))
+
+
+def test_mean_log_loss_is_the_cross_entropy_of_the_true_class():
+    log_proba = np.log(np.array([[0.5, 0.25, 0.25], [0.1, 0.1, 0.8]]))
+    assert np.isclose(mean_log_loss(log_proba, np.array([0, 2])), -(np.log(0.5) + np.log(0.8)) / 2)

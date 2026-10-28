@@ -169,3 +169,20 @@ step and the service. Expected outcomes, written before the analyses were run:
 | category | Whether some product categories are harder | Small differences between categories |
 | calibration | Whether the model's confidence can be read as a probability | Close to calibrated (logistic regression) |
 | unlabeled | How many unlabeled reviews the model is confident about, and how often it is right on the masked ones | Most confident predictions are recommended or high; accuracy at 0.9 above 90% but with few minority-class reviews |
+
+## E13: linear SVM with offsets (written before running it)
+
+D48 kept logistic regression partly because E6 scored the SVM without offsets, while the
+reference had them. E13 closes that gap: `LinearSVC` with C = 0.1 (the setting that
+converged for recommendation in E6), the reference class weights, and offsets searched the
+same way as E1 on its decision values. The reference gets its own offsets on the same two
+product halves, so both sides are treated alike. Report only.
+
+| Head | Expected |
+|---|---|
+| recommendation | Within 0.5 point of logistic regression with offsets; most likely no measurable difference |
+| rating band | 0.5 to 1.5 points below logistic regression with offsets |
+
+Whatever the result, logistic regression stays the TF-IDF model: its probabilities are
+needed for the calibration analysis and for choosing pseudo-labels, and an SVM gives none.
+If the SVM turns out clearly better, the D48 text is corrected to say so.

@@ -121,3 +121,28 @@ Expected:
 
 If the score is still rising at the end of the fourth epoch, more epochs are tried in a
 separate run.
+
+## Two runs added after training (written before running them)
+
+**Pilot on the whole validation set** (`pilot_transformers.py --whole-validation`). The
+pilot runs were scored on the 50,000-review sample. The same runs (both models, three seeds,
+500,000 reviews) are repeated and scored on all validation reviews, with results kept apart
+in `reports/transformer_pilot_whole/`. Expected: every score within 0.3 point of the sample
+score, and the same choice (FaBERT), since the large model's lead was smaller than the seed
+spread.
+
+**FaBERT for 4 epochs without early stopping** (`train_transformer.py --no-early-stop`).
+The first run stopped at epoch 1.75 after two checks without gain, so nobody knows what
+happens later. This run uses the same settings, trains all 4 epochs and keeps the best
+check. The validation loss of each head is now logged at every check. Expected:
+
+- the best check comes in epoch 3 or 4, about 0.3 to 0.8 point above the first run;
+- the validation loss starts to rise after epoch 2 while Macro F1 stays flat or rises a
+  little (the model grows more confident on the reviews it gets wrong).
+
+It replaces the first run only if, on the whole validation set with offsets
+(`scripts/compare_fabert_runs.py`), the whole 95% interval of the difference is above zero,
+judged for each head separately. If the best
+check is the last one and the score is still rising, 6 to 8 epochs are tried next. Training
+the lower layers with smaller learning rates (layer-wise decay) is a separate run after
+this one.

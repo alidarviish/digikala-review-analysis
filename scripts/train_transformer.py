@@ -23,8 +23,16 @@ Outputs:
   artifacts/transformer_final/validation_predictions.parquet
   reports/transformer_final/fabert.json                  checks, scores, comparison, offsets
 
+With --no-early-stop every epoch is trained (the learning rate reaches 0 at the end) and
+the best check is still the one kept. Its outputs get their own names, so the first run's
+files stay as they are:
+  artifacts/transformer_no_early_stop/   and   reports/transformer_final/fabert_no_early_stop.json
+
+Every check records the validation loss of each head next to its Macro F1.
+
 Usage:
     python scripts/train_transformer.py            # needs a GPU
+    python scripts/train_transformer.py --no-early-stop
     python scripts/train_transformer.py --smoke    # a tiny model on a few rows, CPU is fine
     python scripts/train_transformer.py --smoke --stop-after 20   # then run again: tests resuming
 """
@@ -40,7 +48,15 @@ import pandas as pd
 
 from digikala_reviews.config import ARTIFACTS_DIR, CACHE_DIR, REPORTS_DIR, SPLIT_SEED
 from digikala_reviews.experiments import compare, cross_fitted_offsets, product_half, search_offsets
-from digikala_reviews.finetune import IGNORE, batches, build_model, fixed_sample, label_codes, linear_warmup
+from digikala_reviews.finetune import (
+    IGNORE,
+    batches,
+    build_model,
+    fixed_sample,
+    label_codes,
+    linear_warmup,
+    mean_log_loss,
+)
 from digikala_reviews.metrics import bootstrap_macro_f1, classification_report, macro_f1_from_codes
 from digikala_reviews.provenance import check_cache, environment, git_commit, library_version
 from digikala_reviews.tfidf import HEADS, load_cache
@@ -98,12 +114,14 @@ def head_targets(table, head):
 
 
 def selection_score(log_proba, selection):
-    """Mean over the heads of Macro F1 with cross-fitted offsets, on the selection sample."""
-    found = {}
+    """Mean over the heads of Macro F1 with cross-fitted offsets, on the selection sample,
+    and the validation loss of each head on the same reviews."""
+    found, losses = {}, {}
     for head, (labeled, _, codes, halves) in selection.items():
         predicted, _ = cross_fitted_offsets(log_proba[head][labeled], codes, halves)
         found[head] = macro_f1_from_codes(codes, predicted, len(HEADS[head]["labels"]))
-    return float(np.mean(list(found.values()))), found
+        losses[head] = mean_log_loss(log_proba[head][labeled], codes)
+    return float(np.mean(list(found.values()))), found, losses
 
 
 def main():
@@ -112,13 +130,20 @@ def main():
     parser.add_argument(
         "--stop-after", type=int, help="end the session after this step's check (tests resuming)"
     )
+    parser.add_argument(
+        "--no-early-stop", action="store_true", help="train every epoch; keep the best check all the same"
+    )
     args = parser.parse_args()
     import torch
     from transformers import AutoTokenizer
 
     settings = {**SETTINGS, **(SMOKE if args.smoke else {})}
-    name = "smoke" if args.smoke else "fabert"
+    if args.no_early_stop:
+        settings["patience"] = None
+    name = ("smoke" if args.smoke else "fabert") + ("_no_early_stop" if args.no_early_stop else "")
     out_dir = ARTIFACTS_DIR / ("transformer_final_smoke" if args.smoke else "transformer_final")
+    if args.no_early_stop:
+        out_dir = out_dir.with_name(out_dir.name.replace("final", "no_early_stop"))
     result_path = (
         REPORTS_DIR / ("transformer_final_smoke" if args.smoke else "transformer_final") / f"{name}.json"
     )
@@ -225,8 +250,12 @@ def main():
         f"check every {check_every:,}",
         flush=True,
     )
+
     # a run resumed after it already stopped early goes straight to the final scoring
-    start, running, stop = time.perf_counter(), [], state["checks_without_gain"] >= settings["patience"]
+    def patience_used_up():
+        return settings["patience"] is not None and state["checks_without_gain"] >= settings["patience"]
+
+    start, running, stop = time.perf_counter(), [], patience_used_up()
     while state["step"] < total_steps and not stop:
         epoch, done_in_epoch = divmod(state["step"], steps_per_epoch)
         order = np.random.default_rng(settings["seed"] + epoch).permutation(len(train_ids))
@@ -256,7 +285,7 @@ def main():
                 )
                 running = []
             if state["step"] % check_every == 0 or state["step"] == total_steps:
-                score, per_head = selection_score(
+                score, per_head, losses = selection_score(
                     predict(torch, model, tokenizer, selection_ids, device), selection
                 )
                 model.train()
@@ -267,6 +296,8 @@ def main():
                         "epoch": round(state["step"] / steps_per_epoch, 2),
                         "score": score,
                         **{f"{h}_macro_f1": v for h, v in per_head.items()},
+                        **{f"{h}_validation_loss": v for h, v in losses.items()},
+                        "validation_loss_both_heads": sum(losses.values()),
                         "kept": improved,
                     }
                 )
@@ -277,11 +308,11 @@ def main():
                 else:
                     state["checks_without_gain"] += 1
                 print(
-                    f"  check at epoch {state['history'][-1]['epoch']}: {score:.4f} "
-                    f"({'kept' if improved else 'not better'})",
+                    f"  check at epoch {state['history'][-1]['epoch']}: {score:.4f}, "
+                    f"validation loss {sum(losses.values()):.4f} ({'kept' if improved else 'not better'})",
                     flush=True,
                 )
-                stop = state["checks_without_gain"] >= settings["patience"]
+                stop = patience_used_up()
                 save_atomic(
                     {
                         "model": model.state_dict(),
