@@ -16,15 +16,22 @@ from digikala_reviews.ingest import file_sha256
 LIBRARIES = ["numpy", "pandas", "pyarrow", "scipy", "scikit-learn", "joblib", "transformers", "tokenizers"]
 
 
+CODE_PATHS = ["src", "scripts", "pyproject.toml", "uv.lock", "requirements.txt"]
+
+
 def git_commit(root: Path = PROJECT_ROOT) -> dict:
-    """The commit of the code, and whether there were uncommitted changes."""
+    """The commit of the code, and whether the code differed from it.
+
+    Only the code paths count: a new result file or a downloaded zip in the folder does not
+    make the code uncommitted, but an edited or new script does.
+    """
 
     def git(*args):
         return subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True).stdout.strip()
 
     return {
         "commit": git("rev-parse", "HEAD") or None,
-        "uncommitted_changes": bool(git("status", "--porcelain")),
+        "uncommitted_changes": bool(git("status", "--porcelain", "--", *CODE_PATHS)),
     }
 
 
