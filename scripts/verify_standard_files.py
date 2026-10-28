@@ -5,12 +5,13 @@ so a problem in writing or reading the CSVs shows up here. The expected rows of 
 file, the masked rows and the text_seen_in_train flags are worked out again here,
 independently of build_standard_files.py where possible.
 
-Rebuild check: the file hashes are compared with reports/split_manifest.json, the copy
-kept from the last checked run. Run this script, then build_standard_files.py again,
-then this script again: identical hashes show that the files are rebuilt byte for byte.
+Rebuild check: the file hashes are compared with the ones recorded by the last run of
+this script that passed (reports/standard_files_check.json). Run this script, then
+build_standard_files.py again, then this script again: identical hashes show that the
+files are rebuilt byte for byte.
 
-Writes reports/standard_files_check.json and, when every check passes, refreshes
-reports/split_manifest.json. Exits with an error if any check fails.
+Reads reports/split_manifest.json (written by build_standard_files.py) and writes
+reports/standard_files_check.json. Exits with an error if any check fails.
 
 Usage:
     uv run python scripts/verify_standard_files.py
@@ -19,7 +20,6 @@ Usage:
 import hashlib
 import json
 import math
-import shutil
 import sys
 import time
 from datetime import UTC, datetime
@@ -40,8 +40,7 @@ from digikala_reviews.ingest import file_sha256
 from digikala_reviews.normalize import normalize
 from digikala_reviews.standard_files import read_split_file
 
-MANIFEST_PATH = SPLITS_DIR / "split_manifest.json"
-KEPT_MANIFEST_PATH = REPORTS_DIR / "split_manifest.json"
+MANIFEST_PATH = REPORTS_DIR / "split_manifest.json"
 REPORT_PATH = REPORTS_DIR / "standard_files_check.json"
 CHUNK_ROWS = 250_000
 
@@ -102,22 +101,23 @@ def text_seen_in_train(source: pd.DataFrame) -> pd.Series:
     return keys.isin(np.unique(keys[source["split"] == "train"].to_numpy()))
 
 
-def rebuild_check(hashes, manifest, kept):
-    """Compare with the last checked run, but only when that comparison means something."""
-    if kept is None:
-        return "skipped: no earlier checked run"
-    if kept.get("inputs") != manifest.get("inputs"):
-        return "skipped: the inputs changed since the last checked run"
-    if kept["created_at"] == manifest["created_at"]:
-        return "skipped: the files were not rebuilt since the last checked run"
-    return "identical" if hashes == kept["sha256"] else "different"
+def rebuild_check(hashes, manifest, last):
+    """Compare with the last run that passed, but only when that comparison means something."""
+    if last is None or "inputs" not in last:
+        return "skipped: no earlier passed run that recorded its inputs"
+    if last["inputs"] != manifest["inputs"]:
+        return "skipped: the inputs changed since the last passed run"
+    if last["manifest_created_at"] == manifest["created_at"]:
+        return "skipped: the files were not rebuilt since the last passed run"
+    return "identical" if hashes == last["sha256"] else "different"
 
 
 def main():
     start = time.perf_counter()
+    last = json.loads(REPORT_PATH.read_text(encoding="utf-8")) if REPORT_PATH.exists() else None
+    last = last if last and last["passed"] else None
     REPORT_PATH.unlink(missing_ok=True)  # a failed run never leaves an old "passed" report behind
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    kept = json.loads(KEPT_MANIFEST_PATH.read_text(encoding="utf-8")) if KEPT_MANIFEST_PATH.exists() else None
 
     columns = ["id", "product_id", "body", "rate", "recommendation", "rating_band"]
     source = pd.read_parquet(COMMENTS_CLEAN_PARQUET, columns=columns)
@@ -136,7 +136,7 @@ def main():
     check("rows per part match the manifest", rows_per_part == manifest["rows_per_part"])
     hashes = {name: file_sha256(SPLITS_DIR / name) for name in EXPECTED_COLUMNS}
     check("file hashes match the manifest", hashes == manifest["sha256"])
-    rebuild = rebuild_check(hashes, manifest, kept)
+    rebuild = rebuild_check(hashes, manifest, last)
     check("files are rebuilt byte for byte", rebuild != "different", rebuild)
 
     # Which rows every file should hold, worked out from the source
@@ -198,6 +198,8 @@ def main():
         "passed": passed,
         "rebuild_check": rebuild,
         "checks": checks,
+        "inputs": manifest["inputs"],
+        "manifest_created_at": manifest["created_at"],
         "sha256": hashes,
         "seconds": round(time.perf_counter() - start),
     }
@@ -207,8 +209,6 @@ def main():
 
     if not passed:
         sys.exit("Some checks failed, see reports/standard_files_check.json")
-    shutil.copyfile(MANIFEST_PATH, KEPT_MANIFEST_PATH)
-    print(f"Copied the manifest to reports/{KEPT_MANIFEST_PATH.name}")
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-10-25T17:41:31+00:00",
+  "created_at": "2026-10-28T11:23:00+00:00",
   "passed": true,
   "rebuild_check": "identical",
   "checks": [
@@ -269,6 +269,18 @@
       "detail": ""
     }
   ],
+  "inputs": {
+    "comments_clean_sha256": "c17f9d624bea25c7c61f28c58536b26f34c6cc91b0b1cd96144c8d2bdbab14f1",
+    "split_assignment_sha256": "4bf98fa1b6a73f3c7c3394b7e438660aeca12a746ffb7ad90fbde27332fabfbb",
+    "normalizer_version": "2",
+    "mask_rate": 0.2,
+    "rating_band_edges": [
+      2.5,
+      4.0
+    ],
+    "rate_zero_policy": "invalid"
+  },
+  "manifest_created_at": "2026-10-28T11:19:23+00:00",
   "sha256": {
     "train_supervised.csv": "ffc5d0095d2efadf5949c805449fdbb3ed6aa7fbb3b4c40385d043f8463fda0a",
     "train_pseudo_unlabeled.csv": "633df12954d6ca8d5170bde05bd311e57f1a6e4f35b2c406a210d34c6bcb913d",
@@ -277,5 +289,5 @@
     "test.csv": "e1396ecb1bd89f00e9bfe848c95e9ffb6e93403b248a95e4210ea3960f7947a6",
     "audit/masked_labels_reference.csv": "62722cb4b2bbeb530aea79f68877baecaa49cd0892a656644b729a8a812f69c9"
   },
-  "seconds": 214
+  "seconds": 210
 }

@@ -6,10 +6,10 @@ Outputs in data/splits/:
     train_pseudo_unlabeled.csv  masked train rows, id and body only
     natural_unlabeled.csv       train rows without a recommendation label, id and body only
     validation.csv, test.csv    every row of the part, plus text_seen_in_train
-    split_manifest.json         seeds, rules, counts and file hashes
     audit/masked_labels_reference.csv
                                 true labels of the masked rows, only for checking pseudo-labels later;
                                 never used for training
+And reports/split_manifest.json: seeds, rules, counts and the hash of every file above.
 
 The body column stays raw text in every file; the models normalize it with the same function.
 
@@ -44,7 +44,7 @@ from digikala_reviews.normalize import NORMALIZER_VERSION, normalize
 
 ASSIGNMENT_PATH = SPLITS_DIR / "split_assignment.parquet"
 SPLIT_REPORT_PATH = REPORTS_DIR / "split_report.json"
-MANIFEST_PATH = SPLITS_DIR / "split_manifest.json"
+MANIFEST_PATH = REPORTS_DIR / "split_manifest.json"
 AUDIT_DIR = SPLITS_DIR / "audit"
 LABELED_COLUMNS = ["id", "product_id", "body", "rate", "recommendation_status", "rating_band"]
 CHUNK_ROWS = 250_000
@@ -220,7 +220,7 @@ def main():
     for label, counts in masked_per_class.items():
         print(f"  {label:>16}: {counts['masked']:,} of {counts['train_labeled']:,}")
     print(f"Text seen in train: {manifest['text_seen_in_train_pct']}")
-    print(f"Saved data/splits/{MANIFEST_PATH.name} ({time.perf_counter() - start:.0f}s)")
+    print(f"Saved reports/{MANIFEST_PATH.name} ({time.perf_counter() - start:.0f}s)")
 
 
 if __name__ == "__main__":
