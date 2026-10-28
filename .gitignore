@@ -18,8 +18,9 @@ __pycache__/
 .ruff_cache/
 .pytest_cache/
 
-# Jupyter
+# Jupyter and marimo
 .ipynb_checkpoints/
+__marimo__/
 
 # Environment / secrets
 .env
