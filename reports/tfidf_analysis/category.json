@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-10-27T19:34:26+00:00",
+  "created_at": "2026-10-28T11:41:29+00:00",
   "recommendation": {
     "book & stationary & art": {
       "rows": 195142,
@@ -185,9 +185,10 @@
     }
   },
   "code": {
-    "commit": "e852320215f16dd533feebf705253b69e57fea39",
-    "uncommitted_changes": true
+    "commit": "58a68b14b7fd70fe7eb18cedcb71cc907c3b21fb",
+    "uncommitted_changes": false
   },
+  "model": "tfidf",
   "model_files": {
     "artifacts/tfidf_final/model.joblib": {
       "sha256": "54116e1f9058ee06abd916fd3d9eace6018d69fa000c11f3cdbc3b347f1e32fe",

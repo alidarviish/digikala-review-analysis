@@ -110,7 +110,7 @@ Scored with offsets on the same 50,000 validation reviews, as is TF-IDF (the kep
 | sbunlp/fabert | 2028 | 100,000 | 0.85 | 0.7118 (+0.0144 [+0.0084, +0.0203]) | 0.6776 (+0.0072 [+0.0029, +0.0116]) | 0.6947 |
 | sbunlp/fabert | 2026 | 500,000 | 4.3 | 0.7241 (+0.0268 [+0.0211, +0.0325]) | 0.6872 (+0.0167 [+0.0125, +0.0214]) | 0.7056 |
 
-Commit 1647e23 (uncommitted)
+Commit 58a68b1
 
 ## FaBERT on all training reviews
 
