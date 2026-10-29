@@ -1,0 +1,121 @@
+{
+  "created_at": "2026-10-29T16:14:25+00:00",
+  "rows": 3552498,
+  "different_texts": 2363237,
+  "steps_per_epoch": {
+    "now": 55508,
+    "merged": 36926
+  },
+  "copies_per_text": {
+    "1": {
+      "share_of_texts": 0.9534689072657545,
+      "share_of_rows": 0.6342784710927353
+    },
+    "2-9": {
+      "share_of_texts": 0.041527362680932975,
+      "share_of_rows": 0.08464156770813101
+    },
+    "10-99": {
+      "share_of_texts": 0.004546729760916912,
+      "share_of_rows": 0.0724017297124446
+    },
+    "100-999": {
+      "share_of_texts": 0.00041891693469592767,
+      "share_of_rows": 0.07102072963869367
+    },
+    "1000+": {
+      "share_of_texts": 3.8083357699629785e-05,
+      "share_of_rows": 0.1376575018479954
+    }
+  },
+  "most_copied_texts": [
+    {
+      "text": "عالی",
+      "copies": 92467
+    },
+    {
+      "text": "خوب بود",
+      "copies": 54172
+    },
+    {
+      "text": "خوبه",
+      "copies": 50564
+    },
+    {
+      "text": "خوب",
+      "copies": 43512
+    },
+    {
+      "text": "عالی بود",
+      "copies": 20055
+    },
+    {
+      "text": "عالیه",
+      "copies": 15856
+    },
+    {
+      "text": "خیلی خوب بود",
+      "copies": 10555
+    },
+    {
+      "text": "معمولی",
+      "copies": 9293
+    },
+    {
+      "text": "پیشنهاد میکنم",
+      "copies": 8968
+    },
+    {
+      "text": "خیلی خوبه",
+      "copies": 8179
+    }
+  ],
+  "heads": {
+    "recommendation": {
+      "mixed_labels": {
+        "texts_with_a_label": 2006204,
+        "share_of_texts": 0.008905873978917398,
+        "share_of_rows": 0.24218527925763592
+      },
+      "class_shares": {
+        "recommended": {
+          "copies_counted": 0.791166970449364,
+          "each_text_once": 0.7478531985689114
+        },
+        "not_recommended": {
+          "copies_counted": 0.09593623993433267,
+          "each_text_once": 0.12274054421077507
+        },
+        "no_idea": {
+          "copies_counted": 0.11289678961630327,
+          "each_text_once": 0.12940625722031446
+        }
+      }
+    },
+    "rating_band": {
+      "mixed_labels": {
+        "texts_with_a_label": 2166020,
+        "share_of_texts": 0.01620114311040526,
+        "share_of_rows": 0.3039316857109748
+      },
+      "class_shares": {
+        "low": {
+          "copies_counted": 0.09955080688732197,
+          "each_text_once": 0.125114208950877
+        },
+        "medium": {
+          "copies_counted": 0.1858753211634441,
+          "each_text_once": 0.19887872050482852
+        },
+        "high": {
+          "copies_counted": 0.7145738719492339,
+          "each_text_once": 0.6760070705442961
+        }
+      }
+    }
+  },
+  "code": {
+    "commit": "0e477d9300e8c43a5d42084709469d4223074a0f",
+    "uncommitted_changes": true
+  }
+}
