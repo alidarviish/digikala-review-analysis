@@ -1,0 +1,211 @@
+{
+  "experiment": "E13",
+  "head": "rating_band",
+  "variant": "svc_C0.1_with_offsets",
+  "created_at": "2026-10-28T23:37:30+00:00",
+  "reference_model": {
+    "run": "rating_band__word123_min5_persian__unweighted__C1",
+    "setup": "word123_min5_persian",
+    "C": 1.0,
+    "class_weight": null
+  },
+  "converged": true,
+  "fingerprint": {
+    "experiment": "E13",
+    "variant": "svc_C0.1_with_offsets",
+    "reference_run": "rating_band__word123_min5_persian__unweighted__C1",
+    "reference_fingerprint": {
+      "setup_parts": [
+        {
+          "analyzer": "word",
+          "ngram_range": [
+            1,
+            3
+          ],
+          "min_df": 5,
+          "token": "persian",
+          "token_pattern": "(?u)[\\wً-ٰٟ]+(?:‌[\\wً-ٰٟ]+)*|[^\\w\\s‌ً-ٰٟ][︎️\\U0001f3fb-\\U0001f3ff]*"
+        }
+      ],
+      "max_iter": 2000,
+      "data_sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      },
+      "normalizer_version": "2",
+      "sklearn": "1.9.1"
+    },
+    "spec": {
+      "svc_C": 0.1,
+      "svc_max_iter": 2000,
+      "offsets": "as E1, on the SVM decision values and on the reference log probabilities",
+      "compared_with": "the reference with offsets"
+    }
+  },
+  "variant_scores": {
+    "rows": 843458,
+    "macro_f1": 0.6690068079140232,
+    "accuracy": 0.7854404131563161,
+    "balanced_accuracy": 0.6536595064878783,
+    "per_class": {
+      "low": {
+        "precision": 0.7242710763647279,
+        "recall": 0.628905185588873,
+        "f1": 0.6732276474318326,
+        "support": 84407
+      },
+      "medium": {
+        "precision": 0.47384464042009294,
+        "recall": 0.4308462725583446,
+        "f1": 0.45132363809121623,
+        "support": 158755
+      },
+      "high": {
+        "precision": 0.864476139951679,
+        "recall": 0.9012270613164173,
+        "f1": 0.8824691382190207,
+        "support": 600296
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "rows_are_true_class": [
+        [
+          53084,
+          22457,
+          8866
+        ],
+        [
+          14409,
+          68399,
+          75947
+        ],
+        [
+          5800,
+          53493,
+          541003
+        ]
+      ]
+    },
+    "ordinal": {
+      "mean_distance": 0.23194753028603676,
+      "share_off_by_two": 0.01738794344235279
+    }
+  },
+  "reference_scores": {
+    "rows": 843458,
+    "macro_f1": 0.6682810859846451,
+    "accuracy": 0.7764796824501042,
+    "balanced_accuracy": 0.6595514526161529,
+    "per_class": {
+      "low": {
+        "precision": 0.7138652329186452,
+        "recall": 0.6465103605151231,
+        "f1": 0.6785203605843954,
+        "support": 84407
+      },
+      "medium": {
+        "precision": 0.4513540748205064,
+        "recall": 0.4514251519637177,
+        "f1": 0.45138961059410776,
+        "support": 158755
+      },
+      "high": {
+        "precision": 0.8692232443052439,
+        "recall": 0.8807188453696176,
+        "f1": 0.8749332867754324,
+        "support": 600296
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "rows_are_true_class": [
+        [
+          54570,
+          21496,
+          8341
+        ],
+        [
+          15887,
+          71666,
+          71202
+        ],
+        [
+          5986,
+          65618,
+          528692
+        ]
+      ]
+    },
+    "ordinal": {
+      "mean_distance": 0.24050634412146188,
+      "share_off_by_two": 0.0169860265715661
+    }
+  },
+  "macro_f1_difference": 0.0007257219293781425,
+  "difference_interval_95": [
+    1.8563670781626694e-05,
+    0.0014327444022390555
+  ],
+  "direction": "better",
+  "verdict": "report only",
+  "svm_offsets_per_half": {
+    "tuned_on_a": {
+      "high": 0.0,
+      "low": 0.4,
+      "medium": 0.6
+    },
+    "tuned_on_b": {
+      "high": 0.0,
+      "low": 0.4,
+      "medium": 0.6
+    }
+  },
+  "reference_offsets_per_half": {
+    "tuned_on_a": {
+      "high": 0.0,
+      "low": 0.7,
+      "medium": 0.8
+    },
+    "tuned_on_b": {
+      "high": 0.0,
+      "low": 0.6,
+      "medium": 0.8
+    }
+  },
+  "note": "both models predict each review with offsets tuned on the other half of validation",
+  "process_peak_memory_gb": null,
+  "code": {
+    "commit": "1be1f2147a9f8dfd45845175cf8053528355ae2a",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": null,
+      "tokenizers": null
+    },
+    "machine": "ddb9c1fe-aeb2-4f43-a46b-a6527ac89a61-t4twv"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "experiment": "E13",
+  "head": "recommendation",
+  "variant": "svc_C0.1_with_offsets",
+  "created_at": "2026-10-28T22:06:25+00:00",
+  "reference_model": {
+    "run": "recommendation__word123_min5_persian__balanced__C0.5",
+    "setup": "word123_min5_persian",
+    "C": 0.5,
+    "class_weight": "balanced"
+  },
+  "converged": true,
+  "fingerprint": {
+    "experiment": "E13",
+    "variant": "svc_C0.1_with_offsets",
+    "reference_run": "recommendation__word123_min5_persian__balanced__C0.5",
+    "reference_fingerprint": {
+      "setup_parts": [
+        {
+          "analyzer": "word",
+          "ngram_range": [
+            1,
+            3
+          ],
+          "min_df": 5,
+          "token": "persian",
+          "token_pattern": "(?u)[\\wً-ٰٟ]+(?:‌[\\wً-ٰٟ]+)*|[^\\w\\s‌ً-ٰٟ][︎️\\U0001f3fb-\\U0001f3ff]*"
+        }
+      ],
+      "max_iter": 2000,
+      "data_sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      },
+      "normalizer_version": "2",
+      "sklearn": "1.9.1"
+    },
+    "spec": {
+      "svc_C": 0.1,
+      "svc_max_iter": 2000,
+      "offsets": "as E1, on the SVM decision values and on the reference log probabilities",
+      "compared_with": "the reference with offsets"
+    }
+  },
+  "variant_scores": {
+    "rows": 788717,
+    "macro_f1": 0.7041997962540597,
+    "accuracy": 0.8545042138054587,
+    "balanced_accuracy": 0.7107414086556422,
+    "per_class": {
+      "recommended": {
+        "precision": 0.9418654884634267,
+        "recall": 0.9223853616792146,
+        "f1": 0.9320236481727074,
+        "support": 624006
+      },
+      "not_recommended": {
+        "precision": 0.7210213160839543,
+        "recall": 0.6982660640181851,
+        "f1": 0.7094612740358792,
+        "support": 75666
+      },
+      "no_idea": {
+        "precision": 0.4365865112757454,
+        "recall": 0.5115728002695267,
+        "f1": 0.47111446655359285,
+        "support": 89045
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "recommended",
+        "not_recommended",
+        "no_idea"
+      ],
+      "rows_are_true_class": [
+        [
+          575574,
+          6555,
+          41877
+        ],
+        [
+          5922,
+          52835,
+          16909
+        ],
+        [
+          29604,
+          13888,
+          45553
+        ]
+      ]
+    }
+  },
+  "reference_scores": {
+    "rows": 788717,
+    "macro_f1": 0.7016757031931711,
+    "accuracy": 0.8487023862805037,
+    "balanced_accuracy": 0.7110033290736869,
+    "per_class": {
+      "recommended": {
+        "precision": 0.9431736002740456,
+        "recall": 0.9133566023403621,
+        "f1": 0.9280256617967328,
+        "support": 624006
+      },
+      "not_recommended": {
+        "precision": 0.7296573875802997,
+        "recall": 0.6845082335527185,
+        "f1": 0.7063620866007501,
+        "support": 75666
+      },
+      "no_idea": {
+        "precision": 0.4200116346713205,
+        "recall": 0.5351451513279802,
+        "f1": 0.47063936118203054,
+        "support": 89045
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "recommended",
+        "not_recommended",
+        "no_idea"
+      ],
+      "rows_are_true_class": [
+        [
+          569940,
+          6067,
+          47999
+        ],
+        [
+          6069,
+          51794,
+          17803
+        ],
+        [
+          28270,
+          13123,
+          47652
+        ]
+      ]
+    }
+  },
+  "macro_f1_difference": 0.0025240930608886325,
+  "difference_interval_95": [
+    0.0018898974787807555,
+    0.0032204905128877855
+  ],
+  "direction": "better",
+  "verdict": "report only",
+  "svm_offsets_per_half": {
+    "tuned_on_a": {
+      "no_idea": 0.0,
+      "not_recommended": -0.2,
+      "recommended": 0.0
+    },
+    "tuned_on_b": {
+      "no_idea": 0.0,
+      "not_recommended": -0.2,
+      "recommended": -0.1
+    }
+  },
+  "reference_offsets_per_half": {
+    "tuned_on_a": {
+      "no_idea": 0.0,
+      "not_recommended": -0.4,
+      "recommended": 0.7
+    },
+    "tuned_on_b": {
+      "no_idea": 0.0,
+      "not_recommended": -0.4,
+      "recommended": 0.7
+    }
+  },
+  "note": "both models predict each review with offsets tuned on the other half of validation",
+  "process_peak_memory_gb": null,
+  "code": {
+    "commit": "1be1f2147a9f8dfd45845175cf8053528355ae2a",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": null,
+      "tokenizers": null
+    },
+    "machine": "ddb9c1fe-aeb2-4f43-a46b-a6527ac89a61-t4twv"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}

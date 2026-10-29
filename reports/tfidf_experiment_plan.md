@@ -186,3 +186,13 @@ product halves, so both sides are treated alike. Report only.
 Whatever the result, logistic regression stays the TF-IDF model: its probabilities are
 needed for the calibration analysis and for choosing pseudo-labels, and an SVM gives none.
 If the SVM turns out clearly better, the D48 text is corrected to say so.
+
+### Result of E13
+
+`reports/tfidf_experiments/E13__*.json`. The linear SVM with offsets converged for both heads
+and was slightly better than logistic regression with offsets: recommendation +0.0025
+[+0.0019, +0.0032], rating band +0.0007 [+0.0000, +0.0014]. The prediction for
+recommendation had the right size but expected no measurable difference; the prediction for
+the rating band (0.5 to 1.5 points worse) was wrong. D48 is corrected accordingly: logistic
+regression stays the TF-IDF model not because the SVM failed, but because the difference is
+below 0.3 point and the later steps need probabilities, which the SVM does not give.

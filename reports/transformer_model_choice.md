@@ -146,3 +146,34 @@ judged for each head separately. If the best
 check is the last one and the score is still rising, 6 to 8 epochs are tried next. Training
 the lower layers with smaller learning rates (layer-wise decay) is a separate run after
 this one.
+
+## Result of the pilot on the whole validation set
+
+`reports/transformer_pilot_whole/summary.json`. The prediction was wrong: 10 of the 28
+scores moved by more than 0.3 point from the sample score, the largest by 0.9 point (FaBERT
+and mmBERT on recommendation). On the whole validation set the seeds move a model by only
+about 0.1 point, so most of the seed spread seen before was noise of the 50,000-review
+sample. Mean of three seeds with 100,000 reviews: TookaBERT-Large 0.6956 (0.6951 to
+0.6960), FaBERT 0.6929 (0.6925 to 0.6936), TookaBERT-Base 0.6856 (0.6841 to 0.6868). Here
+the lead of the large model (0.26 point) is larger than the spread, so by the rule it is no
+longer a tie. With 500,000 reviews and one seed: TookaBERT-Large 0.7050, FaBERT 0.7043,
+both about 2 points above TF-IDF on each head with the whole interval above zero.
+
+## TookaBERT-Large against FaBERT on 500,000 reviews (written before running)
+
+The choice has to be settled before FaBERT is trained for longer, and the model is trained
+on all 3.5 million reviews in the end, so the comparison is made at 500,000 reviews with
+three seeds, as at 100,000: `pilot_transformers.py` with seeds 2027 and 2028 for both models
+(step 35), then `scripts/compare_pilot_models.py` (step 36), which compares the two models
+directly on the same reviews for each seed (paired bootstrap, per head) and applies the
+rule above to the mean over the three seeds.
+
+Expected:
+
+- the lead of the large model stays below 0.15 point and below the spread between seeds,
+  so it is a tie and FaBERT stays the model;
+- per seed, the interval of the difference includes zero for recommendation; for the
+  rating band it may be slightly in favour of the large model.
+
+If the large model wins by the rule, it replaces FaBERT, and the longer training run (step
+33) is made with it instead.

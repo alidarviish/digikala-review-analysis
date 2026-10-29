@@ -1,0 +1,10 @@
+Code 1be1f2147a9f8dfd45845175cf8053528355ae2a, device NVIDIA RTX PRO 6000 Blackwell Server Edition, torch 2.14.1+cu130
+/marimo/work/outputs/artifacts/tfidf_final/validation_predictions.parquet not found: TF-IDF is not compared in this run
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2026, 600 rows):
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 18387.73it/s]
+    step 10/10, loss 1.7170
+  recommendation: without offsets 0.2945, with offsets 0.2945
+  rating_band: without offsets 0.2772, with offsets 0.2772
+  0.01 min, peak GPU memory 0.12 GB
+Done

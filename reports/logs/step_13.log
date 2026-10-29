@@ -6,3 +6,10 @@ Reference for rating_band: rating_band__word123_min5_persian__unweighted__C1 (ma
   E6 rating_band complement_nb_alpha0.1: -0.0209 [-0.0222, -0.0196] report only
   E6 rating_band complement_nb_alpha1: -0.0208 [-0.0220, -0.0195] report only
 Done
+Code 1be1f2147a9f8dfd45845175cf8053528355ae2a, data checked against cache_info.json
+Reference for recommendation: recommendation__word123_min5_persian__balanced__C0.5 (macro F1 0.6802)
+Reference for rating_band: rating_band__word123_min5_persian__unweighted__C1 (macro F1 0.6459)
+  features word123_min5_persian : 1,192,046 columns (134s)
+  E13 recommendation svc_C0.1_with_offsets: +0.0025 [+0.0019, +0.0032] report only
+  E13 rating_band svc_C0.1_with_offsets: +0.0007 [+0.0000, +0.0014] report only
+Done

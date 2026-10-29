@@ -43,6 +43,7 @@ PILOT_LARGE_ARGS = [
     "--train-rows",
     "500000",
 ]
+PILOT_LARGE_SEED_ARGS = [*PILOT_LARGE_ARGS, "--seeds", "2027,2028"]
 
 
 @dataclass
@@ -368,6 +369,29 @@ STEPS = [
         [24, 33],
         files("reports/transformer_final/no_early_stop_vs_first.json"),
         "reads both runs' predictions; the first run's stay on your machine",
+    ),
+    Step(
+        35,
+        "Pilot on all of validation: 500,000 reviews, two more seeds",
+        [*PILOT_LARGE_SEED_ARGS, "--whole-validation"],
+        "gpu",
+        [31],
+        files(
+            *[
+                f"reports/transformer_pilot_whole/{m}__seed{s}__n500000.json"
+                for m in PILOT_LARGE_MODELS
+                for s in (2027, 2028)
+            ]
+        ),
+    ),
+    Step(
+        36,
+        "TookaBERT-Large against FaBERT on 500,000 reviews",
+        ["scripts/compare_pilot_models.py"],
+        "local",
+        [35],
+        files("reports/transformer_pilot_whole/large_vs_fabert_n500000.json"),
+        "reads the run predictions, which stay on your machine",
     ),
 ]
 
