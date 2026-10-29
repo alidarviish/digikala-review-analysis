@@ -1,0 +1,19 @@
+Code 287977c690f99090929381b9fce81c76001b484b, device NVIDIA RTX PRO 6000 Blackwell Server Edition
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  tokenized 2,000 reviews (0s)
+  tokenized 400 reviews (0s)
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 18125.59it/s]
+2,000 training reviews, 32 steps per epoch, check every 8
+  check at epoch 0.25: 0.2893, validation loss 1.3897 (kept)
+  check at epoch 0.5: 0.2893, validation loss 1.4098 (not better)
+  check at epoch 0.75: 0.3620, validation loss 1.3960 (kept)
+  check at epoch 1.0: 0.3454, validation loss 1.3877 (not better)
+  check at epoch 1.25: 0.3166, validation loss 1.3820 (not better)
+  check at epoch 1.5: 0.3178, validation loss 1.3762 (not better)
+  check at epoch 1.75: 0.3448, validation loss 1.3766 (not better)
+  check at epoch 2.0: 0.3461, validation loss 1.3764 (not better)
+Scoring the whole validation set with the weights from step 24
+  tokenized 1,500 reviews (0s)
+  recommendation: without offsets 0.2723, with offsets 0.2723
+  rating_band: without offsets 0.2075, with offsets 0.2879
+Done
