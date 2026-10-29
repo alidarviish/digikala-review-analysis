@@ -86,3 +86,38 @@ Expected:
   shares. The `no_idea` F1 may rise a little and `recommended` fall a little.
 - The rule keeps whichever is faster on a tie, so a tie in B would make B the setup to try
   on all the training reviews.
+
+### Result of step 2
+
+`reports/transformer_pilot_whole/merged_vs_separate_n500000.json`. Mean Macro F1 of the two
+heads, three seeds each; the separate runs are those of step 35.
+
+| | Merged | Separate | Lead of merged | Spread between seeds | Verdict |
+|---|---|---|---|---|---|
+| A, weight = copies | 0.7043 | 0.7046 | -0.0002 | 0.0006 | tie, merged is faster |
+| B, each text once | 0.7045 | 0.7046 | -0.0001 | 0.0006 | tie, merged is faster |
+
+| | Expected | Found |
+|---|---|---|
+| Different texts in the sample | 350,000 to 380,000 | 362,642: right |
+| Steps, training minutes | 5,500 to 6,000; 3.0 to 3.4 | 5,667; 3.3 instead of 4.3: right |
+| A | 0.001 to 0.005 worse | 0.0002 worse, a tie: wrong, closer than expected |
+| B | a tie within 0.003 | 0.0001 worse, a tie: right |
+| Per class | `no_idea` a little higher, `recommended` a little lower | `no_idea` +0.002 (A) and +0.001 (B), `not_recommended` -0.004 (A) and -0.002 (B), `recommended` unchanged: half right |
+
+Per seed and head the differences are at most 0.0012 either way; recommendation is 0.001
+lower in two of the three seeds of A (whole interval below zero), rating band 0.001 higher in
+one.
+
+What it means:
+
+- Training on label shares instead of single labels does not change the score: the mixed
+  labels of the frequent short texts were not holding the model back, which fits the loss
+  analysis (on those texts the model was already at the floor).
+- Merging saves time only: 24% of the training time on this sample, about a third on all the
+  training reviews (36,926 instead of 55,508 steps per epoch).
+- By the rule a tie goes to the faster setup. If the final model is trained again after a
+  later experiment, it will be trained on merged texts with weight = copies (once the same option is
+  added to `scripts/train_transformer.py`): it keeps exactly the loss of the separate rows
+  and saves a third of the time. B is no better and changes what the loss counts, so it
+  is not used. The current final model is not trained again for this alone.

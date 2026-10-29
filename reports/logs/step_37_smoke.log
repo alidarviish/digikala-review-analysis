@@ -1,0 +1,25 @@
+Code 73437c8c0d9e2a169d7827173c41c96b874c9604, device NVIDIA RTX PRO 6000 Blackwell Server Edition, torch 2.14.1+cu130
+/marimo/work/outputs/artifacts/tfidf_final/validation_predictions.parquet not found: TF-IDF is not compared in this run
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2026, 600 rows):
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  600 training reviews merged into 546 texts
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 16971.51it/s]
+    step 9/9, loss 1.8107
+  recommendation: without offsets 0.2945, with offsets 0.2945
+  rating_band: without offsets 0.2772, with offsets 0.2772
+  0.02 min, peak GPU memory 0.12 GB
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2027, 600 rows):
+  600 training reviews merged into 546 texts
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 11544.32it/s]
+    step 9/9, loss 1.7925
+  recommendation: without offsets 0.2945, with offsets 0.2952
+  rating_band: without offsets 0.2772, with offsets 0.2772
+  0.0 min, peak GPU memory 0.12 GB
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2028, 600 rows):
+  600 training reviews merged into 546 texts
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 11676.20it/s]
+    step 9/9, loss 1.6634
+  recommendation: without offsets 0.2945, with offsets 0.2945
+  rating_band: without offsets 0.2772, with offsets 0.2772
+  0.0 min, peak GPU memory 0.12 GB
+Done

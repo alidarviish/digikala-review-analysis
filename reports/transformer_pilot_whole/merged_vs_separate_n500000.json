@@ -1,0 +1,214 @@
+{
+  "created_at": "2026-10-29T17:26:46+00:00",
+  "model": "sbunlp__fabert",
+  "train_rows": 500000,
+  "copies": {
+    "per_seed": {
+      "2026": {
+        "recommendation": {
+          "merged_macro_f1": 0.7221881455280434,
+          "separate_macro_f1": 0.7231613863204235,
+          "difference": -0.0009732407923800368,
+          "difference_interval_95": [
+            -0.0017669982193453588,
+            -0.0001910290581173676
+          ],
+          "direction": "worse"
+        },
+        "rating_band": {
+          "merged_macro_f1": 0.6864764231981612,
+          "separate_macro_f1": 0.6854863529287664,
+          "difference": 0.0009900702693947938,
+          "difference_interval_95": [
+            0.00044177351878992856,
+            0.0015716127491985754
+          ],
+          "direction": "better"
+        }
+      },
+      "2027": {
+        "recommendation": {
+          "merged_macro_f1": 0.7224872126079372,
+          "separate_macro_f1": 0.722778677823372,
+          "difference": -0.0002914652154347719,
+          "difference_interval_95": [
+            -0.0010410613361035604,
+            0.0004758716551495399
+          ],
+          "direction": "no measurable difference"
+        },
+        "rating_band": {
+          "merged_macro_f1": 0.6859135827918581,
+          "separate_macro_f1": 0.6863323185563112,
+          "difference": -0.0004187357644530598,
+          "difference_interval_95": [
+            -0.0010037685976150318,
+            0.00019804160570940365
+          ],
+          "direction": "no measurable difference"
+        }
+      },
+      "2028": {
+        "recommendation": {
+          "merged_macro_f1": 0.7222402061107576,
+          "separate_macro_f1": 0.7232539801604124,
+          "difference": -0.0010137740496548586,
+          "difference_interval_95": [
+            -0.0018166164776890926,
+            -0.0002545189922628063
+          ],
+          "direction": "worse"
+        },
+        "rating_band": {
+          "merged_macro_f1": 0.6867635178310225,
+          "separate_macro_f1": 0.6865452542217655,
+          "difference": 0.00021826360925703003,
+          "difference_interval_95": [
+            -0.00039761007364784163,
+            0.0008236535158654106
+          ],
+          "direction": "no measurable difference"
+        }
+      }
+    },
+    "mean_of_heads_per_seed": {
+      "merged": [
+        0.7043322843631024,
+        0.7042003976998976,
+        0.70450186197089
+      ],
+      "separate": [
+        0.7043238696245949,
+        0.7045554981898416,
+        0.704899617191089
+      ]
+    },
+    "mean_over_seeds": {
+      "merged": 0.7043448480112966,
+      "separate": 0.7045929950018418
+    },
+    "minutes_per_seed": {
+      "merged": [
+        3.32,
+        3.36,
+        3.29
+      ],
+      "separate": [
+        4.35,
+        4.33,
+        4.33
+      ]
+    },
+    "lead_of_merged": -0.00024814699054520606,
+    "spread_between_seeds": 0.0005757475664940337,
+    "verdict": "tie",
+    "chosen": "merged"
+  },
+  "once": {
+    "per_seed": {
+      "2026": {
+        "recommendation": {
+          "merged_macro_f1": 0.7222479845269857,
+          "separate_macro_f1": 0.7231613863204235,
+          "difference": -0.0009134017934377958,
+          "difference_interval_95": [
+            -0.0016843423924095575,
+            -0.0001394692653181374
+          ],
+          "direction": "worse"
+        },
+        "rating_band": {
+          "merged_macro_f1": 0.6866808386087606,
+          "separate_macro_f1": 0.6854863529287664,
+          "difference": 0.0011944856799942505,
+          "difference_interval_95": [
+            0.0005240435533103077,
+            0.0018356757478277556
+          ],
+          "direction": "better"
+        }
+      },
+      "2027": {
+        "recommendation": {
+          "merged_macro_f1": 0.7229191805155012,
+          "separate_macro_f1": 0.722778677823372,
+          "difference": 0.0001405026921291741,
+          "difference_interval_95": [
+            -0.0006197388152134082,
+            0.0008481983197753701
+          ],
+          "direction": "no measurable difference"
+        },
+        "rating_band": {
+          "merged_macro_f1": 0.6854749619665403,
+          "separate_macro_f1": 0.6863323185563112,
+          "difference": -0.0008573565897708191,
+          "difference_interval_95": [
+            -0.0014805755371066266,
+            -0.0002203690356456456
+          ],
+          "direction": "worse"
+        }
+      },
+      "2028": {
+        "recommendation": {
+          "merged_macro_f1": 0.7227157082279275,
+          "separate_macro_f1": 0.7232539801604124,
+          "difference": -0.0005382719324849017,
+          "difference_interval_95": [
+            -0.001297329058076943,
+            0.00023948349350044442
+          ],
+          "direction": "no measurable difference"
+        },
+        "rating_band": {
+          "merged_macro_f1": 0.6868964396520374,
+          "separate_macro_f1": 0.6865452542217655,
+          "difference": 0.0003511854302719053,
+          "difference_interval_95": [
+            -0.0002651065633978378,
+            0.0009675817626432048
+          ],
+          "direction": "no measurable difference"
+        }
+      }
+    },
+    "mean_of_heads_per_seed": {
+      "merged": [
+        0.7044644115678731,
+        0.7041970712410208,
+        0.7048060739399824
+      ],
+      "separate": [
+        0.7043238696245949,
+        0.7045554981898416,
+        0.704899617191089
+      ]
+    },
+    "mean_over_seeds": {
+      "merged": 0.7044891855829588,
+      "separate": 0.7045929950018418
+    },
+    "minutes_per_seed": {
+      "merged": [
+        3.32,
+        3.32,
+        3.3
+      ],
+      "separate": [
+        4.35,
+        4.33,
+        4.33
+      ]
+    },
+    "lead_of_merged": -0.00010380941888299411,
+    "spread_between_seeds": 0.0006090026989615804,
+    "verdict": "tie",
+    "chosen": "merged"
+  },
+  "rule": "a lead smaller than the spread between seeds is a tie; a tie goes to the faster setup",
+  "code": {
+    "commit": "73437c8c0d9e2a169d7827173c41c96b874c9604",
+    "uncommitted_changes": false
+  }
+}
