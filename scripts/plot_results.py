@@ -10,6 +10,8 @@ Charts are written to reports/figures/results_*.png:
   results_model_comparison     the Transformer candidates and TF-IDF on the whole validation set
   results_training_curve       FaBERT's checks and training loss during the full training
   results_where_it_helps       both final models by review length and by seen / new text
+  results_loss_analysis        where FaBERT's validation loss is, and how close it is to the floor
+  results_label_sample         the hand-labeled sample against the original labels and FaBERT
 
 Usage:
     uv run python scripts/plot_results.py
@@ -212,10 +214,22 @@ def learning_curve(final):
             fabert_sizes.append(n)
             scores = [r["heads"][head]["without_offsets"]["macro_f1"] for r in runs]
             fabert_values.append(float(np.mean(scores)))
-        fabert_sizes.append(final["training_reviews"])
-        fabert_values.append(final["heads"][head]["without_offsets"]["macro_f1"])
-        ax.plot(fabert_sizes, fabert_values, marker="o", color=plotting.SERIES[0], label="FaBERT")
-        for x, v in zip(sizes + fabert_sizes, values + fabert_values, strict=True):
+        ax.plot(fabert_sizes, fabert_values, marker="o", color=plotting.SERIES[0], label="FaBERT, 1 epoch")
+        # the final model trained longer, so it is a point of its own, not the end of the line
+        final_size = final["training_reviews"]
+        final_value = final["heads"][head]["without_offsets"]["macro_f1"]
+        ax.plot(
+            [final_size],
+            [final_value],
+            marker="*",
+            ms=13,
+            ls="none",
+            color=plotting.SERIES[0],
+            label=f"FaBERT final, kept at epoch {final['kept_epoch']:g}",
+        )
+        for x, v in zip(
+            sizes + fabert_sizes + [final_size], values + fabert_values + [final_value], strict=True
+        ):
             ax.text(x, v + 0.006, f"{v:.3f}", ha="center", fontsize=7.5, color=plotting.INK_SECONDARY)
         ax.set_xscale("log")
         ax.set_xlabel("Training reviews (log scale)")
@@ -224,7 +238,7 @@ def learning_curve(final):
     axes[0].legend(loc="lower right", fontsize=8.5)
     fig.suptitle(
         "More training data: TF-IDF against FaBERT on the whole validation set "
-        "(FaBERT at 100,000 and 500,000: mean of 3 seeds, 1 epoch)",
+        "(FaBERT line: mean of 3 seeds, 1 epoch; star: the final model, trained longer)",
         x=0.01,
         ha="left",
         fontsize=12,
@@ -391,6 +405,178 @@ def where_it_helps():
     plotting.save(fig, "results_where_it_helps")
 
 
+def loss_analysis():
+    found = load("loss_analysis.json")
+    groups = [
+        ("true_class", "True class", None),
+        ("length_in_words", "Length in words", LENGTH_ORDER),
+        (
+            "text_in_training_reviews",
+            "Text in the training reviews",
+            ["exact text in train", "nearly the same in train", "new"],
+        ),
+    ]
+    fig, axes = plt.subplots(2, 4, figsize=(16, 7.6), gridspec_kw={"width_ratios": [1.1, 1, 1.5, 1]})
+    for row, head in enumerate(HEADS):
+        ax = axes[row][0]
+        floor = found["floor"][head]
+        names = [k for k in floor if k.startswith("texts_with")]
+        x = np.arange(len(names))
+        ax.bar(
+            x - 0.2,
+            [floor[k]["floor"] for k in names],
+            width=0.38,
+            color=plotting.NEUTRAL,
+            label="lowest possible",
+        )
+        ax.bar(
+            x + 0.2,
+            [floor[k]["model_loss"] for k in names],
+            width=0.38,
+            color=plotting.SERIES[0],
+            label="FaBERT",
+        )
+        ax.set_xticks(x, [f"{k.split('_')[2]}+ copies\n{floor[k]['share_of_rows']:.0%}" for k in names])
+        ax.axhline(floor["model_loss_all_rows"], color=plotting.SERIES[1], lw=1.2, ls="--")
+        ax.text(
+            len(names) - 0.5,
+            floor["model_loss_all_rows"],
+            " all reviews",
+            va="bottom",
+            ha="right",
+            fontsize=8,
+            color=plotting.SERIES[1],
+        )
+        ax.set_ylabel("Mean validation loss")
+        ax.set_title(f"{HEAD_TITLES[head]} · repeated texts", fontsize=10.5)
+        ax.set_ylim(0, max(floor["model_loss_all_rows"], max(floor[k]["model_loss"] for k in names)) * 1.35)
+        if row == 0:
+            ax.legend(fontsize=8.5, loc="upper left", ncols=2)
+        for col, (key, title, order) in enumerate(groups, start=1):
+            ax = axes[row][col]
+            parts = found["groups"][head][key]
+            order = order or HEADS[head]["labels"]
+            x = np.arange(len(order))
+            ax.bar(
+                x - 0.2,
+                [parts[g]["share_of_rows"] * 100 for g in order],
+                width=0.38,
+                color=plotting.NEUTRAL,
+                label="share of reviews",
+            )
+            ax.bar(
+                x + 0.2,
+                [parts[g]["share_of_loss"] * 100 for g in order],
+                width=0.38,
+                color=plotting.SERIES[1],
+                label="share of the loss",
+            )
+            labels = [
+                LENGTH_NAMES.get(g, g)
+                .replace("_", " ")
+                .replace(" in train", "")
+                .replace("nearly the same", "nearly")
+                for g in order
+            ]
+            ax.set_xticks(x, labels, rotation=20 if key == "true_class" else 0)
+            ax.set_ylabel("%")
+            top = max(max(parts[g]["share_of_rows"], parts[g]["share_of_loss"]) for g in order) * 100
+            ax.set_ylim(0, top * 1.3)
+            ax.set_title(f"{HEAD_TITLES[head]} · {title}", fontsize=10.5)
+            if row == 0 and col == 1:
+                ax.legend(fontsize=8.5, loc="upper left", ncols=2)
+    fig.suptitle(
+        "Where FaBERT's validation loss is (final model, whole validation set)",
+        x=0.01,
+        ha="left",
+        fontsize=12,
+        fontweight="bold",
+    )
+    fig.text(
+        0.01,
+        0.005,
+        "Left: on texts that come many times, the lowest possible loss is the spread of their own labels; "
+        "FaBERT is almost there. Right: a group whose loss share is above its review share holds more than "
+        "its part of the loss.",
+        fontsize=8.5,
+        color=plotting.INK_SECONDARY,
+    )
+    fig.tight_layout(rect=(0, 0.03, 1, 1))
+    plotting.save(fig, "results_loss_analysis")
+
+
+def label_sample():
+    found = load("label_sample.json")
+    labels = list(found["original_label_by_my_label"])
+    names = [x.replace("_", " ") for x in labels]
+    counts = np.array(
+        [[found["original_label_by_my_label"][o][m] for m in labels] for o in labels], dtype=float
+    )
+    shares = counts / counts.sum(axis=1, keepdims=True) * 100
+    fig, axes = plt.subplots(1, 2, figsize=(12.5, 4.6), gridspec_kw={"width_ratios": [1, 1.25]})
+    ax = axes[0]
+    ax.imshow(shares, cmap="Blues", vmin=0, vmax=100)
+    ax.grid(False)
+    for i in range(len(labels)):
+        for j in range(len(labels)):
+            color = "white" if shares[i, j] > 55 else plotting.INK
+            ax.text(
+                j,
+                i,
+                f"{shares[i, j]:.0f}%\n{counts[i, j]:.0f}",
+                ha="center",
+                va="center",
+                fontsize=9,
+                color=color,
+            )
+    ax.set_xticks(range(len(labels)), names, rotation=20, ha="right")
+    ax.set_yticks(range(len(labels)), names)
+    ax.set_xlabel("My label")
+    ax.set_ylabel("Original label")
+    ax.set_title(f"{found['reviews']} reviews labeled again by hand", fontsize=10.5)
+
+    ax = axes[1]
+    x = np.arange(len(labels))
+    pairs = [
+        ("my_label_vs_original", "my label = original", plotting.NEUTRAL),
+        ("fabert_vs_my_label", "FaBERT = my label", plotting.SERIES[0]),
+    ]
+    for k, (key, label, color) in enumerate(pairs):
+        values = [found[key][c]["agree"] * 100 for c in labels]
+        bars = ax.bar(x + (k - 0.5) * 0.38, values, width=0.36, color=color, label=label)
+        for bar, v in zip(bars, values, strict=True):
+            ax.text(
+                bar.get_x() + bar.get_width() / 2,
+                v + 1.5,
+                f"{v:.0f}",
+                ha="center",
+                fontsize=8.5,
+                color=plotting.INK_SECONDARY,
+            )
+    ax.set_xticks(x, [f"{n}\n(original)" for n in names])
+    ax.set_ylim(0, 125)
+    ax.set_ylabel("Agreement (%)")
+    ax.set_title("Agreement by original label", fontsize=10.5)
+    ax.legend(fontsize=8.5, loc="upper left", ncols=2)
+    fig.suptitle(
+        "Hand labels: the recommended and not recommended labels hold, no idea does not",
+        x=0.01,
+        ha="left",
+        fontsize=12,
+        fontweight="bold",
+    )
+    fig.text(
+        0.01,
+        0.005,
+        f"Labeled from the text alone, without seeing the original label. The same label again on "
+        f"{found['repeats']['same_label']:.0%} of {found['repeats']['rows']} reviews shown twice.",
+        fontsize=8.5,
+        color=plotting.INK_SECONDARY,
+    )
+    fig.tight_layout(rect=(0, 0.04, 1, 1))
+    plotting.save(fig, "results_label_sample")
+
+
 def main():
     plotting.apply_style()
     comparison = load("transformer_final/vs_tfidf.json")
@@ -402,6 +588,8 @@ def main():
     model_comparison()
     training_curve(final)
     where_it_helps()
+    loss_analysis()
+    label_sample()
     print("Charts written to", plotting.FIGURES_DIR)
 
 

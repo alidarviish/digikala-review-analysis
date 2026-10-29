@@ -36,6 +36,11 @@ With --merge the training sample is merged by text before training (reports/merg
 one row per different text, trained against the share of each label among its copies, each
 text weighted by its copies (--merge copies) or counted once (--merge once). The run is saved
 under its own name (<...>__merge-<mode>).
+
+With --checks N the validation loss is measured N times during training (every 1/N of the
+training steps) on a fixed sample of 50,000 validation reviews, so two setups can be compared
+while they train, also when their batches are built differently. The time of the checks is not
+counted in the training minutes. The run is saved under its own name (<...>__checks<N>).
 """
 
 import argparse
@@ -49,7 +54,15 @@ import pandas as pd
 
 from digikala_reviews.config import ARTIFACTS_DIR, CACHE_DIR, REPORTS_DIR, SPLIT_SEED
 from digikala_reviews.experiments import compare, cross_fitted_offsets, product_half
-from digikala_reviews.finetune import IGNORE, batches, build_model, fixed_sample, label_codes, linear_warmup
+from digikala_reviews.finetune import (
+    IGNORE,
+    batches,
+    build_model,
+    fixed_sample,
+    label_codes,
+    linear_warmup,
+    mean_log_loss,
+)
 from digikala_reviews.merge_texts import merge, soft_targets, weighted_soft_loss
 from digikala_reviews.metrics import bootstrap_macro_f1, classification_report
 from digikala_reviews.provenance import check_cache, environment, git_commit, library_version
@@ -81,6 +94,7 @@ SMOKE = {
     "validation_rows": 400,
 }
 CACHE_FILES = ["train_supervised.parquet", "validation.parquet"]
+CHECK_ROWS = 50_000  # validation reviews measured at every check (--checks)
 LOG_EVERY = 100
 
 
@@ -130,9 +144,35 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
     warmup = max(1, int(settings["warmup_share"] * steps))
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lambda s: linear_warmup(s, steps, warmup))
     loss_fn = torch.nn.CrossEntropyLoss(ignore_index=IGNORE)
-    use_bf16 = device.type == "cuda"
-    if use_bf16:
+    if device.type == "cuda":
         torch.cuda.reset_peak_memory_stats()
+
+    use_bf16 = device.type == "cuda"
+
+    def predict(rows):
+        """Log-probabilities of the given validation rows, in their order."""
+        model.eval()
+        found = {head: [] for head in HEADS}
+        with torch.no_grad():
+            order = rows[np.argsort([len(validation_ids[i]) for i in rows])]  # less padding
+            for batch in batches(torch, tokenizer, validation_ids, order, 256):
+                with torch.autocast(device_type=device.type, dtype=torch.bfloat16, enabled=use_bf16):
+                    outputs = model(batch["input_ids"].to(device), batch["attention_mask"].to(device))
+                for head, logits in outputs.items():
+                    found[head].append(torch.log_softmax(logits.float(), dim=-1).cpu().numpy())
+        position = {row: i for i, row in enumerate(order)}
+        back = np.array([position[row] for row in rows])  # undo the sorting
+        model.train()
+        return {head: np.vstack(parts)[back] for head, parts in found.items()}
+
+    check_at, checks, check_seconds = set(), [], 0.0
+    if settings.get("checks"):
+        check_rows = fixed_sample(len(validation), min(CHECK_ROWS, len(validation)), SPLIT_SEED)
+        check_codes = {
+            head: label_codes(validation[HEADS[head]["column"]].to_numpy()[check_rows], HEADS[head]["labels"])
+            for head in HEADS
+        }
+        check_at = {round(k * steps / settings["checks"]) for k in range(1, settings["checks"] + 1)}
 
     losses, running, step, start = [], [], 0, time.perf_counter()
     model.train()
@@ -162,25 +202,34 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
                 losses.append({"step": step, "mean_loss": float(np.mean(running))})
                 print(f"    step {step}/{steps}, loss {losses[-1]['mean_loss']:.4f}", flush=True)
                 running = []
-    train_minutes = (time.perf_counter() - start) / 60
+            if step in check_at:
+                check_start = time.perf_counter()
+                found = predict(check_rows)
+                check = {
+                    "step": step,
+                    "epoch": round(step / math.ceil(len(train_ids) / settings["batch_size"]), 4),
+                }
+                for head, codes in check_codes.items():
+                    labeled = codes != IGNORE
+                    check[f"{head}_validation_loss"] = mean_log_loss(found[head][labeled], codes[labeled])
+                checks.append(check)
+                check_seconds += time.perf_counter() - check_start
+                print(
+                    f"    check at step {step}: "
+                    + ", ".join(f"{head} loss {check[f'{head}_validation_loss']:.4f}" for head in HEADS),
+                    flush=True,
+                )
+    train_minutes = (time.perf_counter() - start - check_seconds) / 60
 
+    log_proba = predict(np.arange(len(validation_ids)))
     model.eval()
-    log_proba = {head: [] for head in HEADS}
-    with torch.no_grad():
-        order = np.argsort([len(x) for x in validation_ids])  # similar lengths together, less padding
-        for batch in batches(torch, tokenizer, validation_ids, order, 256):
-            with torch.autocast(device_type=device.type, dtype=torch.bfloat16, enabled=use_bf16):
-                outputs = model(batch["input_ids"].to(device), batch["attention_mask"].to(device))
-            for head, logits in outputs.items():
-                log_proba[head].append(torch.log_softmax(logits.float(), dim=-1).cpu().numpy())
-    back = np.argsort(order)  # undo the sorting
-    log_proba = {head: np.vstack(parts)[back] for head, parts in log_proba.items()}
     return {
         "log_proba": log_proba,
         "train_minutes": round(train_minutes, 2),
         "steps": steps,
         "train_texts": len(train_ids),
         "losses": losses,
+        "checks": checks,
         "peak_gpu_memory_gb": round(torch.cuda.max_memory_allocated() / 1024**3, 2) if use_bf16 else None,
         "parameters": int(sum(p.numel() for p in model.parameters())),
     }
@@ -218,6 +267,9 @@ def main():
         choices=["copies", "once"],
         help="merge the training sample by text; weight each text by its copies or count it once",
     )
+    parser.add_argument(
+        "--checks", type=int, help="measure the validation loss this many times during training"
+    )
     args = parser.parse_args()
     import torch
 
@@ -229,6 +281,8 @@ def main():
         settings["train_rows"] = args.train_rows
     if args.merge:
         settings["merge"] = args.merge  # only set when used, so the other runs keep their fingerprint
+    if args.checks:
+        settings["checks"] = args.checks  # the same
     seeds = [int(s) for s in args.seeds.split(",")] if args.seeds else [SETTINGS["seed"]]
     results_dir, arrays_dir = REPORTS_DIR / "transformer_pilot", ARTIFACTS_DIR / "transformer_pilot"
     if args.whole_validation:
@@ -319,6 +373,8 @@ def main():
             tag += f"__seed{seed}__n{settings['train_rows']}"
         if settings.get("merge"):
             tag += f"__merge-{settings['merge']}"
+        if settings.get("checks"):
+            tag += f"__checks{settings['checks']}"
         spec = json.loads(
             json.dumps(
                 {"model": name, "learning_rate": learning_rate, "settings": settings, "data": context["data"]}

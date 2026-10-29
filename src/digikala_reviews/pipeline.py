@@ -431,6 +431,16 @@ STEPS = [
         files("reports/transformer_pilot_whole/merged_vs_separate_n500000.json"),
         "reads the run predictions, which stay on your machine",
     ),
+    Step(
+        40,
+        "Experiment cards",
+        ["scripts/plot_experiment_cards.py"],
+        "local",
+        [17, 24, 29, 30, 31, 33, 35, 37, 38],
+        files("reports/experiment_cards.json"),
+        "one folder of figures per experiment in reports/figures/experiments/; reads the run "
+        "predictions, which stay on your machine",
+    ),
 ]
 
 
