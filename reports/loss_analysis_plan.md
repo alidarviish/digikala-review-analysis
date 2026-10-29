@@ -56,6 +56,7 @@ What it means:
   leakage or to removing repeats.
 - The loss that can still be reduced sits in new texts (about two thirds of it), in the
   ambiguous classes (`no_idea`, `medium`: about half of each head's loss) and in longer
-  reviews. This points to the other text fields of a review (title, advantages,
-  disadvantages) as the next thing to check, rather than to removing repeated texts, which
-  would mostly save training time.
+  reviews. The project allows only the review body as input (title, advantages and
+  disadvantages are excluded), so the next steps work on how the body is used: long reviews
+  cut by the token limit, texts with mixed labels, and the ambiguous classes. Removing
+  repeated texts would mostly save training time.

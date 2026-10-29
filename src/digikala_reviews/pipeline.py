@@ -44,6 +44,17 @@ PILOT_LARGE_ARGS = [
     "500000",
 ]
 PILOT_LARGE_SEED_ARGS = [*PILOT_LARGE_ARGS, "--seeds", "2027,2028"]
+PILOT_MERGE_ARGS = [
+    *PILOT_ARGS,
+    "--models",
+    "sbunlp/fabert",
+    "--train-rows",
+    "500000",
+    "--seeds",
+    "2026,2027,2028",
+    "--whole-validation",
+    "--merge",
+]
 
 
 @dataclass
@@ -392,6 +403,32 @@ STEPS = [
         "local",
         [35],
         files("reports/transformer_pilot_whole/large_vs_fabert_n500000.json"),
+        "reads the run predictions, which stay on your machine",
+    ),
+    *[
+        Step(
+            number,
+            f"FaBERT on 500,000 reviews merged by text, each text {meaning}",
+            [*PILOT_MERGE_ARGS, mode],
+            "gpu",
+            [31],
+            files(
+                *[
+                    f"reports/transformer_pilot_whole/sbunlp__fabert__seed{s}__n500000__merge-{mode}.json"
+                    for s in (2026, 2027, 2028)
+                ]
+            ),
+            smoke=True,
+        )
+        for number, mode, meaning in [(37, "copies", "weighted by its copies"), (38, "once", "counted once")]
+    ],
+    Step(
+        39,
+        "Merged by text against separate reviews",
+        ["scripts/compare_merged_runs.py"],
+        "local",
+        [35, 37, 38],
+        files("reports/transformer_pilot_whole/merged_vs_separate_n500000.json"),
         "reads the run predictions, which stay on your machine",
     ),
 ]

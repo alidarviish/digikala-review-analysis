@@ -61,10 +61,28 @@ What it means:
   almost nothing, and moves the class shares by 1 to 4 points towards the small classes.
   Both are worth a GPU pilot.
 
-## Step 2: GPU pilot (only if step 1 supports it)
+## Step 2: GPU pilot
 
-FaBERT on 500,000 training rows, 3 seeds, scored on all of validation with cross-fitted
-offsets, against the current setup on the same seeds: A first (should tie and be faster),
-then B. The rule as before: a change is kept only if the whole 95% interval is above zero; a
-tie goes to the faster setup. The expected results for step 2 will be written here before it
-runs.
+Steps 37 and 38 of `notebooks/run_all.py` train FaBERT exactly as in step 35 (the same 500,000
+training reviews, seeds 2026 to 2028, 1 epoch, scored on all of validation), with one change:
+`scripts/pilot_transformers.py --merge copies` or `--merge once`. The runs of step 35 are the
+reference, so nothing else is trained again. Step 39 (`scripts/compare_merged_runs.py`,
+local) compares each seed on the same reviews (paired bootstrap, offsets cross-fitted by
+product) and decides with the rule of step 36: a lead smaller than the spread between seeds
+is a tie, and a tie goes to the faster setup.
+
+The merged loss with weight = copies is tested to be exactly the loss on the separate rows
+(`tests/test_merge_texts.py`), and the runs without `--merge` are unchanged.
+
+Expected:
+
+- Inside the 500,000-review sample fewer texts repeat than in all the training reviews: about
+  350,000 to 380,000 different texts, so 5,500 to 6,000 steps instead of 7,813 and about 3.0
+  to 3.4 training minutes instead of 4.35.
+- A (copies): the same loss but about 28% fewer updates in one epoch, so slightly worse:
+  mean Macro F1 of the two heads 0.001 to 0.005 below the separate runs. If so, A only pays
+  off when the saved time is spent on more epochs, which is a separate question.
+- B (once): a tie, within 0.003 either way; the offsets make up for the shift in class
+  shares. The `no_idea` F1 may rise a little and `recommended` fall a little.
+- The rule keeps whichever is faster on a tie, so a tie in B would make B the setup to try
+  on all the training reviews.

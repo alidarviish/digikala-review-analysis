@@ -40,18 +40,30 @@ def main():
     edges = [*COPY_BUCKETS, np.inf]
     for low, high in zip(edges[:-1], edges[1:], strict=True):
         inside = (copies >= low) & (copies < high)
-        name = f"{low}" if high == low + 1 else f"{low}+" if high == np.inf else f"{low}-{int(high) - 1}"
-        buckets[name] = {"share_of_texts": float(inside.mean()), "share_of_rows": float(copies[inside].sum() / len(train))}
+        if high == low + 1:
+            name = f"{low}"
+        else:
+            name = f"{low}+" if high == np.inf else f"{low}-{int(high) - 1}"
+        buckets[name] = {
+            "share_of_texts": float(inside.mean()),
+            "share_of_rows": float(copies[inside].sum() / len(train)),
+        }
     top = np.argsort(-copies)[:10]
 
     result = {
         "rows": int(len(train)),
         "different_texts": int(len(texts)),
-        "steps_per_epoch": {"now": int(np.ceil(len(train) / BATCH_SIZE)), "merged": int(np.ceil(len(texts) / BATCH_SIZE))},
+        "steps_per_epoch": {
+            "now": int(np.ceil(len(train) / BATCH_SIZE)),
+            "merged": int(np.ceil(len(texts) / BATCH_SIZE)),
+        },
         "copies_per_text": buckets,
         "most_copied_texts": [{"text": str(texts[i]), "copies": int(copies[i])} for i in top],
         "heads": {
-            head: {"mixed_labels": mixed(counts[head]), "class_shares": class_shares(counts[head], h["labels"])}
+            head: {
+                "mixed_labels": mixed(counts[head]),
+                "class_shares": class_shares(counts[head], h["labels"]),
+            }
             for head, h in HEADS.items()
         },
     }
@@ -61,9 +73,11 @@ def main():
     )
 
     steps = result["steps_per_epoch"]
-    print(f"{result['rows']:,} rows -> {result['different_texts']:,} different texts "
-          f"({result['different_texts'] / result['rows']:.1%}); "
-          f"steps per epoch {steps['now']:,} -> {steps['merged']:,}")
+    print(
+        f"{result['rows']:,} rows -> {result['different_texts']:,} different texts "
+        f"({result['different_texts'] / result['rows']:.1%}); "
+        f"steps per epoch {steps['now']:,} -> {steps['merged']:,}"
+    )
     print("copies per text:")
     for name, b in buckets.items():
         print(f"  {name}: {b['share_of_texts']:.2%} of texts, {b['share_of_rows']:.1%} of rows")
@@ -72,10 +86,15 @@ def main():
         print(f"  {t['copies']:,}  {t['text'][:40]}")
     for head, r in result["heads"].items():
         m = r["mixed_labels"]
-        print(f"\n{head}: {m['texts_with_a_label']:,} texts with a label; more than one label: "
-              f"{m['share_of_texts']:.2%} of texts, {m['share_of_rows']:.1%} of rows")
+        print(
+            f"\n{head}: {m['texts_with_a_label']:,} texts with a label; more than one label: "
+            f"{m['share_of_texts']:.2%} of texts, {m['share_of_rows']:.1%} of rows"
+        )
         for label, s in r["class_shares"].items():
-            print(f"  {label}: {s['copies_counted']:.1%} as now, {s['each_text_once']:.1%} if each text counts once")
+            print(
+                f"  {label}: {s['copies_counted']:.1%} as now, "
+                f"{s['each_text_once']:.1%} if each text counts once"
+            )
 
 
 if __name__ == "__main__":

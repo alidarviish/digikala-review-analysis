@@ -31,6 +31,11 @@ the validation sample is the same in every run.
 With --whole-validation the same runs are scored on every labeled validation review instead of
 the 50,000-review sample (training is unchanged), and saved apart, in
 reports/transformer_pilot_whole/ and artifacts/transformer_pilot_whole/.
+
+With --merge the training sample is merged by text before training (reports/merged_texts_plan.md):
+one row per different text, trained against the share of each label among its copies, each
+text weighted by its copies (--merge copies) or counted once (--merge once). The run is saved
+under its own name (<...>__merge-<mode>).
 """
 
 import argparse
@@ -45,6 +50,7 @@ import pandas as pd
 from digikala_reviews.config import ARTIFACTS_DIR, CACHE_DIR, REPORTS_DIR, SPLIT_SEED
 from digikala_reviews.experiments import compare, cross_fitted_offsets, product_half
 from digikala_reviews.finetune import IGNORE, batches, build_model, fixed_sample, label_codes, linear_warmup
+from digikala_reviews.merge_texts import merge, soft_targets, weighted_soft_loss
 from digikala_reviews.metrics import bootstrap_macro_f1, classification_report
 from digikala_reviews.provenance import check_cache, environment, git_commit, library_version
 from digikala_reviews.tfidf import HEADS, load_cache
@@ -93,10 +99,22 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
             list(texts), add_special_tokens=True, truncation=True, max_length=settings["max_length"]
         )["input_ids"]
 
-    train_ids, validation_ids = encode(train["text"]), encode(validation["text"])
-    labels = {
-        head: label_codes(train[HEADS[head]["column"]].to_numpy(), HEADS[head]["labels"]) for head in HEADS
-    }
+    merged = settings.get("merge")
+    if merged:
+        texts, _, counts = merge(
+            train["text"], {head: (train[h["column"]], h["labels"]) for head, h in HEADS.items()}
+        )
+        train_texts, labels = list(texts), {}
+        for head in HEADS:
+            labels[head], labels[f"{head}__weight"] = soft_targets(counts[head], merged)
+        print(f"  {len(train):,} training reviews merged into {len(train_texts):,} texts", flush=True)
+    else:
+        train_texts = train["text"]
+        labels = {
+            head: label_codes(train[HEADS[head]["column"]].to_numpy(), HEADS[head]["labels"])
+            for head in HEADS
+        }
+    train_ids, validation_ids = encode(train_texts), encode(validation["text"])
 
     model = build_model(torch, name, settings["dropout"], list(HEADS)).to(device)
     no_decay = [p for n, p in model.named_parameters() if p.ndim < 2]  # biases and norm weights
@@ -126,7 +144,12 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
             loss = 0.0
             for head, logits in outputs.items():
                 target = batch["labels"][head].to(device)
-                if (target != IGNORE).any():
+                if merged:
+                    weight = batch["labels"][f"{head}__weight"].to(device)
+                    if (weight > 0).any():
+                        log_proba = torch.log_softmax(logits.float(), dim=-1)
+                        loss = loss + weighted_soft_loss(log_proba, target, weight)
+                elif (target != IGNORE).any():
                     loss = loss + loss_fn(logits.float(), target)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -156,6 +179,7 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
         "log_proba": log_proba,
         "train_minutes": round(train_minutes, 2),
         "steps": steps,
+        "train_texts": len(train_ids),
         "losses": losses,
         "peak_gpu_memory_gb": round(torch.cuda.max_memory_allocated() / 1024**3, 2) if use_bf16 else None,
         "parameters": int(sum(p.numel() for p in model.parameters())),
@@ -189,6 +213,11 @@ def main():
     parser.add_argument(
         "--whole-validation", action="store_true", help="score on every labeled validation review"
     )
+    parser.add_argument(
+        "--merge",
+        choices=["copies", "once"],
+        help="merge the training sample by text; weight each text by its copies or count it once",
+    )
     args = parser.parse_args()
     import torch
 
@@ -198,6 +227,8 @@ def main():
         models = {name: MODELS[name] for name in args.models.split(",")}
     if args.train_rows:
         settings["train_rows"] = args.train_rows
+    if args.merge:
+        settings["merge"] = args.merge  # only set when used, so the other runs keep their fingerprint
     seeds = [int(s) for s in args.seeds.split(",")] if args.seeds else [SETTINGS["seed"]]
     results_dir, arrays_dir = REPORTS_DIR / "transformer_pilot", ARTIFACTS_DIR / "transformer_pilot"
     if args.whole_validation:
@@ -286,6 +317,8 @@ def main():
         tag = safe_name(name)
         if seed != SETTINGS["seed"] or settings["train_rows"] != SETTINGS["train_rows"]:
             tag += f"__seed{seed}__n{settings['train_rows']}"
+        if settings.get("merge"):
+            tag += f"__merge-{settings['merge']}"
         spec = json.loads(
             json.dumps(
                 {"model": name, "learning_rate": learning_rate, "settings": settings, "data": context["data"]}

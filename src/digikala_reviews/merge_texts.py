@@ -55,3 +55,27 @@ def mixed(counts: np.ndarray) -> dict:
         "share_of_texts": float(is_mixed[labeled].mean()),
         "share_of_rows": float(counts[is_mixed].sum() / counts.sum()),
     }
+
+
+def soft_targets(counts: np.ndarray, mode: str) -> tuple[np.ndarray, np.ndarray]:
+    """Training target and weight of each merged text for one head.
+
+    The target is the share of each label among the copies. The weight is the number of
+    labeled copies (mode "copies": the same loss as on the separate rows) or 1 for every
+    labeled text (mode "once"). A text without a label for this head gets weight 0.
+    """
+    assert mode in {"copies", "once"}, mode
+    total = counts.sum(axis=1)
+    shares = counts / np.maximum(total, 1)[:, None]
+    weights = total if mode == "copies" else (total > 0)
+    return shares.astype(np.float32), weights.astype(np.float32)
+
+
+def weighted_soft_loss(log_proba, shares, weights):
+    """Weighted mean over rows of the cross-entropy against the label shares.
+
+    Works on NumPy arrays and on PyTorch tensors alike. With one-hot shares and weights of 1
+    it is the usual mean cross-entropy; the weights must not all be 0.
+    """
+    per_row = -(shares * log_proba).sum(-1)
+    return (weights * per_row).sum() / weights.sum()
