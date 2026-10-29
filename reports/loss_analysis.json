@@ -1,0 +1,222 @@
+{
+  "created_at": "2026-10-29T14:24:47+00:00",
+  "floor": {
+    "recommendation": {
+      "model_loss_all_rows": 0.31208372116088867,
+      "texts_with_2_or_more_copies": {
+        "share_of_rows": 0.30710508331885833,
+        "floor": 0.18135310765669732,
+        "model_loss": 0.22543112933635712
+      },
+      "texts_with_20_or_more_copies": {
+        "share_of_rows": 0.19837660402907506,
+        "floor": 0.2075182419629589,
+        "model_loss": 0.21479788422584534
+      },
+      "texts_with_100_or_more_copies": {
+        "share_of_rows": 0.14824455413031543,
+        "floor": 0.20578828487617926,
+        "model_loss": 0.20837852358818054
+      }
+    },
+    "rating_band": {
+      "model_loss_all_rows": 0.49247121810913086,
+      "texts_with_2_or_more_copies": {
+        "share_of_rows": 0.323480244422366,
+        "floor": 0.3767193401817998,
+        "model_loss": 0.4459937512874603
+      },
+      "texts_with_20_or_more_copies": {
+        "share_of_rows": 0.21698412961878363,
+        "floor": 0.4306967872650065,
+        "model_loss": 0.44047150015830994
+      },
+      "texts_with_100_or_more_copies": {
+        "share_of_rows": 0.16552809979868588,
+        "floor": 0.4336211409345323,
+        "model_loss": 0.4373306334018707
+      }
+    }
+  },
+  "groups": {
+    "recommendation": {
+      "true_class": {
+        "no_idea": {
+          "rows": 89045,
+          "share_of_rows": 0.11289854282334474,
+          "mean_loss": 1.3452831113965675,
+          "share_of_loss": 0.4866658898874905
+        },
+        "not_recommended": {
+          "rows": 75666,
+          "share_of_rows": 0.09593555102780846,
+          "mean_loss": 0.6990631725266777,
+          "share_of_loss": 0.21489429160787782
+        },
+        "recommended": {
+          "rows": 624006,
+          "share_of_rows": 0.7911659061488467,
+          "mean_loss": 0.11772272925564925,
+          "share_of_loss": 0.2984398185046317
+        }
+      },
+      "length_in_words": {
+        "16-31": {
+          "rows": 100054,
+          "share_of_rows": 0.12685665454148953,
+          "mean_loss": 0.3976215531674479,
+          "share_of_loss": 0.1616263080335872
+        },
+        "8-15": {
+          "rows": 188954,
+          "share_of_rows": 0.23957135449090106,
+          "mean_loss": 0.3451056280967316,
+          "share_of_loss": 0.26492064971631724
+        },
+        "32+": {
+          "rows": 39762,
+          "share_of_rows": 0.050413519678160865,
+          "mean_loss": 0.4410056647660442,
+          "share_of_loss": 0.07123936973571321
+        },
+        "4-7": {
+          "rows": 256356,
+          "share_of_rows": 0.32502912958640423,
+          "mean_loss": 0.277800437025175,
+          "share_of_loss": 0.28932375346295053
+        },
+        "2-3": {
+          "rows": 153919,
+          "share_of_rows": 0.1951511125029637,
+          "mean_loss": 0.2709048199030362,
+          "share_of_loss": 0.16940126326593777
+        },
+        "1-1": {
+          "rows": 49672,
+          "share_of_rows": 0.06297822920008064,
+          "mean_loss": 0.2155046560536589,
+          "share_of_loss": 0.04348865578549405
+        }
+      },
+      "text_in_training_reviews": {
+        "new": {
+          "rows": 487570,
+          "share_of_rows": 0.6181811727146745,
+          "mean_loss": 0.36327887863981895,
+          "share_of_loss": 0.7195894767685972
+        },
+        "exact text in train": {
+          "rows": 283520,
+          "share_of_rows": 0.3594698732244899,
+          "mean_loss": 0.22886437779135504,
+          "share_of_loss": 0.2636146735799021
+        },
+        "nearly the same in train": {
+          "rows": 17627,
+          "share_of_rows": 0.022348954060835508,
+          "mean_loss": 0.23453944566801596,
+          "share_of_loss": 0.016795849651500713
+        }
+      }
+    },
+    "rating_band": {
+      "true_class": {
+        "high": {
+          "rows": 600296,
+          "share_of_rows": 0.7117082296925277,
+          "mean_loss": 0.19898750655896377,
+          "share_of_loss": 0.2875722275987601
+        },
+        "medium": {
+          "rows": 158755,
+          "share_of_rows": 0.1882192118635427,
+          "mean_loss": 1.396635224828213,
+          "share_of_loss": 0.5337846560755516
+        },
+        "low": {
+          "rows": 84407,
+          "share_of_rows": 0.10007255844392964,
+          "mean_loss": 0.879128054395925,
+          "share_of_loss": 0.17864311632568827
+        }
+      },
+      "length_in_words": {
+        "8-15": {
+          "rows": 196149,
+          "share_of_rows": 0.23255336958093942,
+          "mean_loss": 0.5022679857475766,
+          "share_of_loss": 0.23717957021634278
+        },
+        "16-31": {
+          "rows": 103657,
+          "share_of_rows": 0.12289527160807058,
+          "mean_loss": 0.5399605734771901,
+          "share_of_loss": 0.1347461506748492
+        },
+        "32+": {
+          "rows": 42492,
+          "share_of_rows": 0.05037832352055467,
+          "mean_loss": 0.576038846082203,
+          "share_of_loss": 0.05892704003086958
+        },
+        "2-3": {
+          "rows": 167402,
+          "share_of_rows": 0.1984710560573259,
+          "mean_loss": 0.48773670671404684,
+          "share_of_loss": 0.19656299728848317
+        },
+        "1-1": {
+          "rows": 65143,
+          "share_of_rows": 0.07723324694294204,
+          "mean_loss": 0.40199890478417477,
+          "share_of_loss": 0.06304466000452941
+        },
+        "4-7": {
+          "rows": 268615,
+          "share_of_rows": 0.31846873229016737,
+          "mean_loss": 0.4786634300451117,
+          "share_of_loss": 0.30953958178492585
+        }
+      },
+      "text_in_training_reviews": {
+        "new": {
+          "rows": 510161,
+          "share_of_rows": 0.6048445802873409,
+          "mean_loss": 0.5213302335171546,
+          "share_of_loss": 0.6402887171825977
+        },
+        "exact text in train": {
+          "rows": 314761,
+          "share_of_rows": 0.3731792217276972,
+          "mean_loss": 0.44889513257045355,
+          "share_of_loss": 0.34015863079685543
+        },
+        "nearly the same in train": {
+          "rows": 18536,
+          "share_of_rows": 0.021976197984961907,
+          "mean_loss": 0.43816125150873453,
+          "share_of_loss": 0.019552652020546818
+        }
+      }
+    }
+  },
+  "train": {
+    "exact": {
+      "rows": 3552498,
+      "different_texts": 2363237,
+      "rows_repeating_an_earlier_text": 0.33476753540747944,
+      "rows_of_texts_with_more_than_one_label": 0.2545194958589702
+    },
+    "nearly_the_same": {
+      "rows": 3552498,
+      "different_texts": 2282412,
+      "rows_repeating_an_earlier_text": 0.35751913160823734,
+      "rows_of_texts_with_more_than_one_label": 0.2758332305887294
+    }
+  },
+  "model": "transformer_no_early_stop",
+  "code": {
+    "commit": "caa644f5a214284c5af24d4223f286f8e72acd1d",
+    "uncommitted_changes": true
+  }
+}
