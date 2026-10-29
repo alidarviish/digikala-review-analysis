@@ -1,0 +1,83 @@
+{
+  "created_at": "2026-10-29T10:12:56+00:00",
+  "reviews": 200,
+  "my_label_vs_original": {
+    "rows": 200,
+    "agree": 0.795,
+    "recommended": {
+      "rows": 100,
+      "agree": 0.95
+    },
+    "not_recommended": {
+      "rows": 50,
+      "agree": 0.94
+    },
+    "no_idea": {
+      "rows": 50,
+      "agree": 0.34
+    }
+  },
+  "my_label_vs_original_weighted_by_validation_shares": 0.8801725333674815,
+  "original_label_by_my_label": {
+    "recommended": {
+      "recommended": 95,
+      "not_recommended": 0,
+      "no_idea": 5
+    },
+    "not_recommended": {
+      "recommended": 1,
+      "not_recommended": 47,
+      "no_idea": 2
+    },
+    "no_idea": {
+      "recommended": 12,
+      "not_recommended": 21,
+      "no_idea": 17
+    }
+  },
+  "fabert_vs_my_label": {
+    "rows": 200,
+    "agree": 0.825,
+    "recommended": {
+      "rows": 100,
+      "agree": 0.97
+    },
+    "not_recommended": {
+      "rows": 50,
+      "agree": 0.8
+    },
+    "no_idea": {
+      "rows": 50,
+      "agree": 0.56
+    }
+  },
+  "fabert_vs_original": 0.81,
+  "fabert_errors": {
+    "rows": 38,
+    "my_label_sides_with_fabert": 0.5526315789473685,
+    "my_label_sides_with_original": 0.39473684210526316,
+    "by_original_label": {
+      "no_idea": 19,
+      "not_recommended": 13,
+      "recommended": 6
+    }
+  },
+  "disagreements_with_a_rating": {
+    "rows": 39,
+    "rating_sides_with_my_label": 0.23076923076923078,
+    "rating_sides_with_original": 0.6923076923076923,
+    "rating_mapping": {
+      "high": "recommended",
+      "medium": "no_idea",
+      "low": "not_recommended"
+    }
+  },
+  "repeats": {
+    "rows": 20,
+    "same_label": 1.0
+  },
+  "code": {
+    "commit": "287977c690f99090929381b9fce81c76001b484b",
+    "uncommitted_changes": true
+  }
+}

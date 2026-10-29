@@ -7,7 +7,7 @@ Charts are written to reports/figures/results_*.png:
   results_per_class            F1 of every class, both final models
   results_tfidf_experiments    each TF-IDF experiment against the reference, with its interval
   results_learning_curve       Macro F1 by number of training reviews, TF-IDF and FaBERT
-  results_model_comparison     the six Transformer candidates and TF-IDF on the same reviews
+  results_model_comparison     the Transformer candidates and TF-IDF on the whole validation set
   results_training_curve       FaBERT's checks and training loss during the full training
   results_where_it_helps       both final models by review length and by seen / new text
 
@@ -26,6 +26,10 @@ from digikala_reviews.config import REPORTS_DIR
 from digikala_reviews.tfidf import HEADS
 
 HEAD_TITLES = {"recommendation": "Recommendation", "rating_band": "Rating band"}
+PILOT_FABERT_RUNS = {
+    100_000: ["sbunlp__fabert", "sbunlp__fabert__seed2027__n100000", "sbunlp__fabert__seed2028__n100000"],
+    500_000: [f"sbunlp__fabert__seed{s}__n500000" for s in (2026, 2027, 2028)],
+}
 MODEL_COLORS = {"TF-IDF": plotting.NEUTRAL, "FaBERT": plotting.SERIES[0]}
 SHORT_NAMES = {
     "PartAI/TookaBERT-Large": "TookaBERT-Large",
@@ -36,6 +40,7 @@ SHORT_NAMES = {
     "HooshvareLab/bert-fa-zwnj-base": "ParsBERT",
 }
 LENGTH_ORDER = ["1-1", "2-3", "4-7", "8-15", "16-31", "32+"]
+LENGTH_NAMES = {"1-1": "1"}  # a group of one length is shown as that length
 
 
 def load(relative):
@@ -122,8 +127,9 @@ def tfidf_experiments():
         "E5": "E5 plain term counts",
         "E8": "E8 spelling fixes",
         "E11": "E11 conflicting labels removed",
+        "E13": "E13 linear SVM, both with offsets",
     }
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.6), sharey=True)
     for ax, head in zip(axes, HEADS, strict=True):
         rows = []
         for code, name in names.items():
@@ -164,10 +170,18 @@ def tfidf_experiments():
         ax.axvline(0, color=plotting.AXIS, linewidth=1)
         ax.set_yticks(y, [r[0] for r in rows])
         ax.set_xlim(-9.5, 4)
-        ax.set_xlabel("Macro F1 change against the reference (points, 95% interval)")
+        ax.set_xlabel("Change in Macro F1 (points, 95% interval)")
         ax.grid(axis="y", visible=False)
         ax.set_title(HEAD_TITLES[head])
     axes[0].invert_yaxis()  # the axes share y, so inverting both would undo it
+    fig.text(
+        0.01,
+        0.01,
+        "E13 compares the SVM with offsets against the reference with offsets; the others compare "
+        "against the reference without offsets.",
+        fontsize=8,
+        color=plotting.MUTED,
+    )
     fig.suptitle(
         "TF-IDF experiments, each on its own against the reference (green: whole interval above zero)",
         x=0.01,
@@ -175,7 +189,7 @@ def tfidf_experiments():
         fontsize=12,
         fontweight="bold",
     )
-    fig.tight_layout()
+    fig.tight_layout(rect=(0, 0.04, 1, 1))  # room for the note at the bottom
     plotting.save(fig, "results_tfidf_experiments")
 
 
@@ -193,16 +207,14 @@ def learning_curve(final):
         ax.plot(sizes, values, marker="o", color=plotting.MUTED, label="TF-IDF (whole validation)")
 
         fabert_sizes, fabert_values = [], []
-        for name in ("sbunlp__fabert", "sbunlp__fabert__seed2026__n500000"):
-            run = load(f"transformer_pilot/{name}.json")
-            fabert_sizes.append(run["fingerprint"]["settings"]["train_rows"])
-            fabert_values.append(run["heads"][head]["without_offsets"]["macro_f1"])
+        for n, names in PILOT_FABERT_RUNS.items():
+            runs = [load(f"transformer_pilot_whole/{name}.json") for name in names]
+            fabert_sizes.append(n)
+            scores = [r["heads"][head]["without_offsets"]["macro_f1"] for r in runs]
+            fabert_values.append(float(np.mean(scores)))
         fabert_sizes.append(final["training_reviews"])
         fabert_values.append(final["heads"][head]["without_offsets"]["macro_f1"])
         ax.plot(fabert_sizes, fabert_values, marker="o", color=plotting.SERIES[0], label="FaBERT")
-        ax.plot(
-            fabert_sizes[:2], fabert_values[:2], "o", color="white", markersize=3.5
-        )  # 50,000-review sample
         for x, v in zip(sizes + fabert_sizes, values + fabert_values, strict=True):
             ax.text(x, v + 0.006, f"{v:.3f}", ha="center", fontsize=7.5, color=plotting.INK_SECONDARY)
         ax.set_xscale("log")
@@ -211,7 +223,8 @@ def learning_curve(final):
     axes[0].set_ylabel("Macro F1 without offsets")
     axes[0].legend(loc="lower right", fontsize=8.5)
     fig.suptitle(
-        "More training data: TF-IDF against FaBERT (open dots: scored on the 50,000-review sample)",
+        "More training data: TF-IDF against FaBERT on the whole validation set "
+        "(FaBERT at 100,000 and 500,000: mean of 3 seeds, 1 epoch)",
         x=0.01,
         ha="left",
         fontsize=12,
@@ -222,37 +235,49 @@ def learning_curve(final):
 
 
 def model_comparison():
-    summary = load("transformer_pilot/summary.json")
-    rows = [a for a in summary["averaged_over_seeds"] if a["train_rows"] == 100_000]
-    rows.sort(key=lambda a: -a["mean_macro_f1"])
+    summary = load("transformer_pilot_whole/summary.json")
     tfidf = np.mean([np.mean([r[h]["tfidf_macro_f1"] for h in HEADS]) for r in summary["runs"].values()])
-    fig, ax = plt.subplots(figsize=(8.5, 3.8))
-    y = np.arange(len(rows))
-    values = [a["mean_macro_f1"] for a in rows]
-    colors = [
-        plotting.SERIES[0] if a["model"] == "sbunlp/fabert" else plotting.SERIES[0] + "88" for a in rows
-    ]
-    ax.barh(y, values, height=0.55, color=colors)
-    for i, a in enumerate(rows):
-        if len(a["seeds"]) > 1:
-            ax.plot([a["lowest_seed"], a["highest_seed"]], [i, i], color=plotting.INK, linewidth=1.4)
-        seeds = f"{len(a['seeds'])} seeds" if len(a["seeds"]) > 1 else "1 seed"
-        ax.text(
-            max(a["highest_seed"], a["mean_macro_f1"]) + 0.001,
-            i,
-            f"{a['mean_macro_f1']:.4f} · {seeds} · {a['minutes']:.1f} min",
-            va="center",
-            fontsize=8,
-            color=plotting.INK_SECONDARY,
-        )
-    ax.axvline(tfidf, color=plotting.SERIES[1], linewidth=1.3, linestyle="--")
-    ax.text(tfidf, -0.55, f" TF-IDF {tfidf:.4f}", color=plotting.SERIES[1], fontsize=8.5)
-    ax.set_yticks(y, [SHORT_NAMES[a["model"]] for a in rows])
-    ax.invert_yaxis()
-    ax.set_xlim(0.665, 0.705)
-    ax.set_xlabel("Mean Macro F1 of the two heads, with offsets (same 50,000 validation reviews)")
-    ax.grid(axis="y", visible=False)
-    ax.set_title("Transformer candidates after 1 epoch on 100,000 reviews (lines: range over seeds)")
+    averaged = summary["averaged_over_seeds"]
+    groups = {n: [a for a in averaged if a["train_rows"] == n] for n in (100_000, 500_000)}
+    fig, axes = plt.subplots(
+        2, 1, figsize=(8.5, 5.6), gridspec_kw={"height_ratios": [len(g) for g in groups.values()]}
+    )
+    lowest = min(a["lowest_seed"] for g in groups.values() for a in g)
+    highest = max(a["highest_seed"] for g in groups.values() for a in g)
+    for ax, (n, rows) in zip(axes, groups.items(), strict=True):
+        rows.sort(key=lambda a: -a["mean_macro_f1"])
+        y = np.arange(len(rows))
+        colors = [
+            plotting.SERIES[0] if a["model"] == "sbunlp/fabert" else plotting.SERIES[0] + "88" for a in rows
+        ]
+        ax.barh(y, [a["mean_macro_f1"] for a in rows], height=0.55, color=colors)
+        for i, a in enumerate(rows):
+            if len(a["seeds"]) > 1:
+                ax.plot([a["lowest_seed"], a["highest_seed"]], [i, i], color=plotting.INK, linewidth=1.4)
+            seeds = f"{len(a['seeds'])} seeds" if len(a["seeds"]) > 1 else "1 seed"
+            ax.text(
+                max(a["highest_seed"], a["mean_macro_f1"]) + 0.001,
+                i,
+                f"{a['mean_macro_f1']:.4f} · {seeds} · {a['minutes']:.1f} min",
+                va="center",
+                fontsize=8,
+                color=plotting.INK_SECONDARY,
+            )
+        ax.axvline(tfidf, color=plotting.SERIES[1], linewidth=1.3, linestyle="--")
+        ax.set_yticks(y, [SHORT_NAMES[a["model"]] for a in rows])
+        ax.invert_yaxis()
+        ax.set_xlim(min(lowest, tfidf) - 0.004, highest + 0.012)
+        ax.grid(axis="y", visible=False)
+        ax.set_title(f"{n:,} training reviews", fontsize=10.5)
+    axes[0].text(tfidf, -0.6, f" TF-IDF {tfidf:.4f}", color=plotting.SERIES[1], fontsize=8.5)
+    axes[1].set_xlabel("Mean Macro F1 of the two heads, with offsets (whole validation set)")
+    fig.suptitle(
+        "Transformer candidates after 1 epoch (lines: range over seeds; dark: FaBERT, the chosen model)",
+        x=0.01,
+        ha="left",
+        fontsize=12,
+        fontweight="bold",
+    )
     fig.tight_layout()
     plotting.save(fig, "results_model_comparison")
 
@@ -338,7 +363,7 @@ def where_it_helps():
                 gain = (transformer[g]["macro_f1"] - tfidf[g]["macro_f1"]) * 100
                 top = max(transformer[g]["macro_f1"], tfidf[g]["macro_f1"])
                 ax.text(i, top + 0.008, f"{gain:+.1f}", ha="center", fontsize=8, color=plotting.INK_SECONDARY)
-            labels = [f"{g}\n{tfidf[g]['share'] * 100:.0f}%" for g in order]
+            labels = [f"{LENGTH_NAMES.get(g, g)}\n{tfidf[g]['share'] * 100:.0f}%" for g in order]
             if name == "seen":
                 names = {"seen_in_train": "seen in train", "new": "new text"}
                 labels = [f"{names[g]}\n{tfidf[g]['share'] * 100:.0f}%" for g in order]

@@ -5,6 +5,8 @@ FaBERT validation predictions with offsets (artifacts/transformer_final/validati
 For the first showing of every review: agreement of my label with the original label, overall
 and per original label, and the full table of counts; agreement of FaBERT with my label and
 with the original label. For the repeated reviews: how often I gave the same label twice.
+Where my label and the original differ, the buyer's star rating (never shown while labeling)
+is read as a third opinion: high = recommended, medium = no idea, low = not recommended.
 
 The sample has fixed numbers per original label, so the overall agreement is also given
 weighted by the share of each label in the whole validation set.
@@ -26,6 +28,7 @@ from digikala_reviews.standard_files import read_split_file
 from digikala_reviews.tuning import save_json
 
 FOLDER = DATA_DIR / "label_sample"
+RATING_SAYS = {"high": "recommended", "medium": "no_idea", "low": "not_recommended"}
 
 
 def main():
@@ -45,9 +48,15 @@ def main():
 
     validation = read_split_file("validation.csv")
     shares = validation["recommendation_status"].value_counts(normalize=True)
+    # the buyer's own star rating, never shown while labeling, as a third opinion
+    rating = validation.set_index("id")["rating_band"].loc[first["id"]]
+    first["rating_says"] = rating.map(RATING_SAYS).to_numpy()
+    disagree = first[first["my_label"] != first["original_label"]].dropna(subset=["rating_says"])
     mine = agreement(first, "original_label")
     weighted = float(sum(shares[label] * mine[label]["agree"] for label in RECOMMENDATION_CLASSES))
     fabert_vs_original = float((first["fabert"] == first["original_label"]).mean())
+    # the reviews FaBERT gets "wrong": does the hand label side with the model or with the original?
+    errors = first[first["fabert"] != first["original_label"]]
     result = {
         "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "reviews": int(len(first)),
@@ -56,6 +65,20 @@ def main():
         "original_label_by_my_label": confusion(first),
         "fabert_vs_my_label": agreement(first, "fabert"),
         "fabert_vs_original": fabert_vs_original,
+        "fabert_errors": {
+            "rows": int(len(errors)),
+            "my_label_sides_with_fabert": float((errors["my_label"] == errors["fabert"]).mean()),
+            "my_label_sides_with_original": float((errors["my_label"] == errors["original_label"]).mean()),
+            "by_original_label": errors["original_label"].value_counts().to_dict(),
+        },
+        "disagreements_with_a_rating": {
+            "rows": int(len(disagree)),
+            "rating_sides_with_my_label": float((disagree["rating_says"] == disagree["my_label"]).mean()),
+            "rating_sides_with_original": float(
+                (disagree["rating_says"] == disagree["original_label"]).mean()
+            ),
+            "rating_mapping": RATING_SAYS,
+        },
         "repeats": {
             "rows": int(len(repeats)),
             "same_label": float((repeats["my_label"] == repeats["my_label_first"]).mean()),
@@ -71,6 +94,18 @@ def main():
         print(f"  original {label}: {mine[label]['agree']:.1%} of {mine[label]['rows']}, my labels {counts}")
     agree = result["fabert_vs_my_label"]["agree"]
     print(f"FaBERT = my label: {agree:.1%}; FaBERT = original label: {fabert_vs_original:.1%}")
+    wrong = result["fabert_errors"]
+    print(
+        f"Where FaBERT differs from the original label ({wrong['rows']} reviews), my label sides with "
+        f"FaBERT {wrong['my_label_sides_with_fabert']:.1%}, with the original "
+        f"{wrong['my_label_sides_with_original']:.1%}; by original label {wrong['by_original_label']}"
+    )
+    rated = result["disagreements_with_a_rating"]
+    print(
+        f"Where I disagree with the original label ({rated['rows']} with a rating), the rating sides with "
+        f"me {rated['rating_sides_with_my_label']:.1%}, "
+        f"with the original {rated['rating_sides_with_original']:.1%}"
+    )
     print(f"Same label on the repeated reviews: {result['repeats']['same_label']:.1%} of {len(repeats)}")
 
 
