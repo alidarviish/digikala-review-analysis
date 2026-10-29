@@ -64,27 +64,42 @@ What it means:
 - gamma 2 is a large change; gamma 1 already moves most of the weight. A milder gamma 0.5 is
   added to the GPU pilot so that the effect can be followed in steps.
 
-## Step 2: GPU pilot (only if step 1 supports it)
+## Step 2: GPU pilot
 
-FaBERT on the same 500,000 training reviews and seeds 2026 to 2028 as step 35, scored on all
-of validation, with the validation loss measured 10 times during training (`--checks 10`):
+Steps 41 to 45 of `notebooks/run_all.py` train FaBERT on the same 500,000 training reviews and
+seeds 2026 to 2028 as step 35, scored on all of validation, with the validation loss measured
+10 times during training on a fixed sample of 50,000 validation reviews (`--checks 10`):
 
-1. the reference again with `--checks 10`, so its curve can be drawn next to the others
-   (its final scores should equal those of step 35);
-2. focal loss, gamma 0.5 (added after step 1);
-3. focal loss, gamma 1;
-4. focal loss, gamma 2.
+| Step | Run | Option |
+|---|---|---|
+| 41 | the usual training again, now measured during training | |
+| 42 | focal loss, gamma 0.5 (added after step 1) | `--focal 0.5` |
+| 43 | focal loss, gamma 1 | `--focal 1` |
+| 44 | focal loss, gamma 2 | `--focal 2` |
+| 45 | class weights: every class counts as much in total (added after step 1) | `--class-weights` |
 
-Each is compared with the reference on the same reviews (paired bootstrap, cross-fitted
-offsets) and gets an experiment card. The rule as before: a change is kept only if it leads by
-more than the spread between seeds; a tie goes to the faster setup, here the reference.
+Focal loss is the mean over the labeled reviews of -(1 - p)^gamma log p, as in its original
+form; the weights are not rescaled, so the loss is smaller than the usual one. Class weights
+answer a separate question: step 1 showed that focal loss mostly moves weight between classes,
+so if class weights give the same result, it is the class balance that matters and not the
+difficulty of single reviews.
+
+Step 46 (`scripts/compare_hard_examples.py`, local) compares each run with step 41 on the same
+reviews (paired bootstrap, offsets cross-fitted by product) and checks that step 41 scores as
+step 35. The rule as before: a change is kept only if it leads by more than the spread between
+seeds; a tie goes to the usual training, which is as fast and simpler. Every run also gets an
+experiment card, with the validation loss of both setups drawn during training.
 
 Expected:
 
-- The reference with checks scores within 0.0001 of step 35.
-- gamma 0.5: a tie (within 0.002).
-- gamma 1: a tie (within 0.002 of the mean Macro F1 of the two heads).
+- Step 41 scores within 0.001 of step 35 (mean Macro F1 of the two heads): measuring during
+  training does not change the training, only the GPU's rounding may differ.
+- gamma 0.5 and gamma 1: a tie (within 0.002).
 - gamma 2: a tie or slightly worse (0 to 0.004 lower), with `no_idea` and `medium` F1 up a
-  little and `not_recommended` and `low` down; the validation loss higher, since focal loss
-  makes the probabilities less sharp and the loss measures them as they are.
+  little and `not_recommended` and `low` down.
+- Class weights: a tie (within 0.002), with per-class changes in the same direction as gamma 1:
+  the offsets already move the decisions towards the small classes, so the weights add little.
+- The validation loss of every variant is higher than the usual one at the end, since they
+  train for another balance of the classes than the true one, and the loss measures the
+  probabilities as they are.
 - On the curves the focal runs start slower and end level with the reference.

@@ -41,6 +41,11 @@ With --checks N the validation loss is measured N times during training (every 1
 training steps) on a fixed sample of 50,000 validation reviews, so two setups can be compared
 while they train, also when their batches are built differently. The time of the checks is not
 counted in the training minutes. The run is saved under its own name (<...>__checks<N>).
+
+Two ways to give hard reviews more weight (reports/hard_examples_plan.md), each saved under its
+own name: --focal GAMMA multiplies the loss of each review by (1 - p)^GAMMA, p the probability
+of its true class (focal loss, <...>__focal<GAMMA>); --class-weights weights each class so that
+all classes count as much in total in the training sample (<...>__classweights).
 """
 
 import argparse
@@ -56,9 +61,11 @@ from digikala_reviews.config import ARTIFACTS_DIR, CACHE_DIR, REPORTS_DIR, SPLIT
 from digikala_reviews.experiments import compare, cross_fitted_offsets, product_half
 from digikala_reviews.finetune import (
     IGNORE,
+    balanced_class_weights,
     batches,
     build_model,
     fixed_sample,
+    focal_weights,
     label_codes,
     linear_warmup,
     mean_log_loss,
@@ -143,7 +150,15 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
     steps = settings["epochs"] * math.ceil(len(train_ids) / settings["batch_size"])
     warmup = max(1, int(settings["warmup_share"] * steps))
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lambda s: linear_warmup(s, steps, warmup))
-    loss_fn = torch.nn.CrossEntropyLoss(ignore_index=IGNORE)
+    loss_fns = {head: torch.nn.CrossEntropyLoss(ignore_index=IGNORE) for head in HEADS}
+    if settings.get("class_weights"):
+        for head in HEADS:
+            weight = balanced_class_weights(labels[head], len(HEADS[head]["labels"]))
+            loss_fns[head] = torch.nn.CrossEntropyLoss(
+                weight=torch.tensor(weight, dtype=torch.float32, device=device), ignore_index=IGNORE
+            )
+            print(f"  {head} class weights: " + ", ".join(f"{w:.2f}" for w in weight), flush=True)
+    gamma = settings.get("focal")
     if device.type == "cuda":
         torch.cuda.reset_peak_memory_stats()
 
@@ -190,7 +205,14 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
                         log_proba = torch.log_softmax(logits.float(), dim=-1)
                         loss = loss + weighted_soft_loss(log_proba, target, weight)
                 elif (target != IGNORE).any():
-                    loss = loss + loss_fn(logits.float(), target)
+                    if gamma:
+                        # focal loss: -(1 - p)^gamma log p of the true class, mean over labeled reviews
+                        labeled = target != IGNORE
+                        log_p = torch.log_softmax(logits.float()[labeled], dim=-1)
+                        log_p = log_p.gather(1, target[labeled].unsqueeze(1)).squeeze(1)
+                        loss = loss - (focal_weights(log_p.exp(), gamma) * log_p).mean()
+                    else:
+                        loss = loss + loss_fns[head](logits.float(), target)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             optimizer.step()
@@ -270,6 +292,8 @@ def main():
     parser.add_argument(
         "--checks", type=int, help="measure the validation loss this many times during training"
     )
+    parser.add_argument("--focal", type=float, help="focal loss with this gamma")
+    parser.add_argument("--class-weights", action="store_true", help="weight the classes to count the same")
     args = parser.parse_args()
     import torch
 
@@ -283,6 +307,12 @@ def main():
         settings["merge"] = args.merge  # only set when used, so the other runs keep their fingerprint
     if args.checks:
         settings["checks"] = args.checks  # the same
+    if args.focal:
+        settings["focal"] = args.focal
+    if args.class_weights:
+        settings["class_weights"] = True
+    assert not (args.merge and (args.focal or args.class_weights)), "merging is not combined with these"
+    assert not (args.focal and args.class_weights), "focal loss and class weights are tried apart"
     seeds = [int(s) for s in args.seeds.split(",")] if args.seeds else [SETTINGS["seed"]]
     results_dir, arrays_dir = REPORTS_DIR / "transformer_pilot", ARTIFACTS_DIR / "transformer_pilot"
     if args.whole_validation:
@@ -373,6 +403,10 @@ def main():
             tag += f"__seed{seed}__n{settings['train_rows']}"
         if settings.get("merge"):
             tag += f"__merge-{settings['merge']}"
+        if settings.get("focal"):
+            tag += f"__focal{settings['focal']:g}"
+        if settings.get("class_weights"):
+            tag += "__classweights"
         if settings.get("checks"):
             tag += f"__checks{settings['checks']}"
         spec = json.loads(

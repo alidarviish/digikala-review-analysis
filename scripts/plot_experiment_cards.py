@@ -30,6 +30,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.colors import TwoSlopeNorm
+from matplotlib.ticker import MaxNLocator
 
 from digikala_reviews import plotting
 from digikala_reviews.analysis import length_bucket, word_count
@@ -118,6 +119,26 @@ TRANSFORMER_CARDS = [
         }
         for mode, meaning in [("copies", "weight = copies"), ("once", "each text once")]
     ],
+]
+
+HARD_EXAMPLES = [
+    ("hard_focal_0.5", "__focal0.5", "focal 0.5", "Focal loss, gamma 0.5"),
+    ("hard_focal_1", "__focal1", "focal 1", "Focal loss, gamma 1"),
+    ("hard_focal_2", "__focal2", "focal 2", "Focal loss, gamma 2"),
+    ("hard_class_weights", "__classweights", "class weights", "Class weights"),
+]
+TRANSFORMER_CARDS += [
+    {
+        "name": name,
+        "kind": "pilot",
+        "title": title,
+        "reference": ("usual", [f"{pilot_tag(FABERT, s, 500_000)}__checks10" for s in SEEDS]),
+        "variant": (short, [f"{pilot_tag(FABERT, s, 500_000)}{suffix}__checks10" for s in SEEDS]),
+        "subtitle": "FaBERT · 500,000 training reviews · 1 epoch · 3 seeds pooled · whole validation set",
+        "training_curve": False,  # the training losses differ by design; the checks are drawn instead
+        "no_curve_reason": "Not drawn: the runs were not measured during training.",
+    }
+    for name, suffix, short, title in HARD_EXAMPLES
 ]
 
 TFIDF_NAMES = {
@@ -414,7 +435,7 @@ def loss_figure(card, losses, curve, folder):
     ax.set_yticks(pos, [HEAD_TITLES[h] for h in heads])
     ax.invert_yaxis()
     ax.grid(axis="y", visible=False)
-    lim = np.abs(interval).max() * 1.5
+    lim = max(np.abs(interval).max() * 1.5, 1e-4)  # not 0 when the two setups agree everywhere
     for p, h, c, (lo, hi) in zip(pos, heads, change, interval, strict=True):
         ax.text(
             max(hi, 0) + lim * 0.05,
@@ -426,6 +447,7 @@ def loss_figure(card, losses, curve, folder):
             color=plotting.INK_SECONDARY,
         )
     ax.set_xlim(-lim, lim * 3.2)
+    ax.xaxis.set_major_locator(MaxNLocator(5))
     ax.set_xlabel("Change in validation loss (95% interval; lower is better)")
     ax.set_title(f"Validation loss, {var_name} minus {ref_name}", fontsize=10.5)
 

@@ -3,6 +3,7 @@ import pytest
 
 from digikala_reviews.finetune import (
     IGNORE,
+    balanced_class_weights,
     fixed_sample,
     focal_weights,
     label_codes,
@@ -39,3 +40,12 @@ def test_focal_weights_move_weight_to_hard_reviews():
     assert focal_weights(p, 0).tolist() == [1.0, 1.0]  # the usual loss
     assert focal_weights(p, 1) == pytest.approx([0.05, 0.8])
     assert focal_weights(p, 2) == pytest.approx([0.0025, 0.64])
+
+
+def test_balanced_class_weights_make_every_class_count_the_same():
+    codes = np.array([0, 0, 0, 1, IGNORE, 2, 2])
+    weights = balanced_class_weights(codes, 3)
+    assert weights == pytest.approx([6 / 9, 6 / 3, 6 / 6])
+    totals = weights * np.bincount(codes[codes != IGNORE], minlength=3)
+    assert totals == pytest.approx([2, 2, 2])  # each class counts as much in total
+    assert balanced_class_weights(np.array([0, 0]), 2).tolist() == [0.5, 0.0]  # no review of class 1

@@ -44,6 +44,18 @@ PILOT_LARGE_ARGS = [
     "500000",
 ]
 PILOT_LARGE_SEED_ARGS = [*PILOT_LARGE_ARGS, "--seeds", "2027,2028"]
+HARD_ARGS = [
+    *PILOT_ARGS,
+    "--models",
+    "sbunlp/fabert",
+    "--train-rows",
+    "500000",
+    "--seeds",
+    "2026,2027,2028",
+    "--whole-validation",
+    "--checks",
+    "10",
+]
 PILOT_MERGE_ARGS = [
     *PILOT_ARGS,
     "--models",
@@ -440,6 +452,40 @@ STEPS = [
         files("reports/experiment_cards.json"),
         "one folder of figures per experiment in reports/figures/experiments/; reads the run "
         "predictions, which stay on your machine",
+    ),
+    # More weight on hard reviews (reports/hard_examples_plan.md)
+    *[
+        Step(
+            number,
+            title,
+            [*HARD_ARGS, *extra],
+            "gpu",
+            [31],
+            files(
+                *[
+                    f"reports/transformer_pilot_whole/sbunlp__fabert__seed{s}__n500000{suffix}__checks10.json"
+                    for s in (2026, 2027, 2028)
+                ]
+            ),
+            smoke=True,
+        )
+        for number, title, extra, suffix in [
+            (41, "FaBERT on 500,000 reviews, measured during training", [], ""),
+            (42, "Focal loss, gamma 0.5", ["--focal", "0.5"], "__focal0.5"),
+            (43, "Focal loss, gamma 1", ["--focal", "1"], "__focal1"),
+            (44, "Focal loss, gamma 2", ["--focal", "2"], "__focal2"),
+            (45, "Class weights", ["--class-weights"], "__classweights"),
+        ]
+    ],
+    Step(
+        46,
+        "Hard reviews weighted up against the usual training",
+        ["scripts/compare_hard_examples.py"],
+        "local",
+        [35, 41, 42, 43, 44, 45],
+        files("reports/transformer_pilot_whole/hard_examples_n500000.json"),
+        "reads the run predictions, which stay on your machine; then run plot_experiment_cards.py "
+        "again for their cards",
     ),
 ]
 

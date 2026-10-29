@@ -73,3 +73,14 @@ def focal_weights(p_true, gamma: float):
     reviews the model gets wrong or is unsure about. Works on NumPy arrays and PyTorch tensors.
     """
     return (1 - p_true) ** gamma
+
+
+def balanced_class_weights(codes, n_classes: int) -> np.ndarray:
+    """Weight of each class so that every class counts as much in total: n / (classes * n_class).
+
+    Reviews without a label (IGNORE) are left out. A class with no review gets weight 0.
+    """
+    codes = np.asarray(codes)
+    counts = np.bincount(codes[codes != IGNORE], minlength=n_classes).astype(float)
+    with np.errstate(divide="ignore"):
+        return np.where(counts > 0, counts.sum() / (n_classes * counts), 0.0)
