@@ -71,6 +71,8 @@ Macro F1 on the validation set. A difference is shown with its 95% bootstrap int
 | E12 | recommendation | n10000 | score 0.6150 [0.6136, 0.6164] | report only | yes | 2d9bb48 · molab CPU |
 | E12 | recommendation | n100000 | score 0.6487 [0.6473, 0.6499] | report only | yes | 2d9bb48 · molab CPU |
 | E12 | recommendation | n1000000 | score 0.6720 [0.6706, 0.6733] | report only | yes | 2d9bb48 · molab CPU |
+| E13 | rating_band | svc_C0.1_with_offsets | +0.0007 [+0.0000, +0.0014] | better | yes | 1be1f21 · molab CPU |
+| E13 | recommendation | svc_C0.1_with_offsets | +0.0025 [+0.0019, +0.0032] | better | yes | 1be1f21 · molab CPU |
 | reference | rating_band | fit | score 0.6465 [0.6452, 0.6479] | report only | yes | 2d9bb48 · molab CPU |
 | reference | recommendation | fit | score 0.6795 [0.6781, 0.6809] | report only | yes | 2d9bb48 · molab CPU |
 
@@ -115,6 +117,31 @@ Scored with offsets on the same 50,000 validation reviews, as is TF-IDF (the kep
 
 Summary made with 58a68b1 · local
 
+## Transformer pilot on the whole validation set (1 epoch, mean over seeds, with offsets)
+
+| Model | Training reviews | Seeds | Recommendation | Rating band | Mean | Seeds range | Minutes |
+|---|---|---|---|---|---|---|---|
+| PartAI/TookaBERT-Large | 100,000 | 3 | 0.7119 | 0.6792 | 0.6956 | 0.6951 to 0.6960 | 2.2 |
+| sbunlp/fabert | 100,000 | 3 | 0.7102 | 0.6757 | 0.6929 | 0.6925 to 0.6936 | 0.9 |
+| jhu-clsp/mmBERT-base | 100,000 | 1 | 0.7053 | 0.6719 | 0.6886 | 0.6886 to 0.6886 | 1.8 |
+| PartAI/TookaBERT-Base | 100,000 | 3 | 0.7013 | 0.6699 | 0.6856 | 0.6841 to 0.6868 | 0.9 |
+| FacebookAI/xlm-roberta-base | 100,000 | 1 | 0.7004 | 0.6693 | 0.6848 | 0.6848 to 0.6848 | 1.2 |
+| HooshvareLab/bert-fa-zwnj-base | 100,000 | 1 | 0.6881 | 0.6579 | 0.6730 | 0.6730 to 0.6730 | 0.9 |
+| PartAI/TookaBERT-Large | 500,000 | 3 | 0.7243 | 0.6872 | 0.7058 | 0.7050 to 0.7062 | 11.0 |
+| sbunlp/fabert | 500,000 | 3 | 0.7231 | 0.6861 | 0.7046 | 0.7043 to 0.7049 | 4.3 |
+
+Summary made with 42ec92d (uncommitted) · local
+
+TookaBERT-Large minus FaBERT, both on 500,000 reviews, same reviews per seed:
+
+| Seed | Recommendation [95%] | Rating band [95%] |
+|---|---|---|
+| 2026 | +0.0001 [-0.0008, +0.0009] | +0.0013 [+0.0007, +0.0020] |
+| 2027 | +0.0017 [+0.0008, +0.0026] | +0.0013 [+0.0006, +0.0020] |
+| 2028 | +0.0019 [+0.0011, +0.0028] | +0.0008 [+0.0002, +0.0015] |
+
+Lead of TookaBERT-Large +0.00117, spread between seeds 0.00124: tie, chosen sbunlp__fabert (a lead smaller than the spread between seeds is a tie; a tie goes to the faster model). Made with 42ec92d.
+
 ## FaBERT on all training reviews
 
 Checks on the 50,000-review validation sample, with offsets:
@@ -147,8 +174,6 @@ FaBERT loss of both heads: training 0.7874 (logged steps before the kept one), v
 
 | What | Why |
 |---|---|
-| E6 linear SVM with offsets against logistic regression with offsets | never run: E6 compared the SVM without offsets against the reference without offsets |
-| Transformer pilot runs on the whole validation set | by design they were scored on a 50,000-review sample to save time |
 | FaBERT validation loss at each check | not logged during training; only the kept model's validation loss is known |
 | FaBERT trained past epoch 1.75 | early stopping ended the run after two checks without gain |
 | Test set | kept untouched until the end; scored once for each final model |

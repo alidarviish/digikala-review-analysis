@@ -20,14 +20,6 @@ OUT = REPORTS_DIR / "results_summary.md"
 # Measurements that are missing on purpose or by accident, with the reason. Kept by hand.
 NOT_MEASURED = [
     (
-        "E6 linear SVM with offsets against logistic regression with offsets",
-        "never run: E6 compared the SVM without offsets against the reference without offsets",
-    ),
-    (
-        "Transformer pilot runs on the whole validation set",
-        "by design they were scored on a 50,000-review sample to save time",
-    ),
-    (
         "FaBERT validation loss at each check",
         "not logged during training; only the kept model's validation loss is known",
     ),
@@ -191,6 +183,57 @@ def transformer_pilot():
     )
 
 
+def transformer_pilot_whole():
+    folder = REPORTS_DIR / "transformer_pilot_whole"
+    summary = load(folder / "summary.json")
+    rows = [
+        [
+            a["model"],
+            f"{a['train_rows']:,}",
+            len(a["seeds"]),
+            f"{a['recommendation_macro_f1']:.4f}",
+            f"{a['rating_band_macro_f1']:.4f}",
+            f"{a['mean_macro_f1']:.4f}",
+            f"{a['lowest_seed']:.4f} to {a['highest_seed']:.4f}",
+            f"{a['minutes']:.1f}",
+        ]
+        for a in summary["averaged_over_seeds"]
+    ]
+    header = [
+        "Model",
+        "Training reviews",
+        "Seeds",
+        "Recommendation",
+        "Rating band",
+        "Mean",
+        "Seeds range",
+        "Minutes",
+    ]
+    choice = load(folder / "large_vs_fabert_n500000.json")
+    per_seed = []
+    for seed, heads in choice["per_seed"].items():
+        per_seed.append(
+            [seed]
+            + [f"{h['difference']:+.4f} {interval(h['difference_interval_95'])}" for h in heads.values()]
+        )
+    return (
+        [
+            "## Transformer pilot on the whole validation set (1 epoch, mean over seeds, with offsets)",
+            "",
+        ]
+        + table(header, rows)
+        + [f"Summary made with {source(summary)}", ""]
+        + ["TookaBERT-Large minus FaBERT, both on 500,000 reviews, same reviews per seed:", ""]
+        + table(["Seed", "Recommendation [95%]", "Rating band [95%]"], per_seed)
+        + [
+            f"Lead of TookaBERT-Large {choice['lead_of_large']:+.5f}, spread between seeds "
+            f"{choice['spread_between_seeds']:.5f}: {choice['verdict']}, chosen {choice['chosen']} "
+            f"({choice['rule']}). Made with {short(choice['code'])}.",
+            "",
+        ]
+    )
+
+
 def transformer_final():
     run = load(REPORTS_DIR / "transformer_final" / "fabert.json")
     comparison = load(REPORTS_DIR / "transformer_final" / "vs_tfidf.json")
@@ -259,7 +302,8 @@ def main():
         "[low, high]: a change counts only when the whole interval is above zero.",
         "",
     ]
-    lines += tfidf_tuning() + tfidf_experiments() + tfidf_final() + transformer_pilot() + transformer_final()
+    lines += tfidf_tuning() + tfidf_experiments() + tfidf_final() + transformer_pilot()
+    lines += transformer_pilot_whole() + transformer_final()
     lines += ["## Not measured", ""] + table(["What", "Why"], NOT_MEASURED)
     OUT.write_text("\n".join(lines), encoding="utf-8")
     print(f"Written to {OUT}")

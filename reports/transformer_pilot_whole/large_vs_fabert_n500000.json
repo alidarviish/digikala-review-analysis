@@ -1,0 +1,109 @@
+{
+  "created_at": "2026-10-29T07:48:12+00:00",
+  "train_rows": 500000,
+  "per_seed": {
+    "2026": {
+      "recommendation": {
+        "large_macro_f1": 0.7232204974203708,
+        "fabert_macro_f1": 0.7231613863204235,
+        "difference": 5.911109994727326e-05,
+        "difference_interval_95": [
+          -0.0008366871544167681,
+          0.0008539974285443061
+        ],
+        "direction": "no measurable difference"
+      },
+      "rating_band": {
+        "large_macro_f1": 0.6867760499206063,
+        "fabert_macro_f1": 0.6854863529287664,
+        "difference": 0.0012896969918398948,
+        "difference_interval_95": [
+          0.0006772923262833213,
+          0.001957121295706246
+        ],
+        "direction": "better"
+      }
+    },
+    "2027": {
+      "recommendation": {
+        "large_macro_f1": 0.7244850325024963,
+        "fabert_macro_f1": 0.722778677823372,
+        "difference": 0.0017063546791242779,
+        "difference_interval_95": [
+          0.0008013574475534663,
+          0.002598416691710947
+        ],
+        "direction": "better"
+      },
+      "rating_band": {
+        "large_macro_f1": 0.6876190751364266,
+        "fabert_macro_f1": 0.6863323185563112,
+        "difference": 0.0012867565801154557,
+        "difference_interval_95": [
+          0.0005973486628581103,
+          0.0019547728284971338
+        ],
+        "direction": "better"
+      }
+    },
+    "2028": {
+      "recommendation": {
+        "large_macro_f1": 0.7251468158520327,
+        "fabert_macro_f1": 0.7232539801604124,
+        "difference": 0.0018928356916202427,
+        "difference_interval_95": [
+          0.001103583400744157,
+          0.0027857558875795775
+        ],
+        "direction": "better"
+      },
+      "rating_band": {
+        "large_macro_f1": 0.6873290512297735,
+        "fabert_macro_f1": 0.6865452542217655,
+        "difference": 0.0007837970080080137,
+        "difference_interval_95": [
+          0.00019520046757084687,
+          0.001454975360030713
+        ],
+        "direction": "better"
+      }
+    }
+  },
+  "mean_of_heads_per_seed": {
+    "large": [
+      0.7049982736704885,
+      0.7060520538194615,
+      0.706237933540903
+    ],
+    "fabert": [
+      0.7043238696245949,
+      0.7045554981898416,
+      0.704899617191089
+    ]
+  },
+  "mean_over_seeds": {
+    "large": 0.7057627536769511,
+    "fabert": 0.7045929950018418
+  },
+  "minutes_per_seed": {
+    "large": [
+      11.0,
+      11.03,
+      11.02
+    ],
+    "fabert": [
+      4.35,
+      4.33,
+      4.33
+    ]
+  },
+  "lead_of_large": 0.001169758675109267,
+  "spread_between_seeds": 0.0012396598704145223,
+  "verdict": "tie",
+  "chosen": "sbunlp__fabert",
+  "rule": "a lead smaller than the spread between seeds is a tie; a tie goes to the faster model",
+  "code": {
+    "commit": "42ec92d9ad99e3f2db5fd85db6491eb676e89e91",
+    "uncommitted_changes": false
+  }
+}

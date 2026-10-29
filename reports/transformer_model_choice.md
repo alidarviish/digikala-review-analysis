@@ -177,3 +177,27 @@ Expected:
 
 If the large model wins by the rule, it replaces FaBERT, and the longer training run (step
 33) is made with it instead.
+
+## Result of TookaBERT-Large against FaBERT on 500,000 reviews, and the choice
+
+`reports/transformer_pilot_whole/large_vs_fabert_n500000.json`. TookaBERT-Large minus FaBERT
+on the same reviews:
+
+| Seed | Recommendation [95%] | Rating band [95%] |
+|---|---|---|
+| 2026 | +0.0001 [-0.0008, +0.0009] | +0.0013 [+0.0007, +0.0020] |
+| 2027 | +0.0017 [+0.0008, +0.0026] | +0.0013 [+0.0006, +0.0020] |
+| 2028 | +0.0019 [+0.0011, +0.0028] | +0.0008 [+0.0002, +0.0015] |
+
+Mean over the three seeds: TookaBERT-Large 0.7058 (0.7050 to 0.7062, 11.0 minutes), FaBERT
+0.7046 (0.7043 to 0.7049, 4.3 minutes). The lead of the large model (0.00117) is just below
+the spread between seeds (0.00124), so by the rule it is a tie and FaBERT stays the model.
+The predictions of a tie and of a small gain for the large model on the rating band were
+right; the interval for recommendation included zero for one seed only, not for all three.
+
+The result sits at the edge of the rule: the large model is slightly better on every seed,
+by 0.1 to 0.2 point, and the seed ranges of the two models do not overlap. FaBERT is kept
+because the rule was fixed before the runs, the gain is far smaller than the label noise
+measured earlier, and the large model costs 2.6 times the training time, three times the
+memory and a slower service. If time and GPU allow once every step is done with FaBERT,
+TookaBERT-Large is trained once with the final settings and reported as an upper bound.
