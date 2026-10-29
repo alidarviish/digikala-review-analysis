@@ -142,38 +142,52 @@ TookaBERT-Large minus FaBERT, both on 500,000 reviews, same reviews per seed:
 
 Lead of TookaBERT-Large +0.00117, spread between seeds 0.00124: tie, chosen sbunlp__fabert (a lead smaller than the spread between seeds is a tie; a tie goes to the faster model). Made with 42ec92d.
 
-## FaBERT on all training reviews
+## FaBERT on all training reviews (the kept run: every epoch, best check kept)
 
 Checks on the 50,000-review validation sample, with offsets:
 
-| Epoch | Step | Mean | Recommendation | Rating band |  |
-|---|---|---|---|---|---|
-| 0.25 | 13,877 | 0.7009 | 0.7157 | 0.6861 | kept |
-| 0.5 | 27,754 | 0.7038 | 0.7218 | 0.6858 | kept |
-| 0.75 | 41,631 | 0.7059 | 0.7235 | 0.6882 | kept |
-| 1.0 | 55,508 | 0.7071 | 0.7252 | 0.6889 | kept |
-| 1.25 | 69,385 | 0.7104 | 0.7310 | 0.6898 | kept |
-| 1.5 | 83,262 | 0.7085 | 0.7282 | 0.6889 |  |
-| 1.75 | 97,139 | 0.7103 | 0.7325 | 0.6881 |  |
+| Epoch | Step | Mean | Recommendation | Rating band | Validation loss |  |
+|---|---|---|---|---|---|---|
+| 0.25 | 13,877 | 0.7007 | 0.7169 | 0.6844 | 0.8321 | kept |
+| 0.5 | 27,754 | 0.7047 | 0.7230 | 0.6864 | 0.8201 | kept |
+| 0.75 | 41,631 | 0.7090 | 0.7274 | 0.6905 | 0.8104 | kept |
+| 1.0 | 55,508 | 0.7081 | 0.7265 | 0.6896 | 0.8131 |  |
+| 1.25 | 69,385 | 0.7078 | 0.7252 | 0.6905 | 0.8083 |  |
+| 1.5 | 83,262 | 0.7091 | 0.7282 | 0.6899 | 0.8097 | kept |
+| 1.75 | 97,139 | 0.7098 | 0.7287 | 0.6908 | 0.8034 | kept |
+| 2.0 | 111,016 | 0.7125 | 0.7322 | 0.6928 | 0.8048 | kept |
+| 2.25 | 124,893 | 0.7101 | 0.7313 | 0.6889 | 0.8131 |  |
+| 2.5 | 138,770 | 0.7116 | 0.7306 | 0.6927 | 0.8127 |  |
+| 2.75 | 152,647 | 0.7131 | 0.7325 | 0.6937 | 0.8075 | kept |
+| 3.0 | 166,524 | 0.7116 | 0.7345 | 0.6887 | 0.8104 |  |
+| 3.25 | 180,401 | 0.7072 | 0.7262 | 0.6882 | 0.8394 |  |
+| 3.5 | 194,278 | 0.7103 | 0.7326 | 0.6879 | 0.8365 |  |
+| 3.75 | 208,155 | 0.7093 | 0.7307 | 0.6878 | 0.8363 |  |
+| 4.0 | 222,032 | 0.7087 | 0.7297 | 0.6877 | 0.8372 |  |
 
-Trained with 2e54cac · molab GPU. Whole validation set (compared with 58a68b1 · local):
+Trained with 287977c · molab GPU. Whole validation set (compared with b92fbff (uncommitted) · local):
 
 | Head | FaBERT without offsets | FaBERT with offsets | TF-IDF with offsets | Difference [95%] |
 |---|---|---|---|---|
-| recommendation | 0.7224 | 0.7298 | 0.7017 | +0.0281 [+0.0268, +0.0294] |
-| rating_band | 0.6797 | 0.6908 | 0.6683 | +0.0225 [+0.0215, +0.0235] |
+| recommendation | 0.7253 | 0.7324 | 0.7017 | +0.0308 [+0.0295, +0.0321] |
+| rating_band | 0.6799 | 0.6922 | 0.6683 | +0.0239 [+0.0229, +0.0249] |
 
 | Head | FaBERT validation loss | TF-IDF validation loss |
 |---|---|---|
-| recommendation | 0.3117 | 0.5004 |
-| rating_band | 0.4933 | 0.5220 |
+| recommendation | 0.3121 | 0.5004 |
+| rating_band | 0.4925 | 0.5220 |
 
-FaBERT loss of both heads: training 0.7874 (logged steps before the kept one), validation 0.8050.
+FaBERT loss of both heads: training 0.7505 (logged steps before the kept one), validation 0.8046.
+
+Kept run (best check at epoch 2.75) against the first run, stopped early (best check at epoch 1.25), both with offsets on the whole validation set (made with 82ab4df):
+
+| Head | Kept run | First run | Difference [95%] | Verdict |
+|---|---|---|---|---|
+| recommendation | 0.7324 | 0.7298 | +0.0027 [+0.0017, +0.0036] | better |
+| rating_band | 0.6922 | 0.6908 | +0.0014 [+0.0006, +0.0022] | better |
 
 ## Not measured
 
 | What | Why |
 |---|---|
-| FaBERT validation loss at each check | not logged during training; only the kept model's validation loss is known |
-| FaBERT trained past epoch 1.75 | early stopping ended the run after two checks without gain |
 | Test set | kept untouched until the end; scored once for each final model |

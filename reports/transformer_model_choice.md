@@ -201,3 +201,23 @@ because the rule was fixed before the runs, the gain is far smaller than the lab
 measured earlier, and the large model costs 2.6 times the training time, three times the
 memory and a slower service. If time and GPU allow once every step is done with FaBERT,
 TookaBERT-Large is trained once with the final settings and reported as an upper bound.
+
+## Result of FaBERT for every epoch, and the model kept
+
+`reports/transformer_final/fabert_no_early_stop.json` and `no_early_stop_vs_first.json`. The
+best check came at epoch 2.75 (mean of the two heads 0.7131 on the 50,000-review sample,
+against 0.7104 for the first run at epoch 1.25). After epoch 3 the validation loss jumped
+from about 0.81 to 0.84 while the training loss kept falling and Macro F1 drifted down: the
+model starts to memorise the training reviews, so more than three epochs gives nothing.
+
+On the whole validation set, with offsets, the longer run against the first run:
+recommendation 0.7324 against 0.7298, +0.0027 [+0.0017, +0.0036]; rating band 0.6922
+against 0.6908, +0.0014 [+0.0006, +0.0022]. For each head the whole interval is above
+zero, so by the rule written before the run the longer run replaces the first one. Every
+later step reads it (`FINAL_TRANSFORMER_*` in `config.py`); the first run's files are kept
+for the comparison.
+
+The predictions: the best check came earlier than expected (epoch 2.75, not 3 or 4), the
+gain was smaller than expected (0.1 to 0.3 point, not 0.3 to 0.8), and the validation loss
+did rise later in training, after epoch 3 rather than epoch 2. Trying 6 to 8 epochs is
+dropped.

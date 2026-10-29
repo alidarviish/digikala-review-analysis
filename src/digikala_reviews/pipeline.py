@@ -368,7 +368,8 @@ STEPS = [
         "local",
         [24, 33],
         files("reports/transformer_final/no_early_stop_vs_first.json"),
-        "reads both runs' predictions; the first run's stay on your machine",
+        "reads both runs' predictions; if the longer run is better, run steps 25 to 28 again "
+        "(analyses with --redo): they read the run named in config.py",
     ),
     Step(
         35,

@@ -12,18 +12,13 @@ Usage:
 
 import json
 
-from digikala_reviews.config import REPORTS_DIR
+from digikala_reviews.config import FINAL_TRANSFORMER_RESULT, REPORTS_DIR
 from digikala_reviews.provenance import machine_kind
 
 OUT = REPORTS_DIR / "results_summary.md"
 
 # Measurements that are missing on purpose or by accident, with the reason. Kept by hand.
 NOT_MEASURED = [
-    (
-        "FaBERT validation loss at each check",
-        "not logged during training; only the kept model's validation loss is known",
-    ),
-    ("FaBERT trained past epoch 1.75", "early stopping ended the run after two checks without gain"),
     ("Test set", "kept untouched until the end; scored once for each final model"),
 ]
 
@@ -235,7 +230,7 @@ def transformer_pilot_whole():
 
 
 def transformer_final():
-    run = load(REPORTS_DIR / "transformer_final" / "fabert.json")
+    run = load(REPORTS_DIR / FINAL_TRANSFORMER_RESULT)
     comparison = load(REPORTS_DIR / "transformer_final" / "vs_tfidf.json")
     checks = [
         [
@@ -244,6 +239,7 @@ def transformer_final():
             f"{c['score']:.4f}",
             f"{c['recommendation_macro_f1']:.4f}",
             f"{c['rating_band_macro_f1']:.4f}",
+            f"{c['validation_loss_both_heads']:.4f}",
             "kept" if c["kept"] else "",
         ]
         for c in run["checks"]
@@ -267,12 +263,12 @@ def transformer_final():
     training = loss["transformer_training_both_heads_near_kept_step"]
     return (
         [
-            "## FaBERT on all training reviews",
+            "## FaBERT on all training reviews (the kept run: every epoch, best check kept)",
             "",
             "Checks on the 50,000-review validation sample, with offsets:",
             "",
         ]
-        + table(["Epoch", "Step", "Mean", "Recommendation", "Rating band", ""], checks)
+        + table(["Epoch", "Step", "Mean", "Recommendation", "Rating band", "Validation loss", ""], checks)
         + [f"Trained with {source(run)}. Whole validation set (compared with {source(comparison)}):", ""]
         + table(
             [
@@ -290,7 +286,30 @@ def transformer_final():
             f"validation {loss['transformer_validation_both_heads']:.4f}.",
             "",
         ]
+        + kept_against_first()
     )
+
+
+def kept_against_first():
+    """The kept run (every epoch) against the first run (stopped early), on the whole validation set."""
+    found = load(REPORTS_DIR / "transformer_final" / "no_early_stop_vs_first.json")
+    rows = [
+        [
+            head,
+            f"{h['no_early_stop']['macro_f1']:.4f}",
+            f"{h['first']['macro_f1']:.4f}",
+            f"{h['macro_f1_difference']:+.4f} {interval(h['difference_interval_95'])}",
+            h["direction"],
+        ]
+        for head, h in found["heads"].items()
+    ]
+    epochs = found["kept_epoch"]
+    return [
+        f"Kept run (best check at epoch {epochs['no_early_stop']}) against the first run, stopped early "
+        f"(best check at epoch {epochs['first']}), both with offsets on the whole validation set "
+        f"(made with {short(found['code'])}):",
+        "",
+    ] + table(["Head", "Kept run", "First run", "Difference [95%]", "Verdict"], rows)
 
 
 def main():

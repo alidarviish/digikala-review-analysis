@@ -50,6 +50,7 @@ from digikala_reviews.analysis import (
 from digikala_reviews.config import (
     ARTIFACTS_DIR,
     CACHE_DIR,
+    FINAL_TRANSFORMER_DIR,
     PRODUCTS_RAW_DIR,
     PSEUDO_LABEL_THRESHOLD,
     REPORTS_DIR,
@@ -114,7 +115,7 @@ def main():
     args = parser.parse_args()
     global MODEL_DIR, OUT_DIR
     if args.model == "transformer":
-        MODEL_DIR, OUT_DIR = ARTIFACTS_DIR / "transformer_final", REPORTS_DIR / "transformer_analysis"
+        MODEL_DIR, OUT_DIR = ARTIFACTS_DIR / FINAL_TRANSFORMER_DIR, REPORTS_DIR / "transformer_analysis"
         files = [MODEL_DIR / "validation_predictions.parquet", MODEL_DIR / "model.pt"]
         model_files = {str(p.relative_to(ARTIFACTS_DIR.parent)): {"sha256": file_sha256(p)} for p in files}
     else:

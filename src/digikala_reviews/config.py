@@ -26,6 +26,13 @@ MASK_RATE = 0.20
 SPLIT_FRACTIONS = {"train": 0.70, "validation": 0.15, "test": 0.15}
 PSEUDO_LABEL_THRESHOLD = 0.90
 
+# The FaBERT run every later step reads: trained for every epoch and kept at epoch 2.75. It
+# replaced the first run (stopped early at epoch 1.75) after the comparison of step 34; see
+# reports/transformer_model_choice.md. Paths are relative to REPORTS_DIR and ARTIFACTS_DIR.
+FINAL_TRANSFORMER_RESULT = "transformer_final/fabert_no_early_stop.json"
+FINAL_TRANSFORMER_DIR = "transformer_no_early_stop"
+FINAL_TRANSFORMER_LOG = "logs/step_33.log"
+
 RECOMMENDATION_CLASSES = ["recommended", "not_recommended", "no_idea"]
 
 # rating_band: low = [0, 2.5), medium = [2.5, 4.0), high = [4.0, 5.0]

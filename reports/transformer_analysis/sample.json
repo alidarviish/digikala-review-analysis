@@ -1,46 +1,46 @@
 {
-  "created_at": "2026-10-28T11:43:15+00:00",
+  "created_at": "2026-10-29T14:15:53+00:00",
   "recommendation": {
-    "full": 0.7297703155751964,
+    "full": 0.7324370442721989,
     "20000": {
-      "std": 0.004596729159335323,
-      "p05": 0.7218265876526961,
-      "p95": 0.7375542550283138,
-      "largest_gap_to_full": 0.013536190342409604
+      "std": 0.004620020622405623,
+      "p05": 0.7245484697743542,
+      "p95": 0.7398383474226924,
+      "largest_gap_to_full": 0.014501721230693376
     },
     "50000": {
-      "std": 0.0027327321950415366,
-      "p05": 0.7252796424637513,
-      "p95": 0.7340459719120415,
-      "largest_gap_to_full": 0.009777322586579373
+      "std": 0.0027611364265665867,
+      "p05": 0.7280427001684103,
+      "p95": 0.7368569040172659,
+      "largest_gap_to_full": 0.008943686427264064
     }
   },
   "rating_band": {
-    "full": 0.6908045650690342,
+    "full": 0.692190273060563,
     "20000": {
-      "std": 0.004130557838235009,
-      "p05": 0.6834985839088629,
-      "p95": 0.6968131918164605,
-      "largest_gap_to_full": 0.013482197181757694
+      "std": 0.004260596044411358,
+      "p05": 0.6859494045588281,
+      "p95": 0.6988965251312649,
+      "largest_gap_to_full": 0.013799901258447989
     },
     "50000": {
-      "std": 0.0025278590525724446,
-      "p05": 0.6866338179407024,
-      "p95": 0.6948199385622038,
-      "largest_gap_to_full": 0.009024847962656235
+      "std": 0.002524920751738402,
+      "p05": 0.68830345310269,
+      "p95": 0.6961911571526582,
+      "largest_gap_to_full": 0.007959030996212313
     }
   },
   "code": {
-    "commit": "58a68b14b7fd70fe7eb18cedcb71cc907c3b21fb",
-    "uncommitted_changes": false
+    "commit": "b92fbffc481c6aa357e7e1ac75f80089d26926d3",
+    "uncommitted_changes": true
   },
   "model": "transformer",
   "model_files": {
-    "artifacts/transformer_final/validation_predictions.parquet": {
-      "sha256": "18c8b1c5ec363c950f316e69c1175dfd32f5682f2337000e282d67608ea9a6e7"
+    "artifacts/transformer_no_early_stop/validation_predictions.parquet": {
+      "sha256": "750e53d073ab3bac7abf404273652417caef52daad9bf90ec144401f66189df3"
     },
-    "artifacts/transformer_final/model.pt": {
-      "sha256": "a580f069bcc18cec3713682b673d49ce2d32aa2bf73ad30c898708ad7205e255"
+    "artifacts/transformer_no_early_stop/model.pt": {
+      "sha256": "2828ba578eb13e09deace624e83e509aca924ee014d8461ceac6ff76383ebee0"
     }
   }
 }

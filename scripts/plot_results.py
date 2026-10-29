@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from digikala_reviews import plotting
-from digikala_reviews.config import REPORTS_DIR
+from digikala_reviews.config import FINAL_TRANSFORMER_LOG, FINAL_TRANSFORMER_RESULT, REPORTS_DIR
 from digikala_reviews.tfidf import HEADS
 
 HEAD_TITLES = {"recommendation": "Recommendation", "rating_band": "Rating band"}
@@ -283,7 +283,7 @@ def model_comparison():
 
 
 def training_curve(final):
-    text = (REPORTS_DIR / "logs" / "train_molab.log").read_text(encoding="utf-8")
+    text = (REPORTS_DIR / FINAL_TRANSFORMER_LOG).read_text(encoding="utf-8")
     last = text.split("training reviews,")[-1]  # the full run, not the smoke test before it
     points = [
         (int(s.replace(",", "")), float(v))
@@ -296,20 +296,22 @@ def training_curve(final):
     smooth = np.convolve(losses, np.ones(10) / 10, mode="valid")
     axes[0].plot(epochs, losses, color=plotting.SERIES[0] + "44", linewidth=1)
     axes[0].plot(epochs[9:], smooth, color=plotting.SERIES[0], label="training loss (mean of 10 logs)")
-    axes[0].axhline(
-        final_loss := load("transformer_final/vs_tfidf.json")["loss"]["transformer_validation_both_heads"],
+    checks = final["checks"]
+    axes[0].plot(
+        [c["epoch"] for c in checks],
+        [c["validation_loss_both_heads"] for c in checks],
+        marker="o",
+        markersize=3.5,
         color=plotting.SERIES[1],
-        linestyle="--",
         linewidth=1.3,
-        label=f"validation loss of the kept model ({final_loss:.3f})",
+        label="validation loss at each check (50,000-review sample)",
     )
-    axes[0].set_ylim(0.7, 1.2)
+    axes[0].set_ylim(0.65, 1.2)
     axes[0].set_xlabel("Epoch")
     axes[0].set_ylabel("Loss (sum of the two heads)")
     axes[0].legend(fontsize=8.5)
     axes[0].set_title("Loss")
 
-    checks = final["checks"]
     x = [c["epoch"] for c in checks]
     axes[1].plot(x, [c["score"] for c in checks], marker="o", color=plotting.SERIES[0], label="mean of both")
     axes[1].plot(
@@ -338,7 +340,8 @@ def training_curve(final):
     axes[1].legend(fontsize=8, loc="lower right")
     axes[1].set_title("Checks on the 50,000-review validation sample")
     fig.suptitle(
-        "FaBERT on all 3.55 million training reviews (stopped after two checks without gain)",
+        f"FaBERT on all {final['training_reviews'] / 1e6:.2f} million training reviews, "
+        f"{final['checks'][-1]['epoch']:g} epochs (the best check is kept)",
         x=0.01,
         ha="left",
         fontsize=12,
@@ -391,7 +394,7 @@ def where_it_helps():
 def main():
     plotting.apply_style()
     comparison = load("transformer_final/vs_tfidf.json")
-    final = load("transformer_final/fabert.json")
+    final = load(FINAL_TRANSFORMER_RESULT)
     confusion_matrices(comparison)
     per_class(comparison)
     tfidf_experiments()

@@ -8,6 +8,8 @@ log-probabilities). For each head this writes:
 - the validation loss (mean cross-entropy of the true label) of both models, and next to it
   the Transformer's training loss around the step that was kept, read from its log
 
+The Transformer is the kept FaBERT run (FINAL_TRANSFORMER_* in config.py).
+
 Writes reports/transformer_final/vs_tfidf.json and prints a summary. Nothing is trained and the
 test set is not read.
 
@@ -22,13 +24,19 @@ from datetime import UTC, datetime
 import numpy as np
 import pandas as pd
 
-from digikala_reviews.config import ARTIFACTS_DIR, REPORTS_DIR
+from digikala_reviews.config import (
+    ARTIFACTS_DIR,
+    FINAL_TRANSFORMER_DIR,
+    FINAL_TRANSFORMER_LOG,
+    FINAL_TRANSFORMER_RESULT,
+    REPORTS_DIR,
+)
 from digikala_reviews.experiments import compare
 from digikala_reviews.provenance import git_commit
 from digikala_reviews.tfidf import HEADS, load_cache
 from digikala_reviews.tuning import save_json
 
-TRAIN_LOG = REPORTS_DIR / "logs" / "train_molab.log"
+TRAIN_LOG = REPORTS_DIR / FINAL_TRANSFORMER_LOG
 STEP_LINE = re.compile(r"step ([\d,]+)/[\d,]+, loss ([\d.]+)")
 
 
@@ -53,11 +61,11 @@ def training_loss_near(step, window=2_500):
 
 def main():
     validation = load_cache("validation.parquet")
-    transformer = pd.read_parquet(ARTIFACTS_DIR / "transformer_final" / "validation_predictions.parquet")
+    transformer = pd.read_parquet(ARTIFACTS_DIR / FINAL_TRANSFORMER_DIR / "validation_predictions.parquet")
     tfidf = pd.read_parquet(ARTIFACTS_DIR / "tfidf_final" / "validation_predictions.parquet")
     for table in (transformer, tfidf):
         assert (table["id"].to_numpy() == validation["id"].to_numpy()).all(), "rows are not in the same order"
-    run = json.loads((REPORTS_DIR / "transformer_final" / "fabert.json").read_text(encoding="utf-8"))
+    run = json.loads((REPORTS_DIR / FINAL_TRANSFORMER_RESULT).read_text(encoding="utf-8"))
 
     heads, losses = {}, {}
     for head in HEADS:
@@ -90,6 +98,7 @@ def main():
         {
             "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
             "validation_reviews": int(len(validation)),
+            "transformer_run": FINAL_TRANSFORMER_RESULT,
             "kept_step": kept,
             "heads": heads,
             "loss": losses,

@@ -1,14 +1,14 @@
 {
-  "created_at": "2026-10-28T11:43:28+00:00",
+  "created_at": "2026-10-29T14:16:05+00:00",
   "recommendation": {
     "new": {
       "rows": 505197,
       "share": 0.6405301267755101,
-      "macro_f1": 0.727173047733833,
+      "macro_f1": 0.7295034185727891,
       "recall": {
-        "recommended": 0.9264456520287861,
-        "not_recommended": 0.7103868698710434,
-        "no_idea": 0.5459190553965566
+        "recommended": 0.9209420938088307,
+        "not_recommended": 0.7175302852676827,
+        "no_idea": 0.562101982408559
       },
       "class_share": {
         "recommended": 0.7412652885903914,
@@ -19,11 +19,11 @@
     "seen_in_train": {
       "rows": 283520,
       "share": 0.3594698732244899,
-      "macro_f1": 0.7303162573893013,
+      "macro_f1": 0.733684086671976,
       "recall": {
-        "recommended": 0.9694334344604262,
-        "not_recommended": 0.7013942348815329,
-        "no_idea": 0.4669176976869285
+        "recommended": 0.9694975573198248,
+        "not_recommended": 0.7072106748781114,
+        "no_idea": 0.473283127129281
       },
       "class_share": {
         "recommended": 0.8800825338600452,
@@ -36,11 +36,11 @@
     "new": {
       "rows": 528697,
       "share": 0.6268207782723029,
-      "macro_f1": 0.69631585880567,
+      "macro_f1": 0.6970467324779038,
       "recall": {
-        "low": 0.6966985498302993,
-        "medium": 0.5151373487667595,
-        "high": 0.8682714981254347
+        "low": 0.6986526792142342,
+        "medium": 0.522009462011706,
+        "high": 0.8643979620110721
       },
       "class_share": {
         "low": 0.1287334711564469,
@@ -51,11 +51,11 @@
     "seen_in_train": {
       "rows": 314761,
       "share": 0.3731792217276972,
-      "macro_f1": 0.6629105525052622,
+      "macro_f1": 0.6665816950292768,
       "recall": {
-        "low": 0.5699253640034259,
-        "medium": 0.3572131812127179,
-        "high": 0.9463493556732383
+        "low": 0.5794078061911171,
+        "medium": 0.36752186251230673,
+        "high": 0.9428661795356306
       },
       "class_share": {
         "low": 0.05193146546109588,
@@ -65,16 +65,16 @@
     }
   },
   "code": {
-    "commit": "58a68b14b7fd70fe7eb18cedcb71cc907c3b21fb",
-    "uncommitted_changes": false
+    "commit": "b92fbffc481c6aa357e7e1ac75f80089d26926d3",
+    "uncommitted_changes": true
   },
   "model": "transformer",
   "model_files": {
-    "artifacts/transformer_final/validation_predictions.parquet": {
-      "sha256": "18c8b1c5ec363c950f316e69c1175dfd32f5682f2337000e282d67608ea9a6e7"
+    "artifacts/transformer_no_early_stop/validation_predictions.parquet": {
+      "sha256": "750e53d073ab3bac7abf404273652417caef52daad9bf90ec144401f66189df3"
     },
-    "artifacts/transformer_final/model.pt": {
-      "sha256": "a580f069bcc18cec3713682b673d49ce2d32aa2bf73ad30c898708ad7205e255"
+    "artifacts/transformer_no_early_stop/model.pt": {
+      "sha256": "2828ba578eb13e09deace624e83e509aca924ee014d8461ceac6ff76383ebee0"
     }
   }
 }

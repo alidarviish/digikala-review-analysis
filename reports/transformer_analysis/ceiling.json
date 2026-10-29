@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-10-28T11:42:55+00:00",
+  "created_at": "2026-10-29T14:15:33+00:00",
   "recommendation": {
     "repeated_rows": 242219,
     "repeated_share": 0.30710508331885833,
@@ -15,11 +15,11 @@
       }
     },
     "model_on_same_rows": {
-      "macro_f1": 0.7310402535409343,
+      "macro_f1": 0.7323425083549361,
       "recall": {
-        "recommended": 0.9710242179381434,
-        "not_recommended": 0.7077230359520639,
-        "no_idea": 0.4572364886644461
+        "recommended": 0.9709822780799001,
+        "not_recommended": 0.7059476253883711,
+        "no_idea": 0.46250134307510476
       }
     }
   },
@@ -38,25 +38,25 @@
       }
     },
     "model_on_same_rows": {
-      "macro_f1": 0.6587099783067552,
+      "macro_f1": 0.6615708227900131,
       "recall": {
-        "low": 0.5532011160545962,
-        "medium": 0.34764161588806136,
-        "high": 0.950062943917202
+        "low": 0.5609682527712843,
+        "medium": 0.35705258406680207,
+        "high": 0.9465603820300923
       }
     }
   },
   "code": {
-    "commit": "58a68b14b7fd70fe7eb18cedcb71cc907c3b21fb",
-    "uncommitted_changes": false
+    "commit": "b92fbffc481c6aa357e7e1ac75f80089d26926d3",
+    "uncommitted_changes": true
   },
   "model": "transformer",
   "model_files": {
-    "artifacts/transformer_final/validation_predictions.parquet": {
-      "sha256": "18c8b1c5ec363c950f316e69c1175dfd32f5682f2337000e282d67608ea9a6e7"
+    "artifacts/transformer_no_early_stop/validation_predictions.parquet": {
+      "sha256": "750e53d073ab3bac7abf404273652417caef52daad9bf90ec144401f66189df3"
     },
-    "artifacts/transformer_final/model.pt": {
-      "sha256": "a580f069bcc18cec3713682b673d49ce2d32aa2bf73ad30c898708ad7205e255"
+    "artifacts/transformer_no_early_stop/model.pt": {
+      "sha256": "2828ba578eb13e09deace624e83e509aca924ee014d8461ceac6ff76383ebee0"
     }
   }
 }
