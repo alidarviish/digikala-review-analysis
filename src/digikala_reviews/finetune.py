@@ -64,3 +64,12 @@ def batches(torch, tokenizer, encoded, order, size, labels=None):
         if labels is not None:
             batch["labels"] = {head: torch.as_tensor(codes[rows]) for head, codes in labels.items()}
         yield batch
+
+
+def focal_weights(p_true, gamma: float):
+    """Weight of each review in focal loss: (1 - p)^gamma, p the probability of the true class.
+
+    gamma 0 gives every review weight 1 (the usual loss); a larger gamma moves the weight to the
+    reviews the model gets wrong or is unsure about. Works on NumPy arrays and PyTorch tensors.
+    """
+    return (1 - p_true) ** gamma

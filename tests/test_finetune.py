@@ -1,6 +1,14 @@
 import numpy as np
+import pytest
 
-from digikala_reviews.finetune import IGNORE, fixed_sample, label_codes, linear_warmup, mean_log_loss
+from digikala_reviews.finetune import (
+    IGNORE,
+    fixed_sample,
+    focal_weights,
+    label_codes,
+    linear_warmup,
+    mean_log_loss,
+)
 
 
 def test_fixed_sample_is_sorted_repeatable_and_bounded():
@@ -24,3 +32,10 @@ def test_linear_warmup_rises_then_falls_to_zero():
 def test_mean_log_loss_is_the_cross_entropy_of_the_true_class():
     log_proba = np.log(np.array([[0.5, 0.25, 0.25], [0.1, 0.1, 0.8]]))
     assert np.isclose(mean_log_loss(log_proba, np.array([0, 2])), -(np.log(0.5) + np.log(0.8)) / 2)
+
+
+def test_focal_weights_move_weight_to_hard_reviews():
+    p = np.array([0.95, 0.2])
+    assert focal_weights(p, 0).tolist() == [1.0, 1.0]  # the usual loss
+    assert focal_weights(p, 1) == pytest.approx([0.05, 0.8])
+    assert focal_weights(p, 2) == pytest.approx([0.0025, 0.64])
