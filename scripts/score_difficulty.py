@@ -18,11 +18,16 @@ Usage:
 
 import argparse
 import json
+import sys
 from datetime import UTC, datetime
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from pilot_transformers import CACHE_FILES, MODELS, SETTINGS, SMOKE, train_and_score
+
+# the notebook may start Python without the script's folder on the import path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from pilot_transformers import CACHE_FILES, MODELS, SETTINGS, SMOKE, train_and_score  # noqa: E402
 
 from digikala_reviews.config import CACHE_DIR, REPORTS_DIR, SPLIT_SEED
 from digikala_reviews.experiments import product_half
