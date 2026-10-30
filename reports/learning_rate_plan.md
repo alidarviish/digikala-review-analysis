@@ -36,3 +36,34 @@ gets an experiment card.
 If one of them wins by the rule, the final FaBERT model is trained again with it and compared
 with the kept one on the whole validation set, and TookaBERT-Large, which is trained once as an
 upper bound, uses the same setting.
+
+## Result
+
+`reports/transformer_pilot_whole/learning_rate_n500000.json`, the cards in
+`reports/figures/experiments/learning_rate_*` and `layer_decay_0.9`. Mean Macro F1 of the two
+heads over three seeds; the usual training (step 41, learning rate 3e-5) scores 0.7051.
+
+| Run | Mean Macro F1 | Lead | Spread between seeds | Verdict | Minutes per seed | Expected |
+|---|---|---|---|---|---|---|
+| learning rate 2e-5 | 0.7041 | -0.0010 | 0.0008 | worse | 4.3 | a tie or 0 to 0.003 lower: right |
+| learning rate 5e-5 | 0.7043 | -0.0008 | 0.0009 | tie | 4.4 | a tie: right |
+| layer decay 0.9 | 0.7032 | -0.0019 | 0.0010 | worse, in all six seeds and heads | 5.4 | a tie: wrong |
+
+Change in F1 per class (points, three seeds pooled; outside the 95% interval unless marked):
+
+| Run | recommended | not_recommended | no_idea | low | medium | high |
+|---|---|---|---|---|---|---|
+| learning rate 2e-5 | 0.00 (no difference) | -0.28 | -0.09 | -0.07 | -0.27 | +0.13 |
+| learning rate 5e-5 | +0.01 | -0.14 | -0.20 | +0.11 | -0.22 | -0.04 |
+| layer decay 0.9 | +0.03 | -0.44 | -0.33 | -0.10 | -0.29 | -0.01 (no difference) |
+
+No class moved by more than 0.5 points, as expected. The validation loss at the end is within
+0.002 of the usual one in every run.
+
+What it means:
+
+- 3e-5 is the best of the three learning rates: a smaller one and a larger one both score
+  lower, so the usual setting sits near the best value for one epoch on this data.
+- Layer-wise decay is worse and a quarter slower (each parameter gets its own group in the
+  optimizer). Slowing the lower layers costs more than it protects with 500,000 reviews.
+- Kept: the usual settings. The final FaBERT model is not trained again.

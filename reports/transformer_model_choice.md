@@ -145,7 +145,8 @@ It replaces the first run only if, on the whole validation set with offsets
 judged for each head separately. If the best
 check is the last one and the score is still rising, 6 to 8 epochs are tried next. Training
 the lower layers with smaller learning rates (layer-wise decay) is a separate run after
-this one.
+this one (done later on the pilot, with other learning rates: it scores lower,
+`reports/learning_rate_plan.md`).
 
 ## Result of the pilot on the whole validation set
 

@@ -232,6 +232,9 @@ seeds is a tie.
 | Difficulty used (reports/difficulty_plan.md) | leave out 10% | 0.7026 | 0.7051 | -0.0025 | 0.0010 | worse | f090d6c |
 | Difficulty used (reports/difficulty_plan.md) | curriculum | 0.1455 | 0.7051 | -0.5596 | 0.0192 | worse | f090d6c |
 | Gradual curriculum (reports/difficulty_plan.md) | gradual curriculum | 0.7029 | 0.7051 | -0.0021 | 0.0009 | worse | bd13b11 |
+| Learning rate (reports/learning_rate_plan.md) | learning rate 2e-5 | 0.7041 | 0.7051 | -0.0010 | 0.0008 | worse | 3f49121 |
+| Learning rate (reports/learning_rate_plan.md) | learning rate 5e-5 | 0.7043 | 0.7051 | -0.0008 | 0.0009 | tie | 3f49121 |
+| Learning rate (reports/learning_rate_plan.md) | layer decay 0.9 | 0.7032 | 0.7051 | -0.0019 | 0.0010 | worse | 3f49121 |
 
 ## Calibration of the final FaBERT model (reports/calibration_plan.md)
 
