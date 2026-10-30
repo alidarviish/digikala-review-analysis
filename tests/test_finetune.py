@@ -7,6 +7,8 @@ from digikala_reviews.finetune import (
     fixed_sample,
     focal_weights,
     label_codes,
+    layer_depth,
+    layer_learning_rates,
     linear_warmup,
     mean_log_loss,
 )
@@ -49,3 +51,26 @@ def test_balanced_class_weights_make_every_class_count_the_same():
     totals = weights * np.bincount(codes[codes != IGNORE], minlength=3)
     assert totals == pytest.approx([2, 2, 2])  # each class counts as much in total
     assert balanced_class_weights(np.array([0, 0]), 2).tolist() == [0.5, 0.0]  # no review of class 1
+
+
+BERT_NAMES = [
+    "encoder.embeddings.word_embeddings.weight",
+    "encoder.embeddings.LayerNorm.bias",
+    "encoder.encoder.layer.0.attention.self.query.weight",
+    "encoder.encoder.layer.11.output.dense.bias",
+    "encoder.pooler.dense.weight",
+    "heads.recommendation.weight",
+]
+
+
+def test_layer_depth_follows_the_encoder_from_the_bottom():
+    assert [layer_depth(n, 12) for n in BERT_NAMES] == [0, 0, 1, 12, 13, 13]
+
+
+def test_layer_learning_rates_fall_by_the_decay_per_layer():
+    rates = layer_learning_rates(BERT_NAMES, 12, 3e-5, 0.9)
+    assert rates[-1] == pytest.approx(3e-5)  # the heads keep the usual rate
+    assert rates[3] == pytest.approx(3e-5 * 0.9)  # the top encoder layer
+    assert rates[2] == pytest.approx(3e-5 * 0.9**12)  # the bottom encoder layer
+    assert rates[0] == pytest.approx(3e-5 * 0.9**13)  # the embeddings
+    assert layer_learning_rates(BERT_NAMES, 12, 3e-5, 1.0) == pytest.approx([3e-5] * 6)

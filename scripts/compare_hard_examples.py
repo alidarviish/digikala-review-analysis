@@ -14,12 +14,15 @@ and the expected results are in reports/hard_examples_plan.md.
 With --set difficulty the same is done for the runs that use the difficulty of each training
 review (steps 49 to 51: the hardest labels left out, curriculum; reports/difficulty_plan.md),
 written to reports/transformer_pilot_whole/difficulty_n500000.json, and with --set gradual for
-the gradual curriculum (step 53), written to reports/transformer_pilot_whole/gradual_n500000.json.
+the gradual curriculum (step 53), written to reports/transformer_pilot_whole/gradual_n500000.json,
+and with --set learning_rate for other learning rates and layer-wise decay (steps 56 to 58),
+written to reports/transformer_pilot_whole/learning_rate_n500000.json.
 
 Usage:
     uv run python scripts/compare_hard_examples.py
     uv run python scripts/compare_hard_examples.py --set difficulty
     uv run python scripts/compare_hard_examples.py --set gradual
+    uv run python scripts/compare_hard_examples.py --set learning_rate
 """
 
 import argparse
@@ -49,6 +52,11 @@ VARIANT_SETS = {
         "curriculum": "__curriculum",
     },
     "gradual": {"gradual curriculum": "__gradual"},
+    "learning_rate": {
+        "learning rate 2e-5": "__lr2e-05",
+        "learning rate 5e-5": "__lr5e-05",
+        "layer decay 0.9": "__llrd0.9",
+    },
 }
 
 
@@ -103,7 +111,7 @@ def compare_setups(reference, variant):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--set", choices=["hard", "difficulty", "gradual"], default="hard")
+    parser.add_argument("--set", choices=["hard", "difficulty", "gradual", "learning_rate"], default="hard")
     args = parser.parse_args()
     set_name = "hard_examples" if args.set == "hard" else args.set
     validation = load_cache("validation.parquet", extra_columns=["product_id"]).set_index("id")

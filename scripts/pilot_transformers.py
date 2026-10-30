@@ -54,6 +54,11 @@ lowest probability of their label (<...>__leaveout<F>); --curriculum orders the 
 to hard reviews in 10 groups, random inside a group (<...>__curriculum); --gradual-curriculum
 uses every review once too, but lets the harder reviews join step by step and mixes all of them
 at the end (<...>__gradual).
+
+Two settings of the optimizer (reports/learning_rate_plan.md), each saved under its own name:
+--learning-rate LR replaces the model's usual learning rate (<...>__lr<LR>); --layer-decay D
+gives the heads the usual learning rate and multiplies it by D for every layer further down,
+to the embeddings (<...>__llrd<D>).
 """
 
 import argparse
@@ -76,6 +81,7 @@ from digikala_reviews.finetune import (
     fixed_sample,
     focal_weights,
     label_codes,
+    layer_learning_rates,
     linear_warmup,
     mean_log_loss,
 )
@@ -162,15 +168,21 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
             difficulty = review_difficulty(p_true)
 
     model = build_model(torch, name, settings["dropout"], list(HEADS)).to(device)
-    no_decay = [p for n, p in model.named_parameters() if p.ndim < 2]  # biases and norm weights
-    decay = [p for n, p in model.named_parameters() if p.ndim >= 2]
-    optimizer = torch.optim.AdamW(
-        [
-            {"params": decay, "weight_decay": settings["weight_decay"]},
-            {"params": no_decay, "weight_decay": 0.0},
-        ],
-        lr=learning_rate,
-    )
+    named = list(model.named_parameters())
+    if settings.get("layer_decay"):
+        # every parameter gets its own group: the learning rate falls layer by layer downwards
+        layers = model.encoder.config.num_hidden_layers
+        rates = layer_learning_rates([n for n, _ in named], layers, learning_rate, settings["layer_decay"])
+        groups = [
+            {"params": [p], "lr": rate, "weight_decay": settings["weight_decay"] if p.ndim >= 2 else 0.0}
+            for (_, p), rate in zip(named, rates, strict=True)
+        ]
+    else:
+        groups = [
+            {"params": [p for _, p in named if p.ndim >= 2], "weight_decay": settings["weight_decay"]},
+            {"params": [p for _, p in named if p.ndim < 2], "weight_decay": 0.0},  # biases and norms
+        ]
+    optimizer = torch.optim.AdamW(groups, lr=learning_rate)
     steps = settings["epochs"] * math.ceil(len(train_ids) / settings["batch_size"])
     warmup = max(1, int(settings["warmup_share"] * steps))
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lambda s: linear_warmup(s, steps, warmup))
@@ -329,6 +341,10 @@ def main():
     parser.add_argument(
         "--gradual-curriculum", action="store_true", help="let the harder reviews join step by step"
     )
+    parser.add_argument("--learning-rate", type=float, help="instead of the model's usual learning rate")
+    parser.add_argument(
+        "--layer-decay", type=float, help="multiply the learning rate by this for every layer further down"
+    )
     args = parser.parse_args()
     import torch
 
@@ -357,6 +373,8 @@ def main():
     assert not (args.curriculum and args.gradual_curriculum), "one curriculum at a time"
     uses_difficulty = bool(args.leave_out_hardest or args.curriculum or args.gradual_curriculum)
     assert not (uses_difficulty and (args.merge or args.focal or args.class_weights)), "tried apart"
+    if args.layer_decay:
+        settings["layer_decay"] = args.layer_decay
     seeds = [int(s) for s in args.seeds.split(",")] if args.seeds else [SETTINGS["seed"]]
     results_dir, arrays_dir = REPORTS_DIR / "transformer_pilot", ARTIFACTS_DIR / "transformer_pilot"
     if args.whole_validation:
@@ -373,6 +391,8 @@ def main():
             results_dir.with_name("transformer_pilot_smoke"),
             arrays_dir.with_name("transformer_pilot_smoke"),
         )
+    if args.learning_rate:  # after the test-run models are chosen, so the name always fits the run
+        models = {name: args.learning_rate for name in models}
     if uses_difficulty:  # made by scripts/score_difficulty.py for the same training sample
         folder = "difficulty_smoke" if args.smoke else "difficulty"
         settings["difficulty_file"] = f"{folder}/n{settings['train_rows']}.parquet"
@@ -464,6 +484,10 @@ def main():
             tag += "__curriculum"
         if settings.get("gradual_curriculum"):
             tag += "__gradual"
+        if args.learning_rate:
+            tag += f"__lr{learning_rate:g}"
+        if settings.get("layer_decay"):
+            tag += f"__llrd{settings['layer_decay']:g}"
         if settings.get("checks"):
             tag += f"__checks{settings['checks']}"
         spec = json.loads(

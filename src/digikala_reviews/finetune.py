@@ -1,5 +1,7 @@
 """Pieces of Transformer fine-tuning that do not need PyTorch, so they can be tested anywhere."""
 
+import re
+
 import numpy as np
 
 IGNORE = -100  # label of a review that has no label for a head; the loss skips it
@@ -84,3 +86,20 @@ def balanced_class_weights(codes, n_classes: int) -> np.ndarray:
     counts = np.bincount(codes[codes != IGNORE], minlength=n_classes).astype(float)
     with np.errstate(divide="ignore"):
         return np.where(counts > 0, counts.sum() / (n_classes * counts), 0.0)
+
+
+def layer_depth(name: str, layers: int) -> int:
+    """How deep a parameter of the two-head model sits: 0 for the embeddings, i + 1 for encoder
+    layer i, and layers + 1 for everything above the encoder (pooler and heads)."""
+    match = re.search(r"\.layer\.(\d+)\.", name)
+    if match:
+        return int(match.group(1)) + 1
+    if ".embeddings." in name:
+        return 0
+    return layers + 1
+
+
+def layer_learning_rates(names, layers: int, top: float, decay: float) -> list[float]:
+    """Layer-wise learning rate decay: the top (heads) trains at `top`, and every step down
+    the encoder multiplies it by `decay`, so the embeddings get top * decay ** (layers + 1)."""
+    return [top * decay ** (layers + 1 - layer_depth(n, layers)) for n in names]

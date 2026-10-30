@@ -144,6 +144,9 @@ TRANSFORMER_CARDS += [
         ("difficulty_leave_out_10", "__leaveout0.1", "leave out 10%", "Hardest 10% of labels left out"),
         ("difficulty_curriculum", "__curriculum", "curriculum", "Curriculum, easy to hard"),
         ("difficulty_gradual", "__gradual", "gradual", "Gradual curriculum, hard reviews join step by step"),
+        ("learning_rate_2e-5", "__lr2e-05", "lr 2e-5", "Learning rate 2e-5 instead of 3e-5"),
+        ("learning_rate_5e-5", "__lr5e-05", "lr 5e-5", "Learning rate 5e-5 instead of 3e-5"),
+        ("layer_decay_0.9", "__llrd0.9", "layer decay", "Layer-wise learning rate decay 0.9"),
     ]
 ]
 

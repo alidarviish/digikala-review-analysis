@@ -571,6 +571,38 @@ STEPS = [
         files("reports/calibration.json"),
         "reads the final model's validation predictions, which stay on your machine",
     ),
+    # Other learning rates and layer-wise decay (reports/learning_rate_plan.md)
+    *[
+        Step(
+            number,
+            title,
+            [*HARD_ARGS, *extra],
+            "gpu",
+            [41],
+            files(
+                *[
+                    f"reports/transformer_pilot_whole/sbunlp__fabert__seed{s}__n500000{suffix}__checks10.json"
+                    for s in (2026, 2027, 2028)
+                ]
+            ),
+            smoke=True,
+        )
+        for number, title, extra, suffix in [
+            (56, "Learning rate 2e-5", ["--learning-rate", "2e-5"], "__lr2e-05"),
+            (57, "Learning rate 5e-5", ["--learning-rate", "5e-5"], "__lr5e-05"),
+            (58, "Layer-wise learning rate decay 0.9", ["--layer-decay", "0.9"], "__llrd0.9"),
+        ]
+    ],
+    Step(
+        59,
+        "Other learning rates and layer-wise decay against the usual training",
+        ["scripts/compare_hard_examples.py", "--set", "learning_rate"],
+        "local",
+        [41, 56, 57, 58],
+        files("reports/transformer_pilot_whole/learning_rate_n500000.json"),
+        "reads the run predictions, which stay on your machine; then run plot_experiment_cards.py "
+        "again for their cards",
+    ),
 ]
 
 

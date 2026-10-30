@@ -364,6 +364,7 @@ TRAINING_VARIANTS = [
     ("hard_examples_n500000.json", "Hard reviews weighted up (reports/hard_examples_plan.md)"),
     ("difficulty_n500000.json", "Difficulty used (reports/difficulty_plan.md)"),
     ("gradual_n500000.json", "Gradual curriculum (reports/difficulty_plan.md)"),
+    ("learning_rate_n500000.json", "Learning rate (reports/learning_rate_plan.md)"),
 ]
 
 
