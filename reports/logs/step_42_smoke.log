@@ -1,0 +1,52 @@
+Code 96223311442b14cfcd3e44a9ba21f7cd5876fc26, device NVIDIA RTX PRO 6000 Blackwell Server Edition, torch 2.14.1+cu130
+/marimo/work/outputs/artifacts/tfidf_final/validation_predictions.parquet not found: TF-IDF is not compared in this run
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2026, 600 rows):
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 11213.68it/s]
+    check at step 1: recommendation loss 1.0202, rating_band loss 0.9851
+    check at step 2: recommendation loss 0.8522, rating_band loss 0.9107
+    check at step 3: recommendation loss 0.7550, rating_band loss 0.8623
+    check at step 4: recommendation loss 0.7045, rating_band loss 0.8297
+    check at step 5: recommendation loss 0.6782, rating_band loss 0.8158
+    check at step 6: recommendation loss 0.6673, rating_band loss 0.8068
+    check at step 7: recommendation loss 0.6635, rating_band loss 0.8006
+    check at step 8: recommendation loss 0.6629, rating_band loss 0.7974
+    check at step 9: recommendation loss 0.6628, rating_band loss 0.7957
+    step 10/10, loss 1.3690
+    check at step 10: recommendation loss 0.6630, rating_band loss 0.7952
+  recommendation: without offsets 0.2945, with offsets 0.2945
+  rating_band: without offsets 0.2772, with offsets 0.3294
+  0.02 min, peak GPU memory 0.12 GB
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2027, 600 rows):
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 11993.18it/s]
+    check at step 1: recommendation loss 1.1495, rating_band loss 0.9923
+    check at step 2: recommendation loss 0.9675, rating_band loss 0.8927
+    check at step 3: recommendation loss 0.8440, rating_band loss 0.8358
+    check at step 4: recommendation loss 0.7656, rating_band loss 0.8125
+    check at step 5: recommendation loss 0.7246, rating_band loss 0.8035
+    check at step 6: recommendation loss 0.7020, rating_band loss 0.8015
+    check at step 7: recommendation loss 0.6886, rating_band loss 0.8016
+    check at step 8: recommendation loss 0.6808, rating_band loss 0.8017
+    check at step 9: recommendation loss 0.6773, rating_band loss 0.8004
+    step 10/10, loss 1.3639
+    check at step 10: recommendation loss 0.6759, rating_band loss 0.7996
+  recommendation: without offsets 0.2945, with offsets 0.2945
+  rating_band: without offsets 0.2772, with offsets 0.3299
+  0.0 min, peak GPU memory 0.12 GB
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2028, 600 rows):
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 15906.91it/s]
+    check at step 1: recommendation loss 0.8247, rating_band loss 0.9797
+    check at step 2: recommendation loss 0.7517, rating_band loss 0.8808
+    check at step 3: recommendation loss 0.7103, rating_band loss 0.8324
+    check at step 4: recommendation loss 0.6888, rating_band loss 0.8157
+    check at step 5: recommendation loss 0.6809, rating_band loss 0.8106
+    check at step 6: recommendation loss 0.6780, rating_band loss 0.8052
+    check at step 7: recommendation loss 0.6776, rating_band loss 0.8011
+    check at step 8: recommendation loss 0.6769, rating_band loss 0.7984
+    check at step 9: recommendation loss 0.6763, rating_band loss 0.7969
+    step 10/10, loss 1.2541
+    check at step 10: recommendation loss 0.6760, rating_band loss 0.7961
+  recommendation: without offsets 0.2945, with offsets 0.2945
+  rating_band: without offsets 0.2772, with offsets 0.3170
+  0.0 min, peak GPU memory 0.12 GB
+Done

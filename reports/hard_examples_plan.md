@@ -103,3 +103,52 @@ Expected:
   train for another balance of the classes than the true one, and the loss measures the
   probabilities as they are.
 - On the curves the focal runs start slower and end level with the reference.
+
+### Result of step 2
+
+`reports/transformer_pilot_whole/hard_examples_n500000.json`, the cards in
+`reports/figures/experiments/hard_*` and `reports/experiment_cards.json`. Mean Macro F1 of the
+two heads, three seeds each; the usual training (step 41) scores 0.7051.
+
+| Run | Mean Macro F1 | Lead | Spread between seeds | Verdict | Validation loss, recommendation / rating band |
+|---|---|---|---|---|---|
+| usual (step 41) | 0.7051 | | | | 0.3169 / 0.4969 |
+| focal, gamma 0.5 | 0.7047 | -0.0004 | 0.0006 | tie | 0.3243 / 0.5054 |
+| focal, gamma 1 | 0.7046 | -0.0005 | 0.0006 | tie | 0.3472 / 0.5275 |
+| focal, gamma 2 | 0.7036 | -0.0015 | 0.0012 | worse | 0.4055 / 0.5776 |
+| class weights | 0.7021 | -0.0029 | 0.0018 | worse | 0.4493 / 0.6280 |
+
+Change in F1 per class (points, three seeds pooled; every change listed is outside its 95%
+interval unless marked):
+
+| Run | recommended | not_recommended | no_idea | low | medium | high |
+|---|---|---|---|---|---|---|
+| focal 0.5 | +0.04 | -0.14 | -0.10 | +0.14 | -0.10 | -0.05 |
+| focal 1 | +0.04 | -0.15 | -0.14 | +0.54 | -0.27 | -0.28 |
+| focal 2 | -0.06 | -0.59 | 0.00 (no difference) | +0.17 | -0.10 | -0.30 |
+| class weights | -1.04 | +1.10 | -0.64 | +1.20 | -2.04 | -0.34 |
+
+| | Expected | Found |
+|---|---|---|
+| Step 41 against step 35 | within 0.001 | +0.0004, +0.0007, +0.0004 per seed: right |
+| gamma 0.5 and 1 | a tie within 0.002 | ties, -0.0004 and -0.0005: right |
+| gamma 2 | a tie or 0 to 0.004 lower | 0.0015 lower, beyond the spread: right |
+| gamma 2, per class | `no_idea` and `medium` up, `not_recommended` and `low` down | the opposite: `no_idea` unchanged, `medium` down, `low` up, `not_recommended` down: wrong |
+| Class weights | a tie, changes like gamma 1 | 0.0029 lower, and different changes (`not_recommended` +1.1, `medium` -2.0): wrong |
+| Validation loss | higher for every variant | higher for every variant, more with stronger weighting: right |
+| Curves | focal starts slower and ends level | focal stays above the usual loss the whole time: wrong |
+
+What it means:
+
+- Giving the hard reviews more weight does not help. The mild settings tie and the strong ones
+  are worse, and the more weight moves, the worse the result.
+- The ambiguous classes the method was aimed at did not improve: `no_idea` and `medium` F1 stay
+  the same or fall in every run. Weighting them up during training does not teach the model to
+  tell them apart. This fits the earlier findings that much of what is hard there is ambiguous
+  or noisy labels (the hand-labeled sample), not reviews the model has seen too little of.
+- Class weights move the decisions between classes far more than focal loss, but the offsets
+  already do that after training, so the training weights only cost score.
+- The usual training is kept. The next step on the training data is the opposite question:
+  whether leaving out or down-weighting the hardest reviews (likely noisy labels) helps, which
+  needs a measure of difficulty on the training reviews; the same measure is needed for
+  curriculum learning.

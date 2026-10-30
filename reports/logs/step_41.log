@@ -1,0 +1,328 @@
+Code 96223311442b14cfcd3e44a9ba21f7cd5876fc26, device NVIDIA RTX PRO 6000 Blackwell Server Edition, torch 2.14.1+cu130
+/marimo/work/outputs/artifacts/tfidf_final/validation_predictions.parquet not found: TF-IDF is not compared in this run
+sbunlp/fabert (lr 3e-05, seed 2026, 500,000 rows):
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 6236.72it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sbunlp/fabert
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+pooler.dense.weight                        | MISSING    | 
+pooler.dense.bias                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/7813, loss 1.9475
+    step 200/7813, loss 1.2944
+    step 300/7813, loss 1.0690
+    step 400/7813, loss 0.9370
+    step 500/7813, loss 0.9124
+    step 600/7813, loss 0.9231
+    step 700/7813, loss 0.8979
+    check at step 781: recommendation loss 0.3551, rating_band loss 0.5266
+    step 800/7813, loss 0.8907
+    step 900/7813, loss 0.8708
+    step 1000/7813, loss 0.9176
+    step 1100/7813, loss 0.8555
+    step 1200/7813, loss 0.8673
+    step 1300/7813, loss 0.8852
+    step 1400/7813, loss 0.8821
+    step 1500/7813, loss 0.8517
+    check at step 1563: recommendation loss 0.3448, rating_band loss 0.5177
+    step 1600/7813, loss 0.8836
+    step 1700/7813, loss 0.8187
+    step 1800/7813, loss 0.8362
+    step 1900/7813, loss 0.8555
+    step 2000/7813, loss 0.8558
+    step 2100/7813, loss 0.8522
+    step 2200/7813, loss 0.8723
+    step 2300/7813, loss 0.8468
+    check at step 2344: recommendation loss 0.3360, rating_band loss 0.5115
+    step 2400/7813, loss 0.8533
+    step 2500/7813, loss 0.8386
+    step 2600/7813, loss 0.8302
+    step 2700/7813, loss 0.8325
+    step 2800/7813, loss 0.8402
+    step 2900/7813, loss 0.8285
+    step 3000/7813, loss 0.8498
+    step 3100/7813, loss 0.8346
+    check at step 3125: recommendation loss 0.3392, rating_band loss 0.5085
+    step 3200/7813, loss 0.8379
+    step 3300/7813, loss 0.7946
+    step 3400/7813, loss 0.8603
+    step 3500/7813, loss 0.8348
+    step 3600/7813, loss 0.8273
+    step 3700/7813, loss 0.8351
+    step 3800/7813, loss 0.8505
+    step 3900/7813, loss 0.8277
+    check at step 3906: recommendation loss 0.3267, rating_band loss 0.5066
+    step 4000/7813, loss 0.8314
+    step 4100/7813, loss 0.8185
+    step 4200/7813, loss 0.8478
+    step 4300/7813, loss 0.8438
+    step 4400/7813, loss 0.8101
+    step 4500/7813, loss 0.8172
+    step 4600/7813, loss 0.8534
+    check at step 4688: recommendation loss 0.3254, rating_band loss 0.5041
+    step 4700/7813, loss 0.8426
+    step 4800/7813, loss 0.8157
+    step 4900/7813, loss 0.8377
+    step 5000/7813, loss 0.8246
+    step 5100/7813, loss 0.8186
+    step 5200/7813, loss 0.7986
+    step 5300/7813, loss 0.8455
+    step 5400/7813, loss 0.7988
+    check at step 5469: recommendation loss 0.3262, rating_band loss 0.5034
+    step 5500/7813, loss 0.8453
+    step 5600/7813, loss 0.8123
+    step 5700/7813, loss 0.8051
+    step 5800/7813, loss 0.8144
+    step 5900/7813, loss 0.8202
+    step 6000/7813, loss 0.8078
+    step 6100/7813, loss 0.8170
+    step 6200/7813, loss 0.8109
+    check at step 6250: recommendation loss 0.3206, rating_band loss 0.4988
+    step 6300/7813, loss 0.8250
+    step 6400/7813, loss 0.8120
+    step 6500/7813, loss 0.8123
+    step 6600/7813, loss 0.8013
+    step 6700/7813, loss 0.8222
+    step 6800/7813, loss 0.7883
+    step 6900/7813, loss 0.8075
+    step 7000/7813, loss 0.8056
+    check at step 7032: recommendation loss 0.3190, rating_band loss 0.4985
+    step 7100/7813, loss 0.8410
+    step 7200/7813, loss 0.8184
+    step 7300/7813, loss 0.8113
+    step 7400/7813, loss 0.8331
+    step 7500/7813, loss 0.8122
+    step 7600/7813, loss 0.8109
+    step 7700/7813, loss 0.8251
+    step 7800/7813, loss 0.8061
+    step 7813/7813, loss 0.8035
+    check at step 7813: recommendation loss 0.3185, rating_band loss 0.4978
+  recommendation: without offsets 0.7016, with offsets 0.7235
+  rating_band: without offsets 0.6670, with offsets 0.6858
+  4.33 min, peak GPU memory 4.78 GB
+sbunlp/fabert (lr 3e-05, seed 2027, 500,000 rows):
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 5674.28it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sbunlp/fabert
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+pooler.dense.weight                        | MISSING    | 
+pooler.dense.bias                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/7813, loss 2.0013
+    step 200/7813, loss 1.3193
+    step 300/7813, loss 1.0388
+    step 400/7813, loss 0.9804
+    step 500/7813, loss 0.9285
+    step 600/7813, loss 0.9164
+    step 700/7813, loss 0.8967
+    check at step 781: recommendation loss 0.3694, rating_band loss 0.5508
+    step 800/7813, loss 0.8801
+    step 900/7813, loss 0.8649
+    step 1000/7813, loss 0.8946
+    step 1100/7813, loss 0.8792
+    step 1200/7813, loss 0.8778
+    step 1300/7813, loss 0.8604
+    step 1400/7813, loss 0.8561
+    step 1500/7813, loss 0.8703
+    check at step 1563: recommendation loss 0.3505, rating_band loss 0.5229
+    step 1600/7813, loss 0.8457
+    step 1700/7813, loss 0.8744
+    step 1800/7813, loss 0.8441
+    step 1900/7813, loss 0.8531
+    step 2000/7813, loss 0.8729
+    step 2100/7813, loss 0.8417
+    step 2200/7813, loss 0.8584
+    step 2300/7813, loss 0.8581
+    check at step 2344: recommendation loss 0.3339, rating_band loss 0.5117
+    step 2400/7813, loss 0.8440
+    step 2500/7813, loss 0.8575
+    step 2600/7813, loss 0.8248
+    step 2700/7813, loss 0.8352
+    step 2800/7813, loss 0.8238
+    step 2900/7813, loss 0.8311
+    step 3000/7813, loss 0.8506
+    step 3100/7813, loss 0.8593
+    check at step 3125: recommendation loss 0.3308, rating_band loss 0.5077
+    step 3200/7813, loss 0.8467
+    step 3300/7813, loss 0.8575
+    step 3400/7813, loss 0.8382
+    step 3500/7813, loss 0.8505
+    step 3600/7813, loss 0.8080
+    step 3700/7813, loss 0.8080
+    step 3800/7813, loss 0.8288
+    step 3900/7813, loss 0.8171
+    check at step 3906: recommendation loss 0.3263, rating_band loss 0.5025
+    step 4000/7813, loss 0.8498
+    step 4100/7813, loss 0.8565
+    step 4200/7813, loss 0.8242
+    step 4300/7813, loss 0.8407
+    step 4400/7813, loss 0.8483
+    step 4500/7813, loss 0.8258
+    step 4600/7813, loss 0.8431
+    check at step 4688: recommendation loss 0.3256, rating_band loss 0.5023
+    step 4700/7813, loss 0.8554
+    step 4800/7813, loss 0.8123
+    step 4900/7813, loss 0.8243
+    step 5000/7813, loss 0.8203
+    step 5100/7813, loss 0.8416
+    step 5200/7813, loss 0.8189
+    step 5300/7813, loss 0.8082
+    step 5400/7813, loss 0.8303
+    check at step 5469: recommendation loss 0.3254, rating_band loss 0.5021
+    step 5500/7813, loss 0.8306
+    step 5600/7813, loss 0.8164
+    step 5700/7813, loss 0.8206
+    step 5800/7813, loss 0.8253
+    step 5900/7813, loss 0.8171
+    step 6000/7813, loss 0.8140
+    step 6100/7813, loss 0.8025
+    step 6200/7813, loss 0.7779
+    check at step 6250: recommendation loss 0.3224, rating_band loss 0.4990
+    step 6300/7813, loss 0.8020
+    step 6400/7813, loss 0.8089
+    step 6500/7813, loss 0.8372
+    step 6600/7813, loss 0.8111
+    step 6700/7813, loss 0.8109
+    step 6800/7813, loss 0.8069
+    step 6900/7813, loss 0.8224
+    step 7000/7813, loss 0.7943
+    check at step 7032: recommendation loss 0.3209, rating_band loss 0.5000
+    step 7100/7813, loss 0.7849
+    step 7200/7813, loss 0.8109
+    step 7300/7813, loss 0.7775
+    step 7400/7813, loss 0.8211
+    step 7500/7813, loss 0.8118
+    step 7600/7813, loss 0.8036
+    step 7700/7813, loss 0.8246
+    step 7800/7813, loss 0.8070
+    step 7813/7813, loss 0.7943
+    check at step 7813: recommendation loss 0.3190, rating_band loss 0.4970
+  recommendation: without offsets 0.7064, with offsets 0.7237
+  rating_band: without offsets 0.6680, with offsets 0.6867
+  4.37 min, peak GPU memory 4.77 GB
+sbunlp/fabert (lr 3e-05, seed 2028, 500,000 rows):
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 5537.54it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sbunlp/fabert
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+pooler.dense.weight                        | MISSING    | 
+pooler.dense.bias                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/7813, loss 1.8751
+    step 200/7813, loss 1.3032
+    step 300/7813, loss 1.0504
+    step 400/7813, loss 0.9494
+    step 500/7813, loss 0.9482
+    step 600/7813, loss 0.9158
+    step 700/7813, loss 0.9130
+    check at step 781: recommendation loss 0.3548, rating_band loss 0.5255
+    step 800/7813, loss 0.8970
+    step 900/7813, loss 0.8954
+    step 1000/7813, loss 0.8920
+    step 1100/7813, loss 0.8669
+    step 1200/7813, loss 0.8740
+    step 1300/7813, loss 0.8539
+    step 1400/7813, loss 0.8856
+    step 1500/7813, loss 0.8557
+    check at step 1563: recommendation loss 0.3432, rating_band loss 0.5129
+    step 1600/7813, loss 0.8920
+    step 1700/7813, loss 0.8577
+    step 1800/7813, loss 0.8565
+    step 1900/7813, loss 0.8470
+    step 2000/7813, loss 0.8635
+    step 2100/7813, loss 0.8410
+    step 2200/7813, loss 0.8430
+    step 2300/7813, loss 0.8572
+    check at step 2344: recommendation loss 0.3371, rating_band loss 0.5112
+    step 2400/7813, loss 0.8295
+    step 2500/7813, loss 0.8436
+    step 2600/7813, loss 0.8419
+    step 2700/7813, loss 0.8437
+    step 2800/7813, loss 0.8462
+    step 2900/7813, loss 0.8499
+    step 3000/7813, loss 0.8361
+    step 3100/7813, loss 0.8250
+    check at step 3125: recommendation loss 0.3301, rating_band loss 0.5119
+    step 3200/7813, loss 0.8073
+    step 3300/7813, loss 0.8177
+    step 3400/7813, loss 0.8191
+    step 3500/7813, loss 0.8464
+    step 3600/7813, loss 0.8366
+    step 3700/7813, loss 0.8178
+    step 3800/7813, loss 0.8314
+    step 3900/7813, loss 0.8103
+    check at step 3906: recommendation loss 0.3268, rating_band loss 0.5036
+    step 4000/7813, loss 0.8483
+    step 4100/7813, loss 0.8196
+    step 4200/7813, loss 0.8187
+    step 4300/7813, loss 0.8361
+    step 4400/7813, loss 0.8663
+    step 4500/7813, loss 0.8369
+    step 4600/7813, loss 0.8378
+    check at step 4688: recommendation loss 0.3235, rating_band loss 0.5023
+    step 4700/7813, loss 0.8208
+    step 4800/7813, loss 0.8343
+    step 4900/7813, loss 0.8470
+    step 5000/7813, loss 0.8134
+    step 5100/7813, loss 0.8308
+    step 5200/7813, loss 0.8129
+    step 5300/7813, loss 0.7999
+    step 5400/7813, loss 0.7993
+    check at step 5469: recommendation loss 0.3240, rating_band loss 0.4997
+    step 5500/7813, loss 0.8294
+    step 5600/7813, loss 0.8222
+    step 5700/7813, loss 0.8364
+    step 5800/7813, loss 0.8041
+    step 5900/7813, loss 0.8250
+    step 6000/7813, loss 0.8182
+    step 6100/7813, loss 0.8062
+    step 6200/7813, loss 0.7912
+    check at step 6250: recommendation loss 0.3192, rating_band loss 0.4980
+    step 6300/7813, loss 0.8120
+    step 6400/7813, loss 0.8571
+    step 6500/7813, loss 0.7989
+    step 6600/7813, loss 0.8285
+    step 6700/7813, loss 0.7663
+    step 6800/7813, loss 0.8106
+    step 6900/7813, loss 0.8019
+    step 7000/7813, loss 0.8109
+    check at step 7032: recommendation loss 0.3206, rating_band loss 0.4983
+    step 7100/7813, loss 0.8261
+    step 7200/7813, loss 0.8182
+    step 7300/7813, loss 0.7981
+    step 7400/7813, loss 0.8225
+    step 7500/7813, loss 0.8063
+    step 7600/7813, loss 0.8090
+    step 7700/7813, loss 0.8005
+    step 7800/7813, loss 0.7816
+    step 7813/7813, loss 0.8995
+    check at step 7813: recommendation loss 0.3187, rating_band loss 0.4973
+  recommendation: without offsets 0.7059, with offsets 0.7241
+  rating_band: without offsets 0.6633, with offsets 0.6864
+  4.39 min, peak GPU memory 4.77 GB
+Done
