@@ -46,6 +46,12 @@ Two ways to give hard reviews more weight (reports/hard_examples_plan.md), each 
 own name: --focal GAMMA multiplies the loss of each review by (1 - p)^GAMMA, p the probability
 of its true class (focal loss, <...>__focal<GAMMA>); --class-weights weights each class so that
 all classes count as much in total in the training sample (<...>__classweights).
+
+Two uses of the difficulty of each training review, measured out of fold by
+scripts/score_difficulty.py (reports/difficulty_plan.md), each saved under its own name:
+--leave-out-hardest F drops, for each head, the label of the fraction F of reviews with the
+lowest probability of their label (<...>__leaveout<F>); --curriculum orders the epoch from easy
+to hard reviews in 10 groups, random inside a group (<...>__curriculum).
 """
 
 import argparse
@@ -58,6 +64,7 @@ import numpy as np
 import pandas as pd
 
 from digikala_reviews.config import ARTIFACTS_DIR, CACHE_DIR, REPORTS_DIR, SPLIT_SEED
+from digikala_reviews.difficulty import curriculum_order, hardest, review_difficulty
 from digikala_reviews.experiments import compare, cross_fitted_offsets, product_half
 from digikala_reviews.finetune import (
     IGNORE,
@@ -102,6 +109,7 @@ SMOKE = {
 }
 CACHE_FILES = ["train_supervised.parquet", "validation.parquet"]
 CHECK_ROWS = 50_000  # validation reviews measured at every check (--checks)
+CURRICULUM_GROUPS = 10
 LOG_EVERY = 100
 
 
@@ -136,6 +144,20 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
             for head in HEADS
         }
     train_ids, validation_ids = encode(train_texts), encode(validation["text"])
+    difficulty = None
+    if settings.get("leave_out_hardest") or settings.get("curriculum"):
+        assert not merged, "the difficulty is per review, not per merged text"
+        found = pd.read_parquet(REPORTS_DIR / settings["difficulty_file"]).set_index("id")
+        p_true = {head: found[f"{head}_p_true"].reindex(train["id"]).to_numpy() for head in HEADS}
+        for head in HEADS:  # every labeled review of the sample must have its difficulty
+            assert not np.isnan(p_true[head][labels[head] != IGNORE]).any(), head
+        if settings.get("leave_out_hardest"):
+            for head in HEADS:
+                dropped = hardest(p_true[head], settings["leave_out_hardest"])
+                labels[head] = np.where(dropped, IGNORE, labels[head])
+                print(f"  {head}: label left out for {dropped.sum():,} hardest reviews", flush=True)
+        if settings.get("curriculum"):
+            difficulty = review_difficulty(p_true)
 
     model = build_model(torch, name, settings["dropout"], list(HEADS)).to(device)
     no_decay = [p for n, p in model.named_parameters() if p.ndim < 2]  # biases and norm weights
@@ -193,6 +215,8 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
     model.train()
     for epoch in range(settings["epochs"]):
         order = np.random.default_rng(settings["seed"] + epoch).permutation(len(train_ids))
+        if difficulty is not None:  # curriculum: easy to hard instead of random
+            order = curriculum_order(difficulty, CURRICULUM_GROUPS, settings["seed"] + epoch)
         for batch in batches(torch, tokenizer, train_ids, order, settings["batch_size"], labels):
             with torch.autocast(device_type=device.type, dtype=torch.bfloat16, enabled=use_bf16):
                 outputs = model(batch["input_ids"].to(device), batch["attention_mask"].to(device))
@@ -294,6 +318,10 @@ def main():
     )
     parser.add_argument("--focal", type=float, help="focal loss with this gamma")
     parser.add_argument("--class-weights", action="store_true", help="weight the classes to count the same")
+    parser.add_argument(
+        "--leave-out-hardest", type=float, help="drop the label of this fraction of the hardest reviews"
+    )
+    parser.add_argument("--curriculum", action="store_true", help="order the epoch from easy to hard")
     args = parser.parse_args()
     import torch
 
@@ -313,6 +341,12 @@ def main():
         settings["class_weights"] = True
     assert not (args.merge and (args.focal or args.class_weights)), "merging is not combined with these"
     assert not (args.focal and args.class_weights), "focal loss and class weights are tried apart"
+    if args.leave_out_hardest:
+        settings["leave_out_hardest"] = args.leave_out_hardest
+    if args.curriculum:
+        settings["curriculum"] = True
+    uses_difficulty = bool(args.leave_out_hardest or args.curriculum)
+    assert not (uses_difficulty and (args.merge or args.focal or args.class_weights)), "tried apart"
     seeds = [int(s) for s in args.seeds.split(",")] if args.seeds else [SETTINGS["seed"]]
     results_dir, arrays_dir = REPORTS_DIR / "transformer_pilot", ARTIFACTS_DIR / "transformer_pilot"
     if args.whole_validation:
@@ -329,6 +363,13 @@ def main():
             results_dir.with_name("transformer_pilot_smoke"),
             arrays_dir.with_name("transformer_pilot_smoke"),
         )
+    if uses_difficulty:  # made by scripts/score_difficulty.py for the same training sample
+        folder = "difficulty_smoke" if args.smoke else "difficulty"
+        settings["difficulty_file"] = f"{folder}/n{settings['train_rows']}.parquet"
+        if not (REPORTS_DIR / settings["difficulty_file"]).exists():
+            raise SystemExit(
+                f"{settings['difficulty_file']} not found: run scripts/score_difficulty.py first"
+            )
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if not args.smoke and device.type != "cuda":
         raise SystemExit("No GPU found: turn the GPU on for this notebook, or run with --smoke")
@@ -407,6 +448,10 @@ def main():
             tag += f"__focal{settings['focal']:g}"
         if settings.get("class_weights"):
             tag += "__classweights"
+        if settings.get("leave_out_hardest"):
+            tag += f"__leaveout{settings['leave_out_hardest']:g}"
+        if settings.get("curriculum"):
+            tag += "__curriculum"
         if settings.get("checks"):
             tag += f"__checks{settings['checks']}"
         spec = json.loads(

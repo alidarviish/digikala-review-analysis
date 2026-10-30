@@ -138,7 +138,12 @@ TRANSFORMER_CARDS += [
         "training_curve": False,  # the training losses differ by design; the checks are drawn instead
         "no_curve_reason": "Not drawn: the runs were not measured during training.",
     }
-    for name, suffix, short, title in HARD_EXAMPLES
+    for name, suffix, short, title in [
+        *HARD_EXAMPLES,
+        ("difficulty_leave_out_5", "__leaveout0.05", "leave out 5%", "Hardest 5% of labels left out"),
+        ("difficulty_leave_out_10", "__leaveout0.1", "leave out 10%", "Hardest 10% of labels left out"),
+        ("difficulty_curriculum", "__curriculum", "curriculum", "Curriculum, easy to hard"),
+    ]
 ]
 
 TFIDF_NAMES = {

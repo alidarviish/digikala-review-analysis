@@ -487,6 +487,56 @@ STEPS = [
         "reads the run predictions, which stay on your machine; then run plot_experiment_cards.py "
         "again for their cards",
     ),
+    # The difficulty of each training review, and two uses of it (reports/difficulty_plan.md)
+    Step(
+        47,
+        "Difficulty of every review in the training sample",
+        ["scripts/score_difficulty.py"],
+        "gpu",
+        [31],
+        files("reports/difficulty/scoring.json"),
+        "its test run must come before the test runs of steps 49 to 51",
+        smoke=True,
+    ),
+    Step(
+        48,
+        "What the hardest training reviews are",
+        ["scripts/check_difficulty.py"],
+        "any",
+        [47],
+        files("reports/difficulty/summary.json"),
+    ),
+    *[
+        Step(
+            number,
+            title,
+            [*HARD_ARGS, *extra],
+            "gpu",
+            [41, 47],
+            files(
+                *[
+                    f"reports/transformer_pilot_whole/sbunlp__fabert__seed{s}__n500000{suffix}__checks10.json"
+                    for s in (2026, 2027, 2028)
+                ]
+            ),
+            smoke=True,
+        )
+        for number, title, extra, suffix in [
+            (49, "Hardest 5% of labels left out", ["--leave-out-hardest", "0.05"], "__leaveout0.05"),
+            (50, "Hardest 10% of labels left out", ["--leave-out-hardest", "0.1"], "__leaveout0.1"),
+            (51, "Curriculum, easy to hard", ["--curriculum"], "__curriculum"),
+        ]
+    ],
+    Step(
+        52,
+        "Hardest labels left out and curriculum against the usual training",
+        ["scripts/compare_hard_examples.py", "--set", "difficulty"],
+        "local",
+        [41, 49, 50, 51],
+        files("reports/transformer_pilot_whole/difficulty_n500000.json"),
+        "reads the run predictions, which stay on your machine; then run plot_experiment_cards.py "
+        "again for their cards",
+    ),
 ]
 
 

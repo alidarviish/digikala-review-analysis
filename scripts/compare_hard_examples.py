@@ -11,10 +11,16 @@ than the spread between seeds is a tie, and a tie goes to the reference: it is a
 Writes reports/transformer_pilot_whole/hard_examples_n500000.json. Nothing is trained. The plan
 and the expected results are in reports/hard_examples_plan.md.
 
+With --set difficulty the same is done for the runs that use the difficulty of each training
+review (steps 49 to 51: the hardest labels left out, curriculum; reports/difficulty_plan.md),
+written to reports/transformer_pilot_whole/difficulty_n500000.json.
+
 Usage:
     uv run python scripts/compare_hard_examples.py
+    uv run python scripts/compare_hard_examples.py --set difficulty
 """
 
+import argparse
 from datetime import UTC, datetime
 
 import numpy as np
@@ -28,11 +34,18 @@ from digikala_reviews.tuning import save_json
 
 MODEL = "sbunlp__fabert"
 CHECKS = "__checks10"
-VARIANTS = {
-    "focal 0.5": "__focal0.5",
-    "focal 1": "__focal1",
-    "focal 2": "__focal2",
-    "class weights": "__classweights",
+VARIANT_SETS = {
+    "hard_examples": {
+        "focal 0.5": "__focal0.5",
+        "focal 1": "__focal1",
+        "focal 2": "__focal2",
+        "class weights": "__classweights",
+    },
+    "difficulty": {
+        "leave out 5%": "__leaveout0.05",
+        "leave out 10%": "__leaveout0.1",
+        "curriculum": "__curriculum",
+    },
 }
 
 
@@ -86,18 +99,22 @@ def compare_setups(reference, variant):
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--set", choices=["hard", "difficulty"], default="hard")
+    args = parser.parse_args()
+    set_name = "hard_examples" if args.set == "hard" else "difficulty"
     validation = load_cache("validation.parquet", extra_columns=["product_id"]).set_index("id")
     reference = {seed: labels_with_offsets(tag(seed, CHECKS), validation) for seed in SEEDS}
     first = {seed: labels_with_offsets(tag(seed), validation) for seed in SEEDS}
     # measuring during training must not change the result: the reference against step 35
     same_as_step_35 = {seed: mean_of_heads(reference[seed]) - mean_of_heads(first[seed]) for seed in SEEDS}
     result = {}
-    for name, suffix in VARIANTS.items():
+    for name, suffix in VARIANT_SETS[set_name].items():
         variant = {seed: labels_with_offsets(tag(seed, suffix + CHECKS), validation) for seed in SEEDS}
         result[name] = compare_setups(reference, variant)
 
     save_json(
-        REPORTS_DIR / FOLDER / f"hard_examples_n{TRAIN_ROWS}.json",
+        REPORTS_DIR / FOLDER / f"{set_name}_n{TRAIN_ROWS}.json",
         {
             "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
             "model": MODEL,
