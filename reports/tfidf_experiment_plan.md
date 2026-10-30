@@ -59,8 +59,8 @@ exactly one thing in that model and is scored on the same validation reviews.
 ## Experiments added after stage 1
 
 E8 to E12 were added after the stage 1 scores and the first stage 3 result (E1) were seen.
-They come from a discussion with classmates about spelling, conflicting labels, how the
-test set should be chosen and how much data is needed. Their expected outcomes were written
+They come from open questions about spelling, conflicting labels, how the test set should
+be chosen and how much data is needed. Their expected outcomes were written
 down here before any of them was run. They run on a second machine (molab, 4 CPUs and
 32 GB of memory, see `notebooks/molab_tfidf_extra.py`) next to stage 3, so the reference
 models are fitted again there; if they do not reproduce the stage 2 scores (0.6802 and

@@ -61,8 +61,10 @@ temperature fitted on one half by product and scored on the other.
 What it means:
 
 - The final model is a little too sure, more so for the rating band, and one number per head
-  fixes nearly all of it: after scaling, the probability is within half a point of how often
-  the model is right in every bin that holds at least 0.1% of the reviews.
+  fixes most of it. After scaling, in the bins of 0.8 and above (78% of the recommendation
+  reviews, 66% of the rating band) the probability is within one point of how often the model
+  is right; in the bins below 0.6 (about 11% and 12% of the reviews) the model is still up to 3.6
+  points too sure, which one number for all reviews cannot fix.
 - The scores do not change. What changes is what the probabilities can be used for: at the
   pseudo-label threshold of 0.9, the rating band keeps 37% of the reviews instead of 46%, and
   those it keeps are right more often (93.9% against 92.9%).

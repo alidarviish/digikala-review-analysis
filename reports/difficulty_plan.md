@@ -7,8 +7,7 @@ experiments follow from this, and both need to know how hard each training revie
 
 1. **Leave out the hardest labels.** If the hardest reviews are mostly noisy labels, training
    without them should help or at least not hurt.
-2. **Curriculum** (suggested by the course teacher): train on the easy reviews first and add
-   the hard ones later.
+2. **Curriculum**: train on the easy reviews first and add the hard ones later.
 
 ## Step 1: difficulty of every review in the training sample (GPU)
 

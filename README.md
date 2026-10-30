@@ -115,3 +115,31 @@ never masked. The full record of seeds, rules, counts and file hashes is in
 About 37% of validation and test reviews have exactly the same normalized text as some training review, mostly
 short ones like `عالی`. That is not leakage, since the products differ, but it makes part of the test easy, so
 results are reported both for all reviews and for texts never seen in training.
+
+## Results so far (validation set)
+
+The test set has not been read yet; it is scored once, at the end. Every number below comes from a file in
+`reports/`, and all of them are collected with their commits in
+[`reports/results_summary.md`](reports/results_summary.md).
+
+| Model | Recommendation Macro F1 | Balanced accuracy | Rating band Macro F1 | Balanced accuracy |
+|---|---:|---:|---:|---:|
+| TF-IDF + Logistic Regression, with offsets | 0.7017 | 0.7110 | 0.6683 | 0.6596 |
+| FaBERT, fine-tuned, with offsets | 0.7324 | 0.7320 | 0.6922 | 0.6813 |
+
+Offsets are one number per class added to the model's log probabilities before the top class is chosen, tuned
+for Macro F1 on one half of validation and scored on the other. Balanced accuracy is the mean recall over the
+classes, so it is not raised by the large `recommended` and `high` classes.
+
+- **The hard part is the ambiguous classes.** FaBERT reaches an F1 of 0.94 on `recommended` and 0.89 on `high`,
+  but 0.51 on `no_idea` and 0.48 on `medium`.
+- **Much of that is in the labels.** In 200 validation reviews labeled again by hand from the text alone, the
+  `recommended` and `not_recommended` labels held in 95% and 94% of cases, `no_idea` in 34%. Buyers often choose
+  "no idea" while writing a mild complaint, and their star rating usually agrees with their choice, so the text alone
+  cannot tell.
+- **Changing the training did not help.** Merging repeated texts, focal loss, class weights, leaving out the
+  hardest labels and an easy-to-hard curriculum all tied with or lost to the usual training
+  ([`reports/hard_examples_plan.md`](reports/hard_examples_plan.md),
+  [`reports/difficulty_plan.md`](reports/difficulty_plan.md)).
+- **The probabilities are close to honest.** One temperature per head (1.12 and 1.11) brings the calibration
+  error below 0.01 without changing the scores ([`reports/calibration_plan.md`](reports/calibration_plan.md)).

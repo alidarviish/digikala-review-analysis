@@ -312,6 +312,161 @@ def kept_against_first():
     ] + table(["Head", "Kept run", "First run", "Difference [95%]", "Verdict"], rows)
 
 
+def final_per_class():
+    """Precision, recall and F1 of every class for both final models, with offsets."""
+    comparison = load(REPORTS_DIR / "transformer_final" / "vs_tfidf.json")
+    rows, overall = [], []
+    for head, found in comparison["heads"].items():
+        fabert, tfidf = found["transformer"], found["tfidf"]
+        for label, f in fabert["per_class"].items():
+            t = tfidf["per_class"][label]
+            rows.append(
+                [
+                    head,
+                    label,
+                    f"{f['support']:,}",
+                    f"{f['precision']:.3f} / {f['recall']:.3f} / {f['f1']:.3f}",
+                    f"{t['precision']:.3f} / {t['recall']:.3f} / {t['f1']:.3f}",
+                ]
+            )
+        overall.append(
+            [
+                head,
+                f"{fabert['macro_f1']:.4f} / {fabert['balanced_accuracy']:.4f} / {fabert['accuracy']:.4f}",
+                f"{tfidf['macro_f1']:.4f} / {tfidf['balanced_accuracy']:.4f} / {tfidf['accuracy']:.4f}",
+            ]
+        )
+    return (
+        [
+            "## Final models per class (whole validation set, with offsets)",
+            "",
+            "Balanced accuracy is the mean recall over the classes, so the large classes do not",
+            "weigh more; plain accuracy does, and is shown only next to it.",
+            "",
+        ]
+        + table(
+            ["Head", "Class", "Reviews", "FaBERT precision / recall / F1", "TF-IDF precision / recall / F1"],
+            rows,
+        )
+        + table(
+            [
+                "Head",
+                "FaBERT Macro F1 / balanced accuracy / accuracy",
+                "TF-IDF Macro F1 / balanced accuracy / accuracy",
+            ],
+            overall,
+        )
+    )
+
+
+TRAINING_VARIANTS = [
+    ("merged_vs_separate_n500000.json", "Texts merged (reports/merged_texts_plan.md)"),
+    ("hard_examples_n500000.json", "Hard reviews weighted up (reports/hard_examples_plan.md)"),
+    ("difficulty_n500000.json", "Difficulty used (reports/difficulty_plan.md)"),
+    ("gradual_n500000.json", "Gradual curriculum (reports/difficulty_plan.md)"),
+]
+
+
+def training_variants():
+    """FaBERT pilot runs on 500,000 reviews with a changed training, against the usual training."""
+    rows = []
+    for name, title in TRAINING_VARIANTS:
+        path = REPORTS_DIR / "transformer_pilot_whole" / name
+        if not path.exists():
+            rows.append([title, "", "", "", "", "", "not run yet", ""])
+            continue
+        found = load(path)
+        variants = found.get("variants") or {
+            k: v for k, v in found.items() if isinstance(v, dict) and "verdict" in v
+        }
+        for variant, r in variants.items():
+            means = r["mean_over_seeds"]
+            new, old = (
+                (means["merged"], means["separate"])
+                if "merged" in means
+                else (means["variant"], means["reference"])
+            )
+            lead = r.get("lead_of_variant", r.get("lead_of_merged"))
+            rows.append(
+                [
+                    title,
+                    variant,
+                    f"{new:.4f}",
+                    f"{old:.4f}",
+                    f"{lead:+.4f}",
+                    f"{r['spread_between_seeds']:.4f}",
+                    r["verdict"] if r["verdict"] == "tie" else ("better" if lead > 0 else "worse"),
+                    short(found["code"]),
+                ]
+            )
+    return [
+        "## Training changes on the FaBERT pilot (500,000 reviews, 1 epoch, 3 seeds, with offsets)",
+        "",
+        "Mean Macro F1 of the two heads over the seeds. A lead smaller than the spread between",
+        "seeds is a tie.",
+        "",
+    ] + table(
+        ["Experiment", "Variant", "Score", "Usual training", "Lead", "Spread", "Verdict", "Made with"], rows
+    )
+
+
+def calibration():
+    path = REPORTS_DIR / "calibration.json"
+    if not path.exists():
+        return []
+    found = load(path)
+    rows = []
+    for head, r in found["heads"].items():
+        b, a = r["before"], r["after"]
+        sure_b, sure_a = b["at_least_threshold"], a["at_least_threshold"]
+        rows.append(
+            [
+                head,
+                f"{r['temperature_all_validation']:.3f}",
+                f"{b['reliability']['ece']:.4f} -> {a['reliability']['ece']:.4f}",
+                f"{b['mean_loss']:.4f} -> {a['mean_loss']:.4f}",
+                f"{sure_b['share']:.1%}, {sure_b['accuracy']:.1%} right -> "
+                f"{sure_a['share']:.1%}, {sure_a['accuracy']:.1%} right",
+                f"{b['macro_f1_with_offsets']:.4f} -> {a['macro_f1_with_offsets']:.4f}",
+            ]
+        )
+    return [
+        "## Calibration of the final FaBERT model (reports/calibration_plan.md)",
+        "",
+        f"Temperature scaling, fitted on one half of validation by product and scored on the other. "
+        f"Made with {short(found['code'])}.",
+        "",
+    ] + table(
+        [
+            "Head",
+            "Temperature",
+            "ECE",
+            "Mean loss",
+            f"Reviews with p >= {found['threshold']}",
+            "Macro F1 with offsets",
+        ],
+        rows,
+    )
+
+
+def label_sample():
+    path = REPORTS_DIR / "label_sample.json"
+    if not path.exists():
+        return []
+    found = load(path)
+    mine, model = found["my_label_vs_original"], found["fabert_vs_my_label"]
+    rows = [
+        [label, mine[label]["rows"], f"{mine[label]['agree']:.0%}", f"{model[label]['agree']:.0%}"]
+        for label in ("recommended", "not_recommended", "no_idea")
+    ]
+    return [
+        "## Hand-labeled validation sample (reports/label_sample_plan.md)",
+        "",
+        f"{found['reviews']} reviews labeled again from the text alone. Made with {short(found['code'])}.",
+        "",
+    ] + table(["Original label", "Reviews", "Hand label agrees", "FaBERT agrees with the hand label"], rows)
+
+
 def main():
     lines = [
         "# All results",
@@ -322,7 +477,8 @@ def main():
         "",
     ]
     lines += tfidf_tuning() + tfidf_experiments() + tfidf_final() + transformer_pilot()
-    lines += transformer_pilot_whole() + transformer_final()
+    lines += transformer_pilot_whole() + transformer_final() + final_per_class()
+    lines += label_sample() + training_variants() + calibration()
     lines += ["## Not measured", ""] + table(["What", "Why"], NOT_MEASURED)
     OUT.write_text("\n".join(lines), encoding="utf-8")
     print(f"Written to {OUT}")

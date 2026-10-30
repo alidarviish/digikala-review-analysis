@@ -141,10 +141,19 @@ def _(
     assert len(COMMIT) == 40 and CACHE_FOLDER_URL, "fill in COMMIT and CACHE_FOLDER_URL first"
     _lines = [run(f"rm -rf {PROJECT} && git clone -q {REPO_URL} {PROJECT}")]
     _lines.append(run(f"git -C {PROJECT} checkout -q {COMMIT} && git -C {PROJECT} log -1 --oneline"))
-    if not ROOTS["reports"].exists():  # start from the results in the repository, so finished work is skipped
-        shutil.copytree(PROJECT / "reports", ROOTS["reports"])
+    # start from the results in the repository, so finished work is skipped: every file molab does
+    # not have yet is copied, also after molab lost part of its files; files made here are kept
+    _copied = 0
+    for _src in sorted((PROJECT / "reports").rglob("*")):
+        _dst = ROOTS["reports"] / _src.relative_to(PROJECT / "reports")
+        if _src.is_file() and not _dst.exists():
+            _dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(_src, _dst)
+            _copied += 1
+    _lines.append(f"{_copied} result files copied from the repository")
     _venv = PYTHON.parent.parent
-    run(f"uv venv -q --clear --python 3.13 {_venv}")
+    shutil.rmtree(_venv, ignore_errors=True)  # uv will not replace a half-made environment
+    run(f"uv venv -q --python 3.13 {_venv}")
     run(f"uv pip install -q --python {PYTHON} -r {PROJECT}/requirements.txt gdown")
     run(f"uv pip install -q --python {PYTHON} --no-deps -e {PROJECT}")
     if GPU:
