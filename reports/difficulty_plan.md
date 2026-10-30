@@ -110,4 +110,13 @@ What it means:
   `medium`. The last updates teach the model those classes alone, and `recommended` and `high`
   are nearly lost. The fault is in the design (strict easy to hard, with the hardest group alone
   at the end), not in the idea of a curriculum as such.
+- The validation loss of the leave-out runs rises during training instead of falling
+  (recommendation 0.3169 -> 0.4459, rating band 0.4969 -> 0.6208 with 5% left out), against a
+  small expected fall: wrong. Without the reviews that contradict its guesses the model grows
+  overconfident, and the validation reviews like them cost much more. The offsets hide most of
+  this in Macro F1, but the probabilities get worse.
+- The difficulty is out of fold by product, not by text: a text that comes in both halves (about
+  a third of the reviews are repeated texts) was seen by the model that scores it, so repeated
+  texts look easier than they are. This does not change the verdicts, but the hardest reviews
+  are partly hard because they are new texts.
 - Kept: the usual training. Reference with checks against step 35: +0.0004, +0.0007, +0.0004.
