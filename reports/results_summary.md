@@ -186,6 +186,62 @@ Kept run (best check at epoch 2.75) against the first run, stopped early (best c
 | recommendation | 0.7324 | 0.7298 | +0.0027 [+0.0017, +0.0036] | better |
 | rating_band | 0.6922 | 0.6908 | +0.0014 [+0.0006, +0.0022] | better |
 
+## Final models per class (whole validation set, with offsets)
+
+Balanced accuracy is the mean recall over the classes, so the large classes do not
+weigh more; plain accuracy does, and is shown only next to it.
+
+| Head | Class | Reviews | FaBERT precision / recall / F1 | TF-IDF precision / recall / F1 |
+|---|---|---|---|---|
+| recommendation | recommended | 624,006 | 0.948 / 0.940 / 0.944 | 0.943 / 0.913 / 0.928 |
+| recommendation | not_recommended | 75,666 | 0.773 / 0.716 / 0.744 | 0.730 / 0.685 / 0.706 |
+| recommendation | no_idea | 89,045 | 0.483 / 0.540 / 0.510 | 0.420 / 0.535 / 0.471 |
+| rating_band | low | 84,407 | 0.750 / 0.676 / 0.711 | 0.714 / 0.647 / 0.679 |
+| rating_band | medium | 158,755 | 0.486 / 0.472 / 0.479 | 0.451 / 0.451 / 0.451 |
+| rating_band | high | 600,296 | 0.878 / 0.897 / 0.887 | 0.869 / 0.881 / 0.875 |
+
+| Head | FaBERT Macro F1 / balanced accuracy / accuracy | TF-IDF Macro F1 / balanced accuracy / accuracy |
+|---|---|---|
+| recommendation | 0.7324 / 0.7320 / 0.8736 | 0.7017 / 0.7110 / 0.8487 |
+| rating_band | 0.6922 / 0.6813 / 0.7945 | 0.6683 / 0.6596 / 0.7765 |
+
+## Hand-labeled validation sample (reports/label_sample_plan.md)
+
+200 reviews labeled again from the text alone. Made with bd13b11.
+
+| Original label | Reviews | Hand label agrees | FaBERT agrees with the hand label |
+|---|---|---|---|
+| recommended | 100 | 95% | 97% |
+| not_recommended | 50 | 94% | 80% |
+| no_idea | 50 | 34% | 56% |
+
+## Training changes on the FaBERT pilot (500,000 reviews, 1 epoch, 3 seeds, with offsets)
+
+Mean Macro F1 of the two heads over the seeds. A lead smaller than the spread between
+seeds is a tie.
+
+| Experiment | Variant | Score | Usual training | Lead | Spread | Verdict | Made with |
+|---|---|---|---|---|---|---|---|
+| Texts merged (reports/merged_texts_plan.md) | copies | 0.7043 | 0.7046 | -0.0002 | 0.0006 | tie | 73437c8 |
+| Texts merged (reports/merged_texts_plan.md) | once | 0.7045 | 0.7046 | -0.0001 | 0.0006 | tie | 73437c8 |
+| Hard reviews weighted up (reports/hard_examples_plan.md) | focal 0.5 | 0.7047 | 0.7051 | -0.0004 | 0.0006 | tie | 9622331 |
+| Hard reviews weighted up (reports/hard_examples_plan.md) | focal 1 | 0.7046 | 0.7051 | -0.0005 | 0.0006 | tie | 9622331 |
+| Hard reviews weighted up (reports/hard_examples_plan.md) | focal 2 | 0.7036 | 0.7051 | -0.0015 | 0.0012 | worse | 9622331 |
+| Hard reviews weighted up (reports/hard_examples_plan.md) | class weights | 0.7021 | 0.7051 | -0.0029 | 0.0018 | worse | 9622331 |
+| Difficulty used (reports/difficulty_plan.md) | leave out 5% | 0.7037 | 0.7051 | -0.0013 | 0.0006 | worse | f090d6c |
+| Difficulty used (reports/difficulty_plan.md) | leave out 10% | 0.7026 | 0.7051 | -0.0025 | 0.0010 | worse | f090d6c |
+| Difficulty used (reports/difficulty_plan.md) | curriculum | 0.1455 | 0.7051 | -0.5596 | 0.0192 | worse | f090d6c |
+| Gradual curriculum (reports/difficulty_plan.md) | gradual curriculum | 0.7029 | 0.7051 | -0.0021 | 0.0009 | worse | bd13b11 |
+
+## Calibration of the final FaBERT model (reports/calibration_plan.md)
+
+Temperature scaling, fitted on one half of validation by product and scored on the other. Made with a067b69.
+
+| Head | Temperature | ECE | Mean loss | Reviews with p >= 0.9 | Macro F1 with offsets |
+|---|---|---|---|---|---|
+| recommendation | 1.124 | 0.0162 -> 0.0055 | 0.3121 -> 0.3095 | 72.3%, 96.9% right -> 69.1%, 97.3% right | 0.7324 -> 0.7327 |
+| rating_band | 1.108 | 0.0240 -> 0.0046 | 0.4925 -> 0.4898 | 45.6%, 92.9% right -> 37.2%, 93.9% right | 0.6922 -> 0.6923 |
+
 ## Not measured
 
 | What | Why |

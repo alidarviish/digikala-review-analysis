@@ -1,0 +1,119 @@
+{
+  "created_at": "2026-10-30T17:53:11+00:00",
+  "model": "sbunlp__fabert",
+  "train_rows": 500000,
+  "reference_minus_step_35_mean_of_heads": {
+    "2026": 0.0003573526324481824,
+    "2027": 0.0006513096405926788,
+    "2028": 0.000380416247826032
+  },
+  "variants": {
+    "gradual curriculum": {
+      "per_seed": {
+        "2026": {
+          "recommendation": {
+            "variant_macro_f1": 0.7215585886966975,
+            "reference_macro_f1": 0.7235225688925713,
+            "difference": -0.001963980195873738,
+            "difference_interval_95": [
+              -0.002778492186924947,
+              -0.0011073195358334788
+            ],
+            "direction": "worse"
+          },
+          "rating_band": {
+            "variant_macro_f1": 0.6850999927381353,
+            "reference_macro_f1": 0.6858398756215149,
+            "difference": -0.0007398828833796722,
+            "difference_interval_95": [
+              -0.0014230220011565182,
+              -6.490744924543287e-05
+            ],
+            "direction": "worse"
+          }
+        },
+        "2027": {
+          "recommendation": {
+            "variant_macro_f1": 0.7207295641595329,
+            "reference_macro_f1": 0.7236745655984786,
+            "difference": -0.0029450014389457158,
+            "difference_interval_95": [
+              -0.00374031682369898,
+              -0.0021468120533118533
+            ],
+            "direction": "worse"
+          },
+          "rating_band": {
+            "variant_macro_f1": 0.6854325145745176,
+            "reference_macro_f1": 0.68673905006239,
+            "difference": -0.0013065354878724067,
+            "difference_interval_95": [
+              -0.0019378298418712496,
+              -0.000619643222836472
+            ],
+            "direction": "worse"
+          }
+        },
+        "2028": {
+          "recommendation": {
+            "variant_macro_f1": 0.719601207563283,
+            "reference_macro_f1": 0.7241201086227346,
+            "difference": -0.004518901059451519,
+            "difference_interval_95": [
+              -0.005429807056642569,
+              -0.003674494818234794
+            ],
+            "direction": "worse"
+          },
+          "rating_band": {
+            "variant_macro_f1": 0.6852538143033886,
+            "reference_macro_f1": 0.6864399582550954,
+            "difference": -0.0011861439517067973,
+            "difference_interval_95": [
+              -0.0018040957422473997,
+              -0.0005145080192398039
+            ],
+            "direction": "worse"
+          }
+        }
+      },
+      "mean_of_heads_per_seed": {
+        "variant": [
+          0.7033292907174165,
+          0.7030810393670253,
+          0.7024275109333358
+        ],
+        "reference": [
+          0.7046812222570431,
+          0.7052068078304343,
+          0.705280033438915
+        ]
+      },
+      "mean_over_seeds": {
+        "variant": 0.7029459470059258,
+        "reference": 0.7050560211754641
+      },
+      "minutes_per_seed": {
+        "variant": [
+          4.3,
+          4.35,
+          4.42
+        ],
+        "reference": [
+          4.33,
+          4.37,
+          4.39
+        ]
+      },
+      "lead_of_variant": -0.002110074169538234,
+      "spread_between_seeds": 0.0009017797840806807,
+      "verdict": "lead",
+      "chosen": "reference"
+    }
+  },
+  "rule": "a lead smaller than the spread between seeds is a tie; a tie goes to the reference",
+  "code": {
+    "commit": "bd13b11f524901bceed2c88175488557a514985f",
+    "uncommitted_changes": false
+  }
+}

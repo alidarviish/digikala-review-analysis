@@ -147,3 +147,27 @@ Expected:
 - On the curves the validation loss is higher than the usual one at the first check (the model
   has seen mostly easy `recommended` and `high` reviews and is too sure of them), level from
   the middle on, and ends within 0.01 of it.
+
+### Result of step 3
+
+`reports/transformer_pilot_whole/gradual_n500000.json`, the card in
+`reports/figures/experiments/difficulty_gradual`. Each run took 4.4 minutes per seed, as the
+usual training.
+
+| | Found | Expected |
+|---|---|---|
+| Mean Macro F1 of the two heads | 0.7029 against 0.7051: lead -0.0021, spread between seeds 0.0009, worse | a tie within 0.002: wrong, just past it |
+| Per seed and head | worse in all six: recommendation -0.0020, -0.0029, -0.0045; rating band -0.0007, -0.0013, -0.0012 | |
+| Change in F1 per class (points, all outside their 95% interval) | recommended +0.03, not_recommended -0.36, no_idea -0.61; low +0.24, medium -0.34, high -0.22 | no class by more than 0.5: wrong for `no_idea` |
+| Validation loss at the first check | recommendation 1.01 to 1.12, rating band 1.61 to 1.71 (usual 0.36 and 0.53) | higher: right |
+| Validation loss at the end | 0.3177 against 0.3169, 0.5009 against 0.4969 | within 0.01: right |
+
+What it means:
+
+- Starting with the easy reviews does not help, also without the hard-only end of the strict
+  curriculum. The early part of the epoch, mostly easy `recommended` and `high` reviews, pushes
+  the model towards the large classes, and the rest of the epoch does not fully undo it: the
+  losses fall on `no_idea`, `not_recommended` and `medium`.
+- Kept: the usual training. None of the changes to the training tried on the pilot (merged
+  texts, focal loss, class weights, leaving out the hardest labels, strict and gradual
+  curriculum) beat it.
