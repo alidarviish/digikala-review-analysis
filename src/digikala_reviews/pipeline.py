@@ -611,6 +611,25 @@ STEPS = [
         [17, 33, 41],
         files("reports/ensemble.json"),
         "reads the saved predictions of both final models and of step 41, which stay on your machine",
+    ),  # TookaBERT-Large trained like the kept FaBERT run, as an upper bound (reports/large_final_plan.md)
+    Step(
+        61,
+        "TookaBERT-Large on all training reviews, every epoch",
+        ["scripts/train_transformer.py", "--large"],
+        "gpu",
+        [23],
+        files("reports/transformer_final/large.json"),
+        "about 5 to 6 hours; it saves a resume point at every check, so start it again if the session ends",
+        smoke=True,
+    ),
+    Step(
+        62,
+        "TookaBERT-Large against the kept FaBERT run",
+        ["scripts/compare_fabert_runs.py", "--large"],
+        "local",
+        [33, 61],
+        files("reports/transformer_final/large_vs_fabert.json"),
+        "reads both runs' predictions, which stay on your machine",
     ),
 ]
 

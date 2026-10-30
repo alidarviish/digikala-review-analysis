@@ -30,9 +30,15 @@ files stay as they are:
 
 Every check records the validation loss of each head next to its Macro F1.
 
+With --large, TookaBERT-Large (learning rate 2e-5, as in the comparison runs) is trained the
+same way as the kept FaBERT run, every epoch with the best check kept, as an upper bound
+(reports/large_final_plan.md):
+  artifacts/transformer_large/   and   reports/transformer_final/large.json
+
 Usage:
     python scripts/train_transformer.py            # needs a GPU
     python scripts/train_transformer.py --no-early-stop
+    python scripts/train_transformer.py --large
     python scripts/train_transformer.py --smoke    # a tiny model on a few rows, CPU is fine
     python scripts/train_transformer.py --smoke --stop-after 20   # then run again: tests resuming
 """
@@ -77,6 +83,7 @@ SETTINGS = {
     "train_rows": None,  # None = every labeled training review
     "seed": SPLIT_SEED,
 }
+LARGE = {"model": "PartAI/TookaBERT-Large", "learning_rate": 2e-5, "patience": None}
 SMOKE = {
     "model": "hf-internal-testing/tiny-random-BertModel",
     "learning_rate": 1e-3,
@@ -133,17 +140,25 @@ def main():
     parser.add_argument(
         "--no-early-stop", action="store_true", help="train every epoch; keep the best check all the same"
     )
+    parser.add_argument(
+        "--large", action="store_true", help="TookaBERT-Large, every epoch, as an upper bound"
+    )
     args = parser.parse_args()
     import torch
     from transformers import AutoTokenizer
 
-    settings = {**SETTINGS, **(SMOKE if args.smoke else {})}
+    assert not (args.large and args.no_early_stop), "--large already trains every epoch"
+    settings = {**SETTINGS, **(LARGE if args.large else {}), **(SMOKE if args.smoke else {})}
     if args.no_early_stop:
         settings["patience"] = None
     name = ("smoke" if args.smoke else "fabert") + ("_no_early_stop" if args.no_early_stop else "")
     out_dir = ARTIFACTS_DIR / ("transformer_final_smoke" if args.smoke else "transformer_final")
     if args.no_early_stop:
         out_dir = out_dir.with_name(out_dir.name.replace("final", "no_early_stop"))
+    if args.large:  # its own names, so the FaBERT runs stay as they are
+        settings["patience"] = None
+        name = "smoke_large" if args.smoke else "large"
+        out_dir = ARTIFACTS_DIR / ("transformer_large_smoke" if args.smoke else "transformer_large")
     result_path = (
         REPORTS_DIR / ("transformer_final_smoke" if args.smoke else "transformer_final") / f"{name}.json"
     )
