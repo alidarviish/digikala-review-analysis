@@ -602,6 +602,15 @@ STEPS = [
         files("reports/transformer_pilot_whole/learning_rate_n500000.json"),
         "reads the run predictions, which stay on your machine; then run plot_experiment_cards.py "
         "again for their cards",
+    ),  # Combined models (reports/ensemble_plan.md)
+    Step(
+        60,
+        "FaBERT and TF-IDF combined, and three pilot seeds combined",
+        ["scripts/check_ensemble.py"],
+        "local",
+        [17, 33, 41],
+        files("reports/ensemble.json"),
+        "reads the saved predictions of both final models and of step 41, which stay on your machine",
     ),
 ]
 
