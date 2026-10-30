@@ -1,0 +1,43 @@
+500,000 reviews with an out-of-fold difficulty
+
+recommendation: mean p of the true label 0.832
+  true_class (all / hardest 5% / hardest 10%):
+    recommended: 79.2% / 19.0% / 21.1%
+    not_recommended: 9.6% / 20.6% / 19.1%
+    no_idea: 11.2% / 60.4% / 59.8%
+  length_in_words (all / hardest 5% / hardest 10%):
+    1-1: 6.3% / 5.1% / 3.7%
+    2-3: 19.6% / 17.7% / 14.7%
+    4-7: 32.3% / 30.5% / 28.1%
+    8-15: 24.0% / 25.2% / 28.0%
+    16-31: 12.6% / 15.0% / 17.5%
+    32+: 5.1% / 6.4% / 8.0%
+  text_repeated_in_training (all / hardest 5% / hardest 10%):
+    once: 64.5% / 70.7% / 78.2%
+    repeated: 35.5% / 29.3% / 21.8%
+  text_with_more_than_one_recommendation_label (all / hardest 5% / hardest 10%):
+    mixed: 24.3% / 27.4% / 19.9%
+    single: 75.7% / 72.6% / 80.1%
+  hardest 5%: 20,729 reviews, p of the true label below 0.171
+  hardest 10%: 41,458 reviews, p of the true label below 0.374
+
+rating_band: mean p of the true label 0.725
+  true_class (all / hardest 5% / hardest 10%):
+    low: 10.0% / 26.5% / 16.9%
+    medium: 18.6% / 59.8% / 70.5%
+    high: 71.5% / 13.7% / 12.6%
+  length_in_words (all / hardest 5% / hardest 10%):
+    1-1: 8.0% / 6.2% / 8.4%
+    2-3: 20.1% / 20.0% / 23.0%
+    4-7: 31.5% / 31.6% / 29.6%
+    8-15: 23.2% / 24.1% / 21.7%
+    16-31: 12.2% / 12.9% / 11.9%
+    32+: 5.1% / 5.2% / 5.3%
+  text_repeated_in_training (all / hardest 5% / hardest 10%):
+    once: 62.9% / 66.1% / 61.7%
+    repeated: 37.1% / 33.9% / 38.3%
+  text_with_more_than_one_recommendation_label (all / hardest 5% / hardest 10%):
+    mixed: 26.0% / 23.4% / 29.0%
+    single: 74.0% / 76.6% / 71.0%
+  hardest 5%: 23,013 reviews, p of the true label below 0.107
+  hardest 10%: 46,026 reviews, p of the true label below 0.197

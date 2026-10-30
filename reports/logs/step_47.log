@@ -1,0 +1,118 @@
+500,000 training reviews, 249,924 and 250,076 in the two halves
+model a: trained on 249,924 reviews, scores 250,076
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 5176.79it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sbunlp/fabert
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+pooler.dense.weight                        | MISSING    | 
+pooler.dense.bias                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/3906, loss 1.8115
+    step 200/3906, loss 1.1547
+    step 300/3906, loss 0.9922
+    step 400/3906, loss 0.9240
+    step 500/3906, loss 0.8837
+    step 600/3906, loss 0.8762
+    step 700/3906, loss 0.8776
+    step 800/3906, loss 0.8881
+    step 900/3906, loss 0.8871
+    step 1000/3906, loss 0.8619
+    step 1100/3906, loss 0.8589
+    step 1200/3906, loss 0.9093
+    step 1300/3906, loss 0.8559
+    step 1400/3906, loss 0.8512
+    step 1500/3906, loss 0.8304
+    step 1600/3906, loss 0.8577
+    step 1700/3906, loss 0.8498
+    step 1800/3906, loss 0.8305
+    step 1900/3906, loss 0.8336
+    step 2000/3906, loss 0.8607
+    step 2100/3906, loss 0.8564
+    step 2200/3906, loss 0.8545
+    step 2300/3906, loss 0.8272
+    step 2400/3906, loss 0.8552
+    step 2500/3906, loss 0.8533
+    step 2600/3906, loss 0.8501
+    step 2700/3906, loss 0.8073
+    step 2800/3906, loss 0.8418
+    step 2900/3906, loss 0.8066
+    step 3000/3906, loss 0.8111
+    step 3100/3906, loss 0.8187
+    step 3200/3906, loss 0.8123
+    step 3300/3906, loss 0.8405
+    step 3400/3906, loss 0.8198
+    step 3500/3906, loss 0.8161
+    step 3600/3906, loss 0.8223
+    step 3700/3906, loss 0.8308
+    step 3800/3906, loss 0.8046
+    step 3900/3906, loss 0.8274
+    step 3906/3906, loss 0.8889
+model b: trained on 250,076 reviews, scores 249,924
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 4848.91it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sbunlp/fabert
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+pooler.dense.weight                        | MISSING    | 
+pooler.dense.bias                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    step 100/3908, loss 1.8265
+    step 200/3908, loss 1.1333
+    step 300/3908, loss 0.9886
+    step 400/3908, loss 0.9247
+    step 500/3908, loss 0.9260
+    step 600/3908, loss 0.8866
+    step 700/3908, loss 0.8801
+    step 800/3908, loss 0.8956
+    step 900/3908, loss 0.8664
+    step 1000/3908, loss 0.8675
+    step 1100/3908, loss 0.8721
+    step 1200/3908, loss 0.8539
+    step 1300/3908, loss 0.8476
+    step 1400/3908, loss 0.8534
+    step 1500/3908, loss 0.8681
+    step 1600/3908, loss 0.8416
+    step 1700/3908, loss 0.8577
+    step 1800/3908, loss 0.8482
+    step 1900/3908, loss 0.8611
+    step 2000/3908, loss 0.8606
+    step 2100/3908, loss 0.8174
+    step 2200/3908, loss 0.8058
+    step 2300/3908, loss 0.8410
+    step 2400/3908, loss 0.8624
+    step 2500/3908, loss 0.8372
+    step 2600/3908, loss 0.8436
+    step 2700/3908, loss 0.8571
+    step 2800/3908, loss 0.8522
+    step 2900/3908, loss 0.8225
+    step 3000/3908, loss 0.8533
+    step 3100/3908, loss 0.8008
+    step 3200/3908, loss 0.8296
+    step 3300/3908, loss 0.8391
+    step 3400/3908, loss 0.8440
+    step 3500/3908, loss 0.8097
+    step 3600/3908, loss 0.8108
+    step 3700/3908, loss 0.8047
+    step 3800/3908, loss 0.8134
+    step 3900/3908, loss 0.8276
+    step 3908/3908, loss 0.8223
+saved /marimo/work/outputs/reports/difficulty/n500000.parquet
+  recommendation: mean p of the true label 0.832
+  rating_band: mean p of the true label 0.725
+Done

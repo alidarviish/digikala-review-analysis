@@ -1,0 +1,58 @@
+Code f090d6cf6e15a6c143ae54b96659092f367f67c0, device NVIDIA RTX PRO 6000 Blackwell Server Edition, torch 2.14.1+cu130
+/marimo/work/outputs/artifacts/tfidf_final/validation_predictions.parquet not found: TF-IDF is not compared in this run
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2026, 600 rows):
+  recommendation: label left out for 24 hardest reviews
+  rating_band: label left out for 28 hardest reviews
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 14771.67it/s]
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+    check at step 1: recommendation loss 1.0246, rating_band loss 0.9813
+    check at step 2: recommendation loss 0.8579, rating_band loss 0.9060
+    check at step 3: recommendation loss 0.7623, rating_band loss 0.8558
+    check at step 4: recommendation loss 0.7075, rating_band loss 0.8259
+    check at step 5: recommendation loss 0.6782, rating_band loss 0.8113
+    check at step 6: recommendation loss 0.6661, rating_band loss 0.8034
+    check at step 7: recommendation loss 0.6628, rating_band loss 0.7984
+    check at step 8: recommendation loss 0.6638, rating_band loss 0.7951
+    check at step 9: recommendation loss 0.6651, rating_band loss 0.7935
+    step 10/10, loss 1.6098
+    check at step 10: recommendation loss 0.6656, rating_band loss 0.7929
+  recommendation: without offsets 0.2945, with offsets 0.2945
+  rating_band: without offsets 0.2772, with offsets 0.2774
+  0.01 min, peak GPU memory 0.12 GB
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2027, 600 rows):
+  recommendation: label left out for 24 hardest reviews
+  rating_band: label left out for 28 hardest reviews
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 12852.82it/s]
+    check at step 1: recommendation loss 1.1592, rating_band loss 0.9811
+    check at step 2: recommendation loss 0.9696, rating_band loss 0.8878
+    check at step 3: recommendation loss 0.8450, rating_band loss 0.8315
+    check at step 4: recommendation loss 0.7657, rating_band loss 0.8056
+    check at step 5: recommendation loss 0.7222, rating_band loss 0.7961
+    check at step 6: recommendation loss 0.6972, rating_band loss 0.7932
+    check at step 7: recommendation loss 0.6836, rating_band loss 0.7921
+    check at step 8: recommendation loss 0.6768, rating_band loss 0.7914
+    check at step 9: recommendation loss 0.6739, rating_band loss 0.7912
+    step 10/10, loss 1.6273
+    check at step 10: recommendation loss 0.6728, rating_band loss 0.7911
+  recommendation: without offsets 0.2945, with offsets 0.2945
+  rating_band: without offsets 0.2772, with offsets 0.2772
+  0.0 min, peak GPU memory 0.12 GB
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2028, 600 rows):
+  recommendation: label left out for 24 hardest reviews
+  rating_band: label left out for 28 hardest reviews
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 14951.42it/s]
+    check at step 1: recommendation loss 0.8246, rating_band loss 0.9798
+    check at step 2: recommendation loss 0.7457, rating_band loss 0.8842
+    check at step 3: recommendation loss 0.7026, rating_band loss 0.8335
+    check at step 4: recommendation loss 0.6821, rating_band loss 0.8100
+    check at step 5: recommendation loss 0.6723, rating_band loss 0.8026
+    check at step 6: recommendation loss 0.6699, rating_band loss 0.7987
+    check at step 7: recommendation loss 0.6712, rating_band loss 0.7969
+    check at step 8: recommendation loss 0.6728, rating_band loss 0.7965
+    check at step 9: recommendation loss 0.6744, rating_band loss 0.7966
+    step 10/10, loss 1.4839
+    check at step 10: recommendation loss 0.6752, rating_band loss 0.7971
+  recommendation: without offsets 0.2945, with offsets 0.2945
+  rating_band: without offsets 0.2772, with offsets 0.2857
+  0.0 min, peak GPU memory 0.12 GB
+Done

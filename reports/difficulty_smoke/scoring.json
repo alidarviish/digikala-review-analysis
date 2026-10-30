@@ -1,0 +1,66 @@
+{
+  "created_at": "2026-10-30T09:53:23+00:00",
+  "fingerprint": {
+    "model": "hf-internal-testing/tiny-random-BertModel",
+    "learning_rate": 0.001,
+    "settings": {
+      "train_rows": 600,
+      "validation_rows": "the other half",
+      "epochs": 1,
+      "batch_size": 64,
+      "max_length": 128,
+      "weight_decay": 0.01,
+      "warmup_share": 0.06,
+      "dropout": 0.1,
+      "seed": 2026
+    },
+    "data": {
+      "normalizer_version": "2",
+      "sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      }
+    }
+  },
+  "rows": 600,
+  "labeled": {
+    "recommendation": 480,
+    "rating_band": 552
+  },
+  "mean_p_true": {
+    "recommendation": 0.548812747001648,
+    "rating_band": 0.4623071849346161
+  },
+  "train_minutes": {
+    "a": 0.01,
+    "b": 0.0
+  },
+  "file": "difficulty_smoke/n600.parquet",
+  "code": {
+    "commit": "f090d6cf6e15a6c143ae54b96659092f367f67c0",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": "5.21.0",
+      "tokenizers": "0.23.3"
+    },
+    "machine": "02d82009-58a3-424f-85f6-4e5e76c2813f-f2bzd",
+    "torch": "2.14.1+cu130",
+    "transformers": "5.21.0"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}

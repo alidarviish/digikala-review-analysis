@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/marimo/work/repo/scripts/score_difficulty.py", line 25, in <module>
+    from pilot_transformers import CACHE_FILES, MODELS, SETTINGS, SMOKE, train_and_score
+ModuleNotFoundError: No module named 'pilot_transformers'
+600 training reviews, 297 and 303 in the two halves
+model a: trained on 297 reviews, scores 303
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 16585.81it/s]
+    step 5/5, loss 1.9329
+model b: trained on 303 reviews, scores 297
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 10127.51it/s]
+    step 5/5, loss 1.9094
+saved /marimo/work/outputs/reports/difficulty_smoke/n600.parquet
+  recommendation: mean p of the true label 0.549
+  rating_band: mean p of the true label 0.462
+Done
