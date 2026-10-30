@@ -561,6 +561,16 @@ STEPS = [
         "reads the run predictions, which stay on your machine; then run plot_experiment_cards.py "
         "again for their cards",
     ),
+    # Calibration of the final model (reports/calibration_plan.md)
+    Step(
+        55,
+        "Temperature scaling of the final FaBERT model",
+        ["scripts/calibrate.py"],
+        "local",
+        [33],
+        files("reports/calibration.json"),
+        "reads the final model's validation predictions, which stay on your machine",
+    ),
 ]
 
 
