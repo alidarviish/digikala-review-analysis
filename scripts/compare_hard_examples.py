@@ -13,11 +13,13 @@ and the expected results are in reports/hard_examples_plan.md.
 
 With --set difficulty the same is done for the runs that use the difficulty of each training
 review (steps 49 to 51: the hardest labels left out, curriculum; reports/difficulty_plan.md),
-written to reports/transformer_pilot_whole/difficulty_n500000.json.
+written to reports/transformer_pilot_whole/difficulty_n500000.json, and with --set gradual for
+the gradual curriculum (step 53), written to reports/transformer_pilot_whole/gradual_n500000.json.
 
 Usage:
     uv run python scripts/compare_hard_examples.py
     uv run python scripts/compare_hard_examples.py --set difficulty
+    uv run python scripts/compare_hard_examples.py --set gradual
 """
 
 import argparse
@@ -46,6 +48,7 @@ VARIANT_SETS = {
         "leave out 10%": "__leaveout0.1",
         "curriculum": "__curriculum",
     },
+    "gradual": {"gradual curriculum": "__gradual"},
 }
 
 
@@ -100,9 +103,9 @@ def compare_setups(reference, variant):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--set", choices=["hard", "difficulty"], default="hard")
+    parser.add_argument("--set", choices=["hard", "difficulty", "gradual"], default="hard")
     args = parser.parse_args()
-    set_name = "hard_examples" if args.set == "hard" else "difficulty"
+    set_name = "hard_examples" if args.set == "hard" else args.set
     validation = load_cache("validation.parquet", extra_columns=["product_id"]).set_index("id")
     reference = {seed: labels_with_offsets(tag(seed, CHECKS), validation) for seed in SEEDS}
     first = {seed: labels_with_offsets(tag(seed), validation) for seed in SEEDS}

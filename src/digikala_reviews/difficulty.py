@@ -1,4 +1,4 @@
-"""How hard each training review is, and two ways to use it (reports/difficulty_plan.md).
+"""How hard each training review is, and ways to use it (reports/difficulty_plan.md).
 
 The difficulty of a review for a head is the probability p that a model which never saw the
 review gives to its label (out of fold): the lower p, the harder the review.
@@ -41,4 +41,24 @@ def curriculum_order(difficulty, groups: int, seed: int) -> np.ndarray:
         key[part] = group + rng.random(len(part))  # random order inside the group
     unknown = np.isnan(difficulty)
     key[unknown] = rng.random(unknown.sum()) * groups
+    return np.argsort(key, kind="stable")
+
+
+def gradual_order(difficulty, seed: int, last_start: float = 0.5) -> np.ndarray:
+    """Positions of the reviews for a gradual curriculum: every review is used once. Each review
+    gets a start on a scale from 0 to 1 that grows with its difficulty rank, from 0 (the
+    easiest) to last_start (the hardest), and a random place between its start and 1; the
+    reviews follow each other by that place. The epoch so begins with easy reviews only, the
+    harder ones join step by step, and from about the middle all of them are mixed, the hardest
+    a little more often than their share. Reviews with no difficulty (NaN) get a random rank."""
+    difficulty = np.asarray(difficulty, dtype=float)
+    rng = np.random.default_rng(seed)
+    rank = np.empty(len(difficulty))
+    known = np.flatnonzero(~np.isnan(difficulty))
+    ranked = known[np.argsort(difficulty[known], kind="stable")]
+    rank[ranked] = np.arange(len(ranked)) / max(len(ranked), 1)
+    unknown = np.isnan(difficulty)
+    rank[unknown] = rng.random(unknown.sum())
+    start = last_start * rank
+    key = start + rng.random(len(difficulty)) * (1 - start)
     return np.argsort(key, kind="stable")

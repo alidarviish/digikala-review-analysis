@@ -537,6 +537,30 @@ STEPS = [
         "reads the run predictions, which stay on your machine; then run plot_experiment_cards.py "
         "again for their cards",
     ),
+    Step(
+        53,
+        "Gradual curriculum, harder reviews join step by step",
+        [*HARD_ARGS, "--gradual-curriculum"],
+        "gpu",
+        [41, 47],
+        files(
+            *[
+                f"reports/transformer_pilot_whole/sbunlp__fabert__seed{s}__n500000__gradual__checks10.json"
+                for s in (2026, 2027, 2028)
+            ]
+        ),
+        smoke=True,
+    ),
+    Step(
+        54,
+        "Gradual curriculum against the usual training",
+        ["scripts/compare_hard_examples.py", "--set", "gradual"],
+        "local",
+        [41, 53],
+        files("reports/transformer_pilot_whole/gradual_n500000.json"),
+        "reads the run predictions, which stay on your machine; then run plot_experiment_cards.py "
+        "again for their cards",
+    ),
 ]
 
 

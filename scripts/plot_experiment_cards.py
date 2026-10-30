@@ -143,6 +143,7 @@ TRANSFORMER_CARDS += [
         ("difficulty_leave_out_5", "__leaveout0.05", "leave out 5%", "Hardest 5% of labels left out"),
         ("difficulty_leave_out_10", "__leaveout0.1", "leave out 10%", "Hardest 10% of labels left out"),
         ("difficulty_curriculum", "__curriculum", "curriculum", "Curriculum, easy to hard"),
+        ("difficulty_gradual", "__gradual", "gradual", "Gradual curriculum, hard reviews join step by step"),
     ]
 ]
 

@@ -120,3 +120,31 @@ What it means:
   texts look easier than they are. This does not change the verdicts, but the hardest reviews
   are partly hard because they are new texts.
 - Kept: the usual training. Reference with checks against step 35: +0.0004, +0.0007, +0.0004.
+
+## Step 3: a gradual curriculum (added after step 2, written before running)
+
+The strict curriculum failed because its last tenth held only the hardest reviews. A gradual
+curriculum keeps the idea, starting with easy reviews, without that end. Every review is still
+used once, in one epoch of the same 7,813 steps. Each review gets a start that grows with its
+difficulty rank (0 for the easiest, 0.5 for the hardest) and a random place between its start
+and 1, and the reviews follow each other by that place (`gradual_order` in
+`src/digikala_reviews/difficulty.py`). On made-up difficulties of 500,000 reviews:
+
+| Part of the epoch | Mean difficulty rank (0 easiest, 1 hardest) | Hardest tenth | Easier half |
+|---|---|---|---|
+| first 5% | 0.15 | 0% | 100% |
+| 10 to 15% | 0.35 | 0% | 72% |
+| 25 to 30% | 0.52 | 7% | 45% |
+| from 50% to the end | 0.56 | 14% | 42% |
+
+Step 53 trains FaBERT this way (same sample, seeds 2026 to 2028, all of validation, 10
+checks), and step 54 (`scripts/compare_hard_examples.py --set gradual`) compares it with step
+41 by the same rule, with a card.
+
+Expected:
+
+- Mean Macro F1 of the two heads: a tie (within 0.002 of 0.7051).
+- No class changes by more than 0.5 points of F1.
+- On the curves the validation loss is higher than the usual one at the first check (the model
+  has seen mostly easy `recommended` and `high` reviews and is too sure of them), level from
+  the middle on, and ends within 0.01 of it.

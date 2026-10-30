@@ -51,7 +51,9 @@ Two uses of the difficulty of each training review, measured out of fold by
 scripts/score_difficulty.py (reports/difficulty_plan.md), each saved under its own name:
 --leave-out-hardest F drops, for each head, the label of the fraction F of reviews with the
 lowest probability of their label (<...>__leaveout<F>); --curriculum orders the epoch from easy
-to hard reviews in 10 groups, random inside a group (<...>__curriculum).
+to hard reviews in 10 groups, random inside a group (<...>__curriculum); --gradual-curriculum
+uses every review once too, but lets the harder reviews join step by step and mixes all of them
+at the end (<...>__gradual).
 """
 
 import argparse
@@ -64,7 +66,7 @@ import numpy as np
 import pandas as pd
 
 from digikala_reviews.config import ARTIFACTS_DIR, CACHE_DIR, REPORTS_DIR, SPLIT_SEED
-from digikala_reviews.difficulty import curriculum_order, hardest, review_difficulty
+from digikala_reviews.difficulty import curriculum_order, gradual_order, hardest, review_difficulty
 from digikala_reviews.experiments import compare, cross_fitted_offsets, product_half
 from digikala_reviews.finetune import (
     IGNORE,
@@ -145,7 +147,7 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
         }
     train_ids, validation_ids = encode(train_texts), encode(validation["text"])
     difficulty = None
-    if settings.get("leave_out_hardest") or settings.get("curriculum"):
+    if settings.get("leave_out_hardest") or settings.get("curriculum") or settings.get("gradual_curriculum"):
         assert not merged, "the difficulty is per review, not per merged text"
         found = pd.read_parquet(REPORTS_DIR / settings["difficulty_file"]).set_index("id")
         p_true = {head: found[f"{head}_p_true"].reindex(train["id"]).to_numpy() for head in HEADS}
@@ -156,7 +158,7 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
                 dropped = hardest(p_true[head], settings["leave_out_hardest"])
                 labels[head] = np.where(dropped, IGNORE, labels[head])
                 print(f"  {head}: label left out for {dropped.sum():,} hardest reviews", flush=True)
-        if settings.get("curriculum"):
+        if settings.get("curriculum") or settings.get("gradual_curriculum"):
             difficulty = review_difficulty(p_true)
 
     model = build_model(torch, name, settings["dropout"], list(HEADS)).to(device)
@@ -215,7 +217,9 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
     model.train()
     for epoch in range(settings["epochs"]):
         order = np.random.default_rng(settings["seed"] + epoch).permutation(len(train_ids))
-        if difficulty is not None:  # curriculum: easy to hard instead of random
+        if difficulty is not None and settings.get("gradual_curriculum"):
+            order = gradual_order(difficulty, settings["seed"] + epoch)
+        elif difficulty is not None:  # curriculum: easy to hard instead of random
             order = curriculum_order(difficulty, CURRICULUM_GROUPS, settings["seed"] + epoch)
         for batch in batches(torch, tokenizer, train_ids, order, settings["batch_size"], labels):
             with torch.autocast(device_type=device.type, dtype=torch.bfloat16, enabled=use_bf16):
@@ -322,6 +326,9 @@ def main():
         "--leave-out-hardest", type=float, help="drop the label of this fraction of the hardest reviews"
     )
     parser.add_argument("--curriculum", action="store_true", help="order the epoch from easy to hard")
+    parser.add_argument(
+        "--gradual-curriculum", action="store_true", help="let the harder reviews join step by step"
+    )
     args = parser.parse_args()
     import torch
 
@@ -345,7 +352,10 @@ def main():
         settings["leave_out_hardest"] = args.leave_out_hardest
     if args.curriculum:
         settings["curriculum"] = True
-    uses_difficulty = bool(args.leave_out_hardest or args.curriculum)
+    if args.gradual_curriculum:
+        settings["gradual_curriculum"] = True
+    assert not (args.curriculum and args.gradual_curriculum), "one curriculum at a time"
+    uses_difficulty = bool(args.leave_out_hardest or args.curriculum or args.gradual_curriculum)
     assert not (uses_difficulty and (args.merge or args.focal or args.class_weights)), "tried apart"
     seeds = [int(s) for s in args.seeds.split(",")] if args.seeds else [SETTINGS["seed"]]
     results_dir, arrays_dir = REPORTS_DIR / "transformer_pilot", ARTIFACTS_DIR / "transformer_pilot"
@@ -452,6 +462,8 @@ def main():
             tag += f"__leaveout{settings['leave_out_hardest']:g}"
         if settings.get("curriculum"):
             tag += "__curriculum"
+        if settings.get("gradual_curriculum"):
+            tag += "__gradual"
         if settings.get("checks"):
             tag += f"__checks{settings['checks']}"
         spec = json.loads(
