@@ -141,5 +141,9 @@ classes, so it is not raised by the large `recommended` and `high` classes.
   hardest labels and an easy-to-hard curriculum all tied with or lost to the usual training
   ([`reports/hard_examples_plan.md`](reports/hard_examples_plan.md),
   [`reports/difficulty_plan.md`](reports/difficulty_plan.md)).
+- **Combining the two models helps a little.** The mean of FaBERT's and TF-IDF's probabilities (weight 0.7 to 0.8
+  for FaBERT) scores 0.2 point higher on recommendation and 0.1 point on rating band than FaBERT alone, both
+  measurable; three FaBERT models trained with other seeds do not help
+  ([`reports/ensemble_plan.md`](reports/ensemble_plan.md)).
 - **The probabilities are close to honest.** One temperature per head (1.12 and 1.11) brings the calibration
   error below 0.01 without changing the scores ([`reports/calibration_plan.md`](reports/calibration_plan.md)).

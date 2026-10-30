@@ -1,0 +1,133 @@
+{
+  "created_at": "2026-10-30T21:19:56+00:00",
+  "final_fabert_and_tfidf": {
+    "recommendation": {
+      "reviews": 788717,
+      "fabert_weight_per_half": {
+        "tuned_on_a": 0.7,
+        "tuned_on_b": 0.7
+      },
+      "fabert_macro_f1": 0.7324370442721989,
+      "blend_macro_f1": 0.7344318559099552,
+      "difference": 0.0019948116377562775,
+      "difference_interval_95": [
+        0.0014133683035695344,
+        0.0025947383765922757
+      ],
+      "direction": "better",
+      "f1_per_class": {
+        "recommended": {
+          "fabert": 0.9440903949711925,
+          "blend": 0.9433596537413655
+        },
+        "not_recommended": {
+          "fabert": 0.7435999505840688,
+          "blend": 0.7487805207615496
+        },
+        "no_idea": {
+          "fabert": 0.5096207872613355,
+          "blend": 0.5111553932269506
+        }
+      }
+    },
+    "rating_band": {
+      "reviews": 843458,
+      "fabert_weight_per_half": {
+        "tuned_on_a": 0.8,
+        "tuned_on_b": 0.7
+      },
+      "fabert_macro_f1": 0.692190273060563,
+      "blend_macro_f1": 0.6935241490531752,
+      "difference": 0.0013338759926121435,
+      "difference_interval_95": [
+        0.0008843530805096811,
+        0.001780164729823086
+      ],
+      "direction": "better",
+      "f1_per_class": {
+        "low": {
+          "fabert": 0.7109576145976847,
+          "blend": 0.7142857142857143
+        },
+        "medium": {
+          "fabert": 0.4786362488532587,
+          "blend": 0.4787285433641429
+        },
+        "high": {
+          "fabert": 0.8869769557307459,
+          "blend": 0.8875581895096685
+        }
+      }
+    }
+  },
+  "three_pilot_seeds": {
+    "recommendation": {
+      "single_macro_f1": [
+        0.7235225688925713,
+        0.7236745655984786,
+        0.7241201086227346
+      ],
+      "combined_macro_f1": 0.7223310035235834,
+      "difference_to_each_seed": [
+        -0.0011915653689879013,
+        -0.001343562074895277,
+        -0.0017891050991512003
+      ],
+      "interval_95_to_each_seed": [
+        [
+          -0.001875145814550952,
+          -0.0005104934577960575
+        ],
+        [
+          -0.0020037882767635156,
+          -0.000677094311435006
+        ],
+        [
+          -0.002463949411327848,
+          -0.0010920852245023766
+        ]
+      ],
+      "direction_to_each_seed": [
+        "worse",
+        "worse",
+        "worse"
+      ]
+    },
+    "rating_band": {
+      "single_macro_f1": [
+        0.6858398756215149,
+        0.68673905006239,
+        0.6864399582550954
+      ],
+      "combined_macro_f1": 0.6872312969303628,
+      "difference_to_each_seed": [
+        0.00139142130884784,
+        0.0004922468679727787,
+        0.0007913386752673723
+      ],
+      "interval_95_to_each_seed": [
+        [
+          0.0009147788105115934,
+          0.001836803476248422
+        ],
+        [
+          -1.8403384373091857e-05,
+          0.0009595037100701364
+        ],
+        [
+          0.0002741933596228818,
+          0.0012824114466888441
+        ]
+      ],
+      "direction_to_each_seed": [
+        "better",
+        "no measurable difference",
+        "better"
+      ]
+    }
+  },
+  "code": {
+    "commit": "5319d4383ce6d600dafdcb5e4f3ec0457232d83f",
+    "uncommitted_changes": false
+  }
+}
