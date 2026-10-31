@@ -1,0 +1,60 @@
+{
+  "created_at": "2026-10-31T22:20:25+00:00",
+  "reviews": 736134,
+  "true_classes": {
+    "recommended": 0.791167097294786,
+    "no_idea": 0.11289656502756291,
+    "not_recommended": 0.09593633767765108
+  },
+  "thresholds": {
+    "0.8": {
+      "kept": 574432,
+      "share_kept": 0.7803361887917145,
+      "accuracy": 0.9595252353629324,
+      "kept_classes": {
+        "recommended": 0.9335169349896941,
+        "not_recommended": 0.06368900061277923,
+        "no_idea": 0.0027940643975266004
+      },
+      "kept_right_per_true_class": {
+        "recommended": 0.8884178535555155,
+        "not_recommended": 0.4602531788960947,
+        "no_idea": 0.015149145078031934
+      }
+    },
+    "0.9": {
+      "kept": 508744,
+      "share_kept": 0.6911024351544691,
+      "accuracy": 0.9729647917223594,
+      "kept_classes": {
+        "recommended": 0.9571926155394461,
+        "not_recommended": 0.042361187552089064,
+        "no_idea": 0.00044619690846476814
+      },
+      "kept_right_per_true_class": {
+        "recommended": 0.8149226054034564,
+        "not_recommended": 0.2855908923564895,
+        "no_idea": 0.0024787322367550266
+      }
+    },
+    "0.95": {
+      "kept": 404952,
+      "share_kept": 0.5501063665039245,
+      "accuracy": 0.9839931646219799,
+      "kept_classes": {
+        "recommended": 0.9730091467630732,
+        "not_recommended": 0.026990853236926845,
+        "no_idea": 0.0
+      },
+      "kept_right_per_true_class": {
+        "recommended": 0.666139542071239,
+        "not_recommended": 0.14877800118943105,
+        "no_idea": 0.0
+      }
+    }
+  },
+  "code": {
+    "commit": "2279ab73408e5bcb97ce909eb3747cfa61bd3830",
+    "uncommitted_changes": false
+  }
+}

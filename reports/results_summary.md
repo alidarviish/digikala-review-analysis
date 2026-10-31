@@ -235,6 +235,7 @@ seeds is a tie.
 | Learning rate (reports/learning_rate_plan.md) | learning rate 2e-5 | 0.7041 | 0.7051 | -0.0010 | 0.0008 | worse | 3f49121 |
 | Learning rate (reports/learning_rate_plan.md) | learning rate 5e-5 | 0.7043 | 0.7051 | -0.0008 | 0.0009 | tie | 3f49121 |
 | Learning rate (reports/learning_rate_plan.md) | layer decay 0.9 | 0.7032 | 0.7051 | -0.0019 | 0.0010 | worse | 3f49121 |
+| Pseudo-labels (reports/semi_supervised_plan.md) | pseudo-labels 0.9 | 0.7047 | 0.7051 | -0.0003 | 0.0007 | tie | 2279ab7 |
 
 ## Calibration of the final FaBERT model (reports/calibration_plan.md)
 

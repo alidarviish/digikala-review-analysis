@@ -60,3 +60,53 @@ The test set is not read at any step.
   of add little new.
 - So the full run is most likely not made, and the answer to the question is "no measurable
   gain", with the measured quality of the guesses.
+
+## Result
+
+`reports/pseudo_labels/scoring.json` and `check.json` (the guesses, step 64 and 65),
+`reports/transformer_pilot_whole/pseudo_n500000.json` (the pilot, step 67), all of validation.
+Scoring the 736,134 hidden reviews took about 9 minutes; the guesses were made with the final
+FaBERT weights (the hash matches the local `model.pt`).
+
+The guesses against the true labels (true classes: `recommended` 79.1%, `no_idea` 11.3%,
+`not_recommended` 9.6%):
+
+| Threshold | Kept | Right | Kept classes: recommended / not_recommended / no_idea | Kept and right, share of each true class: recommended / not_recommended / no_idea |
+|---|---|---|---|---|
+| 0.8 | 574,432 (78.0%) | 96.0% | 93.4% / 6.4% / 0.3% | 88.8% / 46.0% / 1.5% |
+| 0.9 | 508,744 (69.1%) | 97.3% | 95.7% / 4.2% / 0.0% | 81.5% / 28.6% / 0.2% |
+| 0.95 | 404,952 (55.0%) | 98.4% | 97.3% / 2.7% / 0.0% | 66.6% / 14.9% / 0.0% |
+
+The pilot student (500,000 reviews plus 71,740 of a fixed random 103,608 hidden reviews whose
+guess reaches 0.9) against step 41, three seeds:
+
+| Head | Step 41 | With pseudo-labels | Difference per seed [95%] |
+|---|---|---|---|
+| recommendation | 0.7235, 0.7237, 0.7241 | 0.7226, 0.7225, 0.7233 | -0.0009 [-0.0016, -0.0002] worse; -0.0012 [-0.0019, -0.0005] worse; -0.0008 [-0.0016, +0.0000] no measurable difference |
+| rating band | 0.6858, 0.6867, 0.6864 | 0.6865, 0.6864, 0.6869 | +0.0007 [+0.0001, +0.0013] better; -0.0003 [-0.0009, +0.0003] and +0.0005 [-0.0001, +0.0011] no measurable difference |
+
+Mean Macro F1 of the two heads: 0.7047 against 0.7051, lead -0.0003, spread between seeds
+0.0007: a tie, so the usual training is kept. Each seed took 5.0 minutes instead of 4.4.
+
+F1 per class with offsets, mean of three seeds, step 41 -> with pseudo-labels: `recommended`
+0.943 -> 0.944, `not_recommended` 0.732 -> 0.732, `no_idea` 0.496 -> 0.492; `low` 0.702 ->
+0.704, `medium` 0.472 -> 0.470, `high` 0.885 -> 0.886.
+
+| | Expected | Found |
+|---|---|---|
+| Share reaching 0.9 | 65 to 72% | 69.1%: right |
+| Kept guesses right | 96 to 98% | 97.3%: right |
+| Kept classes | 88 to 92% recommended, 7 to 10% not_recommended, 1 to 3% no_idea | 95.7%, 4.2%, 0.0%: wrong, even more one-sided |
+| Pilot student | a tie; `no_idea` F1 a little lower | a tie (recommendation slightly lower in two seeds); `no_idea` 0.4 point lower: right |
+| Full run | most likely not made | not made: the pilot did not win |
+
+What it means:
+
+- The confident guesses are right almost every time, but they are nearly all `recommended`:
+  only 0.2% of the hidden `no_idea` reviews and 28.6% of the hidden `not_recommended` ones
+  get a label at 0.9, against 81.5% of the `recommended` ones. A lower threshold does not
+  change this (0.3% `no_idea` kept at 0.8).
+- So the added reviews are mostly reviews the model already gets right, of the class it
+  already knows best; they teach it nothing about `no_idea`, the class that limits Macro F1.
+- Kept: the final system as before (`reports/ensemble_plan.md`). The answer to the question
+  is "no measurable gain", with the measured quality of the guesses above.
