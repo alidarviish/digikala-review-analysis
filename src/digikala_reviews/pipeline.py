@@ -728,6 +728,15 @@ STEPS = [
         files("reports/error_overlap.json"),
         "reads the saved predictions of the three final models, which stay on your machine",
     ),
+    Step(
+        72,
+        "How much of the perfect-chooser room is chance: the same bound for three FaBERT seeds",
+        ["scripts/check_seed_oracle.py"],
+        "local",
+        [41, 71],
+        files("reports/seed_oracle.json"),
+        "reads the step 41 predictions, which stay on your machine",
+    ),
 ]
 
 

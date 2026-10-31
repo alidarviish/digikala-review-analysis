@@ -39,3 +39,69 @@ Nothing is trained and the test set is not read.
   only on paper, since no real combination knows which model is right.
 - The three models gain 0 to 0.2 point over FaBERT and TF-IDF, below the 0.3 point asked
   for, so the kept combination stays.
+
+## Result
+
+`reports/error_overlap.json`, all of validation.
+
+| | Recommendation | Rating band |
+|---|---|---|
+| All three right | 81.4% | 72.9% |
+| All three wrong | 9.0% | 15.8% |
+| Some right | 9.6% | 11.3% |
+| All wrong, per true class | recommended 4.1%, not_recommended 20.9%, no_idea 33.1% | low 25.1%, medium 44.0%, high 7.1% |
+| Some right, per true class | recommended 6.0%, not_recommended 18.8%, no_idea 27.1% | low 16.6%, medium 19.8%, high 8.3% |
+| Both wrong, share of either wrong: FaBERT & Large / FaBERT & TF-IDF / Large & TF-IDF | 77.1% / 55.6% / 54.7% | 81.0% / 64.3% / 65.4% |
+| Macro F1: FaBERT / Large / TF-IDF | 0.7324 / 0.7324 / 0.7017 | 0.6922 / 0.6938 / 0.6683 |
+| FaBERT and TF-IDF (kept) | 0.7344 | 0.6935 |
+| Perfect chooser | 0.8080 | 0.7609 |
+| Three models | 0.7367, +0.0023 [+0.0018, +0.0028], better | 0.6959, +0.0023 [+0.0018, +0.0028], better |
+
+In the three-model combination the averaged transformers get weight 0.7 (recommendation) and
+0.8 (rating band) on both halves. F1 per class, kept -> three models: `recommended` 0.943 ->
+0.944, `not_recommended` 0.749 -> 0.752, `no_idea` 0.511 -> 0.514; `low` 0.714 -> 0.719,
+`medium` 0.479 -> 0.482, `high` 0.888 -> 0.886.
+
+| | Expected | Found |
+|---|---|---|
+| Recommendation: all right / all wrong / some right | about 85% / 8 to 10% / 5 to 7% | 81.4% / 9.0% / 9.6%: all wrong right, the rest wrong (more room than expected) |
+| `no_idea` wrong in all three | 40 to 55% | 33.1%: wrong, lower |
+| Shared mistakes, FaBERT & Large / FaBERT & TF-IDF | 70 to 80% / 55 to 70% | recommendation 77.1% / 55.6%: right; rating band 81.0%: a little above |
+| Perfect chooser above the kept combination | 0.03 to 0.08 | 0.074 and 0.067: right |
+| Three models over the kept combination | 0 to 0.2 point | 0.23 point on each head: wrong, a little more |
+| The choice | the kept combination stays | stays: the interval is above zero on both heads, but the mean gain, 0.23 point, is below the 0.3 point fixed before the run |
+
+What it means:
+
+- About a tenth of the reviews are wrong in every model, mostly `no_idea`, `not_recommended`,
+  `low` and `medium`; no combination of these models can fix them.
+- On another tenth at least one model is right. A perfect chooser would gain about 7 points,
+  but the real combinations recover only a small part of it: averaging gains 0.2 point, and
+  stacking, which tries to learn when to trust which model, gained nothing
+  (`reports/stacking_plan.md`). The models do not show, in their probabilities, when they are
+  the one that is right.
+- FaBERT and Large share four fifths of their mistakes; TF-IDF, a different kind of model,
+  shares only a little more than half, which is why it is the one that helps.
+- By the rule fixed before the run, the kept combination of FaBERT and TF-IDF stays. The
+  three models are reported as the best combination measured on validation.
+
+## Step 72: how much of that room is chance (added after step 71, before running)
+
+The perfect chooser counts a review as right whenever any model has its label. Where the
+label is unclear, a model can have it by chance, so the bound is too high, and more so the
+more models there are. Three FaBERT runs that differ only in their seed (step 41) know the
+same things, so their perfect-chooser gain is what chance alone gives.
+`scripts/check_seed_oracle.py` measures it for the three seeds and for each pair, next to the
+gain of the three final models over FaBERT alone (0.0756 and 0.0687).
+
+The seeds were trained on 500,000 reviews for one epoch and vary more than models trained on
+all reviews, so their gain overstates chance a little.
+
+Rule: if the three seeds gain more than half as much as the three final models, at most half
+of the room is real, a real chooser could hope for a small part of that, and the idea of a
+chooser with more information (text length, agreement between the models, the words) is
+dropped. Otherwise it gets its own plan.
+
+Expected: the seeds have "some right" on 4 to 6% of the recommendation reviews (the final
+models 9.6%) and gain 0.03 to 0.045 for each head, 40 to 60% of the final models' gain: the
+rule is near its edge.
