@@ -16,13 +16,15 @@ review (steps 49 to 51: the hardest labels left out, curriculum; reports/difficu
 written to reports/transformer_pilot_whole/difficulty_n500000.json, and with --set gradual for
 the gradual curriculum (step 53), written to reports/transformer_pilot_whole/gradual_n500000.json,
 and with --set learning_rate for other learning rates and layer-wise decay (steps 56 to 58),
-written to reports/transformer_pilot_whole/learning_rate_n500000.json.
+written to reports/transformer_pilot_whole/learning_rate_n500000.json, and with --set pseudo for
+the pseudo-labeled hidden reviews (step 66), written to reports/transformer_pilot_whole/pseudo_n500000.json.
 
 Usage:
     uv run python scripts/compare_hard_examples.py
     uv run python scripts/compare_hard_examples.py --set difficulty
     uv run python scripts/compare_hard_examples.py --set gradual
     uv run python scripts/compare_hard_examples.py --set learning_rate
+    uv run python scripts/compare_hard_examples.py --set pseudo
 """
 
 import argparse
@@ -57,6 +59,7 @@ VARIANT_SETS = {
         "learning rate 5e-5": "__lr5e-05",
         "layer decay 0.9": "__llrd0.9",
     },
+    "pseudo": {"pseudo-labels 0.9": "__pseudo0.9"},
 }
 
 
@@ -111,7 +114,9 @@ def compare_setups(reference, variant):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--set", choices=["hard", "difficulty", "gradual", "learning_rate"], default="hard")
+    parser.add_argument(
+        "--set", choices=["hard", "difficulty", "gradual", "learning_rate", "pseudo"], default="hard"
+    )
     args = parser.parse_args()
     set_name = "hard_examples" if args.set == "hard" else args.set
     validation = load_cache("validation.parquet", extra_columns=["product_id"]).set_index("id")

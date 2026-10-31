@@ -59,6 +59,11 @@ Two settings of the optimizer (reports/learning_rate_plan.md), each saved under 
 --learning-rate LR replaces the model's usual learning rate (<...>__lr<LR>); --layer-decay D
 gives the heads the usual learning rate and multiplies it by D for every layer further down,
 to the embeddings (<...>__llrd<D>).
+
+Semi-supervised (reports/semi_supervised_plan.md): --pseudo-labels P adds to the training
+sample a fixed random share of the hidden training reviews, as large as their share in the
+full data, keeping those whose guessed recommendation label (scripts/pseudo_label.py) has a
+probability of at least P (<...>__pseudo<P>).
 """
 
 import argparse
@@ -88,6 +93,7 @@ from digikala_reviews.finetune import (
 from digikala_reviews.merge_texts import merge, soft_targets, weighted_soft_loss
 from digikala_reviews.metrics import bootstrap_macro_f1, classification_report
 from digikala_reviews.provenance import check_cache, environment, git_commit, library_version
+from digikala_reviews.pseudo import pseudo_rows
 from digikala_reviews.tfidf import HEADS, load_cache
 from digikala_reviews.tuning import finished, save_json
 
@@ -116,6 +122,7 @@ SMOKE = {
     "validation_rows": 400,
 }
 CACHE_FILES = ["train_supervised.parquet", "validation.parquet"]
+MASKED_CACHE = "train_pseudo_unlabeled.parquet"  # the hidden reviews, for --pseudo-labels
 CHECK_ROWS = 50_000  # validation reviews measured at every check (--checks)
 CURRICULUM_GROUPS = 10
 LOG_EVERY = 100
@@ -343,6 +350,9 @@ def main():
     )
     parser.add_argument("--learning-rate", type=float, help="instead of the model's usual learning rate")
     parser.add_argument(
+        "--pseudo-labels", type=float, help="add the hidden reviews whose guess reaches this probability"
+    )
+    parser.add_argument(
         "--layer-decay", type=float, help="multiply the learning rate by this for every layer further down"
     )
     args = parser.parse_args()
@@ -375,6 +385,9 @@ def main():
     assert not (uses_difficulty and (args.merge or args.focal or args.class_weights)), "tried apart"
     if args.layer_decay:
         settings["layer_decay"] = args.layer_decay
+    if args.pseudo_labels:
+        settings["pseudo_labels"] = args.pseudo_labels
+        assert not (uses_difficulty or args.merge or args.focal or args.class_weights), "tried apart"
     seeds = [int(s) for s in args.seeds.split(",")] if args.seeds else [SETTINGS["seed"]]
     results_dir, arrays_dir = REPORTS_DIR / "transformer_pilot", ARTIFACTS_DIR / "transformer_pilot"
     if args.whole_validation:
@@ -391,6 +404,12 @@ def main():
             results_dir.with_name("transformer_pilot_smoke"),
             arrays_dir.with_name("transformer_pilot_smoke"),
         )
+    if args.pseudo_labels:  # made by scripts/pseudo_label.py
+        settings["pseudo_file"] = (
+            "pseudo_labels_smoke" if args.smoke else "pseudo_labels"
+        ) + "/masked.parquet"
+        if not (REPORTS_DIR / settings["pseudo_file"]).exists():
+            raise SystemExit(f"{settings['pseudo_file']} not found: run scripts/pseudo_label.py first")
     if args.learning_rate:  # after the test-run models are chosen, so the name always fits the run
         models = {name: args.learning_rate for name in models}
     if uses_difficulty:  # made by scripts/score_difficulty.py for the same training sample
@@ -417,7 +436,7 @@ def main():
             "gpu": gpu,
             "transformers": library_version("transformers"),
         },
-        "data": check_cache(CACHE_DIR, CACHE_FILES),
+        "data": check_cache(CACHE_DIR, CACHE_FILES + ([MASKED_CACHE] if args.pseudo_labels else [])),
     }
     print(f"Code {context['code']['commit']}, device {gpu or 'cpu'}, torch {torch.__version__}", flush=True)
     results_dir.mkdir(parents=True, exist_ok=True)
@@ -427,6 +446,18 @@ def main():
     # the samples always use the split seed; a run's own seed only changes the training itself
     train = train_all.iloc[fixed_sample(len(train_all), settings["train_rows"], SPLIT_SEED)]
     train = train.reset_index(drop=True)
+    if settings.get("pseudo_labels"):
+        masked = pd.read_parquet(CACHE_DIR / MASKED_CACHE, columns=["id", "text"])
+        guessed = pd.read_parquet(REPORTS_DIR / settings["pseudo_file"])
+        n_extra = round(len(train) * len(masked) / len(train_all))  # their share in the full data
+        if args.smoke:  # the test run guessed only a few hidden reviews
+            masked = masked[masked["id"].isin(guessed["id"])].reset_index(drop=True)
+        extra = pseudo_rows(masked, guessed, n_extra, SPLIT_SEED, settings["pseudo_labels"])
+        print(
+            f"  {len(extra):,} of {n_extra:,} sampled hidden reviews reach {settings['pseudo_labels']:g}",
+            flush=True,
+        )
+        train = pd.concat([train, extra], ignore_index=True)
     del train_all
     validation_all = load_cache(CACHE_FILES[1], extra_columns=["product_id"])
     validation_all = validation_all[
@@ -488,6 +519,8 @@ def main():
             tag += f"__lr{learning_rate:g}"
         if settings.get("layer_decay"):
             tag += f"__llrd{settings['layer_decay']:g}"
+        if settings.get("pseudo_labels"):
+            tag += f"__pseudo{settings['pseudo_labels']:g}"
         if settings.get("checks"):
             tag += f"__checks{settings['checks']}"
         spec = json.loads(

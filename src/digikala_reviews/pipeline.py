@@ -639,6 +639,50 @@ STEPS = [
         [60],
         files("reports/stacking.json"),
         "reads the saved predictions of both final models, which stay on your machine",
+    ),  # Semi-supervised: guessed labels for the hidden reviews (reports/semi_supervised_plan.md)
+    Step(
+        64,
+        "Guess the hidden recommendation labels with the final FaBERT model",
+        ["scripts/pseudo_label.py"],
+        "gpu",
+        [33, 55],
+        files("reports/pseudo_labels/scoring.json"),
+        "needs fabert_final.pt and train_pseudo_unlabeled.parquet in the cache folder",
+        smoke=True,
+    ),
+    Step(
+        65,
+        "How good the guesses are, against the true labels",
+        ["scripts/check_pseudo_labels.py"],
+        "local",
+        [64],
+        files("reports/pseudo_labels/check.json"),
+        "reads the true labels of the hidden reviews, which stay on your machine",
+    ),
+    Step(
+        66,
+        "FaBERT on 500,000 reviews with the confidently guessed hidden reviews added",
+        [*HARD_ARGS, "--pseudo-labels", "0.9"],
+        "gpu",
+        [41, 64],
+        files(
+            *[
+                f"reports/transformer_pilot_whole/sbunlp__fabert__seed{s}__n500000__pseudo0.9__checks10.json"
+                for s in (2026, 2027, 2028)
+            ]
+        ),
+        "its test run needs the test run of step 64 first",
+        smoke=True,
+    ),
+    Step(
+        67,
+        "Hidden reviews with guessed labels against the usual training",
+        ["scripts/compare_hard_examples.py", "--set", "pseudo"],
+        "local",
+        [41, 66],
+        files("reports/transformer_pilot_whole/pseudo_n500000.json"),
+        "reads the run predictions, which stay on your machine; then run plot_experiment_cards.py "
+        "--only pseudo_labels_0.9 for its card",
     ),
 ]
 

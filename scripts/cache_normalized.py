@@ -2,13 +2,18 @@
 
 For train_supervised, validation and test, writes data/cache/<name>.parquet with the
 same columns as the CSV file, except that `body` is replaced by `text`, the normalized
-review. data/cache/cache_info.json records the normalizer version, the hash of each source
-file and the hash of each Parquet file, so a stale or damaged copy can be noticed.
+review. With --files only the named files are built and the others keep their entry; the
+hidden training reviews of the semi-supervised step (train_pseudo_unlabeled.csv, id and
+text only) are built this way. data/cache/cache_info.json records the normalizer version,
+the hash of each source file and the hash of each Parquet file, so a stale or damaged copy
+can be noticed.
 
 Usage:
     uv run python scripts/cache_normalized.py
+    uv run python scripts/cache_normalized.py --files train_pseudo_unlabeled.csv
 """
 
+import argparse
 import json
 import time
 
@@ -21,16 +26,25 @@ from digikala_reviews.resources import peak_memory_gb, require_free_memory
 from digikala_reviews.standard_files import read_split_file
 
 FILES = ["train_supervised.csv", "validation.csv", "test.csv"]
+OTHER_FILES = ["train_pseudo_unlabeled.csv"]  # built only when named with --files
 CHUNK_ROWS = 250_000
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--files", nargs="+", choices=FILES + OTHER_FILES, help="build only these")
+    names = parser.parse_args().files or FILES
     start = time.perf_counter()
     manifest = json.loads((REPORTS_DIR / "split_manifest.json").read_text(encoding="utf-8"))
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     info = {"normalizer_version": NORMALIZER_VERSION, "files": {}}
+    info_path = CACHE_DIR / "cache_info.json"
+    if names != FILES and info_path.exists():  # keep the entries of the files not built now
+        kept = json.loads(info_path.read_text(encoding="utf-8"))
+        assert kept["normalizer_version"] == NORMALIZER_VERSION, "rebuild the whole cache first"
+        info["files"] = kept["files"]
 
-    for name in FILES:
+    for name in names:
         source_hash = file_sha256(SPLITS_DIR / name)
         assert source_hash == manifest["sha256"][name], f"{name} differs from the checked version"
         require_free_memory(2.5, f"reading {name}")
@@ -55,7 +69,7 @@ def main():
         print(f"  {out.name}: {len(table):,} rows ({seconds:.0f}s, peak memory {peak:.1f} GB)")
         del table, texts
 
-    (CACHE_DIR / "cache_info.json").write_text(json.dumps(info, indent=2) + "\n", encoding="utf-8")
+    info_path.write_text(json.dumps(info, indent=2) + "\n", encoding="utf-8")
     print(f"Done in {time.perf_counter() - start:.0f}s")
 
 
