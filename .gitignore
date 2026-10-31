@@ -9,6 +9,7 @@ artifacts/**/*.joblib
 artifacts/**/*.npz
 artifacts/**/*.parquet
 artifacts/**/checkpoints/
+artifacts/fabert_adapted*/
 
 # Python
 __pycache__/

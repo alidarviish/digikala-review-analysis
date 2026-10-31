@@ -148,6 +148,7 @@ TRANSFORMER_CARDS += [
         ("learning_rate_5e-5", "__lr5e-05", "lr 5e-5", "Learning rate 5e-5 instead of 3e-5"),
         ("layer_decay_0.9", "__llrd0.9", "layer decay", "Layer-wise learning rate decay 0.9"),
         ("pseudo_labels_0.9", "__pseudo0.9", "pseudo-labels", "Hidden reviews added with guessed labels"),
+        ("domain_adapted", "__adapted", "domain-adapted", "FaBERT pretrained further on the review texts"),
     ]
 ]
 

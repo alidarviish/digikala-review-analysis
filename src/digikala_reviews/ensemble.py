@@ -70,3 +70,32 @@ def cross_fitted_stack(features, codes, half_a, c: float = 1.0):
         log_proba[~fit_on] = model.predict_log_proba(features[~fit_on])
         predicted[~fit_on] = predict_with_offsets(log_proba[~fit_on], offsets)
     return predicted, log_proba
+
+
+def error_overlap(y_true, predictions: dict) -> dict:
+    """How the mistakes of several models overlap: the share of reviews all of them get right,
+    all of them get wrong, and the rest (some right, some wrong), where a combination could
+    help; and for each pair, the share of either model's mistakes that both make."""
+    y_true = np.asarray(y_true)
+    right = {name: np.asarray(p) == y_true for name, p in predictions.items()}
+    stacked = np.vstack(list(right.values()))
+    names = list(right)
+    pairs = {}
+    for i, a in enumerate(names):
+        for b in names[i + 1 :]:
+            either = ~right[a] | ~right[b]
+            pairs[f"{a} & {b}"] = float((~right[a] & ~right[b])[either].mean()) if either.any() else None
+    return {
+        "all_right": float(stacked.all(axis=0).mean()),
+        "all_wrong": float((~stacked).all(axis=0).mean()),
+        "some_right": float((stacked.any(axis=0) & ~stacked.all(axis=0)).mean()),
+        "both_wrong_share_of_either_wrong": pairs,
+    }
+
+
+def oracle(y_true, predictions: dict, fallback: str) -> np.ndarray:
+    """The labels of a perfect chooser: the true label wherever at least one model has it,
+    otherwise the fallback model's label. No real combination can score above this."""
+    y_true = np.asarray(y_true)
+    any_right = np.vstack([np.asarray(p) == y_true for p in predictions.values()]).any(axis=0)
+    return np.where(any_right, y_true, np.asarray(predictions[fallback]))

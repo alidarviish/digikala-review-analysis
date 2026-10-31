@@ -17,7 +17,9 @@ written to reports/transformer_pilot_whole/difficulty_n500000.json, and with --s
 the gradual curriculum (step 53), written to reports/transformer_pilot_whole/gradual_n500000.json,
 and with --set learning_rate for other learning rates and layer-wise decay (steps 56 to 58),
 written to reports/transformer_pilot_whole/learning_rate_n500000.json, and with --set pseudo for
-the pseudo-labeled hidden reviews (step 66), written to reports/transformer_pilot_whole/pseudo_n500000.json.
+the pseudo-labeled hidden reviews (step 66), written to reports/transformer_pilot_whole/pseudo_n500000.json,
+and with --set adapted for FaBERT pretrained further on the review texts (step 69), written to
+reports/transformer_pilot_whole/adapted_n500000.json.
 
 Usage:
     uv run python scripts/compare_hard_examples.py
@@ -25,6 +27,7 @@ Usage:
     uv run python scripts/compare_hard_examples.py --set gradual
     uv run python scripts/compare_hard_examples.py --set learning_rate
     uv run python scripts/compare_hard_examples.py --set pseudo
+    uv run python scripts/compare_hard_examples.py --set adapted
 """
 
 import argparse
@@ -60,6 +63,7 @@ VARIANT_SETS = {
         "layer decay 0.9": "__llrd0.9",
     },
     "pseudo": {"pseudo-labels 0.9": "__pseudo0.9"},
+    "adapted": {"domain-adapted": "__adapted"},
 }
 
 
@@ -115,7 +119,9 @@ def compare_setups(reference, variant):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--set", choices=["hard", "difficulty", "gradual", "learning_rate", "pseudo"], default="hard"
+        "--set",
+        choices=["hard", "difficulty", "gradual", "learning_rate", "pseudo", "adapted"],
+        default="hard",
     )
     args = parser.parse_args()
     set_name = "hard_examples" if args.set == "hard" else args.set

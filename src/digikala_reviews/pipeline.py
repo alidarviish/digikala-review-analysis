@@ -683,6 +683,50 @@ STEPS = [
         files("reports/transformer_pilot_whole/pseudo_n500000.json"),
         "reads the run predictions, which stay on your machine; then run plot_experiment_cards.py "
         "--only pseudo_labels_0.9 for its card",
+    ),  # FaBERT pretrained further on the review texts (reports/domain_adaptation_plan.md)
+    Step(
+        68,
+        "FaBERT pretrained further on the training review texts (masked words)",
+        ["scripts/adapt_pretrain.py"],
+        "gpu",
+        [23],
+        files("reports/domain_adaptation/pretrain.json"),
+        "reads only the text of train_supervised and train_pseudo_unlabeled from the cache",
+        smoke=True,
+    ),
+    Step(
+        69,
+        "FaBERT on 500,000 reviews, starting from the further pretrained weights",
+        [*HARD_ARGS, "--adapted"],
+        "gpu",
+        [41, 68],
+        files(
+            *[
+                f"reports/transformer_pilot_whole/sbunlp__fabert__seed{s}__n500000__adapted__checks10.json"
+                for s in (2026, 2027, 2028)
+            ]
+        ),
+        "its test run needs the test run of step 68 first",
+        smoke=True,
+    ),
+    Step(
+        70,
+        "Further pretrained FaBERT against the usual training",
+        ["scripts/compare_hard_examples.py", "--set", "adapted"],
+        "local",
+        [41, 69],
+        files("reports/transformer_pilot_whole/adapted_n500000.json"),
+        "reads the run predictions, which stay on your machine; then run plot_experiment_cards.py "
+        "--only domain_adapted for its card",
+    ),  # Do the final models make different mistakes? (reports/error_overlap_plan.md)
+    Step(
+        71,
+        "Mistakes shared by FaBERT, TookaBERT-Large and TF-IDF, and the three combined",
+        ["scripts/check_error_overlap.py"],
+        "local",
+        [33, 60, 61],
+        files("reports/error_overlap.json"),
+        "reads the saved predictions of the three final models, which stay on your machine",
     ),
 ]
 

@@ -64,6 +64,10 @@ Semi-supervised (reports/semi_supervised_plan.md): --pseudo-labels P adds to the
 sample a fixed random share of the hidden training reviews, as large as their share in the
 full data, keeping those whose guessed recommendation label (scripts/pseudo_label.py) has a
 probability of at least P (<...>__pseudo<P>).
+
+Domain adaptation (reports/domain_adaptation_plan.md): --adapted starts FaBERT from the weights
+pretrained further on the review texts by scripts/adapt_pretrain.py (<...>__adapted); the
+hash of those weights is part of the run's settings.
 """
 
 import argparse
@@ -90,6 +94,7 @@ from digikala_reviews.finetune import (
     linear_warmup,
     mean_log_loss,
 )
+from digikala_reviews.ingest import file_sha256
 from digikala_reviews.merge_texts import merge, soft_targets, weighted_soft_loss
 from digikala_reviews.metrics import bootstrap_macro_f1, classification_report
 from digikala_reviews.provenance import check_cache, environment, git_commit, library_version
@@ -123,6 +128,7 @@ SMOKE = {
 }
 CACHE_FILES = ["train_supervised.parquet", "validation.parquet"]
 MASKED_CACHE = "train_pseudo_unlabeled.parquet"  # the hidden reviews, for --pseudo-labels
+ADAPTED_FOR = "sbunlp/fabert"  # --adapted: the weights of scripts/adapt_pretrain.py are FaBERT's
 CHECK_ROWS = 50_000  # validation reviews measured at every check (--checks)
 CURRICULUM_GROUPS = 10
 LOG_EVERY = 100
@@ -174,7 +180,8 @@ def train_and_score(name, learning_rate, settings, train, validation, device, to
         if settings.get("curriculum") or settings.get("gradual_curriculum"):
             difficulty = review_difficulty(p_true)
 
-    model = build_model(torch, name, settings["dropout"], list(HEADS)).to(device)
+    encoder = str(ARTIFACTS_DIR / settings["adapted_dir"]) if settings.get("adapted_dir") else None
+    model = build_model(torch, name, settings["dropout"], list(HEADS), encoder=encoder).to(device)
     named = list(model.named_parameters())
     if settings.get("layer_decay"):
         # every parameter gets its own group: the learning rate falls layer by layer downwards
@@ -353,6 +360,9 @@ def main():
         "--pseudo-labels", type=float, help="add the hidden reviews whose guess reaches this probability"
     )
     parser.add_argument(
+        "--adapted", action="store_true", help="start from FaBERT pretrained further on the review texts"
+    )
+    parser.add_argument(
         "--layer-decay", type=float, help="multiply the learning rate by this for every layer further down"
     )
     args = parser.parse_args()
@@ -388,6 +398,10 @@ def main():
     if args.pseudo_labels:
         settings["pseudo_labels"] = args.pseudo_labels
         assert not (uses_difficulty or args.merge or args.focal or args.class_weights), "tried apart"
+    if args.adapted:
+        others = uses_difficulty or args.merge or args.focal or args.class_weights or args.pseudo_labels
+        assert not others, "tried apart"
+        assert not args.layer_decay and not args.learning_rate, "tried apart"
     seeds = [int(s) for s in args.seeds.split(",")] if args.seeds else [SETTINGS["seed"]]
     results_dir, arrays_dir = REPORTS_DIR / "transformer_pilot", ARTIFACTS_DIR / "transformer_pilot"
     if args.whole_validation:
@@ -410,6 +424,13 @@ def main():
         ) + "/masked.parquet"
         if not (REPORTS_DIR / settings["pseudo_file"]).exists():
             raise SystemExit(f"{settings['pseudo_file']} not found: run scripts/pseudo_label.py first")
+    if args.adapted:  # made by scripts/adapt_pretrain.py; the hash ties every run to those weights
+        assert args.smoke or list(models) == [ADAPTED_FOR], f"--adapted is for {ADAPTED_FOR} only"
+        settings["adapted_dir"] = "fabert_adapted_smoke" if args.smoke else "fabert_adapted"
+        weights = ARTIFACTS_DIR / settings["adapted_dir"] / "model.safetensors"
+        if not weights.exists():
+            raise SystemExit(f"{weights} not found: run scripts/adapt_pretrain.py first")
+        settings["adapted_sha256"] = file_sha256(weights)
     if args.learning_rate:  # after the test-run models are chosen, so the name always fits the run
         models = {name: args.learning_rate for name in models}
     if uses_difficulty:  # made by scripts/score_difficulty.py for the same training sample
@@ -521,6 +542,8 @@ def main():
             tag += f"__llrd{settings['layer_decay']:g}"
         if settings.get("pseudo_labels"):
             tag += f"__pseudo{settings['pseudo_labels']:g}"
+        if settings.get("adapted_dir"):
+            tag += "__adapted"
         if settings.get("checks"):
             tag += f"__checks{settings['checks']}"
         spec = json.loads(

@@ -366,6 +366,7 @@ TRAINING_VARIANTS = [
     ("gradual_n500000.json", "Gradual curriculum (reports/difficulty_plan.md)"),
     ("learning_rate_n500000.json", "Learning rate (reports/learning_rate_plan.md)"),
     ("pseudo_n500000.json", "Pseudo-labels (reports/semi_supervised_plan.md)"),
+    ("adapted_n500000.json", "Domain-adapted FaBERT (reports/domain_adaptation_plan.md)"),
 ]
 
 

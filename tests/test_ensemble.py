@@ -5,7 +5,9 @@ from digikala_reviews.ensemble import (
     blend,
     cross_fitted_blend,
     cross_fitted_stack,
+    error_overlap,
     mean_probabilities,
+    oracle,
     stack_features,
 )
 
@@ -57,3 +59,14 @@ def test_stack_features_floors_the_log_probabilities():
     a = np.log(np.array([[1e-30, 1 - 1e-30]]))
     assert stack_features([a, a]).shape == (1, 4)
     assert stack_features([a]).min() == pytest.approx(-20.0)
+
+
+def test_error_overlap_and_oracle():
+    y = np.array(["a", "a", "b", "b"])
+    predictions = {"x": np.array(["a", "b", "a", "b"]), "y": np.array(["a", "a", "a", "a"])}
+    found = error_overlap(y, predictions)
+    assert found["all_right"] == pytest.approx(0.25)  # review 0
+    assert found["all_wrong"] == pytest.approx(0.25)  # review 2
+    assert found["some_right"] == pytest.approx(0.5)  # reviews 1 and 3
+    assert found["both_wrong_share_of_either_wrong"]["x & y"] == pytest.approx(1 / 3)
+    assert oracle(y, predictions, "x").tolist() == ["a", "a", "a", "b"]
