@@ -1,0 +1,84 @@
+{
+  "created_at": "2026-10-31T18:10:05+00:00",
+  "features": "log probabilities of FaBERT and TF-IDF for both heads, floored at -20",
+  "heads": {
+    "recommendation": {
+      "reviews": 788717,
+      "stacking_against_blend": {
+        "variant_macro_f1": 0.7324631022571243,
+        "reference_macro_f1": 0.7344318559099552,
+        "difference": -0.00196875365283089,
+        "difference_interval_95": [
+          -0.002548774332919429,
+          -0.0014348016954808505
+        ],
+        "direction": "worse"
+      },
+      "stacking_against_fabert": {
+        "variant_macro_f1": 0.7324631022571243,
+        "reference_macro_f1": 0.7324370442721989,
+        "difference": 2.6057984925387245e-05,
+        "difference_interval_95": [
+          -0.0006027007451375078,
+          0.0006138896844942619
+        ],
+        "direction": "no measurable difference"
+      },
+      "f1_per_class": {
+        "recommended": {
+          "blend": 0.9433596537413655,
+          "stacking": 0.9452809542705289
+        },
+        "not_recommended": {
+          "blend": 0.7487805207615496,
+          "stacking": 0.7429812509541058
+        },
+        "no_idea": {
+          "blend": 0.5111553932269506,
+          "stacking": 0.5091271015467383
+        }
+      }
+    },
+    "rating_band": {
+      "reviews": 843458,
+      "stacking_against_blend": {
+        "variant_macro_f1": 0.6938763005949502,
+        "reference_macro_f1": 0.6935241490531752,
+        "difference": 0.0003521515417750365,
+        "difference_interval_95": [
+          -7.882661160668565e-07,
+          0.0006897866916799165
+        ],
+        "direction": "no measurable difference"
+      },
+      "stacking_against_fabert": {
+        "variant_macro_f1": 0.6938763005949502,
+        "reference_macro_f1": 0.692190273060563,
+        "difference": 0.00168602753438718,
+        "difference_interval_95": [
+          0.0012271324076656514,
+          0.002153227928290893
+        ],
+        "direction": "better"
+      },
+      "f1_per_class": {
+        "low": {
+          "blend": 0.7142857142857143,
+          "stacking": 0.713862548205004
+        },
+        "medium": {
+          "blend": 0.4787285433641429,
+          "stacking": 0.47937341203395417
+        },
+        "high": {
+          "blend": 0.8875581895096685,
+          "stacking": 0.8883929415458925
+        }
+      }
+    }
+  },
+  "code": {
+    "commit": "606c8f12040824db5f6271e83738d031a56a7b23",
+    "uncommitted_changes": false
+  }
+}
