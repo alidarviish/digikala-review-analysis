@@ -105,3 +105,32 @@ dropped. Otherwise it gets its own plan.
 Expected: the seeds have "some right" on 4 to 6% of the recommendation reviews (the final
 models 9.6%) and gain 0.03 to 0.045 for each head, 40 to 60% of the final models' gain: the
 rule is near its edge.
+
+### Result of step 72
+
+`reports/seed_oracle.json`.
+
+| | Recommendation | Rating band |
+|---|---|---|
+| Seeds alone | 0.7235, 0.7237, 0.7241 | 0.6858, 0.6867, 0.6864 |
+| Some right: three seeds / three final models | 3.5% / 9.6% | 4.4% / 11.3% |
+| Perfect-chooser gain, two seeds | +0.0242 | +0.0216 |
+| Perfect-chooser gain, three seeds | +0.0358 | +0.0319 |
+| Perfect-chooser gain, three final models over FaBERT | +0.0756 | +0.0687 |
+| Seeds' gain as a share of the final models' gain | 47% | 46% |
+
+| | Expected | Found |
+|---|---|---|
+| Some right, three seeds (recommendation) | 4 to 6% | 3.5%: wrong, lower |
+| Perfect-chooser gain, three seeds | 0.03 to 0.045 | 0.0358 and 0.0319: right |
+| Share of the final models' gain | 40 to 60% | 47% and 46%: right |
+
+What it means:
+
+- Chance alone, with models that know the same things, gives about half of the
+  perfect-chooser room. The other half, about 4 points on each head, comes from the three
+  final models really making different mistakes: they disagree with one of them right almost
+  three times as often as the seeds.
+- Below half, so by the rule the idea of a chooser with more information gets its own plan.
+  The seeds overstate chance a little, so the real part may be somewhat larger; it is still
+  only a bound, and a real chooser can recover only a part of it.

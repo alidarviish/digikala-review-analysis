@@ -99,3 +99,43 @@ def oracle(y_true, predictions: dict, fallback: str) -> np.ndarray:
     y_true = np.asarray(y_true)
     any_right = np.vstack([np.asarray(p) == y_true for p in predictions.values()]).any(axis=0)
     return np.where(any_right, y_true, np.asarray(predictions[fallback]))
+
+
+def chooser_model(seed: int):
+    """Gradient-boosted trees: they can learn rules such as "on short texts where the models
+    disagree, trust this one", which a linear model on the probabilities cannot."""
+    from sklearn.ensemble import HistGradientBoostingClassifier
+
+    return HistGradientBoostingClassifier(
+        max_iter=300, learning_rate=0.1, early_stopping=True, validation_fraction=0.1, random_state=seed
+    )
+
+
+def cross_fitted_chooser(features, codes, product_id, seed: int):
+    """A non-linear model learns the class from the features on one half of validation (by
+    product) and predicts the other half, then the other way round. Its offsets are searched
+    on predictions it did not fit: within the fitting half, a second split by product gives
+    each review a prediction from a model that did not see it. Returns the predicted codes and
+    the log probabilities of every review from the model that did not see it."""
+    features, codes = np.asarray(features, dtype=float), np.asarray(codes)
+    product_id = np.asarray(product_id)
+    assert np.issubdtype(product_id.dtype, np.integer), "product ids must be whole numbers"
+    half_a = product_id % 2 == 0
+    inner = (product_id // 2) % 2 == 0  # a second split by product, independent of the first
+    n_classes = int(codes.max()) + 1
+    predicted = np.empty(len(codes), dtype=int)
+    log_proba = np.empty((len(codes), n_classes))
+    for fit_on in (half_a, ~half_a):
+        unseen = np.empty((int(fit_on.sum()), n_classes))
+        part = inner[fit_on]
+        x, y = features[fit_on], codes[fit_on]
+        for sub in (part, ~part):
+            model = chooser_model(seed).fit(x[sub], y[sub])
+            assert list(model.classes_) == list(range(n_classes)), "every class must be in each part"
+            unseen[~sub] = np.log(np.maximum(model.predict_proba(x[~sub]), 1e-12))
+        offsets = search_offsets(unseen, y)
+        model = chooser_model(seed).fit(x, y)
+        log_proba[~fit_on] = np.log(np.maximum(model.predict_proba(features[~fit_on]), 1e-12))
+        predicted[~fit_on] = predict_with_offsets(log_proba[~fit_on], offsets)
+    return predicted, log_proba
+

@@ -4,6 +4,7 @@ import pytest
 from digikala_reviews.ensemble import (
     blend,
     cross_fitted_blend,
+    cross_fitted_chooser,
     cross_fitted_stack,
     error_overlap,
     mean_probabilities,
@@ -70,3 +71,24 @@ def test_error_overlap_and_oracle():
     assert found["some_right"] == pytest.approx(0.5)  # reviews 1 and 3
     assert found["both_wrong_share_of_either_wrong"]["x & y"] == pytest.approx(1 / 3)
     assert oracle(y, predictions, "x").tolist() == ["a", "a", "a", "b"]
+
+
+def test_chooser_learns_which_model_to_trust_from_another_feature():
+    rng = np.random.default_rng(2)
+    n = 8000
+    codes = rng.integers(0, 3, n)
+    short = rng.random(n) < 0.5  # on short texts model a is right, on long texts model b
+    wrong = (codes + rng.integers(1, 3, n)) % 3  # either other class, so the pair alone says nothing
+    a = np.full((n, 3), np.log(0.1))
+    a[np.arange(n), np.where(short, codes, wrong)] = np.log(0.8)
+    b = np.full((n, 3), np.log(0.1))
+    b[np.arange(n), np.where(short, wrong, codes)] = np.log(0.8)
+    product_id = rng.integers(0, 2000, n)
+    features = np.column_stack([a, b])
+    without, _ = cross_fitted_chooser(features, codes, product_id, seed=1)
+    with_length, log_proba = cross_fitted_chooser(
+        np.column_stack([features, short]), codes, product_id, seed=1
+    )
+    assert np.mean(with_length == codes) > 0.95
+    assert np.mean(without == codes) < 0.6  # without the length it cannot tell them apart
+    assert np.exp(log_proba).sum(axis=1) == pytest.approx(np.ones(n), abs=1e-6)

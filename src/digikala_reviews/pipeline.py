@@ -736,6 +736,15 @@ STEPS = [
         [41, 71],
         files("reports/seed_oracle.json"),
         "reads the step 41 predictions, which stay on your machine",
+    ),  # A non-linear chooser with more information (reports/chooser_plan.md)
+    Step(
+        73,
+        "Gradient-boosted chooser on the final models, the text length and their agreement",
+        ["scripts/check_chooser.py"],
+        "local",
+        [33, 60, 61, 72],
+        files("reports/chooser.json"),
+        "reads the saved predictions of the three final models, which stay on your machine",
     ),
 ]
 
