@@ -1,0 +1,250 @@
+{
+  "created_at": "2026-10-31T13:43:07+00:00",
+  "validation_reviews": 922795,
+  "kept_epoch": {
+    "fabert": 2.75,
+    "large": 2.75
+  },
+  "heads": {
+    "recommendation": {
+      "large": {
+        "rows": 788717,
+        "macro_f1": 0.7323558140123856,
+        "accuracy": 0.8759060600950658,
+        "balanced_accuracy": 0.7269039517050109,
+        "per_class": {
+          "recommended": {
+            "precision": 0.9454423738477011,
+            "recall": 0.946045390589193,
+            "f1": 0.945743786095914,
+            "support": 624006
+          },
+          "not_recommended": {
+            "precision": 0.7837956911870531,
+            "recall": 0.7053498268707213,
+            "f1": 0.7425065561112696,
+            "support": 75666
+          },
+          "no_idea": {
+            "precision": 0.48984618582415296,
+            "recall": 0.5293166376551182,
+            "f1": 0.5088170998299733,
+            "support": 89045
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "recommended",
+            "not_recommended",
+            "no_idea"
+          ],
+          "rows_are_true_class": [
+            [
+              590338,
+              3390,
+              30278
+            ],
+            [
+              3486,
+              53371,
+              18809
+            ],
+            [
+              30580,
+              11332,
+              47133
+            ]
+          ]
+        }
+      },
+      "fabert": {
+        "rows": 788717,
+        "macro_f1": 0.7324370442721989,
+        "accuracy": 0.8736111938756234,
+        "balanced_accuracy": 0.7320481352724965,
+        "per_class": {
+          "recommended": {
+            "precision": 0.9478525922671354,
+            "recall": 0.9403579452761672,
+            "f1": 0.9440903949711925,
+            "support": 624006
+          },
+          "not_recommended": {
+            "precision": 0.7734879204980296,
+            "recall": 0.7159358232231121,
+            "f1": 0.7435999505840688,
+            "support": 75666
+          },
+          "no_idea": {
+            "precision": 0.48259695409049386,
+            "recall": 0.5398506373182099,
+            "f1": 0.5096207872613355,
+            "support": 89045
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "recommended",
+            "not_recommended",
+            "no_idea"
+          ],
+          "rows_are_true_class": [
+            [
+              586789,
+              3754,
+              33463
+            ],
+            [
+              3419,
+              54172,
+              18075
+            ],
+            [
+              28864,
+              12110,
+              48071
+            ]
+          ]
+        }
+      },
+      "macro_f1_difference": -8.123025981332521e-05,
+      "difference_interval_95": [
+        -0.0010450915735066874,
+        0.0008266981657729545
+      ],
+      "direction": "no measurable difference",
+      "validation_loss": {
+        "fabert": 0.31208372116088867,
+        "large": 0.3099060356616974
+      }
+    },
+    "rating_band": {
+      "large": {
+        "rows": 843458,
+        "macro_f1": 0.693827514017401,
+        "accuracy": 0.7942102629887914,
+        "balanced_accuracy": 0.6861271307078917,
+        "per_class": {
+          "low": {
+            "precision": 0.741701679338927,
+            "recall": 0.6922648595495634,
+            "f1": 0.7161310880702012,
+            "support": 84407
+          },
+          "medium": {
+            "precision": 0.48594195387406064,
+            "recall": 0.47248905546282005,
+            "f1": 0.4791210896954793,
+            "support": 158755
+          },
+          "high": {
+            "precision": 0.8789547071439924,
+            "recall": 0.8936274771112918,
+            "f1": 0.8862303642865226,
+            "support": 600296
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "rows_are_true_class": [
+            [
+              58432,
+              19948,
+              6027
+            ],
+            [
+              15896,
+              75010,
+              67849
+            ],
+            [
+              4453,
+              59402,
+              536441
+            ]
+          ]
+        },
+        "ordinal": {
+          "mean_distance": 0.21821477773641368,
+          "share_off_by_two": 0.012425040725205049
+        }
+      },
+      "fabert": {
+        "rows": 843458,
+        "macro_f1": 0.692190273060563,
+        "accuracy": 0.7945114042430091,
+        "balanced_accuracy": 0.6812651018015435,
+        "per_class": {
+          "low": {
+            "precision": 0.7502697297439541,
+            "recall": 0.6755600838792991,
+            "f1": 0.7109576145976847,
+            "support": 84407
+          },
+          "medium": {
+            "precision": 0.48588468926846995,
+            "recall": 0.471600894460017,
+            "f1": 0.4786362488532587,
+            "support": 158755
+          },
+          "high": {
+            "precision": 0.8775254007382192,
+            "recall": 0.8966343270653144,
+            "f1": 0.8869769557307459,
+            "support": 600296
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "low",
+            "medium",
+            "high"
+          ],
+          "rows_are_true_class": [
+            [
+              57022,
+              21235,
+              6150
+            ],
+            [
+              14914,
+              74869,
+              68972
+            ],
+            [
+              4066,
+              57984,
+              538246
+            ]
+          ]
+        },
+        "ordinal": {
+          "mean_distance": 0.2176006392730877,
+          "share_off_by_two": 0.01211204351609683
+        }
+      },
+      "macro_f1_difference": 0.0016372409568379265,
+      "difference_interval_95": [
+        0.0008801223834619592,
+        0.002388213977125331
+      ],
+      "direction": "better",
+      "validation_loss": {
+        "fabert": 0.49247121810913086,
+        "large": 0.4902999997138977
+      }
+    }
+  },
+  "large_measurably_better": {
+    "recommendation": false,
+    "rating_band": true
+  },
+  "code": {
+    "commit": "1e0dd7ebac60db8c5cc9a4e6de2569eaf98a37e0",
+    "uncommitted_changes": false
+  }
+}

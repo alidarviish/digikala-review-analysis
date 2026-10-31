@@ -141,6 +141,9 @@ classes, so it is not raised by the large `recommended` and `high` classes.
   hardest labels and an easy-to-hard curriculum all tied with or lost to the usual training
   ([`reports/hard_examples_plan.md`](reports/hard_examples_plan.md),
   [`reports/difficulty_plan.md`](reports/difficulty_plan.md)).
+- **A larger model does not help either.** TookaBERT-Large, three times the size and trained the same way on all
+  training reviews, ties FaBERT on recommendation and is 0.16 point higher on rating band
+  ([`reports/large_final_plan.md`](reports/large_final_plan.md)), so FaBERT is kept.
 - **Combining the two models helps a little.** The mean of FaBERT's and TF-IDF's probabilities (weight 0.7 to 0.8
   for FaBERT) scores 0.2 point higher on recommendation and 0.1 point on rating band than FaBERT alone, both
   measurable; three FaBERT models trained with other seeds do not help
