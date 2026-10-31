@@ -1,7 +1,13 @@
 import numpy as np
 import pytest
 
-from digikala_reviews.ensemble import blend, cross_fitted_blend, mean_probabilities
+from digikala_reviews.ensemble import (
+    blend,
+    cross_fitted_blend,
+    cross_fitted_stack,
+    mean_probabilities,
+    stack_features,
+)
 
 
 def test_mean_probabilities_averages_in_probability_space():
@@ -30,3 +36,24 @@ def test_cross_fitted_blend_finds_the_better_model_and_never_tunes_on_the_scored
     assert (predicted == codes).all()
     assert set(chosen) == {"tuned_on_a", "tuned_on_b"}
     assert all(w >= 0.5 for w in chosen.values())
+
+
+def test_stacking_uses_the_other_head_when_it_carries_the_answer():
+    rng = np.random.default_rng(1)
+    n = 6000
+    codes = rng.integers(0, 3, n)
+    useless = np.log(rng.dirichlet(np.ones(3), n))  # this head's own model knows nothing
+    other = np.full((n, 3), np.log(0.1))
+    other[np.arange(n), codes] = np.log(0.8)  # the other head's model points to the answer
+    half_a = rng.random(n) < 0.5
+    alone, _ = cross_fitted_stack(stack_features([useless]), codes, half_a)
+    together, log_proba = cross_fitted_stack(stack_features([useless, other]), codes, half_a)
+    assert np.mean(together == codes) > 0.95
+    assert np.mean(alone == codes) < 0.5
+    assert np.exp(log_proba).sum(axis=1) == pytest.approx(np.ones(n))
+
+
+def test_stack_features_floors_the_log_probabilities():
+    a = np.log(np.array([[1e-30, 1 - 1e-30]]))
+    assert stack_features([a, a]).shape == (1, 4)
+    assert stack_features([a]).min() == pytest.approx(-20.0)

@@ -630,6 +630,15 @@ STEPS = [
         [33, 61],
         files("reports/transformer_final/large_vs_fabert.json"),
         "reads both runs' predictions, which stay on your machine",
+    ),  # A small model on top of both models and both heads (reports/stacking_plan.md)
+    Step(
+        63,
+        "Stacking: both models and both heads together",
+        ["scripts/check_stacking.py"],
+        "local",
+        [60],
+        files("reports/stacking.json"),
+        "reads the saved predictions of both final models, which stay on your machine",
     ),
 ]
 
