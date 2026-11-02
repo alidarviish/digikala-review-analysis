@@ -170,6 +170,7 @@ def main():
     print(f"held-out masked-word loss after: {after:.4f} (before {before:.4f})", flush=True)
 
     out.mkdir(parents=True, exist_ok=True)
+    report.parent.mkdir(parents=True, exist_ok=True)
     model.save_pretrained(out)
     tokenizer.save_pretrained(out)
     save_json(
