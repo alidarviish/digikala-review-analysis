@@ -19,6 +19,7 @@ Usage:
 """
 
 import argparse
+import itertools
 import math
 import time
 from datetime import UTC, datetime
@@ -108,8 +109,15 @@ def main():
     model = AutoModelForMaskedLM.from_pretrained(settings["model"]).to(device)
 
     def blocks_of(rows):
-        encoded = tokenizer(list(rows), truncation=True, max_length=settings["block_size"])["input_ids"]
-        return pack_blocks(encoded, settings["block_size"])
+        # in parts of 200,000 texts, as in scripts/train_transformer.py: one call on millions
+        # of texts can crash the tokenizer; the parts are joined into one stream before cutting
+        parts = []
+        for i in range(0, len(rows), 200_000):
+            encoded = tokenizer(
+                list(rows[i : i + 200_000]), truncation=True, max_length=settings["block_size"]
+            )["input_ids"]
+            parts.append(np.fromiter(itertools.chain.from_iterable(encoded), dtype=np.int32))
+        return pack_blocks([np.concatenate(parts)], settings["block_size"])
 
     train_blocks, held_blocks = blocks_of(texts[~held]), blocks_of(texts[held])
     held_blocks = held_blocks[: settings["max_held_out_blocks"]]
