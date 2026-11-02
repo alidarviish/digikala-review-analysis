@@ -45,3 +45,34 @@ implementation. Nothing outside validation is read; the test set is not read.
 - All three models: 0.2 to 0.5 point above it.
 - No class loses more than 0.5 point of F1.
 - 20 to 60 minutes in all (four versions and heads, six fits each).
+
+## Result
+
+`reports/chooser.json`, all of validation, against the kept combination of FaBERT and TF-IDF
+(0.7344 and 0.6935).
+
+| Head | Version | Chooser | Difference [95%] | Expected |
+|---|---|---|---|---|
+| recommendation | FaBERT and TF-IDF | 0.7325 | -0.0019 [-0.0024, -0.0013], worse | 0 to 0.3 point better: wrong |
+| recommendation | three models | 0.7347 | +0.0003 [-0.0005, +0.0010], no measurable difference | 0.2 to 0.5 point better: wrong |
+| rating band | FaBERT and TF-IDF | 0.6940 | +0.0005 [+0.0000, +0.0009], better | 0 to 0.3 point: right, at the low end |
+| rating band | three models | 0.6957 | +0.0021 [+0.0016, +0.0027], better | 0.2 to 0.5 point: right, at the low end |
+
+F1 per class, kept -> chooser: FaBERT and TF-IDF: `recommended` 0.943 -> 0.944,
+`not_recommended` 0.749 -> 0.746, `no_idea` 0.511 -> 0.507; `low`, `medium`, `high` within
+0.001. Three models: `recommended` 0.943 -> 0.946, `not_recommended` 0.749 -> 0.746,
+`no_idea` 0.511 -> 0.513; `low` 0.714 -> 0.718, `medium` 0.479 -> 0.482, `high` 0.888 ->
+0.887. No class moved by more than 0.5 point, as expected. Each version took about one
+minute, not the 20 to 60 expected (early stopping ends the fits early).
+
+What it means:
+
+- Neither version passes its rule: FaBERT and TF-IDF lose on recommendation, and the three
+  models gain nothing measurable there.
+- The chooser does no better than the plain averages. On recommendation it loses about 0.2
+  point against the weighted mean, as the linear stacking did (-0.0020); with three models it
+  ends below the plain mean of the three (0.7367, step 71) on recommendation and level with
+  it on the rating band (0.6959). The text length and the agreement between the models do
+  not tell it which model is right.
+- The room measured in steps 71 and 72 is real, but these signals cannot reach it.
+- Kept: the weighted mean of FaBERT and TF-IDF. XGBoost is not tried, since no version gained.

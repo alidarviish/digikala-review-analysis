@@ -1,0 +1,123 @@
+{
+  "created_at": "2026-10-31T23:16:24+00:00",
+  "heads": {
+    "recommendation": {
+      "reviews": 788717,
+      "versions": {
+        "fabert_and_tfidf": {
+          "features": 15,
+          "kept_macro_f1": 0.7344318559099552,
+          "chooser_macro_f1": 0.7325383720778392,
+          "difference": -0.0018934838321159608,
+          "difference_interval_95": [
+            -0.0024358810881195013,
+            -0.001311918197306783
+          ],
+          "direction": "worse",
+          "f1_per_class": {
+            "recommended": {
+              "kept": 0.9433596537413655,
+              "chooser": 0.9442752635379758
+            },
+            "not_recommended": {
+              "kept": 0.7487805207615496,
+              "chooser": 0.7464905376270491
+            },
+            "no_idea": {
+              "kept": 0.5111553932269506,
+              "chooser": 0.5068493150684932
+            }
+          },
+          "minutes": 1.0
+        },
+        "three_models": {
+          "features": 23,
+          "kept_macro_f1": 0.7344318559099552,
+          "chooser_macro_f1": 0.7347028740086367,
+          "difference": 0.00027101809868146365,
+          "difference_interval_95": [
+            -0.00046992642853002365,
+            0.0009779271730007777
+          ],
+          "direction": "no measurable difference",
+          "f1_per_class": {
+            "recommended": {
+              "kept": 0.9433596537413655,
+              "chooser": 0.945635120939687
+            },
+            "not_recommended": {
+              "kept": 0.7487805207615496,
+              "chooser": 0.7456278042478712
+            },
+            "no_idea": {
+              "kept": 0.5111553932269506,
+              "chooser": 0.5128456968383519
+            }
+          },
+          "minutes": 1.1
+        }
+      }
+    },
+    "rating_band": {
+      "reviews": 843458,
+      "versions": {
+        "fabert_and_tfidf": {
+          "features": 15,
+          "kept_macro_f1": 0.6935241490531752,
+          "chooser_macro_f1": 0.693997908553197,
+          "difference": 0.00047375950002181977,
+          "difference_interval_95": [
+            4.4945130037615805e-05,
+            0.0009298728181887566
+          ],
+          "direction": "better",
+          "f1_per_class": {
+            "low": {
+              "kept": 0.7142857142857143,
+              "chooser": 0.713809363841091
+            },
+            "medium": {
+              "kept": 0.4787285433641429,
+              "chooser": 0.4804362181603698
+            },
+            "high": {
+              "kept": 0.8875581895096685,
+              "chooser": 0.88774814365813
+            }
+          },
+          "minutes": 1.1
+        },
+        "three_models": {
+          "features": 23,
+          "kept_macro_f1": 0.6935241490531752,
+          "chooser_macro_f1": 0.6956614803965455,
+          "difference": 0.0021373313433703522,
+          "difference_interval_95": [
+            0.0015509639312554502,
+            0.002672451297071032
+          ],
+          "direction": "better",
+          "f1_per_class": {
+            "low": {
+              "kept": 0.7142857142857143,
+              "chooser": 0.7184775349398624
+            },
+            "medium": {
+              "kept": 0.4787285433641429,
+              "chooser": 0.4815492206975579
+            },
+            "high": {
+              "kept": 0.8875581895096685,
+              "chooser": 0.886957685552216
+            }
+          },
+          "minutes": 1.1
+        }
+      }
+    }
+  },
+  "code": {
+    "commit": "e8ce9c9fafbfa2ea3d343e03d56c98e8d22573ea",
+    "uncommitted_changes": false
+  }
+}
