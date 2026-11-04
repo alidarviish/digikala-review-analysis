@@ -35,10 +35,17 @@ same way as the kept FaBERT run, every epoch with the best check kept, as an upp
 (reports/large_final_plan.md):
   artifacts/transformer_large/   and   reports/transformer_final/large.json
 
+With --adapted, FaBERT starts from the weights pretrained further on the review texts
+(scripts/adapt_pretrain.py) and is trained exactly as the kept run, every epoch with the best
+check kept (reports/domain_adaptation_plan.md); the hash of those weights is part of the
+settings:
+  artifacts/transformer_adapted/   and   reports/transformer_final/adapted.json
+
 Usage:
     python scripts/train_transformer.py            # needs a GPU
     python scripts/train_transformer.py --no-early-stop
     python scripts/train_transformer.py --large
+    python scripts/train_transformer.py --adapted
     python scripts/train_transformer.py --smoke    # a tiny model on a few rows, CPU is fine
     python scripts/train_transformer.py --smoke --stop-after 20   # then run again: tests resuming
 """
@@ -63,6 +70,7 @@ from digikala_reviews.finetune import (
     linear_warmup,
     mean_log_loss,
 )
+from digikala_reviews.ingest import file_sha256
 from digikala_reviews.metrics import bootstrap_macro_f1, classification_report, macro_f1_from_codes
 from digikala_reviews.provenance import check_cache, environment, git_commit, library_version
 from digikala_reviews.tfidf import HEADS, load_cache
@@ -143,11 +151,15 @@ def main():
     parser.add_argument(
         "--large", action="store_true", help="TookaBERT-Large, every epoch, as an upper bound"
     )
+    parser.add_argument(
+        "--adapted", action="store_true", help="FaBERT from the further pretrained weights, every epoch"
+    )
     args = parser.parse_args()
     import torch
     from transformers import AutoTokenizer
 
     assert not (args.large and args.no_early_stop), "--large already trains every epoch"
+    assert not (args.adapted and (args.large or args.no_early_stop)), "--adapted trains every epoch alone"
     settings = {**SETTINGS, **(LARGE if args.large else {}), **(SMOKE if args.smoke else {})}
     if args.no_early_stop:
         settings["patience"] = None
@@ -159,6 +171,15 @@ def main():
         settings["patience"] = None
         name = "smoke_large" if args.smoke else "large"
         out_dir = ARTIFACTS_DIR / ("transformer_large_smoke" if args.smoke else "transformer_large")
+    if args.adapted:  # its own names; the weights come from scripts/adapt_pretrain.py
+        settings["patience"] = None
+        settings["encoder"] = "fabert_adapted_smoke" if args.smoke else "fabert_adapted"
+        weights = ARTIFACTS_DIR / settings["encoder"] / "model.safetensors"
+        if not weights.exists():
+            raise SystemExit(f"{weights} not found: run scripts/adapt_pretrain.py first")
+        settings["encoder_sha256"] = file_sha256(weights)
+        name = "smoke_adapted" if args.smoke else "adapted"
+        out_dir = ARTIFACTS_DIR / ("transformer_adapted_smoke" if args.smoke else "transformer_adapted")
     result_path = (
         REPORTS_DIR / ("transformer_final_smoke" if args.smoke else "transformer_final") / f"{name}.json"
     )
@@ -218,7 +239,9 @@ def main():
     }
     selection = {head: head_targets(selection_table, head) for head in HEADS}
 
-    model = build_model(torch, settings["model"], settings["dropout"], list(HEADS)).to(device)
+    encoder = str(ARTIFACTS_DIR / settings["encoder"]) if settings.get("encoder") else None
+    model = build_model(torch, settings["model"], settings["dropout"], list(HEADS), encoder=encoder)
+    model = model.to(device)
     decay = [p for p in model.parameters() if p.ndim >= 2]
     no_decay = [p for p in model.parameters() if p.ndim < 2]  # biases and norm weights
     optimizer = torch.optim.AdamW(

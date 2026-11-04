@@ -46,3 +46,80 @@ The test set is not read at any step.
   learns the shop words from 3.55 million labeled reviews during fine-tuning, and the limit
   measured so far is in the labels (`reports/label_sample_plan.md`), which this does not touch.
 - So the full run is most likely not made.
+
+## Result
+
+`reports/domain_adaptation/pretrain.json` (step 68), `reports/transformer_pilot_whole/adapted_n500000.json`
+(step 70), the card in `reports/figures/experiments/domain_adapted`.
+
+Further pretraining: 4,288,632 texts (42,886 held out), 438,622 blocks of 128 tokens, 3,427
+steps in 5.4 minutes, peak GPU memory 15.4 GB. The held-out masked-word loss fell from 4.047
+to 2.103, 48% lower.
+
+The pilot against step 41, three seeds:
+
+| Head | Step 41 | Further pretrained | Difference per seed [95%] |
+|---|---|---|---|
+| recommendation | 0.7235, 0.7237, 0.7241 | 0.7257, 0.7263, 0.7254 | +0.0022 [+0.0014, +0.0029]; +0.0026 [+0.0019, +0.0033]; +0.0013 [+0.0006, +0.0021]: better in all three |
+| rating band | 0.6858, 0.6867, 0.6864 | 0.6886, 0.6883, 0.6888 | +0.0028 [+0.0022, +0.0034]; +0.0016 [+0.0010, +0.0022]; +0.0023 [+0.0018, +0.0029]: better in all three |
+
+Mean Macro F1 of the two heads: 0.7072 against 0.7051, lead +0.0021, spread between seeds
+0.0006: a lead, so the further pretrained start is chosen. The validation loss at the end is
+lower on both heads (0.3157 against 0.3187, 0.4951 against 0.4974). Each seed took 4.4
+minutes, as before.
+
+F1 per class with offsets, mean of three seeds, step 41 -> further pretrained: `recommended`
+0.943 -> 0.944, `not_recommended` 0.732 -> 0.735, `no_idea` 0.496 -> 0.498; `low` 0.702 ->
+0.708, `medium` 0.472 -> 0.472, `high` 0.885 -> 0.886.
+
+| | Expected | Found |
+|---|---|---|
+| Held-out masked-word loss | 10 to 30% lower | 48% lower: wrong, much more |
+| Time of the further pretraining | 15 to 45 minutes | 5.4 minutes: wrong, faster |
+| Pilot | a tie, at most 0.3 point better | 0.21 point better, every seed and head above zero: wrong, a win |
+| Classes | none moves by more than 0.5 point | largest `low` +0.6: wrong for one class |
+
+What it means:
+
+- This is the first training change that wins by the rule, on every seed and both heads.
+  Every earlier change tied or lost (`reports/hard_examples_plan.md`,
+  `reports/difficulty_plan.md`, `reports/learning_rate_plan.md`,
+  `reports/semi_supervised_plan.md`), and a model three times as large gained 0.08 point.
+- FaBERT knew the language of the reviews much less well than expected: one pass over their
+  text halved its masked-word loss in five minutes. What helps is knowing this kind of text,
+  not a bigger model or a different way of fine-tuning.
+- The gain spreads over most classes and is largest on `low` and `not_recommended`;
+  `no_idea` and `medium`, where the labels limit any model (`reports/label_sample_plan.md`),
+  barely move.
+- By the plan, the full run is made next: FaBERT fine-tuned from these weights on all 3.55
+  million reviews, exactly as the kept run, compared with it on the whole validation set and
+  combined with TF-IDF again.
+
+## The full run (written after the pilot, before running)
+
+Step 74 (`scripts/train_transformer.py --adapted`, GPU): FaBERT starts from the further
+pretrained weights and is trained exactly as the kept run (`artifacts/transformer_no_early_stop`):
+all 3,552,498 training reviews, 4 epochs, four checks per epoch on the same 50,000 validation
+reviews, the best check kept. The hash of the starting weights is part of the settings. If the
+molab machine was reset and the weights of step 68 are gone, step 68 is run again first; its
+new hash is then recorded.
+
+Step 75 (`scripts/compare_fabert_runs.py --adapted`, on your own machine), on the whole
+validation set:
+
+1. The new run against the kept FaBERT run, each with its cross-fitted offsets. Rule: it
+   replaces the kept run if the whole 95% interval is above zero on both heads (same model,
+   same cost).
+2. Each run combined with the final TF-IDF model as in step 60, and the two combinations
+   compared on the same reviews. Rule: the new combination becomes the final system if the
+   whole interval is above zero on both heads.
+
+Expected:
+
+- The kept check is in epoch 2 to 3.5, as for the kept run (2.75); training takes 2 to 2.5
+  hours (the kept run took 121 minutes).
+- The gain is smaller than on the pilot, since with seven times as many labeled reviews the
+  usual run learns more of the review language during fine-tuning: 0.05 to 0.2 point on each
+  head, with the interval above zero on at least one head.
+- Combined with TF-IDF, the gain shrinks a little more (TF-IDF already adds some of the
+  review-specific words): 0 to 0.15 point.

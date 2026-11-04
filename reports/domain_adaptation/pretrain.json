@@ -1,0 +1,127 @@
+{
+  "created_at": "2026-11-02T09:48:04+00:00",
+  "settings": {
+    "model": "sbunlp/fabert",
+    "block_size": 128,
+    "batch_size": 128,
+    "learning_rate": 5e-05,
+    "weight_decay": 0.01,
+    "warmup_share": 0.06,
+    "epochs": 1,
+    "mask_share": 0.15,
+    "held_out_share": 0.01,
+    "max_held_out_blocks": 5000,
+    "seed": 2026
+  },
+  "texts": 4288632,
+  "held_out_texts": 42886,
+  "training_blocks": 438622,
+  "held_out_blocks": 4433,
+  "steps": 3427,
+  "held_out_loss_before": 4.046855698625427,
+  "held_out_loss_after": 2.103009055731597,
+  "losses": [
+    {
+      "step": 200,
+      "mean_loss": 3.038416222333908
+    },
+    {
+      "step": 400,
+      "mean_loss": 2.5663487410545347
+    },
+    {
+      "step": 600,
+      "mean_loss": 2.4527121782302856
+    },
+    {
+      "step": 800,
+      "mean_loss": 2.3792393970489503
+    },
+    {
+      "step": 1000,
+      "mean_loss": 2.3375321102142332
+    },
+    {
+      "step": 1200,
+      "mean_loss": 2.318726484775543
+    },
+    {
+      "step": 1400,
+      "mean_loss": 2.2800156152248383
+    },
+    {
+      "step": 1600,
+      "mean_loss": 2.2635050022602083
+    },
+    {
+      "step": 1800,
+      "mean_loss": 2.24108157992363
+    },
+    {
+      "step": 2000,
+      "mean_loss": 2.224729138612747
+    },
+    {
+      "step": 2200,
+      "mean_loss": 2.207987279891968
+    },
+    {
+      "step": 2400,
+      "mean_loss": 2.186301756501198
+    },
+    {
+      "step": 2600,
+      "mean_loss": 2.1745477604866026
+    },
+    {
+      "step": 2800,
+      "mean_loss": 2.1729647016525266
+    },
+    {
+      "step": 3000,
+      "mean_loss": 2.1601614320278166
+    },
+    {
+      "step": 3200,
+      "mean_loss": 2.152230886220932
+    },
+    {
+      "step": 3400,
+      "mean_loss": 2.147630076408386
+    },
+    {
+      "step": 3427,
+      "mean_loss": 2.1638388986940735
+    }
+  ],
+  "train_minutes": 5.41,
+  "weights_sha256": "3132dcf6078d5656d151fe0ec2fdf131ab3b3f0150b6b1d9cf35e741d8e79a9c",
+  "peak_gpu_memory_gb": 15.44,
+  "code": {
+    "commit": "be670fae566ed3c7127d8ee2b76da2840ba2e2b7",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": "5.21.0",
+      "tokenizers": "0.23.3"
+    },
+    "machine": "84635df7-60db-4672-8ea2-9538cba5bae4-xbhkv",
+    "torch": "2.14.1+cu130",
+    "transformers": "5.21.0"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "train_pseudo_unlabeled.parquet": "972dbbf26b8ca0b1860d454c558d1fb6f3ffb1a649f1528dda936d13496331d2"
+    }
+  }
+}

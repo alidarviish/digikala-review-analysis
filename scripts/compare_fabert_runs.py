@@ -11,9 +11,16 @@ Writes reports/transformer_final/no_early_stop_vs_first.json and prints a summar
 With --large the same is done for TookaBERT-Large trained the same way against the kept FaBERT
 run (reports/large_final_plan.md), written to reports/transformer_final/large_vs_fabert.json.
 
+With --adapted the same is done for FaBERT trained from the further pretrained weights against
+the kept FaBERT run (reports/domain_adaptation_plan.md), written to
+reports/transformer_final/adapted_vs_fabert.json; and each of the two is also combined with the
+final TF-IDF model as in step 60 (weight and offsets tuned on the other half by product), and
+the two combinations are compared on the same reviews.
+
 Usage:
     uv run python scripts/compare_fabert_runs.py
     uv run python scripts/compare_fabert_runs.py --large
+    uv run python scripts/compare_fabert_runs.py --adapted
 """
 
 import argparse
@@ -24,7 +31,8 @@ import numpy as np
 import pandas as pd
 
 from digikala_reviews.config import ARTIFACTS_DIR, REPORTS_DIR
-from digikala_reviews.experiments import compare
+from digikala_reviews.ensemble import cross_fitted_blend
+from digikala_reviews.experiments import compare, product_half
 from digikala_reviews.finetune import mean_log_loss
 from digikala_reviews.provenance import git_commit
 from digikala_reviews.tfidf import HEADS, load_cache
@@ -52,6 +60,16 @@ COMPARISONS = {
         "output": "large_vs_fabert.json",
         "verdict": "large_measurably_better",
     },
+    "adapted": {
+        "variant": "adapted",
+        "reference": "fabert",
+        "runs": {
+            "fabert": ("transformer_no_early_stop", "fabert_no_early_stop.json"),
+            "adapted": ("transformer_adapted", "adapted.json"),
+        },
+        "output": "adapted_vs_fabert.json",
+        "verdict": "adapted_measurably_better",
+    },
 }
 
 
@@ -62,9 +80,18 @@ def log_proba(table, head):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--large", action="store_true", help="TookaBERT-Large against the kept FaBERT run")
-    c = COMPARISONS["large" if parser.parse_args().large else "epochs"]
+    parser.add_argument(
+        "--adapted", action="store_true", help="further pretrained FaBERT against the kept run"
+    )
+    args = parser.parse_args()
+    assert not (args.large and args.adapted), "one comparison at a time"
+    c = COMPARISONS["large" if args.large else "adapted" if args.adapted else "epochs"]
     variant, reference = c["variant"], c["reference"]
-    validation = load_cache("validation.parquet")
+    validation = load_cache("validation.parquet", extra_columns=["product_id"])
+    tfidf = None
+    if args.adapted:  # both runs are also combined with the final TF-IDF model, as in step 60
+        tfidf = pd.read_parquet(ARTIFACTS_DIR / "tfidf_final" / "validation_predictions.parquet")
+        assert (tfidf["id"].to_numpy() == validation["id"].to_numpy()).all(), "tfidf"
     tables, runs = {}, {}
     for name, (folder, result) in c["runs"].items():
         tables[name] = pd.read_parquet(ARTIFACTS_DIR / folder / "validation_predictions.parquet")
@@ -93,6 +120,23 @@ def main():
                 name: mean_log_loss(log_proba(table[rows], head), codes) for name, table in tables.items()
             },
         }
+        if tfidf is not None:
+            labels = np.array(HEADS[head]["labels"])
+            halves = product_half(validation["product_id"].to_numpy()[rows])
+            log_t = log_proba(tfidf[rows], head)
+            blended = {
+                name: cross_fitted_blend(log_proba(tables[name][rows], head), log_t, codes, halves)
+                for name in (variant, reference)
+            }
+            with_tfidf = compare(head, y_true, labels[blended[variant][0]], labels[blended[reference][0]])
+            heads[head]["with_tfidf"] = {
+                variant: with_tfidf["variant_scores"],
+                reference: with_tfidf["reference_scores"],
+                "weights": {name: b[1] for name, b in blended.items()},
+                "macro_f1_difference": with_tfidf["macro_f1_difference"],
+                "difference_interval_95": with_tfidf["difference_interval_95"],
+                "direction": with_tfidf["direction"],
+            }
 
     save_json(
         REPORTS_DIR / "transformer_final" / c["output"],
@@ -102,6 +146,15 @@ def main():
             "kept_epoch": {name: run["kept_epoch"] for name, run in runs.items()},
             "heads": heads,
             c["verdict"]: {head: h["direction"] == "better" for head, h in heads.items()},
+            **(
+                {
+                    "with_tfidf_better": {
+                        head: h["with_tfidf"]["direction"] == "better" for head, h in heads.items()
+                    }
+                }
+                if tfidf is not None
+                else {}
+            ),
             "code": git_commit(),
         },
     )
@@ -118,6 +171,15 @@ def main():
             f"difference {h['macro_f1_difference']:+.4f} [{low:+.4f}, {high:+.4f}] ({h['direction']}); "
             f"validation loss {loss[variant]:.4f} vs {loss[reference]:.4f}"
         )
+        if "with_tfidf" in h:
+            t = h["with_tfidf"]
+            low, high = t["difference_interval_95"]
+            print(
+                f"  with TF-IDF: {variant} {t[variant]['macro_f1']:.4f}, "
+                f"{reference} {t[reference]['macro_f1']:.4f}, "
+                f"difference {t['macro_f1_difference']:+.4f} [{low:+.4f}, {high:+.4f}] ({t['direction']}); "
+                f"FaBERT weights {t['weights']}"
+            )
 
 
 if __name__ == "__main__":

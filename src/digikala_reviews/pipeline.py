@@ -745,6 +745,26 @@ STEPS = [
         [33, 60, 61, 72],
         files("reports/chooser.json"),
         "reads the saved predictions of the three final models, which stay on your machine",
+    ),  # The full run from the further pretrained weights (reports/domain_adaptation_plan.md)
+    Step(
+        74,
+        "FaBERT from the further pretrained weights on all training reviews, every epoch",
+        ["scripts/train_transformer.py", "--adapted"],
+        "gpu",
+        [68],
+        files("reports/transformer_final/adapted.json"),
+        "about 2 to 2.5 hours; it saves a resume point at every check, so start it again if the "
+        "session ends; if the machine was reset, run step 68 again first (5 minutes)",
+        smoke=True,
+    ),
+    Step(
+        75,
+        "Further pretrained FaBERT against the kept run, alone and combined with TF-IDF",
+        ["scripts/compare_fabert_runs.py", "--adapted"],
+        "local",
+        [17, 33, 74],
+        files("reports/transformer_final/adapted_vs_fabert.json"),
+        "reads both runs' predictions and the TF-IDF predictions, which stay on your machine",
     ),
 ]
 
