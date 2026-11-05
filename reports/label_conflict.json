@@ -1,0 +1,658 @@
+{
+  "created_at": "2026-11-05T18:53:48+00:00",
+  "settings": {
+    "model": "FaBERT final run, saved labels with offsets",
+    "intervals": "product-level cluster bootstrap, percentiles 2.5 and 97.5, 1000 rounds, seed 2026",
+    "verify_csv": true
+  },
+  "reviews_with_band": 843458,
+  "data_checks": {
+    "source": {
+      "cache_columns": [
+        "id",
+        "product_id",
+        "rate",
+        "recommendation_status",
+        "rating_band",
+        "text_seen_in_train",
+        "text"
+      ],
+      "taken_from_cache": [
+        "id",
+        "product_id",
+        "rate",
+        "rating_band"
+      ],
+      "taken_from_csv": [],
+      "data": {
+        "normalizer_version": "2",
+        "sha256": {
+          "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+        }
+      },
+      "join_with_csv": {
+        "cache_rows": 922795,
+        "csv_rows": 922795,
+        "only_in_cache": 0,
+        "only_in_csv": 0
+      },
+      "cache_vs_csv_mismatches": {
+        "product_id": 0,
+        "rate": 0,
+        "rating_band": 0
+      }
+    },
+    "rates": {
+      "rows": 922795,
+      "with_band": 843458,
+      "without_band": 79337,
+      "rate_not_finite": 0,
+      "rate_zero": 79336,
+      "rate_out_of_range": 1,
+      "band_counts": {
+        "low": 84407,
+        "medium": 158755,
+        "high": 600296
+      }
+    },
+    "recommendation": {
+      "counts": {
+        "recommended": 624006,
+        "not_recommended": 75666,
+        "no_idea": 89045,
+        "missing": 134078
+      },
+      "cache_vs_csv_mismatches": 0
+    },
+    "prediction_join": {
+      "rows": 922795,
+      "only_in_validation": 0,
+      "only_in_predictions": 0
+    },
+    "fabert_macro_f1": {
+      "rating_band": 0.692190273060563,
+      "recommendation": 0.7324370442721989
+    }
+  },
+  "1_band_by_buyer_label": {
+    "all reviews with a band": {
+      "rows": 843458,
+      "products": 48755,
+      "small": false,
+      "true_band_share": {
+        "low": 0.10007255844392964,
+        "medium": 0.1882192118635427,
+        "high": 0.7117082296925277
+      },
+      "all_bands_present": true,
+      "confusion": {
+        "true low": {
+          "predicted low": 57022,
+          "predicted medium": 21235,
+          "predicted high": 6150
+        },
+        "true medium": {
+          "predicted low": 14914,
+          "predicted medium": 74869,
+          "predicted high": 68972
+        },
+        "true high": {
+          "predicted low": 4066,
+          "predicted medium": 57984,
+          "predicted high": 538246
+        }
+      },
+      "recall low": {
+        "value": 0.6755600838792991,
+        "interval_95": [
+          0.6711729972584856,
+          0.679765643184666
+        ]
+      },
+      "recall medium": {
+        "value": 0.471600894460017,
+        "interval_95": [
+          0.4683060642943447,
+          0.4750595917144411
+        ]
+      },
+      "recall high": {
+        "value": 0.8966343270653144,
+        "interval_95": [
+          0.8954679127566175,
+          0.8977562087920985
+        ]
+      },
+      "macro_f1": {
+        "value": 0.692190273060563,
+        "interval_95": [
+          0.6905569858372358,
+          0.693758461320713
+        ]
+      }
+    },
+    "recommended": {
+      "rows": 560167,
+      "products": 40440,
+      "small": false,
+      "true_band_share": {
+        "low": 0.00997024101741088,
+        "medium": 0.13165359615971667,
+        "high": 0.8583761628228724
+      },
+      "all_bands_present": true,
+      "confusion": {
+        "true low": {
+          "predicted low": 841,
+          "predicted medium": 1498,
+          "predicted high": 3246
+        },
+        "true medium": {
+          "predicted low": 1041,
+          "predicted medium": 21893,
+          "predicted high": 50814
+        },
+        "true high": {
+          "predicted low": 1818,
+          "predicted medium": 40106,
+          "predicted high": 438910
+        }
+      },
+      "recall low": {
+        "value": 0.1505819158460161,
+        "interval_95": [
+          0.1406499153870616,
+          0.16085780872207994
+        ]
+      },
+      "recall medium": {
+        "value": 0.29686228779085533,
+        "interval_95": [
+          0.2929058109685937,
+          0.30090418801646623
+        ]
+      },
+      "recall high": {
+        "value": 0.9128098262602062,
+        "interval_95": [
+          0.9117460737103305,
+          0.9138381223152051
+        ]
+      },
+      "macro_f1": {
+        "value": 0.4672072207649556,
+        "interval_95": [
+          0.4633549862140798,
+          0.47105404346896074
+        ]
+      }
+    },
+    "not_recommended": {
+      "rows": 67056,
+      "products": 18658,
+      "small": false,
+      "true_band_share": {
+        "low": 0.8200608446671439,
+        "medium": 0.15170901932712957,
+        "high": 0.028230136005726558
+      },
+      "all_bands_present": true,
+      "confusion": {
+        "true low": {
+          "predicted low": 44127,
+          "predicted medium": 10073,
+          "predicted high": 790
+        },
+        "true medium": {
+          "predicted low": 5064,
+          "predicted medium": 4737,
+          "predicted high": 372
+        },
+        "true high": {
+          "predicted low": 587,
+          "predicted medium": 532,
+          "predicted high": 774
+        }
+      },
+      "recall low": {
+        "value": 0.802454991816694,
+        "interval_95": [
+          0.7986045370942387,
+          0.8061480524274371
+        ]
+      },
+      "recall medium": {
+        "value": 0.46564435269831905,
+        "interval_95": [
+          0.455466534839326,
+          0.47564816807859656
+        ]
+      },
+      "recall high": {
+        "value": 0.40887480190174325,
+        "interval_95": [
+          0.38541451446280994,
+          0.4299469759611691
+        ]
+      },
+      "macro_f1": {
+        "value": 0.5393232102284452,
+        "interval_95": [
+          0.5318152120953571,
+          0.5462348203986584
+        ]
+      }
+    },
+    "no_idea": {
+      "rows": 85959,
+      "products": 20710,
+      "small": false,
+      "true_band_share": {
+        "low": 0.14583696878744518,
+        "medium": 0.6766481694761456,
+        "high": 0.1775148617364092
+      },
+      "all_bands_present": true,
+      "confusion": {
+        "true low": {
+          "predicted low": 4908,
+          "predicted medium": 6625,
+          "predicted high": 1003
+        },
+        "true medium": {
+          "predicted low": 7163,
+          "predicted medium": 40353,
+          "predicted high": 10648
+        },
+        "true high": {
+          "predicted low": 860,
+          "predicted medium": 8036,
+          "predicted high": 6363
+        }
+      },
+      "recall low": {
+        "value": 0.3915124441608169,
+        "interval_95": [
+          0.38226678615928245,
+          0.4004396216327249
+        ]
+      },
+      "recall medium": {
+        "value": 0.6937796575201155,
+        "interval_95": [
+          0.6895705928595913,
+          0.697485699299872
+        ]
+      },
+      "recall high": {
+        "value": 0.41699980339471787,
+        "interval_95": [
+          0.40960617276842437,
+          0.4243841153195369
+        ]
+      },
+      "macro_f1": {
+        "value": 0.4936671240762808,
+        "interval_95": [
+          0.48965940916713513,
+          0.49746848041693376
+        ]
+      }
+    },
+    "none": {
+      "rows": 130276,
+      "products": 26243,
+      "small": false,
+      "true_band_share": {
+        "low": 0.08670821947250452,
+        "medium": 0.12795910221376156,
+        "high": 0.7853326783137339
+      },
+      "all_bands_present": true,
+      "confusion": {
+        "true low": {
+          "predicted low": 7146,
+          "predicted medium": 3039,
+          "predicted high": 1111
+        },
+        "true medium": {
+          "predicted low": 1646,
+          "predicted medium": 7886,
+          "predicted high": 7138
+        },
+        "true high": {
+          "predicted low": 801,
+          "predicted medium": 9310,
+          "predicted high": 92199
+        }
+      },
+      "recall low": {
+        "value": 0.6326133144475921,
+        "interval_95": [
+          0.6225269181728107,
+          0.6428266722220504
+        ]
+      },
+      "recall medium": {
+        "value": 0.47306538692261546,
+        "interval_95": [
+          0.4649240711117906,
+          0.4819989854510996
+        ]
+      },
+      "recall high": {
+        "value": 0.9011729058743035,
+        "interval_95": [
+          0.8991975918903602,
+          0.9032142252210121
+        ]
+      },
+      "macro_f1": {
+        "value": 0.6736680392763867,
+        "interval_95": [
+          0.6697232127916151,
+          0.6775402731422078
+        ]
+      }
+    }
+  },
+  "2_hard_classes": {
+    "reviews_with_both_labels": 713182,
+    "by_true_labels": {
+      "recommended x low": {
+        "rows": 5585,
+        "products": 4005,
+        "small": false,
+        "recommendation wrong": {
+          "value": 0.3188898836168308,
+          "interval_95": [
+            0.30692713089558943,
+            0.3313650893555803
+          ]
+        },
+        "band wrong": {
+          "value": 0.8494180841539839,
+          "interval_95": [
+            0.839952094334618,
+            0.8581146015369577
+          ]
+        },
+        "both wrong": {
+          "value": 0.16884512085944495,
+          "interval_95": [
+            0.15878381677454217,
+            0.17903467302851123
+          ]
+        }
+      },
+      "recommended x medium": {
+        "rows": 73748,
+        "products": 17062,
+        "small": false,
+        "recommendation wrong": {
+          "value": 0.1691842490643814,
+          "interval_95": [
+            0.16601307854046618,
+            0.172375960837971
+          ]
+        },
+        "band wrong": {
+          "value": 0.7031377122091447,
+          "interval_95": [
+            0.6992091717007969,
+            0.7075150057821255
+          ]
+        },
+        "both wrong": {
+          "value": 0.014373271139556327,
+          "interval_95": [
+            0.013475516085752376,
+            0.015290692986538283
+          ]
+        }
+      },
+      "recommended x high": {
+        "rows": 480834,
+        "products": 38737,
+        "small": false,
+        "recommendation wrong": {
+          "value": 0.03785298044647425,
+          "interval_95": [
+            0.037248526058644225,
+            0.038479143606837386
+          ]
+        },
+        "band wrong": {
+          "value": 0.08719017373979378,
+          "interval_95": [
+            0.08611434630288844,
+            0.08825793969135097
+          ]
+        },
+        "both wrong": {
+          "value": 0.0374557539608264,
+          "interval_95": [
+            0.0368614252133525,
+            0.03808713159836734
+          ]
+        }
+      },
+      "not_recommended x low": {
+        "rows": 54990,
+        "products": 16828,
+        "small": false,
+        "recommendation wrong": {
+          "value": 0.21700309147117658,
+          "interval_95": [
+            0.21355081679946664,
+            0.22114635481919603
+          ]
+        },
+        "band wrong": {
+          "value": 0.19754500818330606,
+          "interval_95": [
+            0.19406561738377373,
+            0.2013049951460471
+          ]
+        },
+        "both wrong": {
+          "value": 0.18657937806873978,
+          "interval_95": [
+            0.1833026624546149,
+            0.19032582287105768
+          ]
+        }
+      },
+      "not_recommended x medium": {
+        "rows": 10173,
+        "products": 6198,
+        "small": false,
+        "recommendation wrong": {
+          "value": 0.5069301091123563,
+          "interval_95": [
+            0.4964262682750691,
+            0.5170518674026885
+          ]
+        },
+        "band wrong": {
+          "value": 0.534355647301681,
+          "interval_95": [
+            0.5242820200222023,
+            0.544651868796113
+          ]
+        },
+        "both wrong": {
+          "value": 0.0676300009829942,
+          "interval_95": [
+            0.06288915175699007,
+            0.07276147360004981
+          ]
+        }
+      },
+      "not_recommended x high": {
+        "rows": 1893,
+        "products": 1697,
+        "small": false,
+        "recommendation wrong": {
+          "value": 0.6967776016904385,
+          "interval_95": [
+            0.676607696051423,
+            0.717396764996666
+          ]
+        },
+        "band wrong": {
+          "value": 0.5911251980982567,
+          "interval_95": [
+            0.567808578246602,
+            0.6151475988068092
+          ]
+        },
+        "both wrong": {
+          "value": 0.2879027997886952,
+          "interval_95": [
+            0.26735526315789476,
+            0.3081804134889941
+          ]
+        }
+      },
+      "no_idea x low": {
+        "rows": 12536,
+        "products": 7233,
+        "small": false,
+        "recommendation wrong": {
+          "value": 0.4814932992980217,
+          "interval_95": [
+            0.4722927916404557,
+            0.48990957216943376
+          ]
+        },
+        "band wrong": {
+          "value": 0.6084875558391831,
+          "interval_95": [
+            0.5995326794848189,
+            0.6169607995136672
+          ]
+        },
+        "both wrong": {
+          "value": 0.14143267389917039,
+          "interval_95": [
+            0.13512530479644522,
+            0.14764958909398151
+          ]
+        }
+      },
+      "no_idea x medium": {
+        "rows": 58164,
+        "products": 16953,
+        "small": false,
+        "recommendation wrong": {
+          "value": 0.41475826972010177,
+          "interval_95": [
+            0.41029255945529214,
+            0.4190394655737521
+          ]
+        },
+        "band wrong": {
+          "value": 0.30622034247988444,
+          "interval_95": [
+            0.302342351070105,
+            0.3101910972146353
+          ]
+        },
+        "both wrong": {
+          "value": 0.28658620452513583,
+          "interval_95": [
+            0.2828104661282394,
+            0.2904498820822992
+          ]
+        }
+      },
+      "no_idea x high": {
+        "rows": 15259,
+        "products": 8246,
+        "small": false,
+        "recommendation wrong": {
+          "value": 0.6103938659151976,
+          "interval_95": [
+            0.6018654586456004,
+            0.618164267577194
+          ]
+        },
+        "band wrong": {
+          "value": 0.5830001966052821,
+          "interval_95": [
+            0.5752292044629228,
+            0.5909514148572228
+          ]
+        },
+        "both wrong": {
+          "value": 0.196539747034537,
+          "interval_95": [
+            0.19019050703932794,
+            0.20357024990778538
+          ]
+        }
+      }
+    },
+    "band_wrong_given_recommendation_wrong": {
+      "given": {
+        "value": 0.5860729228930066,
+        "interval_95": [
+          0.5829980696915591,
+          0.5894412986513959
+        ]
+      },
+      "not_given": {
+        "value": 0.15626645687495985,
+        "interval_95": [
+          0.15477027158955325,
+          0.15760901325318563
+        ]
+      },
+      "difference": {
+        "value": 0.42980646601804673,
+        "interval_95": [
+          0.4262772799861381,
+          0.43383150183724983
+        ]
+      }
+    },
+    "where_errors_fall": {
+      "recommendation errors on true medium": {
+        "value": 0.46222133669832416,
+        "interval_95": [
+          0.4589317429631753,
+          0.46578306493067106
+        ]
+      },
+      "band errors on true no_idea": {
+        "value": 0.22847959754052544,
+        "interval_95": [
+          0.22599412983237924,
+          0.23082370576151925
+        ]
+      },
+      "no_idea errors on true medium": {
+        "value": 0.6111364442417794,
+        "interval_95": [
+          0.6061523061994887,
+          0.6159310206503387
+        ]
+      },
+      "medium errors on true no_idea": {
+        "value": 0.23715746584644884,
+        "interval_95": [
+          0.2336188980548591,
+          0.24081554336266486
+        ]
+      },
+      "medium share among all reviews with both labels": 0.19922684532139062,
+      "no_idea share among all reviews with both labels": 0.12052884116536873
+    }
+  },
+  "minutes": 1.2,
+  "code": {
+    "commit": "c176f64cf37c4d8553b2682e64d09dbcf7d085b1",
+    "uncommitted_changes": false
+  }
+}
