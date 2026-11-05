@@ -1,0 +1,99 @@
+Code daaad7d397049987a4caad0fc0a660892467759a, device NVIDIA RTX PRO 6000 Blackwell Server Edition, torch 2.14.1+cu130
+/marimo/work/outputs/artifacts/tfidf_final/validation_predictions.parquet not found: TF-IDF is not compared in this run
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2026, 600 rows):
+Loading weights:   0%|          | 0/85 [00:00<?, ?it/s]Loading weights: 100%|██████████| 85/85 [00:00<00:00, 5281.79it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: /marimo/work/outputs/artifacts/fabert_adapted_smoke
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+pooler.dense.weight                        | MISSING    | 
+pooler.dense.bias                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    check at step 1: recommendation loss 0.7526, rating_band loss 1.2082
+    check at step 2: recommendation loss 0.7093, rating_band loss 1.0577
+    check at step 3: recommendation loss 0.6859, rating_band loss 0.9550
+    check at step 4: recommendation loss 0.6751, rating_band loss 0.8860
+    check at step 5: recommendation loss 0.6687, rating_band loss 0.8463
+    check at step 6: recommendation loss 0.6647, rating_band loss 0.8246
+    check at step 7: recommendation loss 0.6631, rating_band loss 0.8121
+    check at step 8: recommendation loss 0.6629, rating_band loss 0.8059
+    check at step 9: recommendation loss 0.6633, rating_band loss 0.8022
+    step 10/10, loss 1.7157
+    check at step 10: recommendation loss 0.6634, rating_band loss 0.8007
+  recommendation: without offsets 0.2945, with offsets 0.2945
+  rating_band: without offsets 0.2772, with offsets 0.2773
+  0.01 min, peak GPU memory 0.12 GB
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2027, 600 rows):
+Loading weights:   0%|          | 0/85 [00:00<?, ?it/s]Loading weights: 100%|██████████| 85/85 [00:00<00:00, 5976.90it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: /marimo/work/outputs/artifacts/fabert_adapted_smoke
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+pooler.dense.weight                        | MISSING    | 
+pooler.dense.bias                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    check at step 1: recommendation loss 1.0747, rating_band loss 0.9007
+    check at step 2: recommendation loss 0.9252, rating_band loss 0.8519
+    check at step 3: recommendation loss 0.8272, rating_band loss 0.8233
+    check at step 4: recommendation loss 0.7670, rating_band loss 0.8098
+    check at step 5: recommendation loss 0.7312, rating_band loss 0.8022
+    check at step 6: recommendation loss 0.7072, rating_band loss 0.7998
+    check at step 7: recommendation loss 0.6918, rating_band loss 0.7993
+    check at step 8: recommendation loss 0.6826, rating_band loss 0.7995
+    check at step 9: recommendation loss 0.6782, rating_band loss 0.7990
+    step 10/10, loss 1.6761
+    check at step 10: recommendation loss 0.6763, rating_band loss 0.7983
+  recommendation: without offsets 0.2945, with offsets 0.2945
+  rating_band: without offsets 0.2772, with offsets 0.2772
+  0.0 min, peak GPU memory 0.12 GB
+hf-internal-testing/tiny-random-BertModel (lr 0.001, seed 2028, 600 rows):
+Loading weights:   0%|          | 0/85 [00:00<?, ?it/s]Loading weights: 100%|██████████| 85/85 [00:00<00:00, 6026.60it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: /marimo/work/outputs/artifacts/fabert_adapted_smoke
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+pooler.dense.weight                        | MISSING    | 
+pooler.dense.bias                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+    check at step 1: recommendation loss 0.9624, rating_band loss 1.0320
+    check at step 2: recommendation loss 0.8058, rating_band loss 0.9061
+    check at step 3: recommendation loss 0.7204, rating_band loss 0.8419
+    check at step 4: recommendation loss 0.6787, rating_band loss 0.8142
+    check at step 5: recommendation loss 0.6657, rating_band loss 0.8022
+    check at step 6: recommendation loss 0.6639, rating_band loss 0.7949
+    check at step 7: recommendation loss 0.6653, rating_band loss 0.7920
+    check at step 8: recommendation loss 0.6675, rating_band loss 0.7914
+    check at step 9: recommendation loss 0.6699, rating_band loss 0.7914
+    step 10/10, loss 1.6380
+    check at step 10: recommendation loss 0.6709, rating_band loss 0.7915
+  recommendation: without offsets 0.2945, with offsets 0.2945
+  rating_band: without offsets 0.2772, with offsets 0.3016
+  0.0 min, peak GPU memory 0.12 GB
+Done
+Code be670fae566ed3c7127d8ee2b76da2840ba2e2b7, device NVIDIA RTX PRO 6000 Blackwell Server Edition, torch 2.14.1+cu130
+/marimo/work/outputs/artifacts/tfidf_final/validation_predictions.parquet not found: TF-IDF is not compared in this run
+hf-internal-testing__tiny-random-BertModel__seed2026__n600__adapted__checks10: already done
+hf-internal-testing__tiny-random-BertModel__seed2027__n600__adapted__checks10: already done
+hf-internal-testing__tiny-random-BertModel__seed2028__n600__adapted__checks10: already done
+Done

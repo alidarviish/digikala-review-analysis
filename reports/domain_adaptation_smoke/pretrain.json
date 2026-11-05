@@ -1,0 +1,59 @@
+{
+  "created_at": "2026-11-05T19:45:17+00:00",
+  "settings": {
+    "model": "hf-internal-testing/tiny-random-BertModel",
+    "block_size": 128,
+    "batch_size": 16,
+    "learning_rate": 5e-05,
+    "weight_decay": 0.01,
+    "warmup_share": 0.06,
+    "epochs": 1,
+    "mask_share": 0.15,
+    "held_out_share": 0.01,
+    "max_held_out_blocks": 5000,
+    "seed": 2026
+  },
+  "texts": 3000,
+  "held_out_texts": 30,
+  "training_blocks": 508,
+  "held_out_blocks": 4,
+  "steps": 32,
+  "held_out_loss_before": 7.055831681436567,
+  "held_out_loss_after": 7.009142975309002,
+  "losses": [
+    {
+      "step": 32,
+      "mean_loss": 7.0208219438791275
+    }
+  ],
+  "train_minutes": 0.01,
+  "weights_sha256": "d9de9de695f31ecd50b41f10046cebc6f2d8348d0eb12b9dd49166d9825fde4c",
+  "peak_gpu_memory_gb": 0.1,
+  "code": {
+    "commit": "9d9cf4689957db249bfbcca4224264ddca951747",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": "5.21.0",
+      "tokenizers": "0.23.3"
+    },
+    "machine": "24ad7ae4-4674-43d8-912d-901b1c338f49-6q6q4",
+    "torch": "2.14.1+cu130",
+    "transformers": "5.21.0"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "train_pseudo_unlabeled.parquet": "972dbbf26b8ca0b1860d454c558d1fb6f3ffb1a649f1528dda936d13496331d2"
+    }
+  }
+}

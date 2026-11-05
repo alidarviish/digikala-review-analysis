@@ -123,3 +123,50 @@ Expected:
   head, with the interval above zero on at least one head.
 - Combined with TF-IDF, the gain shrinks a little more (TF-IDF already adds some of the
   review-specific words): 0 to 0.15 point.
+
+### Result of the full run
+
+`reports/transformer_final/adapted.json` and `reports/transformer_final/adapted_vs_fabert.json`,
+whole validation set, Macro F1 with cross-fitted offsets.
+
+The machine had been reset, so step 68 was run again first: held-out masked-word loss 4.047 to
+2.103 (2.103 before), 5.5 minutes (5.4 before), new weights `ddc497a6...` (`3132dcf6...` before;
+a GPU run is not exactly repeatable). Step 74 started from the new weights and records their
+hash; the pilot weights are kept outside git.
+
+| Head | Kept FaBERT | Further pretrained | Difference [95%] | With TF-IDF: kept / further pretrained | Difference [95%] |
+|---|---|---|---|---|---|
+| recommendation | 0.7324 | 0.7337 | +0.0012 [+0.0004, +0.0021]: better | 0.7344 / 0.7345 | +0.0001 [-0.0007, +0.0008]: no measurable difference |
+| rating band | 0.6922 | 0.6931 | +0.0009 [+0.0002, +0.0016]: better | 0.6935 / 0.6944 | +0.0008 [+0.0002, +0.0015]: better |
+
+Training took 127 minutes; the kept check is at epoch 2.75 (step 152,647), as for the kept run.
+Validation loss: 0.3125 against 0.3121 (recommendation), 0.4921 against 0.4925 (rating band).
+F1 per class, kept -> further pretrained: `recommended` 0.944 -> 0.944, `not_recommended` 0.744
+-> 0.744, `no_idea` 0.510 -> 0.513; `low` 0.711 -> 0.713, `medium` 0.479 -> 0.479, `high`
+0.887 -> 0.888.
+
+| | Expected | Found |
+|---|---|---|
+| Kept check | epoch 2 to 3.5 | 2.75: right |
+| Training time | 2 to 2.5 hours | 127 minutes: right |
+| Model alone | 0.05 to 0.2 point per head, above zero on at least one | 0.12 and 0.09 point, above zero on both: right, a little better |
+| With TF-IDF | 0 to 0.15 point | 0.01 and 0.08 point: right |
+
+Decision, by the rules written above:
+
+1. The interval is above zero on both heads, so the further pretrained run replaces the kept
+   FaBERT run as the best single model (0.7337 and 0.6931).
+2. Combined with TF-IDF, the interval is above zero for rating band but not for
+   recommendation, so the final system stays as it is: the kept FaBERT run combined with TF-IDF
+   (0.7344 and 0.6935). The rule asks for both heads, and it is not changed after the result.
+
+What it means:
+
+- The gain of the pilot holds on the full run, smaller, as expected: knowing the review language
+  helps a little even after fine-tuning on 3.55 million reviews.
+- TF-IDF already gives the combination most of what the further pretraining adds on
+  recommendation; on rating band a small part of the gain is left.
+- `medium` does not move at all, alone or combined, as the label analyses predict
+  (`reports/rating_boundaries.json`, `reports/rate_recommendation.json`,
+  `reports/label_conflict.json`): its errors are limited by the labels, not by how well the model
+  knows the language.

@@ -1,0 +1,52 @@
+3,000 texts, 30 held out, model hf-internal-testing/tiny-random-BertModel
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/85 [00:00<?, ?it/s]Loading weights: 100%|██████████| 85/85 [00:00<00:00, 15922.99it/s]
+[transformers] This checkpoint seem corrupted. The tied weights mapping for this model specifies to tie cls.predictions.bias to cls.predictions.decoder.bias, but both are absent from the checkpoint, and we could not find another related tied weight for those keys
+[transformers] [1mBertForMaskedLM LOAD REPORT[0m from: hf-internal-testing/tiny-random-BertModel
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+pooler.dense.weight                        | UNEXPECTED | 
+pooler.dense.bias                          | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | MISSING    | 
+cls.predictions.transform.LayerNorm.bias   | MISSING    | 
+cls.predictions.bias                       | MISSING    | 
+cls.predictions.transform.LayerNorm.weight | MISSING    | 
+cls.predictions.decoder.bias               | MISSING    | 
+cls.predictions.transform.dense.weight     | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+508 training blocks of 128 tokens
+held-out masked-word loss before: 7.0558
+    step 32/32, loss 7.0208, 0.0 min, about 0 min left
+held-out masked-word loss after: 7.0091 (before 7.0558)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 185.32it/s]
+saved /marimo/work/outputs/artifacts/fabert_adapted_smoke; 0.01 min
+Done
+3,000 texts, 30 held out, model hf-internal-testing/tiny-random-BertModel
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/85 [00:00<?, ?it/s]Loading weights: 100%|██████████| 85/85 [00:00<00:00, 18737.36it/s]
+[transformers] This checkpoint seem corrupted. The tied weights mapping for this model specifies to tie cls.predictions.bias to cls.predictions.decoder.bias, but both are absent from the checkpoint, and we could not find another related tied weight for those keys
+[transformers] [1mBertForMaskedLM LOAD REPORT[0m from: hf-internal-testing/tiny-random-BertModel
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+pooler.dense.bias                          | UNEXPECTED | 
+pooler.dense.weight                        | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | MISSING    | 
+cls.predictions.transform.LayerNorm.weight | MISSING    | 
+cls.predictions.decoder.bias               | MISSING    | 
+cls.predictions.transform.LayerNorm.bias   | MISSING    | 
+cls.predictions.bias                       | MISSING    | 
+cls.predictions.transform.dense.bias       | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+508 training blocks of 128 tokens
+held-out masked-word loss before: 7.0558
+    step 32/32, loss 7.0208, 0.0 min, about 0 min left
+held-out masked-word loss after: 7.0091 (before 7.0558)
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 194.09it/s]
+saved /marimo/work/outputs/artifacts/fabert_adapted_smoke; 0.01 min
+Done

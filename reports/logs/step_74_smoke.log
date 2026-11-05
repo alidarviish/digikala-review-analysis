@@ -1,0 +1,32 @@
+Code 9d9cf4689957db249bfbcca4224264ddca951747, device NVIDIA RTX PRO 6000 Blackwell Server Edition
+  tokenized 2,000 reviews (0s)
+  tokenized 400 reviews (0s)
+Loading weights:   0%|          | 0/85 [00:00<?, ?it/s]Loading weights: 100%|██████████| 85/85 [00:00<00:00, 5313.99it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: /marimo/work/outputs/artifacts/fabert_adapted_smoke
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+2,000 training reviews, 32 steps per epoch, check every 8
+  check at epoch 0.25: 0.3037, validation loss 1.3884 (kept)
+  check at epoch 0.5: 0.2893, validation loss 1.3976 (not better)
+  check at epoch 0.75: 0.3104, validation loss 1.3975 (kept)
+  check at epoch 1.0: 0.3243, validation loss 1.3855 (kept)
+  check at epoch 1.25: 0.2895, validation loss 1.3828 (not better)
+  check at epoch 1.5: 0.3264, validation loss 1.3817 (kept)
+  check at epoch 1.75: 0.3007, validation loss 1.3825 (not better)
+  check at epoch 2.0: 0.3218, validation loss 1.3822 (not better)
+Scoring the whole validation set with the weights from step 48
+  tokenized 1,500 reviews (0s)
+  recommendation: without offsets 0.2723, with offsets 0.2723
+  rating_band: without offsets 0.2075, with offsets 0.2389
+Done

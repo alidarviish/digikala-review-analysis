@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-11-02T09:48:04+00:00",
+  "created_at": "2026-11-05T19:44:06+00:00",
   "settings": {
     "model": "sbunlp/fabert",
     "block_size": 128,
@@ -19,86 +19,86 @@
   "held_out_blocks": 4433,
   "steps": 3427,
   "held_out_loss_before": 4.046855698625427,
-  "held_out_loss_after": 2.103009055731597,
+  "held_out_loss_after": 2.102989380299377,
   "losses": [
     {
       "step": 200,
-      "mean_loss": 3.038416222333908
+      "mean_loss": 3.0380468702316286
     },
     {
       "step": 400,
-      "mean_loss": 2.5663487410545347
+      "mean_loss": 2.5660605323314667
     },
     {
       "step": 600,
-      "mean_loss": 2.4527121782302856
+      "mean_loss": 2.4532163083553313
     },
     {
       "step": 800,
-      "mean_loss": 2.3792393970489503
+      "mean_loss": 2.3790713918209074
     },
     {
       "step": 1000,
-      "mean_loss": 2.3375321102142332
+      "mean_loss": 2.337715755701065
     },
     {
       "step": 1200,
-      "mean_loss": 2.318726484775543
+      "mean_loss": 2.3181057381629944
     },
     {
       "step": 1400,
-      "mean_loss": 2.2800156152248383
+      "mean_loss": 2.2801083016395567
     },
     {
       "step": 1600,
-      "mean_loss": 2.2635050022602083
+      "mean_loss": 2.2635054326057436
     },
     {
       "step": 1800,
-      "mean_loss": 2.24108157992363
+      "mean_loss": 2.2409378039836882
     },
     {
       "step": 2000,
-      "mean_loss": 2.224729138612747
+      "mean_loss": 2.2246620225906373
     },
     {
       "step": 2200,
-      "mean_loss": 2.207987279891968
+      "mean_loss": 2.207980887889862
     },
     {
       "step": 2400,
-      "mean_loss": 2.186301756501198
+      "mean_loss": 2.186339536309242
     },
     {
       "step": 2600,
-      "mean_loss": 2.1745477604866026
+      "mean_loss": 2.174672577381134
     },
     {
       "step": 2800,
-      "mean_loss": 2.1729647016525266
+      "mean_loss": 2.1734007382392884
     },
     {
       "step": 3000,
-      "mean_loss": 2.1601614320278166
+      "mean_loss": 2.160448409318924
     },
     {
       "step": 3200,
-      "mean_loss": 2.152230886220932
+      "mean_loss": 2.1519865226745605
     },
     {
       "step": 3400,
-      "mean_loss": 2.147630076408386
+      "mean_loss": 2.147654874920845
     },
     {
       "step": 3427,
-      "mean_loss": 2.1638388986940735
+      "mean_loss": 2.1649992112760192
     }
   ],
-  "train_minutes": 5.41,
-  "weights_sha256": "3132dcf6078d5656d151fe0ec2fdf131ab3b3f0150b6b1d9cf35e741d8e79a9c",
+  "train_minutes": 5.47,
+  "weights_sha256": "ddc497a6fb5db49a834297f4b050afdbafd987b71c604455a5eab36601d5377b",
   "peak_gpu_memory_gb": 15.44,
   "code": {
-    "commit": "be670fae566ed3c7127d8ee2b76da2840ba2e2b7",
+    "commit": "9d9cf4689957db249bfbcca4224264ddca951747",
     "uncommitted_changes": false
   },
   "environment": {
@@ -113,7 +113,7 @@
       "transformers": "5.21.0",
       "tokenizers": "0.23.3"
     },
-    "machine": "84635df7-60db-4672-8ea2-9538cba5bae4-xbhkv",
+    "machine": "24ad7ae4-4674-43d8-912d-901b1c338f49-6q6q4",
     "torch": "2.14.1+cu130",
     "transformers": "5.21.0"
   },
