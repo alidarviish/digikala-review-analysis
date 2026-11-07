@@ -1,0 +1,190 @@
+{
+  "created_at": "2026-11-07T15:55:12+00:00",
+  "plan": "reports/decision_recheck_plan.md",
+  "rounds": 1000,
+  "seed": 2026,
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  },
+  "heads": {
+    "recommendation": {
+      "reviews": 788717,
+      "products": 46432,
+      "macro_f1": {
+        "fabert": 0.7324370442721989,
+        "adapted": 0.7336597252799493,
+        "tfidf": 0.7016757031931711,
+        "bilstm": 0.7175581115767086,
+        "fabert + tfidf": 0.7344318559099552,
+        "adapted + tfidf": 0.7344835272635696
+      },
+      "comparisons": [
+        {
+          "decision": "D58 final system",
+          "variant": "fabert + tfidf",
+          "reference": "fabert",
+          "difference": 0.0019948116377562775,
+          "interval_95_products": [
+            0.0013611534726320014,
+            0.0026012151968856172
+          ],
+          "above_zero": true,
+          "below_zero": false
+        },
+        {
+          "decision": "D65 best single model",
+          "variant": "adapted",
+          "reference": "fabert",
+          "difference": 0.0012226810077503592,
+          "interval_95_products": [
+            0.00037043484736609125,
+            0.0020661933305917562
+          ],
+          "above_zero": true,
+          "below_zero": false
+        },
+        {
+          "decision": "D65 final system unchanged",
+          "variant": "adapted + tfidf",
+          "reference": "fabert + tfidf",
+          "difference": 5.16713536143909e-05,
+          "interval_95_products": [
+            -0.0007860031992665079,
+            0.0008170081162802185
+          ],
+          "above_zero": false,
+          "below_zero": false
+        },
+        {
+          "decision": "model order",
+          "variant": "fabert",
+          "reference": "tfidf",
+          "difference": 0.030761341079027837,
+          "interval_95_products": [
+            0.02947749664748908,
+            0.03201507933674885
+          ],
+          "above_zero": true,
+          "below_zero": false
+        },
+        {
+          "decision": "model order",
+          "variant": "bilstm",
+          "reference": "tfidf",
+          "difference": 0.015882408383537494,
+          "interval_95_products": [
+            0.014629866099408608,
+            0.0171872451723533
+          ],
+          "above_zero": true,
+          "below_zero": false
+        },
+        {
+          "decision": "model order",
+          "variant": "fabert",
+          "reference": "bilstm",
+          "difference": 0.014878932695490343,
+          "interval_95_products": [
+            0.013738675347920443,
+            0.01611052036907914
+          ],
+          "above_zero": true,
+          "below_zero": false
+        }
+      ]
+    },
+    "rating_band": {
+      "reviews": 843458,
+      "products": 48755,
+      "macro_f1": {
+        "fabert": 0.692190273060563,
+        "adapted": 0.6931107551567047,
+        "tfidf": 0.6682810859846451,
+        "bilstm": 0.6826093995653655,
+        "fabert + tfidf": 0.6935241490531752,
+        "adapted + tfidf": 0.6943640792771939
+      },
+      "comparisons": [
+        {
+          "decision": "D58 final system",
+          "variant": "fabert + tfidf",
+          "reference": "fabert",
+          "difference": 0.0013338759926121435,
+          "interval_95_products": [
+            0.0008840185462640316,
+            0.00177180864603024
+          ],
+          "above_zero": true,
+          "below_zero": false
+        },
+        {
+          "decision": "D65 best single model",
+          "variant": "adapted",
+          "reference": "fabert",
+          "difference": 0.000920482096141706,
+          "interval_95_products": [
+            0.0002508059227424753,
+            0.0016071446553916375
+          ],
+          "above_zero": true,
+          "below_zero": false
+        },
+        {
+          "decision": "D65 final system unchanged",
+          "variant": "adapted + tfidf",
+          "reference": "fabert + tfidf",
+          "difference": 0.0008399302240187367,
+          "interval_95_products": [
+            0.00017209793540307885,
+            0.0014739076483265554
+          ],
+          "above_zero": true,
+          "below_zero": false
+        },
+        {
+          "decision": "model order",
+          "variant": "fabert",
+          "reference": "tfidf",
+          "difference": 0.023909187075917937,
+          "interval_95_products": [
+            0.0228793844183499,
+            0.024991987660896435
+          ],
+          "above_zero": true,
+          "below_zero": false
+        },
+        {
+          "decision": "model order",
+          "variant": "bilstm",
+          "reference": "tfidf",
+          "difference": 0.014328313580720398,
+          "interval_95_products": [
+            0.013249318988787933,
+            0.015321851981513843
+          ],
+          "above_zero": true,
+          "below_zero": false
+        },
+        {
+          "decision": "model order",
+          "variant": "fabert",
+          "reference": "bilstm",
+          "difference": 0.00958087349519754,
+          "interval_95_products": [
+            0.008684257042608143,
+            0.010485153538943142
+          ],
+          "above_zero": true,
+          "below_zero": false
+        }
+      ]
+    }
+  },
+  "code": {
+    "commit": "d54d70f82025283e2969b05438abe41ebd3b2332",
+    "uncommitted_changes": false
+  }
+}
