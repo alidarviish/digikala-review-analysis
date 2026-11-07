@@ -796,6 +796,15 @@ STEPS = [
         files("reports/reading_models.json"),
         "reads the saved predictions of the three models, which stay on your machine",
     ),
+    Step(
+        79,
+        "Negative reviews all three models get wrong with no known cause: rates, length and typical words",
+        ["scripts/analyze_negative_errors.py"],
+        "local",
+        [78],
+        files("reports/negative_errors.json"),
+        "reads the saved predictions of the three models, which stay on your machine",
+    ),
 ]
 
 

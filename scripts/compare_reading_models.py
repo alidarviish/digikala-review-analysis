@@ -45,6 +45,7 @@ CAUSES = [
     "buyer_labels_strongly_disagree",
     "rate_exactly_3",
     "rate_exactly_4",
+    "rate_exactly_2",
     "text_also_in_train",
     "emoji",
     "three_words_or_fewer",
@@ -128,6 +129,31 @@ def groups(right: np.ndarray, names: list[str]) -> dict:
     return out
 
 
+def known_causes(validation: pd.DataFrame) -> dict:
+    """For every validation review, whether each known cause applies (see the plan)."""
+    texts = validation["text"].astype(str).to_numpy()
+    rate = validation["rate"].to_numpy(dtype=float)
+    rec = validation["recommendation_status"].to_numpy(dtype=object)
+    band = validation["rating_band"].to_numpy(dtype=object)
+    both = pd.notna(rec) & pd.notna(band)
+    mapped = np.array([MAPPING.get(b) for b in band], dtype=object)
+    strong = both & (
+        ((rec == "recommended") & (band == "low")) | ((rec == "not_recommended") & (band == "high"))
+    )
+    return {
+        "buyer_labels_disagree": both & (mapped != rec),
+        "buyer_labels_strongly_disagree": strong,
+        "rate_exactly_3": np.isclose(rate, 3.0),
+        # added after the first run, before running again (reports/reading_models_plan.md)
+        "rate_exactly_4": np.isclose(rate, 4.0),
+        # added after the second run, before running again (reports/reading_models_plan.md)
+        "rate_exactly_2": np.isclose(rate, 2.0),
+        "text_also_in_train": validation["text_seen_in_train"].to_numpy(dtype=bool),
+        "emoji": np.array([has_emoji(t) for t in texts]),
+        "three_words_or_fewer": np.array([len(t.split()) <= 3 for t in texts]),
+    }
+
+
 def main():
     names = list(MODELS)
     validation = load_cache("validation.parquet", extra_columns=["product_id", "rate", "text_seen_in_train"])
@@ -136,27 +162,7 @@ def main():
     assert int((~keep).sum()) == SELECTION_ROWS, "the choosing sample is not 50,000 reviews"
     predictions, checks = load_predictions(validation, names)
 
-    texts = validation["text"].astype(str).to_numpy()
-    emoji = np.array([has_emoji(t) for t in texts])
-    short = np.array([len(t.split()) <= 3 for t in texts])
-    rec = validation["recommendation_status"].to_numpy(dtype=object)
-    band = validation["rating_band"].to_numpy(dtype=object)
-    both = pd.notna(rec) & pd.notna(band)
-    mapped = np.array([MAPPING.get(b) for b in band], dtype=object)
-    disagree = both & (mapped != rec)
-    strong = both & (
-        ((rec == "recommended") & (band == "low")) | ((rec == "not_recommended") & (band == "high"))
-    )
-    causes_all = {
-        "buyer_labels_disagree": disagree,
-        "buyer_labels_strongly_disagree": strong,
-        "rate_exactly_3": np.isclose(validation["rate"].to_numpy(dtype=float), 3.0),
-        # added after the first run, before running again (reports/reading_models_plan.md)
-        "rate_exactly_4": np.isclose(validation["rate"].to_numpy(dtype=float), 4.0),
-        "text_also_in_train": validation["text_seen_in_train"].to_numpy(dtype=bool),
-        "emoji": emoji,
-        "three_words_or_fewer": short,
-    }
+    causes_all = known_causes(validation)
 
     result = {
         "models": {m: MODELS[m][0] for m in names},
