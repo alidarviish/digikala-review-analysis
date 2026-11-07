@@ -1,0 +1,344 @@
+{
+  "created_at": "2026-11-07T11:15:28+00:00",
+  "settings": {
+    "text": "normalized validation text, as in training",
+    "intervals": "product-level cluster bootstrap, 1000 rounds, seed 2026"
+  },
+  "reviews": 922795,
+  "data_checks": {
+    "source": {
+      "cache_columns": [
+        "id",
+        "product_id",
+        "rate",
+        "recommendation_status",
+        "rating_band",
+        "text_seen_in_train",
+        "text"
+      ],
+      "taken_from_cache": [
+        "id",
+        "product_id",
+        "rate",
+        "rating_band"
+      ],
+      "taken_from_csv": [],
+      "data": {
+        "normalizer_version": "2",
+        "sha256": {
+          "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+        }
+      }
+    },
+    "prediction_join": {
+      "rows": 922795,
+      "only_in_validation": 0,
+      "only_in_predictions": 0
+    }
+  },
+  "tokenizer": {
+    "folder": "fabert_adapted",
+    "vocabulary_size": 50000,
+    "unk_id": 100,
+    "rebuilt_in_plain_python": "scripts/bert_wordpiece.py",
+    "checked_against_compare_json": {
+      "numbers": 10,
+      "probes": 17,
+      "reviews": 50000
+    }
+  },
+  "1_tokens": {
+    "tokens": 10473077,
+    "unknown_tokens": 7216,
+    "unknown_token_share": 0.0006890047690855324,
+    "reviews_with_unknown": 6851,
+    "reviews_with_unknown_share": 0.007424184136238276,
+    "reviews_only_unknown": 162,
+    "reviews_with_half_space_share": 0.026755671628043064,
+    "unknown_per_review_with_unknown": 1.0532768938841046
+  },
+  "2_sources": {
+    "kinds": {
+      "emoji or symbol + persian or arabic letters": 4567,
+      "emoji or symbol": 2391,
+      "emoji or symbol + marks or format characters + persian or arabic letters": 145,
+      "emoji or symbol + marks or format characters": 67,
+      "other": 10,
+      "emoji or symbol + latin letters": 8,
+      "digits + emoji or symbol + persian or arabic letters": 7,
+      "digits + emoji or symbol": 5,
+      "emoji or symbol + latin letters + marks or format characters": 5,
+      "latin letters + other": 2,
+      "latin letters": 2,
+      "persian or arabic letters": 1,
+      "digits": 1,
+      "marks or format characters + persian or arabic letters": 1,
+      "marks or format characters + other": 1,
+      "emoji or symbol + other + persian or arabic letters": 1,
+      "emoji or symbol + latin letters + persian or arabic letters": 1,
+      "digits + marks or format characters + persian or arabic letters": 1
+    },
+    "most_frequent": [
+      {
+        "text": "😍",
+        "count": 119,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "👍",
+        "count": 101,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "👌",
+        "count": 96,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "❤",
+        "count": 78,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "👌🏻",
+        "count": 59,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "🙏",
+        "count": 52,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "😂",
+        "count": 50,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "👍🏻",
+        "count": 49,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "😐",
+        "count": 39,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "😊",
+        "count": 36,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "بود😍",
+        "count": 34,
+        "kind": "emoji or symbol + persian or arabic letters"
+      },
+      {
+        "text": "🥰",
+        "count": 32,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "😅",
+        "count": 31,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "😑",
+        "count": 29,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "😁",
+        "count": 27,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "👍👍",
+        "count": 26,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "🙏🏻",
+        "count": 23,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "🥲",
+        "count": 23,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "🙂",
+        "count": 23,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "👌👌",
+        "count": 21,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "♡",
+        "count": 20,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "خوبه👌",
+        "count": 19,
+        "kind": "emoji or symbol + persian or arabic letters"
+      },
+      {
+        "text": "🌹",
+        "count": 19,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "😍😍",
+        "count": 19,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "👍👍👍",
+        "count": 18,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "بود👌",
+        "count": 18,
+        "kind": "emoji or symbol + persian or arabic letters"
+      },
+      {
+        "text": "☺",
+        "count": 18,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "😄",
+        "count": 17,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "👌👌👌",
+        "count": 17,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "🤗",
+        "count": 17,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "خوبه👍",
+        "count": 17,
+        "kind": "emoji or symbol + persian or arabic letters"
+      },
+      {
+        "text": "خوبه😍",
+        "count": 16,
+        "kind": "emoji or symbol + persian or arabic letters"
+      },
+      {
+        "text": "😉",
+        "count": 16,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "عالی👌",
+        "count": 16,
+        "kind": "emoji or symbol + persian or arabic letters"
+      },
+      {
+        "text": "🤩",
+        "count": 15,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "عالی😍",
+        "count": 15,
+        "kind": "emoji or symbol + persian or arabic letters"
+      },
+      {
+        "text": "بود👌🏻",
+        "count": 15,
+        "kind": "emoji or symbol + persian or arabic letters"
+      },
+      {
+        "text": "👎",
+        "count": 15,
+        "kind": "emoji or symbol"
+      },
+      {
+        "text": "کالا🙏",
+        "count": 14,
+        "kind": "emoji or symbol + persian or arabic letters"
+      },
+      {
+        "text": "دارم😍",
+        "count": 14,
+        "kind": "emoji or symbol + persian or arabic letters"
+      }
+    ],
+    "distinct": 4536
+  },
+  "3_cost": {
+    "recommendation": {
+      "with_unknown": {
+        "rows": 5955,
+        "share_right": 0.8980688497061293,
+        "interval_95": [
+          0.8900078157935872,
+          0.9054325490872466
+        ]
+      },
+      "without_unknown": {
+        "rows": 782762,
+        "share_right": 0.8734251279443815,
+        "interval_95": [
+          0.8723652171845551,
+          0.874542289430242
+        ]
+      },
+      "right_without_minus_with": {
+        "value": -0.024643721761747783,
+        "interval_95": [
+          -0.03195503045121755,
+          -0.017622537031991285
+        ]
+      },
+      "upper_bound_gain_accuracy_points": 0.0
+    },
+    "rating_band": {
+      "with_unknown": {
+        "rows": 6489,
+        "share_right": 0.8811835413777162,
+        "interval_95": [
+          0.8727146097776544,
+          0.8889737471150714
+        ]
+      },
+      "without_unknown": {
+        "rows": 836969,
+        "share_right": 0.7938394373029347,
+        "interval_95": [
+          0.7923710438610313,
+          0.7953998516650068
+        ]
+      },
+      "right_without_minus_with": {
+        "value": -0.08734410407478144,
+        "interval_95": [
+          -0.09462421245766607,
+          -0.07922111492183419
+        ]
+      },
+      "upper_bound_gain_accuracy_points": 0.0
+    }
+  },
+  "minutes": 2.5,
+  "code": {
+    "commit": "9391af2dfa6e974feed1d4d4f59aac69c91d794b",
+    "uncommitted_changes": false
+  }
+}
