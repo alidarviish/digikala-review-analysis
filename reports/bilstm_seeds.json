@@ -1,0 +1,137 @@
+{
+  "created_at": "2026-11-07T17:10:03+00:00",
+  "plan": "reports/bilstm_plan.md",
+  "seeds": [
+    2026,
+    2027,
+    2028
+  ],
+  "checks": {
+    "fabert": {
+      "recommendation": 0.7324370442721989,
+      "rating_band": 0.692190273060563
+    },
+    "tfidf": {
+      "recommendation": 0.7016757031931711,
+      "rating_band": 0.6682810859846451
+    },
+    "bilstm": {
+      "recommendation": 0.7175581115767086,
+      "rating_band": 0.6826093995653655
+    },
+    "bilstm_seed2027": {
+      "recommendation": 0.7080936488485287,
+      "rating_band": 0.6764686906428126
+    },
+    "bilstm_seed2028": {
+      "recommendation": 0.7182330271317453,
+      "rating_band": 0.6810551555823531
+    }
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  },
+  "heads": {
+    "recommendation": {
+      "bilstm_macro_f1_whole_validation": {
+        "2026": 0.7175581115767086,
+        "2027": 0.7080936488485287,
+        "2028": 0.7182330271317453
+      },
+      "spread_max_minus_min": 0.010139378283216649,
+      "mean": 0.7146282625189943,
+      "fabert_minus_bilstm": {
+        "2026": 0.014878932695490343,
+        "2027": 0.024343395423670255,
+        "2028": 0.014204017140453606
+      },
+      "three_model_comparison": {
+        "2026": {
+          "bilstm_macro_f1_compared_reviews": 0.7174869264719632,
+          "all_right": 604117,
+          "all_wrong": 66339,
+          "all_wrong_same_label": 59722,
+          "all_wrong_no_known_cause": 11370,
+          "only_bilstm_right": 7624
+        },
+        "2027": {
+          "bilstm_macro_f1_compared_reviews": 0.7080436144794414,
+          "all_right": 600956,
+          "all_wrong": 65102,
+          "all_wrong_same_label": 57886,
+          "all_wrong_no_known_cause": 11108,
+          "only_bilstm_right": 8861
+        },
+        "2028": {
+          "bilstm_macro_f1_compared_reviews": 0.7181123044332273,
+          "all_right": 603706,
+          "all_wrong": 66692,
+          "all_wrong_same_label": 60091,
+          "all_wrong_no_known_cause": 11481,
+          "only_bilstm_right": 7271
+        }
+      },
+      "relative_spread_of_counts": {
+        "all_right": 0.005242763212089481,
+        "all_wrong": 0.024074737676207398,
+        "all_wrong_same_label": 0.03722587071396012,
+        "all_wrong_no_known_cause": 0.03295150033864366
+      },
+      "reviews_compared": 745860
+    },
+    "rating_band": {
+      "bilstm_macro_f1_whole_validation": {
+        "2026": 0.6826093995653655,
+        "2027": 0.6764686906428126,
+        "2028": 0.6810551555823531
+      },
+      "spread_max_minus_min": 0.006140708922552918,
+      "mean": 0.6800444152635103,
+      "fabert_minus_bilstm": {
+        "2026": 0.00958087349519754,
+        "2027": 0.015721582417750457,
+        "2028": 0.011135117478209944
+      },
+      "three_model_comparison": {
+        "2026": {
+          "bilstm_macro_f1_compared_reviews": 0.6824900039857585,
+          "all_right": 577201,
+          "all_wrong": 124315,
+          "all_wrong_same_label": 117190,
+          "all_wrong_no_known_cause": 11111,
+          "only_bilstm_right": 9528
+        },
+        "2027": {
+          "bilstm_macro_f1_compared_reviews": 0.6763728131798702,
+          "all_right": 572206,
+          "all_wrong": 121431,
+          "all_wrong_same_label": 113773,
+          "all_wrong_no_known_cause": 10732,
+          "only_bilstm_right": 12412
+        },
+        "2028": {
+          "bilstm_macro_f1_compared_reviews": 0.6809333624936681,
+          "all_right": 575511,
+          "all_wrong": 124329,
+          "all_wrong_same_label": 117184,
+          "all_wrong_no_known_cause": 11339,
+          "only_bilstm_right": 9514
+        }
+      },
+      "relative_spread_of_counts": {
+        "all_right": 0.008687369486549506,
+        "all_wrong": 0.023492535296899278,
+        "all_wrong_same_label": 0.029444458806193934,
+        "all_wrong_no_known_cause": 0.054879151347115906
+      },
+      "reviews_compared": 797508
+    }
+  },
+  "code": {
+    "commit": "eab6ccf01659e749c8c9cf7803d80ddc857dcfa3",
+    "uncommitted_changes": false
+  }
+}

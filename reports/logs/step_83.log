@@ -1,0 +1,103 @@
+Code eab6ccf01659e749c8c9cf7803d80ddc857dcfa3, device NVIDIA RTX PRO 6000 Blackwell Server Edition
+vocabulary 55,254 ids (16s)
+3,552,498 training reviews encoded
+    step 500/55,508, loss 1.2877, 0.2 min
+    step 1,000/55,508, loss 0.9868, 0.4 min
+    step 1,500/55,508, loss 0.9395, 0.6 min
+    step 2,000/55,508, loss 0.9159, 0.8 min
+    step 2,500/55,508, loss 0.9052, 1.0 min
+    step 3,000/55,508, loss 0.8983, 1.2 min
+  check at epoch 0.25: 0.6760 (kept)
+    step 3,500/55,508, loss 0.8943, 1.4 min
+    step 4,000/55,508, loss 0.8823, 1.6 min
+    step 4,500/55,508, loss 0.8757, 1.8 min
+    step 5,000/55,508, loss 0.8725, 2.0 min
+    step 5,500/55,508, loss 0.8632, 2.1 min
+    step 6,000/55,508, loss 0.8671, 2.3 min
+    step 6,500/55,508, loss 0.8676, 2.5 min
+  check at epoch 0.5: 0.6852 (kept)
+    step 7,000/55,508, loss 0.8598, 2.8 min
+    step 7,500/55,508, loss 0.8664, 2.9 min
+    step 8,000/55,508, loss 0.8631, 3.1 min
+    step 8,500/55,508, loss 0.8604, 3.3 min
+    step 9,000/55,508, loss 0.8552, 3.5 min
+    step 9,500/55,508, loss 0.8557, 3.7 min
+    step 10,000/55,508, loss 0.8579, 3.9 min
+  check at epoch 0.75: 0.6923 (kept)
+    step 10,500/55,508, loss 0.8569, 4.1 min
+    step 11,000/55,508, loss 0.8503, 4.3 min
+    step 11,500/55,508, loss 0.8452, 4.5 min
+    step 12,000/55,508, loss 0.8493, 4.7 min
+    step 12,500/55,508, loss 0.8585, 4.9 min
+    step 13,000/55,508, loss 0.8477, 5.1 min
+    step 13,500/55,508, loss 0.8534, 5.3 min
+  check at epoch 1.0: 0.6932 (kept)
+    step 14,000/55,508, loss 0.8436, 5.5 min
+    step 14,500/55,508, loss 0.8350, 5.7 min
+    step 15,000/55,508, loss 0.8378, 5.9 min
+    step 15,500/55,508, loss 0.8398, 6.1 min
+    step 16,000/55,508, loss 0.8344, 6.3 min
+    step 16,500/55,508, loss 0.8329, 6.5 min
+    step 17,000/55,508, loss 0.8346, 6.6 min
+  check at epoch 1.25: 0.6940 (kept)
+    step 17,500/55,508, loss 0.8389, 6.9 min
+    step 18,000/55,508, loss 0.8379, 7.0 min
+    step 18,500/55,508, loss 0.8364, 7.2 min
+    step 19,000/55,508, loss 0.8375, 7.4 min
+    step 19,500/55,508, loss 0.8344, 7.6 min
+    step 20,000/55,508, loss 0.8318, 7.8 min
+    step 20,500/55,508, loss 0.8315, 8.0 min
+  check at epoch 1.5: 0.6957 (kept)
+    step 21,000/55,508, loss 0.8332, 8.2 min
+    step 21,500/55,508, loss 0.8363, 8.4 min
+    step 22,000/55,508, loss 0.8349, 8.6 min
+    step 22,500/55,508, loss 0.8274, 8.8 min
+    step 23,000/55,508, loss 0.8355, 9.0 min
+    step 23,500/55,508, loss 0.8283, 9.2 min
+    step 24,000/55,508, loss 0.8325, 9.4 min
+  check at epoch 1.75: 0.6958 (kept)
+    step 24,500/55,508, loss 0.8287, 9.6 min
+    step 25,000/55,508, loss 0.8316, 9.8 min
+    step 25,500/55,508, loss 0.8298, 10.0 min
+    step 26,000/55,508, loss 0.8237, 10.2 min
+    step 26,500/55,508, loss 0.8252, 10.4 min
+    step 27,000/55,508, loss 0.8322, 10.5 min
+    step 27,500/55,508, loss 0.8209, 10.7 min
+  check at epoch 2.0: 0.6937 (not better)
+    step 28,000/55,508, loss 0.8201, 11.0 min
+    step 28,500/55,508, loss 0.8190, 11.2 min
+    step 29,000/55,508, loss 0.8154, 11.4 min
+    step 29,500/55,508, loss 0.8089, 11.6 min
+    step 30,000/55,508, loss 0.8173, 11.8 min
+    step 30,500/55,508, loss 0.8138, 11.9 min
+    step 31,000/55,508, loss 0.8198, 12.1 min
+  check at epoch 2.25: 0.6974 (kept)
+    step 31,500/55,508, loss 0.8112, 12.4 min
+    step 32,000/55,508, loss 0.8128, 12.5 min
+    step 32,500/55,508, loss 0.8122, 12.7 min
+    step 33,000/55,508, loss 0.8193, 12.9 min
+    step 33,500/55,508, loss 0.8140, 13.1 min
+    step 34,000/55,508, loss 0.8127, 13.3 min
+    step 34,500/55,508, loss 0.8191, 13.5 min
+  check at epoch 2.5: 0.7019 (kept)
+    step 35,000/55,508, loss 0.8124, 13.7 min
+    step 35,500/55,508, loss 0.8160, 13.9 min
+    step 36,000/55,508, loss 0.8160, 14.1 min
+    step 36,500/55,508, loss 0.8145, 14.3 min
+    step 37,000/55,508, loss 0.8105, 14.5 min
+    step 37,500/55,508, loss 0.8083, 14.7 min
+    step 38,000/55,508, loss 0.8096, 14.9 min
+  check at epoch 2.75: 0.7007 (not better)
+    step 38,500/55,508, loss 0.8204, 15.1 min
+    step 39,000/55,508, loss 0.8142, 15.3 min
+    step 39,500/55,508, loss 0.8114, 15.5 min
+    step 40,000/55,508, loss 0.8143, 15.7 min
+    step 40,500/55,508, loss 0.8038, 15.9 min
+    step 41,000/55,508, loss 0.8098, 16.1 min
+    step 41,500/55,508, loss 0.8132, 16.3 min
+  check at epoch 3.0: 0.6985 (not better)
+  stopped early: no gain in the last checks
+Scoring the whole validation set with the weights from step 34,690
+  recommendation: without offsets 0.6943, with offsets 0.7182
+  rating_band: without offsets 0.6599, with offsets 0.6811
+Done
