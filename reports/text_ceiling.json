@@ -1,0 +1,1019 @@
+{
+  "created_at": "2026-11-07T15:43:18+00:00",
+  "plan": "reports/text_ceiling_plan.md",
+  "checks": {
+    "fabert": {
+      "recommendation": 0.7324370442721989,
+      "rating_band": 0.692190273060563
+    },
+    "tfidf": {
+      "recommendation": 0.7016757031931711,
+      "rating_band": 0.6682810859846451
+    },
+    "bilstm": {
+      "recommendation": 0.7175581115767086,
+      "rating_band": 0.6826093995653655
+    }
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  },
+  "heads": {
+    "recommendation": {
+      "reviews": 745860,
+      "by_min_count": {
+        "2": {
+          "distinct_texts": 23526,
+          "reviews": 227829,
+          "share_of_compared_reviews": 0.3055,
+          "true_label_counts": {
+            "recommended": 201852,
+            "not_recommended": 8478,
+            "no_idea": 17499
+          },
+          "ceiling_accuracy": 0.9312993517067625,
+          "most_frequent_label_per_text": {
+            "accuracy": 0.9312993517067625,
+            "macro_f1": 0.7434800620684244,
+            "recall": {
+              "recommended": 0.9853110199552148,
+              "not_recommended": 0.7951167728237792,
+              "no_idea": 0.37424995714040804
+            }
+          },
+          "most_frequent_label_gives": {
+            "recommended": 209152,
+            "not_recommended": 8662,
+            "no_idea": 10015
+          },
+          "train_majority": {
+            "reviews_with_text_in_train": 222473,
+            "accuracy": 0.9237390604702593,
+            "macro_f1": 0.7125808156111729,
+            "recall": {
+              "recommended": 0.9805090540711663,
+              "not_recommended": 0.7410747374922791,
+              "no_idea": 0.3498495841443992
+            }
+          },
+          "models": {
+            "fabert": {
+              "accuracy": 0.922226757787639,
+              "macro_f1": 0.7329743607539307,
+              "recall": {
+                "recommended": 0.9711273606404692,
+                "not_recommended": 0.7060627506487379,
+                "no_idea": 0.46288359334819135
+              }
+            },
+            "tfidf": {
+              "accuracy": 0.9175873132919865,
+              "macro_f1": 0.7308338721952627,
+              "recall": {
+                "recommended": 0.9631165408318967,
+                "not_recommended": 0.7068884170794999,
+                "no_idea": 0.4944853991656666
+              }
+            },
+            "bilstm": {
+              "accuracy": 0.9218405031844058,
+              "macro_f1": 0.7277490876830668,
+              "recall": {
+                "recommended": 0.9723113964686998,
+                "not_recommended": 0.6756310450577967,
+                "no_idea": 0.45894051088633636
+              }
+            }
+          },
+          "models_with_two_answers_for_one_text": {
+            "fabert": 93,
+            "tfidf": 0,
+            "bilstm": 139
+          }
+        },
+        "5": {
+          "distinct_texts": 5654,
+          "reviews": 184278,
+          "share_of_compared_reviews": 0.2471,
+          "true_label_counts": {
+            "recommended": 164804,
+            "not_recommended": 6003,
+            "no_idea": 13471
+          },
+          "ceiling_accuracy": 0.9295737961123954,
+          "most_frequent_label_per_text": {
+            "accuracy": 0.9295737961123954,
+            "macro_f1": 0.7237639347133444,
+            "recall": {
+              "recommended": 0.9831618164607655,
+              "not_recommended": 0.7712810261535898,
+              "no_idea": 0.34451785316606043
+            }
+          },
+          "most_frequent_label_gives": {
+            "recommended": 170385,
+            "not_recommended": 6033,
+            "no_idea": 7860
+          },
+          "train_majority": {
+            "reviews_with_text_in_train": 184273,
+            "accuracy": 0.9274934472223277,
+            "macro_f1": 0.7151917164026323,
+            "recall": {
+              "recommended": 0.981996249977245,
+              "not_recommended": 0.7466266866566716,
+              "no_idea": 0.34132581100141046
+            }
+          },
+          "models": {
+            "fabert": {
+              "accuracy": 0.9261821812696035,
+              "macro_f1": 0.733423116127839,
+              "recall": {
+                "recommended": 0.9727676512706003,
+                "not_recommended": 0.7138097617857738,
+                "no_idea": 0.4508945141414891
+              }
+            },
+            "tfidf": {
+              "accuracy": 0.9228719651830387,
+              "macro_f1": 0.7326429439845672,
+              "recall": {
+                "recommended": 0.9670032280769885,
+                "not_recommended": 0.7119773446610028,
+                "no_idea": 0.47695048622967856
+              }
+            },
+            "bilstm": {
+              "accuracy": 0.9260953559296281,
+              "macro_f1": 0.7299173909229114,
+              "recall": {
+                "recommended": 0.9735868061454819,
+                "not_recommended": 0.6866566716641679,
+                "no_idea": 0.4517853166060426
+              }
+            }
+          },
+          "models_with_two_answers_for_one_text": {
+            "fabert": 20,
+            "tfidf": 0,
+            "bilstm": 39
+          }
+        },
+        "20": {
+          "distinct_texts": 1163,
+          "reviews": 146711,
+          "share_of_compared_reviews": 0.1967,
+          "true_label_counts": {
+            "recommended": 132593,
+            "not_recommended": 3807,
+            "no_idea": 10311
+          },
+          "ceiling_accuracy": 0.9305028252823578,
+          "most_frequent_label_per_text": {
+            "accuracy": 0.9305028252823578,
+            "macro_f1": 0.7117477233984862,
+            "recall": {
+              "recommended": 0.9828271477378142,
+              "not_recommended": 0.737063304439191,
+              "no_idea": 0.32906604597032296
+            }
+          },
+          "most_frequent_label_gives": {
+            "recommended": 137044,
+            "not_recommended": 3644,
+            "no_idea": 6023
+          },
+          "train_majority": {
+            "reviews_with_text_in_train": 146711,
+            "accuracy": 0.9299234549556611,
+            "macro_f1": 0.7096938428807541,
+            "recall": {
+              "recommended": 0.9822916745227878,
+              "not_recommended": 0.723404255319149,
+              "no_idea": 0.3327514305111046
+            }
+          },
+          "models": {
+            "fabert": {
+              "accuracy": 0.9290578075263614,
+              "macro_f1": 0.7286756822712382,
+              "recall": {
+                "recommended": 0.9736034330620772,
+                "not_recommended": 0.6963488311006042,
+                "no_idea": 0.44214916109009794
+              }
+            },
+            "tfidf": {
+              "accuracy": 0.9269175453783288,
+              "macro_f1": 0.7289366758858818,
+              "recall": {
+                "recommended": 0.9698174111755522,
+                "not_recommended": 0.6963488311006042,
+                "no_idea": 0.46038211618659686
+              }
+            },
+            "bilstm": {
+              "accuracy": 0.9289283012180409,
+              "macro_f1": 0.7251771341058507,
+              "recall": {
+                "recommended": 0.9741011968957637,
+                "not_recommended": 0.6703441029682164,
+                "no_idea": 0.44350693434196486
+              }
+            }
+          },
+          "models_with_two_answers_for_one_text": {
+            "fabert": 2,
+            "tfidf": 0,
+            "bilstm": 9
+          }
+        }
+      },
+      "most_frequent_texts": [
+        {
+          "text": "عالی",
+          "reviews": 15678,
+          "labels": {
+            "recommended": 15517,
+            "not_recommended": 50,
+            "no_idea": 111
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "خوب بود",
+          "reviews": 9857,
+          "labels": {
+            "recommended": 9209,
+            "not_recommended": 43,
+            "no_idea": 605
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "خوبه",
+          "reviews": 9093,
+          "labels": {
+            "recommended": 8499,
+            "not_recommended": 37,
+            "no_idea": 557
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "خوب",
+          "reviews": 7197,
+          "labels": {
+            "recommended": 6651,
+            "not_recommended": 42,
+            "no_idea": 504
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "عالی بود",
+          "reviews": 3608,
+          "labels": {
+            "recommended": 3572,
+            "not_recommended": 8,
+            "no_idea": 28
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "عالیه",
+          "reviews": 2858,
+          "labels": {
+            "recommended": 2822,
+            "not_recommended": 2,
+            "no_idea": 34
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "خیلی خوب بود",
+          "reviews": 2172,
+          "labels": {
+            "recommended": 2155,
+            "not_recommended": 4,
+            "no_idea": 13
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "پیشنهاد میکنم",
+          "reviews": 1922,
+          "labels": {
+            "recommended": 1886,
+            "not_recommended": 2,
+            "no_idea": 34
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "معمولی",
+          "reviews": 1637,
+          "labels": {
+            "recommended": 620,
+            "not_recommended": 66,
+            "no_idea": 951
+          },
+          "models_say_most_often": {
+            "fabert": "no_idea",
+            "tfidf": "no_idea",
+            "bilstm": "no_idea"
+          }
+        },
+        {
+          "text": "خیلی خوبه",
+          "reviews": 1607,
+          "labels": {
+            "recommended": 1588,
+            "not_recommended": 4,
+            "no_idea": 15
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "نسبت به قیمتش خوبه",
+          "reviews": 1239,
+          "labels": {
+            "recommended": 1060,
+            "not_recommended": 7,
+            "no_idea": 172
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "بسیار عالی",
+          "reviews": 1201,
+          "labels": {
+            "recommended": 1193,
+            "not_recommended": 2,
+            "no_idea": 6
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "کیفیت خوبی داره",
+          "reviews": 1150,
+          "labels": {
+            "recommended": 1115,
+            "not_recommended": 3,
+            "no_idea": 32
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "بد نیست",
+          "reviews": 1118,
+          "labels": {
+            "recommended": 559,
+            "not_recommended": 30,
+            "no_idea": 529
+          },
+          "models_say_most_often": {
+            "fabert": "no_idea",
+            "tfidf": "no_idea",
+            "bilstm": "no_idea"
+          }
+        },
+        {
+          "text": "قیمت مناسب",
+          "reviews": 1011,
+          "labels": {
+            "recommended": 946,
+            "not_recommended": 5,
+            "no_idea": 60
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "توصیه میکنم",
+          "reviews": 951,
+          "labels": {
+            "recommended": 943,
+            "not_recommended": 1,
+            "no_idea": 7
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "راضی بودم",
+          "reviews": 941,
+          "labels": {
+            "recommended": 911,
+            "not_recommended": 3,
+            "no_idea": 27
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "نسبت به قیمت خوبه",
+          "reviews": 934,
+          "labels": {
+            "recommended": 833,
+            "not_recommended": 2,
+            "no_idea": 99
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "خوب بود راضی بودم",
+          "reviews": 891,
+          "labels": {
+            "recommended": 874,
+            "not_recommended": 0,
+            "no_idea": 17
+          },
+          "models_say_most_often": {
+            "fabert": "recommended",
+            "tfidf": "recommended",
+            "bilstm": "recommended"
+          }
+        },
+        {
+          "text": "بد نبود",
+          "reviews": 839,
+          "labels": {
+            "recommended": 385,
+            "not_recommended": 33,
+            "no_idea": 421
+          },
+          "models_say_most_often": {
+            "fabert": "no_idea",
+            "tfidf": "no_idea",
+            "bilstm": "no_idea"
+          }
+        }
+      ]
+    },
+    "rating_band": {
+      "reviews": 797508,
+      "by_min_count": {
+        "2": {
+          "distinct_texts": 24626,
+          "reviews": 256705,
+          "share_of_compared_reviews": 0.3219,
+          "true_label_counts": {
+            "low": 12497,
+            "medium": 41684,
+            "high": 202524
+          },
+          "ceiling_accuracy": 0.8539101303052141,
+          "most_frequent_label_per_text": {
+            "accuracy": 0.8539101303052141,
+            "macro_f1": 0.69877459346467,
+            "recall": {
+              "low": 0.6637593022325358,
+              "medium": 0.367671048843681,
+              "high": 0.9657225810274338
+            }
+          },
+          "most_frequent_label_gives": {
+            "low": 11114,
+            "medium": 23063,
+            "high": 222528
+          },
+          "train_majority": {
+            "reviews_with_text_in_train": 251296,
+            "accuracy": 0.8393886094486184,
+            "macro_f1": 0.6494414752552345,
+            "recall": {
+              "low": 0.5861212321960915,
+              "medium": 0.2833633071370501,
+              "high": 0.9684134743667843
+            }
+          },
+          "models": {
+            "fabert": {
+              "accuracy": 0.8320913110379619,
+              "macro_f1": 0.6615550942891689,
+              "recall": {
+                "low": 0.5602144514683524,
+                "medium": 0.3564677094328759,
+                "high": 0.9467618652604136
+              }
+            },
+            "tfidf": {
+              "accuracy": 0.8294891022769326,
+              "macro_f1": 0.6630114327498883,
+              "recall": {
+                "low": 0.5608546051052252,
+                "medium": 0.3748440648690145,
+                "high": 0.9396417214749857
+              }
+            },
+            "bilstm": {
+              "accuracy": 0.8319199080656785,
+              "macro_f1": 0.6595091322682952,
+              "recall": {
+                "low": 0.5588541249899976,
+                "medium": 0.3492467133672392,
+                "high": 0.9481147913333728
+              }
+            }
+          },
+          "models_with_two_answers_for_one_text": {
+            "fabert": 0,
+            "tfidf": 52,
+            "bilstm": 0
+          }
+        },
+        "5": {
+          "distinct_texts": 5977,
+          "reviews": 211200,
+          "share_of_compared_reviews": 0.2648,
+          "true_label_counts": {
+            "low": 9322,
+            "medium": 33654,
+            "high": 168224
+          },
+          "ceiling_accuracy": 0.8481960227272727,
+          "most_frequent_label_per_text": {
+            "accuracy": 0.8481960227272727,
+            "macro_f1": 0.653993267653853,
+            "recall": {
+              "low": 0.5799184724308089,
+              "medium": 0.2742913175254056,
+              "high": 0.9778747384439794
+            }
+          },
+          "most_frequent_label_gives": {
+            "low": 7157,
+            "medium": 13976,
+            "high": 190067
+          },
+          "train_majority": {
+            "reviews_with_text_in_train": 211195,
+            "accuracy": 0.8451099694595042,
+            "macro_f1": 0.6432570261745012,
+            "recall": {
+              "low": 0.5554602016734607,
+              "medium": 0.2614625739161442,
+              "high": 0.9779217691118773
+            }
+          },
+          "models": {
+            "fabert": {
+              "accuracy": 0.8362878787878788,
+              "macro_f1": 0.6544520370867432,
+              "recall": {
+                "low": 0.5372237717228062,
+                "medium": 0.3392464491590896,
+                "high": 0.9522957485257751
+              }
+            },
+            "tfidf": {
+              "accuracy": 0.8331297348484848,
+              "macro_f1": 0.6563292487577532,
+              "recall": {
+                "low": 0.5365801330186655,
+                "medium": 0.3596006418256374,
+                "high": 0.9442945120791326
+              }
+            },
+            "bilstm": {
+              "accuracy": 0.8363352272727272,
+              "macro_f1": 0.6541580280563098,
+              "recall": {
+                "low": 0.5401201458914396,
+                "medium": 0.335353895525049,
+                "high": 0.9529734163971847
+              }
+            }
+          },
+          "models_with_two_answers_for_one_text": {
+            "fabert": 0,
+            "tfidf": 15,
+            "bilstm": 0
+          }
+        },
+        "20": {
+          "distinct_texts": 1262,
+          "reviews": 171824,
+          "share_of_compared_reviews": 0.2155,
+          "true_label_counts": {
+            "low": 6695,
+            "medium": 26950,
+            "high": 138179
+          },
+          "ceiling_accuracy": 0.8484612161281311,
+          "most_frequent_label_per_text": {
+            "accuracy": 0.8484612161281311,
+            "macro_f1": 0.6336334467050935,
+            "recall": {
+              "low": 0.5241224794622853,
+              "medium": 0.2517625231910946,
+              "high": 0.9805542086713611
+            }
+          },
+          "most_frequent_label_gives": {
+            "low": 4664,
+            "medium": 10255,
+            "high": 156905
+          },
+          "train_majority": {
+            "reviews_with_text_in_train": 171824,
+            "accuracy": 0.8481120216035013,
+            "macro_f1": 0.6306030465088885,
+            "recall": {
+              "low": 0.5032113517550411,
+              "medium": 0.2519480519480519,
+              "high": 0.9810969828989934
+            }
+          },
+          "models": {
+            "fabert": {
+              "accuracy": 0.8405926995064718,
+              "macro_f1": 0.6419945532897425,
+              "recall": {
+                "low": 0.49260642270351007,
+                "medium": 0.32307977736549165,
+                "high": 0.958387309214859
+              }
+            },
+            "tfidf": {
+              "accuracy": 0.8360822702300028,
+              "macro_f1": 0.6445598035291599,
+              "recall": {
+                "low": 0.49051530993278564,
+                "medium": 0.35087198515769946,
+                "high": 0.9474594547651959
+              }
+            },
+            "bilstm": {
+              "accuracy": 0.8403599031567185,
+              "macro_f1": 0.6428137012552689,
+              "recall": {
+                "low": 0.49768483943241226,
+                "medium": 0.3233395176252319,
+                "high": 0.9578011130490162
+              }
+            }
+          },
+          "models_with_two_answers_for_one_text": {
+            "fabert": 0,
+            "tfidf": 5,
+            "bilstm": 0
+          }
+        }
+      },
+      "most_frequent_texts": [
+        {
+          "text": "عالی",
+          "reviews": 21191,
+          "labels": {
+            "low": 214,
+            "medium": 562,
+            "high": 20415
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "خوبه",
+          "reviews": 12057,
+          "labels": {
+            "low": 293,
+            "medium": 1877,
+            "high": 9887
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "خوب بود",
+          "reviews": 11888,
+          "labels": {
+            "low": 228,
+            "medium": 2250,
+            "high": 9410
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "خوب",
+          "reviews": 10031,
+          "labels": {
+            "low": 387,
+            "medium": 1454,
+            "high": 8190
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "عالی بود",
+          "reviews": 4327,
+          "labels": {
+            "low": 37,
+            "medium": 305,
+            "high": 3985
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "عالیه",
+          "reviews": 3415,
+          "labels": {
+            "low": 25,
+            "medium": 181,
+            "high": 3209
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "خیلی خوب بود",
+          "reviews": 2316,
+          "labels": {
+            "low": 10,
+            "medium": 120,
+            "high": 2186
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "معمولی",
+          "reviews": 2143,
+          "labels": {
+            "low": 139,
+            "medium": 1678,
+            "high": 326
+          },
+          "models_say_most_often": {
+            "fabert": "medium",
+            "tfidf": "medium",
+            "bilstm": "medium"
+          }
+        },
+        {
+          "text": "پیشنهاد میکنم",
+          "reviews": 1978,
+          "labels": {
+            "low": 18,
+            "medium": 174,
+            "high": 1786
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "خیلی خوبه",
+          "reviews": 1856,
+          "labels": {
+            "low": 10,
+            "medium": 149,
+            "high": 1697
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "بسیار عالی",
+          "reviews": 1408,
+          "labels": {
+            "low": 5,
+            "medium": 81,
+            "high": 1322
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "بد نیست",
+          "reviews": 1352,
+          "labels": {
+            "low": 102,
+            "medium": 797,
+            "high": 453
+          },
+          "models_say_most_often": {
+            "fabert": "medium",
+            "tfidf": "medium",
+            "bilstm": "medium"
+          }
+        },
+        {
+          "text": "نسبت به قیمتش خوبه",
+          "reviews": 1316,
+          "labels": {
+            "low": 23,
+            "medium": 418,
+            "high": 875
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "medium",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "کیفیت خوبی داره",
+          "reviews": 1161,
+          "labels": {
+            "low": 7,
+            "medium": 129,
+            "high": 1025
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "قیمت مناسب",
+          "reviews": 1155,
+          "labels": {
+            "low": 20,
+            "medium": 200,
+            "high": 935
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "راضی بودم",
+          "reviews": 1108,
+          "labels": {
+            "low": 9,
+            "medium": 132,
+            "high": 967
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "بد نبود",
+          "reviews": 1049,
+          "labels": {
+            "low": 109,
+            "medium": 600,
+            "high": 340
+          },
+          "models_say_most_often": {
+            "fabert": "medium",
+            "tfidf": "medium",
+            "bilstm": "medium"
+          }
+        },
+        {
+          "text": "نسبت به قیمت خوبه",
+          "reviews": 1022,
+          "labels": {
+            "low": 31,
+            "medium": 308,
+            "high": 683
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "medium",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "توصیه میکنم",
+          "reviews": 979,
+          "labels": {
+            "low": 13,
+            "medium": 96,
+            "high": 870
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        },
+        {
+          "text": "خوب بود راضی بودم",
+          "reviews": 914,
+          "labels": {
+            "low": 4,
+            "medium": 112,
+            "high": 798
+          },
+          "models_say_most_often": {
+            "fabert": "high",
+            "tfidf": "high",
+            "bilstm": "high"
+          }
+        }
+      ]
+    }
+  },
+  "code": {
+    "commit": "3e8e9824d4381acd77e650c60648c4c3124c37d4",
+    "uncommitted_changes": false
+  }
+}
