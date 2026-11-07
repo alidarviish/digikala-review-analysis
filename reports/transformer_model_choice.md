@@ -222,3 +222,52 @@ The predictions: the best check came earlier than expected (epoch 2.75, not 3 or
 gain was smaller than expected (0.1 to 0.3 point, not 0.3 to 0.8), and the validation loss
 did rise later in training, after epoch 3 rather than epoch 2. Trying 6 to 8 epochs is
 dropped.
+
+## The kept model in brief (the details the project asks for)
+
+Gathered from the files above; nothing new was run for this section.
+
+- **Checkpoint:** `sbunlp/fabert` from the Hugging Face hub (hub commit 4cad285 when the
+  tokenizers were compared), a BERT-base encoder pretrained on Persian blogs (the HmBlogs
+  corpus; Masumi et al., "FaBERT: Pre-training BERT on Persian Blogs", Proceedings of the Tenth
+  Workshop on Noisy and User-generated Text, 2025).
+- **Licence:** neither the model card nor the files of the hub repository state a licence
+  (checked on 2026-11-08: no licence tag, no LICENSE file). The weights are public and are used
+  here for study and research, with the paper cited; any other use needs the authors'
+  permission first.
+- **Why this model:** the tokenizer and pilot comparisons above: FaBERT tied the three times
+  larger TookaBERT-Large within the spread between seeds, at 2.6 times the speed and a third of
+  the memory, and beat the other base models.
+- **Tokenizer and length:** FaBERT's own WordPiece tokenizer (`BertTokenizer`, vocabulary of
+  50,000), on the project's normalized text. A review is cut at 128 tokens; on a 50,000-review
+  sample the median review has 7 tokens, the 99th percentile 72, and 0.21% are longer than 128
+  (`reports/tokenizers/compare.json`). Unknown tokens are 0.07% of all tokens, almost all emoji
+  (`reports/label_analyses.md`, part 4).
+- **Network:** the encoder and one linear head per task (recommendation, rating band) on the
+  first token's output. Parameters: 124,445,958, all of them trained (the whole encoder is
+  fine-tuned; nothing is frozen); the two heads are 2,307 of them each.
+- **Loss:** the sum of the two heads' cross-entropies; a review without a label for a head is
+  ignored for that head only (its other label is still used). No class weights (class weights
+  and focal loss were tried and did not help: `reports/hard_examples_plan.md`).
+- **Training settings:** AdamW, learning rate 3e-5 for the encoder and the heads alike (2e-5,
+  5e-5 and a layer-wise decay of 0.9 that gives lower layers a lower rate were tried and did
+  not help: `reports/learning_rate_plan.md`), weight decay 0.01 (none on biases and norms),
+  6% linear warmup then linear decay to 0, batch 64 with no gradient accumulation, dropout 0.1,
+  gradient norm clipped at 1.0, bfloat16 on the GPU, seed 2026.
+- **Checkpoint choice:** 4 epochs over all 3,552,498 training reviews (55,508 steps per
+  epoch), four checks per epoch on a fixed 50,000-review validation sample (mean Macro F1 of
+  the two heads with offsets), the best check kept; no early stopping in the kept run. Kept:
+  epoch 2.75 (step 152,647), 121 minutes of training.
+- **Overfitting:** the validation loss of the checks fell from 0.832 to about 0.80 by epoch 2,
+  stayed near 0.81 up to epoch 3, then jumped to 0.84 from epoch 3.25 while the training loss
+  kept falling and Macro F1 drifted down (`reports/figures/results_training_curve.png`).
+  `reports/transformer_final/vs_tfidf.json` records, for both heads together, a training
+  loss of 0.751 (the training losses logged before the kept step) against 0.805 on the whole
+  validation set: a small gap. The first
+  run, which stopped early at epoch 1.25, was replaced by this one by the rule written before
+  it ran.
+- **Did fine-tuning help:** yes, against TF-IDF on the same validation reviews with offsets,
+  recommendation 0.7324 against 0.7017 (+0.0308 [+0.0295, +0.0321]) and rating band 0.6922
+  against 0.6683 (+0.0239 [+0.0229, +0.0249]), better on every class
+  (`reports/transformer_final/vs_tfidf.json`). Stability across training seeds:
+  `reports/full_seeds_plan.md`.
