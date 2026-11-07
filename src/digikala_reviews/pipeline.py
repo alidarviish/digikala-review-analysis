@@ -908,6 +908,42 @@ STEPS = [
         [60, 71, 74, 84, 88, 89, 90, 91, 92],
         files("reports/full_seeds.json"),
         "reads the saved predictions of the models, which stay on your machine",
+    ),  # Every score the project asks for, for every final model
+    Step(
+        94,
+        "Required scores of every final model: accuracy, macro precision and recall, ordinal error",
+        ["scripts/score_required_metrics.py"],
+        "local",
+        [17, 33, 60, 61, 71, 74, 77],
+        files("reports/required_metrics.json"),
+        "reads the saved predictions of the models, which stay on your machine",
+    ),  # Three analyses that ran before they had a step of their own
+    Step(
+        95,
+        "Where FaBERT's validation loss comes from (reports/loss_analysis_plan.md)",
+        ["scripts/analyze_loss.py"],
+        "local",
+        [9, 33],
+        files("reports/loss_analysis.json"),
+        "reads FaBERT's saved predictions and the training cache, which stay on your machine",
+    ),
+    Step(
+        96,
+        "What merging the training reviews by text would change (reports/merged_texts_plan.md)",
+        ["scripts/check_merged_texts.py"],
+        "local",
+        [9],
+        files("reports/merged_texts_check.json"),
+        "reads the training cache only",
+    ),
+    Step(
+        97,
+        "Where focal loss would move the training weight (reports/hard_examples_plan.md)",
+        ["scripts/check_hard_examples.py"],
+        "local",
+        [9, 35],
+        files("reports/hard_examples_check.json"),
+        "reads the saved probabilities of the three FaBERT pilot runs, which stay on your machine",
     ),
 ]
 
