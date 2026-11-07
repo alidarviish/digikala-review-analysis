@@ -1,0 +1,1127 @@
+{
+  "created_at": "2026-11-07T14:06:07+00:00",
+  "plan": "reports/reading_models_plan.md",
+  "models": {
+    "fabert": "transformer_no_early_stop",
+    "tfidf": "tfidf_final",
+    "bilstm": "bilstm"
+  },
+  "reviews_compared": 872795,
+  "left_out_choosing_sample": 50000,
+  "checks": {
+    "macro_f1_whole_validation_matches_record": {
+      "fabert": {
+        "recommendation": 0.7324370442721989,
+        "rating_band": 0.692190273060563
+      },
+      "tfidf": {
+        "recommendation": 0.7016757031931711,
+        "rating_band": 0.6682810859846451
+      },
+      "bilstm": {
+        "recommendation": 0.7175581115767086,
+        "rating_band": 0.6826093995653655
+      }
+    },
+    "data": {
+      "normalizer_version": "2",
+      "sha256": {
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      }
+    }
+  },
+  "heads": {
+    "recommendation": {
+      "reviews": 745860,
+      "macro_f1": {
+        "fabert": 0.732404439399493,
+        "tfidf": 0.7019287327408827,
+        "bilstm": 0.7174869264719632
+      },
+      "overall": {
+        "reviews": 745860,
+        "patterns": {
+          "fabert right, tfidf right, bilstm right": {
+            "count": 604117,
+            "share": 0.80996
+          },
+          "fabert right, tfidf right, bilstm wrong": {
+            "count": 8795,
+            "share": 0.011792
+          },
+          "fabert right, tfidf wrong, bilstm right": {
+            "count": 28054,
+            "share": 0.037613
+          },
+          "fabert right, tfidf wrong, bilstm wrong": {
+            "count": 10650,
+            "share": 0.014279
+          },
+          "fabert wrong, tfidf right, bilstm right": {
+            "count": 8686,
+            "share": 0.011646
+          },
+          "fabert wrong, tfidf right, bilstm wrong": {
+            "count": 11595,
+            "share": 0.015546
+          },
+          "fabert wrong, tfidf wrong, bilstm right": {
+            "count": 7624,
+            "share": 0.010222
+          },
+          "fabert wrong, tfidf wrong, bilstm wrong": {
+            "count": 66339,
+            "share": 0.088943
+          }
+        },
+        "groups": {
+          "all right": {
+            "count": 604117,
+            "share": 0.80996
+          },
+          "all wrong": {
+            "count": 66339,
+            "share": 0.088943
+          },
+          "exactly 1 right": {
+            "count": 29869,
+            "share": 0.040046
+          },
+          "exactly 2 right": {
+            "count": 45535,
+            "share": 0.06105
+          }
+        },
+        "only_this_model_right": {
+          "fabert": {
+            "count": 10650,
+            "share": 0.014279
+          },
+          "tfidf": {
+            "count": 11595,
+            "share": 0.015546
+          },
+          "bilstm": {
+            "count": 7624,
+            "share": 0.010222
+          }
+        },
+        "only_this_model_wrong": {
+          "fabert": {
+            "count": 8686,
+            "share": 0.011646
+          },
+          "tfidf": {
+            "count": 28054,
+            "share": 0.037613
+          },
+          "bilstm": {
+            "count": 8795,
+            "share": 0.011792
+          }
+        }
+      },
+      "by_true_class": {
+        "recommended": {
+          "reviews": 590237,
+          "patterns": {
+            "fabert right, tfidf right, bilstm right": {
+              "count": 529828,
+              "share": 0.897653
+            },
+            "fabert right, tfidf right, bilstm wrong": {
+              "count": 2259,
+              "share": 0.003827
+            },
+            "fabert right, tfidf wrong, bilstm right": {
+              "count": 19302,
+              "share": 0.032702
+            },
+            "fabert right, tfidf wrong, bilstm wrong": {
+              "count": 3643,
+              "share": 0.006172
+            },
+            "fabert wrong, tfidf right, bilstm right": {
+              "count": 4226,
+              "share": 0.00716
+            },
+            "fabert wrong, tfidf right, bilstm wrong": {
+              "count": 2887,
+              "share": 0.004891
+            },
+            "fabert wrong, tfidf wrong, bilstm right": {
+              "count": 4296,
+              "share": 0.007278
+            },
+            "fabert wrong, tfidf wrong, bilstm wrong": {
+              "count": 23796,
+              "share": 0.040316
+            }
+          },
+          "groups": {
+            "all right": {
+              "count": 529828,
+              "share": 0.897653
+            },
+            "all wrong": {
+              "count": 23796,
+              "share": 0.040316
+            },
+            "exactly 1 right": {
+              "count": 10826,
+              "share": 0.018342
+            },
+            "exactly 2 right": {
+              "count": 25787,
+              "share": 0.043689
+            }
+          },
+          "only_this_model_right": {
+            "fabert": {
+              "count": 3643,
+              "share": 0.006172
+            },
+            "tfidf": {
+              "count": 2887,
+              "share": 0.004891
+            },
+            "bilstm": {
+              "count": 4296,
+              "share": 0.007278
+            }
+          },
+          "only_this_model_wrong": {
+            "fabert": {
+              "count": 4226,
+              "share": 0.00716
+            },
+            "tfidf": {
+              "count": 19302,
+              "share": 0.032702
+            },
+            "bilstm": {
+              "count": 2259,
+              "share": 0.003827
+            }
+          }
+        },
+        "not_recommended": {
+          "reviews": 71461,
+          "patterns": {
+            "fabert right, tfidf right, bilstm right": {
+              "count": 41831,
+              "share": 0.585368
+            },
+            "fabert right, tfidf right, bilstm wrong": {
+              "count": 2866,
+              "share": 0.040106
+            },
+            "fabert right, tfidf wrong, bilstm right": {
+              "count": 3195,
+              "share": 0.04471
+            },
+            "fabert right, tfidf wrong, bilstm wrong": {
+              "count": 3283,
+              "share": 0.045941
+            },
+            "fabert wrong, tfidf right, bilstm right": {
+              "count": 1695,
+              "share": 0.023719
+            },
+            "fabert wrong, tfidf right, bilstm wrong": {
+              "count": 2530,
+              "share": 0.035404
+            },
+            "fabert wrong, tfidf wrong, bilstm right": {
+              "count": 960,
+              "share": 0.013434
+            },
+            "fabert wrong, tfidf wrong, bilstm wrong": {
+              "count": 15101,
+              "share": 0.211318
+            }
+          },
+          "groups": {
+            "all right": {
+              "count": 41831,
+              "share": 0.585368
+            },
+            "all wrong": {
+              "count": 15101,
+              "share": 0.211318
+            },
+            "exactly 1 right": {
+              "count": 6773,
+              "share": 0.094779
+            },
+            "exactly 2 right": {
+              "count": 7756,
+              "share": 0.108535
+            }
+          },
+          "only_this_model_right": {
+            "fabert": {
+              "count": 3283,
+              "share": 0.045941
+            },
+            "tfidf": {
+              "count": 2530,
+              "share": 0.035404
+            },
+            "bilstm": {
+              "count": 960,
+              "share": 0.013434
+            }
+          },
+          "only_this_model_wrong": {
+            "fabert": {
+              "count": 1695,
+              "share": 0.023719
+            },
+            "tfidf": {
+              "count": 3195,
+              "share": 0.04471
+            },
+            "bilstm": {
+              "count": 2866,
+              "share": 0.040106
+            }
+          }
+        },
+        "no_idea": {
+          "reviews": 84162,
+          "patterns": {
+            "fabert right, tfidf right, bilstm right": {
+              "count": 32458,
+              "share": 0.385661
+            },
+            "fabert right, tfidf right, bilstm wrong": {
+              "count": 3670,
+              "share": 0.043606
+            },
+            "fabert right, tfidf wrong, bilstm right": {
+              "count": 5557,
+              "share": 0.066027
+            },
+            "fabert right, tfidf wrong, bilstm wrong": {
+              "count": 3724,
+              "share": 0.044248
+            },
+            "fabert wrong, tfidf right, bilstm right": {
+              "count": 2765,
+              "share": 0.032853
+            },
+            "fabert wrong, tfidf right, bilstm wrong": {
+              "count": 6178,
+              "share": 0.073406
+            },
+            "fabert wrong, tfidf wrong, bilstm right": {
+              "count": 2368,
+              "share": 0.028136
+            },
+            "fabert wrong, tfidf wrong, bilstm wrong": {
+              "count": 27442,
+              "share": 0.326062
+            }
+          },
+          "groups": {
+            "all right": {
+              "count": 32458,
+              "share": 0.385661
+            },
+            "all wrong": {
+              "count": 27442,
+              "share": 0.326062
+            },
+            "exactly 1 right": {
+              "count": 12270,
+              "share": 0.14579
+            },
+            "exactly 2 right": {
+              "count": 11992,
+              "share": 0.142487
+            }
+          },
+          "only_this_model_right": {
+            "fabert": {
+              "count": 3724,
+              "share": 0.044248
+            },
+            "tfidf": {
+              "count": 6178,
+              "share": 0.073406
+            },
+            "bilstm": {
+              "count": 2368,
+              "share": 0.028136
+            }
+          },
+          "only_this_model_wrong": {
+            "fabert": {
+              "count": 2765,
+              "share": 0.032853
+            },
+            "tfidf": {
+              "count": 5557,
+              "share": 0.066027
+            },
+            "bilstm": {
+              "count": 3670,
+              "share": 0.043606
+            }
+          }
+        }
+      },
+      "all_wrong_same_label": {
+        "count": 59722,
+        "share": 0.900255,
+        "by_label": {
+          "true recommended, all said not_recommended": 1753,
+          "true recommended, all said no_idea": 19069,
+          "true not_recommended, all said recommended": 2142,
+          "true not_recommended, all said no_idea": 10031,
+          "true no_idea, all said recommended": 20120,
+          "true no_idea, all said not_recommended": 6607
+        }
+      },
+      "causes": {
+        "all right": {
+          "buyer_labels_disagree": {
+            "count": 67642,
+            "share": 0.111968
+          },
+          "buyer_labels_strongly_disagree": {
+            "count": 3712,
+            "share": 0.006145
+          },
+          "rate_exactly_3": {
+            "count": 70859,
+            "share": 0.117294
+          },
+          "text_also_in_train": {
+            "count": 242483,
+            "share": 0.401384
+          },
+          "emoji": {
+            "count": 4852,
+            "share": 0.008032
+          },
+          "three_words_or_fewer": {
+            "count": 170594,
+            "share": 0.282386
+          },
+          "none_of_these": {
+            "count": 288483,
+            "share": 0.477528
+          },
+          "reviews": 604117
+        },
+        "some right": {
+          "buyer_labels_disagree": {
+            "count": 19075,
+            "share": 0.252971
+          },
+          "buyer_labels_strongly_disagree": {
+            "count": 761,
+            "share": 0.010092
+          },
+          "rate_exactly_3": {
+            "count": 23956,
+            "share": 0.317702
+          },
+          "text_also_in_train": {
+            "count": 6745,
+            "share": 0.089451
+          },
+          "emoji": {
+            "count": 504,
+            "share": 0.006684
+          },
+          "three_words_or_fewer": {
+            "count": 5997,
+            "share": 0.079532
+          },
+          "none_of_these": {
+            "count": 36566,
+            "share": 0.484934
+          },
+          "reviews": 75404
+        },
+        "all wrong": {
+          "buyer_labels_disagree": {
+            "count": 25954,
+            "share": 0.391233
+          },
+          "buyer_labels_strongly_disagree": {
+            "count": 2607,
+            "share": 0.039298
+          },
+          "rate_exactly_3": {
+            "count": 26387,
+            "share": 0.39776
+          },
+          "text_also_in_train": {
+            "count": 19038,
+            "share": 0.286981
+          },
+          "emoji": {
+            "count": 350,
+            "share": 0.005276
+          },
+          "three_words_or_fewer": {
+            "count": 15853,
+            "share": 0.23897
+          },
+          "none_of_these": {
+            "count": 19305,
+            "share": 0.291005
+          },
+          "reviews": 66339
+        }
+      },
+      "causes_all_wrong_by_true_class": {
+        "recommended": {
+          "buyer_labels_disagree": {
+            "count": 10191,
+            "share": 0.428265
+          },
+          "buyer_labels_strongly_disagree": {
+            "count": 1454,
+            "share": 0.061103
+          },
+          "rate_exactly_3": {
+            "count": 8218,
+            "share": 0.345352
+          },
+          "text_also_in_train": {
+            "count": 6483,
+            "share": 0.272441
+          },
+          "emoji": {
+            "count": 108,
+            "share": 0.004539
+          },
+          "three_words_or_fewer": {
+            "count": 5810,
+            "share": 0.244159
+          },
+          "none_of_these": {
+            "count": 9934,
+            "share": 0.417465
+          },
+          "reviews": 23796
+        },
+        "not_recommended": {
+          "buyer_labels_disagree": {
+            "count": 5064,
+            "share": 0.335342
+          },
+          "buyer_labels_strongly_disagree": {
+            "count": 1153,
+            "share": 0.076353
+          },
+          "rate_exactly_3": {
+            "count": 3538,
+            "share": 0.234289
+          },
+          "text_also_in_train": {
+            "count": 2867,
+            "share": 0.189855
+          },
+          "emoji": {
+            "count": 89,
+            "share": 0.005894
+          },
+          "three_words_or_fewer": {
+            "count": 2734,
+            "share": 0.181048
+          },
+          "none_of_these": {
+            "count": 7835,
+            "share": 0.51884
+          },
+          "reviews": 15101
+        },
+        "no_idea": {
+          "buyer_labels_disagree": {
+            "count": 10699,
+            "share": 0.389877
+          },
+          "buyer_labels_strongly_disagree": {
+            "count": 0,
+            "share": 0.0
+          },
+          "rate_exactly_3": {
+            "count": 14631,
+            "share": 0.533161
+          },
+          "text_also_in_train": {
+            "count": 9688,
+            "share": 0.353035
+          },
+          "emoji": {
+            "count": 153,
+            "share": 0.005575
+          },
+          "three_words_or_fewer": {
+            "count": 7309,
+            "share": 0.266344
+          },
+          "none_of_these": {
+            "count": 1536,
+            "share": 0.055973
+          },
+          "reviews": 27442
+        }
+      }
+    },
+    "rating_band": {
+      "reviews": 797508,
+      "macro_f1": {
+        "fabert": 0.6921090785879674,
+        "tfidf": 0.6681553874008594,
+        "bilstm": 0.6824900039857585
+      },
+      "overall": {
+        "reviews": 797508,
+        "patterns": {
+          "fabert right, tfidf right, bilstm right": {
+            "count": 577201,
+            "share": 0.723756
+          },
+          "fabert right, tfidf right, bilstm wrong": {
+            "count": 12025,
+            "share": 0.015078
+          },
+          "fabert right, tfidf wrong, bilstm right": {
+            "count": 30968,
+            "share": 0.038831
+          },
+          "fabert right, tfidf wrong, bilstm wrong": {
+            "count": 13453,
+            "share": 0.016869
+          },
+          "fabert wrong, tfidf right, bilstm right": {
+            "count": 12574,
+            "share": 0.015767
+          },
+          "fabert wrong, tfidf right, bilstm wrong": {
+            "count": 17444,
+            "share": 0.021873
+          },
+          "fabert wrong, tfidf wrong, bilstm right": {
+            "count": 9528,
+            "share": 0.011947
+          },
+          "fabert wrong, tfidf wrong, bilstm wrong": {
+            "count": 124315,
+            "share": 0.155879
+          }
+        },
+        "groups": {
+          "all right": {
+            "count": 577201,
+            "share": 0.723756
+          },
+          "all wrong": {
+            "count": 124315,
+            "share": 0.155879
+          },
+          "exactly 1 right": {
+            "count": 40425,
+            "share": 0.050689
+          },
+          "exactly 2 right": {
+            "count": 55567,
+            "share": 0.069676
+          }
+        },
+        "only_this_model_right": {
+          "fabert": {
+            "count": 13453,
+            "share": 0.016869
+          },
+          "tfidf": {
+            "count": 17444,
+            "share": 0.021873
+          },
+          "bilstm": {
+            "count": 9528,
+            "share": 0.011947
+          }
+        },
+        "only_this_model_wrong": {
+          "fabert": {
+            "count": 12574,
+            "share": 0.015767
+          },
+          "tfidf": {
+            "count": 30968,
+            "share": 0.038831
+          },
+          "bilstm": {
+            "count": 12025,
+            "share": 0.015078
+          }
+        }
+      },
+      "by_true_class": {
+        "low": {
+          "reviews": 79789,
+          "patterns": {
+            "fabert right, tfidf right, bilstm right": {
+              "count": 45409,
+              "share": 0.569114
+            },
+            "fabert right, tfidf right, bilstm wrong": {
+              "count": 1996,
+              "share": 0.025016
+            },
+            "fabert right, tfidf wrong, bilstm right": {
+              "count": 3583,
+              "share": 0.044906
+            },
+            "fabert right, tfidf wrong, bilstm wrong": {
+              "count": 2902,
+              "share": 0.036371
+            },
+            "fabert wrong, tfidf right, bilstm right": {
+              "count": 2047,
+              "share": 0.025655
+            },
+            "fabert wrong, tfidf right, bilstm wrong": {
+              "count": 2089,
+              "share": 0.026182
+            },
+            "fabert wrong, tfidf wrong, bilstm right": {
+              "count": 1374,
+              "share": 0.01722
+            },
+            "fabert wrong, tfidf wrong, bilstm wrong": {
+              "count": 20389,
+              "share": 0.255536
+            }
+          },
+          "groups": {
+            "all right": {
+              "count": 45409,
+              "share": 0.569114
+            },
+            "all wrong": {
+              "count": 20389,
+              "share": 0.255536
+            },
+            "exactly 1 right": {
+              "count": 6365,
+              "share": 0.079773
+            },
+            "exactly 2 right": {
+              "count": 7626,
+              "share": 0.095577
+            }
+          },
+          "only_this_model_right": {
+            "fabert": {
+              "count": 2902,
+              "share": 0.036371
+            },
+            "tfidf": {
+              "count": 2089,
+              "share": 0.026182
+            },
+            "bilstm": {
+              "count": 1374,
+              "share": 0.01722
+            }
+          },
+          "only_this_model_wrong": {
+            "fabert": {
+              "count": 2047,
+              "share": 0.025655
+            },
+            "tfidf": {
+              "count": 3583,
+              "share": 0.044906
+            },
+            "bilstm": {
+              "count": 1996,
+              "share": 0.025016
+            }
+          }
+        },
+        "medium": {
+          "reviews": 150007,
+          "patterns": {
+            "fabert right, tfidf right, bilstm right": {
+              "count": 52969,
+              "share": 0.35311
+            },
+            "fabert right, tfidf right, bilstm wrong": {
+              "count": 4029,
+              "share": 0.026859
+            },
+            "fabert right, tfidf wrong, bilstm right": {
+              "count": 8619,
+              "share": 0.057457
+            },
+            "fabert right, tfidf wrong, bilstm wrong": {
+              "count": 5083,
+              "share": 0.033885
+            },
+            "fabert wrong, tfidf right, bilstm right": {
+              "count": 3445,
+              "share": 0.022966
+            },
+            "fabert wrong, tfidf right, bilstm wrong": {
+              "count": 7256,
+              "share": 0.048371
+            },
+            "fabert wrong, tfidf wrong, bilstm right": {
+              "count": 3260,
+              "share": 0.021732
+            },
+            "fabert wrong, tfidf wrong, bilstm wrong": {
+              "count": 65346,
+              "share": 0.43562
+            }
+          },
+          "groups": {
+            "all right": {
+              "count": 52969,
+              "share": 0.35311
+            },
+            "all wrong": {
+              "count": 65346,
+              "share": 0.43562
+            },
+            "exactly 1 right": {
+              "count": 15599,
+              "share": 0.103988
+            },
+            "exactly 2 right": {
+              "count": 16093,
+              "share": 0.107282
+            }
+          },
+          "only_this_model_right": {
+            "fabert": {
+              "count": 5083,
+              "share": 0.033885
+            },
+            "tfidf": {
+              "count": 7256,
+              "share": 0.048371
+            },
+            "bilstm": {
+              "count": 3260,
+              "share": 0.021732
+            }
+          },
+          "only_this_model_wrong": {
+            "fabert": {
+              "count": 3445,
+              "share": 0.022966
+            },
+            "tfidf": {
+              "count": 8619,
+              "share": 0.057457
+            },
+            "bilstm": {
+              "count": 4029,
+              "share": 0.026859
+            }
+          }
+        },
+        "high": {
+          "reviews": 567712,
+          "patterns": {
+            "fabert right, tfidf right, bilstm right": {
+              "count": 478823,
+              "share": 0.843426
+            },
+            "fabert right, tfidf right, bilstm wrong": {
+              "count": 6000,
+              "share": 0.010569
+            },
+            "fabert right, tfidf wrong, bilstm right": {
+              "count": 18766,
+              "share": 0.033055
+            },
+            "fabert right, tfidf wrong, bilstm wrong": {
+              "count": 5468,
+              "share": 0.009632
+            },
+            "fabert wrong, tfidf right, bilstm right": {
+              "count": 7082,
+              "share": 0.012475
+            },
+            "fabert wrong, tfidf right, bilstm wrong": {
+              "count": 8099,
+              "share": 0.014266
+            },
+            "fabert wrong, tfidf wrong, bilstm right": {
+              "count": 4894,
+              "share": 0.008621
+            },
+            "fabert wrong, tfidf wrong, bilstm wrong": {
+              "count": 38580,
+              "share": 0.067957
+            }
+          },
+          "groups": {
+            "all right": {
+              "count": 478823,
+              "share": 0.843426
+            },
+            "all wrong": {
+              "count": 38580,
+              "share": 0.067957
+            },
+            "exactly 1 right": {
+              "count": 18461,
+              "share": 0.032518
+            },
+            "exactly 2 right": {
+              "count": 31848,
+              "share": 0.056099
+            }
+          },
+          "only_this_model_right": {
+            "fabert": {
+              "count": 5468,
+              "share": 0.009632
+            },
+            "tfidf": {
+              "count": 8099,
+              "share": 0.014266
+            },
+            "bilstm": {
+              "count": 4894,
+              "share": 0.008621
+            }
+          },
+          "only_this_model_wrong": {
+            "fabert": {
+              "count": 7082,
+              "share": 0.012475
+            },
+            "tfidf": {
+              "count": 18766,
+              "share": 0.033055
+            },
+            "bilstm": {
+              "count": 6000,
+              "share": 0.010569
+            }
+          }
+        }
+      },
+      "all_wrong_same_label": {
+        "count": 117190,
+        "share": 0.942686,
+        "by_label": {
+          "true low, all said medium": 12604,
+          "true low, all said high": 4692,
+          "true medium, all said low": 9130,
+          "true medium, all said high": 55654,
+          "true high, all said low": 2073,
+          "true high, all said medium": 33037
+        }
+      },
+      "causes": {
+        "all right": {
+          "buyer_labels_disagree": {
+            "count": 27311,
+            "share": 0.047316
+          },
+          "buyer_labels_strongly_disagree": {
+            "count": 1288,
+            "share": 0.002231
+          },
+          "rate_exactly_3": {
+            "count": 49858,
+            "share": 0.086379
+          },
+          "text_also_in_train": {
+            "count": 239398,
+            "share": 0.414757
+          },
+          "emoji": {
+            "count": 5156,
+            "share": 0.008933
+          },
+          "three_words_or_fewer": {
+            "count": 177366,
+            "share": 0.307286
+          },
+          "none_of_these": {
+            "count": 277664,
+            "share": 0.481053
+          },
+          "reviews": 577201
+        },
+        "some right": {
+          "buyer_labels_disagree": {
+            "count": 20895,
+            "share": 0.217674
+          },
+          "buyer_labels_strongly_disagree": {
+            "count": 535,
+            "share": 0.005573
+          },
+          "rate_exactly_3": {
+            "count": 28492,
+            "share": 0.296816
+          },
+          "text_also_in_train": {
+            "count": 13648,
+            "share": 0.142179
+          },
+          "emoji": {
+            "count": 573,
+            "share": 0.005969
+          },
+          "three_words_or_fewer": {
+            "count": 8206,
+            "share": 0.085486
+          },
+          "none_of_these": {
+            "count": 48137,
+            "share": 0.501469
+          },
+          "reviews": 95992
+        },
+        "all wrong": {
+          "buyer_labels_disagree": {
+            "count": 64465,
+            "share": 0.518562
+          },
+          "buyer_labels_strongly_disagree": {
+            "count": 5257,
+            "share": 0.042288
+          },
+          "rate_exactly_3": {
+            "count": 57517,
+            "share": 0.462671
+          },
+          "text_also_in_train": {
+            "count": 44668,
+            "share": 0.359313
+          },
+          "emoji": {
+            "count": 484,
+            "share": 0.003893
+          },
+          "three_words_or_fewer": {
+            "count": 34194,
+            "share": 0.275059
+          },
+          "none_of_these": {
+            "count": 29767,
+            "share": 0.239448
+          },
+          "reviews": 124315
+        }
+      },
+      "causes_all_wrong_by_true_class": {
+        "low": {
+          "buyer_labels_disagree": {
+            "count": 10336,
+            "share": 0.50694
+          },
+          "buyer_labels_strongly_disagree": {
+            "count": 4329,
+            "share": 0.21232
+          },
+          "rate_exactly_3": {
+            "count": 0,
+            "share": 0.0
+          },
+          "text_also_in_train": {
+            "count": 5997,
+            "share": 0.294129
+          },
+          "emoji": {
+            "count": 93,
+            "share": 0.004561
+          },
+          "three_words_or_fewer": {
+            "count": 5331,
+            "share": 0.261465
+          },
+          "none_of_these": {
+            "count": 7443,
+            "share": 0.36505
+          },
+          "reviews": 20389
+        },
+        "medium": {
+          "buyer_labels_disagree": {
+            "count": 46714,
+            "share": 0.714872
+          },
+          "buyer_labels_strongly_disagree": {
+            "count": 0,
+            "share": 0.0
+          },
+          "rate_exactly_3": {
+            "count": 57517,
+            "share": 0.880192
+          },
+          "text_also_in_train": {
+            "count": 28319,
+            "share": 0.43337
+          },
+          "emoji": {
+            "count": 269,
+            "share": 0.004117
+          },
+          "three_words_or_fewer": {
+            "count": 21476,
+            "share": 0.328651
+          },
+          "none_of_these": {
+            "count": 1076,
+            "share": 0.016466
+          },
+          "reviews": 65346
+        },
+        "high": {
+          "buyer_labels_disagree": {
+            "count": 7415,
+            "share": 0.192198
+          },
+          "buyer_labels_strongly_disagree": {
+            "count": 928,
+            "share": 0.024054
+          },
+          "rate_exactly_3": {
+            "count": 0,
+            "share": 0.0
+          },
+          "text_also_in_train": {
+            "count": 10352,
+            "share": 0.268326
+          },
+          "emoji": {
+            "count": 122,
+            "share": 0.003162
+          },
+          "three_words_or_fewer": {
+            "count": 7387,
+            "share": 0.191472
+          },
+          "none_of_these": {
+            "count": 21248,
+            "share": 0.550752
+          },
+          "reviews": 38580
+        }
+      }
+    }
+  },
+  "code": {
+    "commit": "d5ebe4040d44681a7efe6fa9ad44aba4ea67cc46",
+    "uncommitted_changes": false
+  }
+}
