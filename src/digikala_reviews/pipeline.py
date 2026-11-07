@@ -822,6 +822,29 @@ STEPS = [
         [60, 75, 77],
         files("reports/decision_recheck.json"),
         "reads the saved predictions of the four models, which stay on your machine",
+    ),  # How much one BiLSTM run depends on chance (reports/bilstm_plan.md, two more seeds)
+    *[
+        Step(
+            number,
+            f"BiLSTM: the best setting again with training seed {seed}",
+            ["scripts/train_bilstm.py", "--seed", str(seed)],
+            "gpu",
+            [77],
+            files(f"reports/bilstm/final_seed{seed}.json"),
+            "about 20 minutes; it saves a resume point at every check; "
+            "its test run needs the test run of step 76 first",
+            smoke=True,
+        )
+        for number, seed in [(82, 2027), (83, 2028)]
+    ],
+    Step(
+        84,
+        "The three BiLSTM seeds: their spread and the three-model comparison with each",
+        ["scripts/check_bilstm_seeds.py"],
+        "local",
+        [78, 82, 83],
+        files("reports/bilstm_seeds.json"),
+        "reads the saved predictions of the models, which stay on your machine",
     ),
 ]
 

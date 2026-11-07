@@ -26,6 +26,12 @@ Two parts, run in this order:
          Writes artifacts/bilstm/ (vocabulary, kept weights, validation_predictions.parquet
          with the same columns as the Transformer runs) and reports/bilstm/final.json.
 
+--seed N  the same full run with another training seed (dropout, initial weights and the
+         order of the reviews; the vocabulary, the training reviews and the 50,000-review sample
+         stay the same), to measure how much one run depends on chance
+         (reports/bilstm_plan.md). Writes artifacts/bilstm_seedN/ and
+         reports/bilstm/final_seedN.json; seed 2026 is the run above.
+
 The four-model comparison later leaves out the 50,000 reviews used here for choosing; this
 script reports the whole validation set, like the other runs. The test set is not read.
 
@@ -35,6 +41,7 @@ Usage:
     python scripts/train_bilstm.py --tune --smoke
     python scripts/train_bilstm.py --smoke       # tiny model on a few rows, CPU is fine
     python scripts/train_bilstm.py --smoke --stop-after 6   # then run again: tests resuming
+    python scripts/train_bilstm.py --seed 2027   # needs a GPU, after the first full run
 """
 
 import argparse
@@ -322,13 +329,18 @@ def main():
     parser.add_argument(
         "--stop-after", type=int, help="end the session after this step's check (tests resuming)"
     )
+    parser.add_argument("--seed", type=int, help="another training seed for the full run")
     args = parser.parse_args()
+    assert not (args.seed and args.tune), "--seed is for the full run only"
     import torch
 
     base = {**SETTINGS, **(TUNE if args.tune else FINAL), **(SMOKE if args.smoke else {})}
     suffix = "_smoke" if args.smoke else ""
     report_dir = REPORTS_DIR / f"bilstm{suffix}"
     out_dir = ARTIFACTS_DIR / f"bilstm{suffix}"
+    other_seed = args.seed is not None and args.seed != SETTINGS["seed"]
+    if other_seed:  # its own names, so the first run's files stay as they are
+        out_dir = ARTIFACTS_DIR / f"bilstm{suffix}_seed{args.seed}"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if not args.smoke and device.type != "cuda":
         raise SystemExit("No GPU found: turn the GPU on for this notebook, or run with --smoke")
@@ -433,6 +445,9 @@ def main():
     tuning = json.loads(tuning_path.read_text(encoding="utf-8"))
     settings = {**base, **tuning["best"]}
     result_path = report_dir / "final.json"
+    if other_seed:
+        settings["seed"] = args.seed
+        result_path = report_dir / f"final_seed{args.seed}.json"
     spec = json.loads(json.dumps({"settings": settings, "data": context["data"]}))
     if finished(result_path, spec):
         print("Already done", flush=True)

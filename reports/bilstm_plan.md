@@ -134,3 +134,26 @@ A model that starts from nothing and reads only our reviews comes within 1 to 1.
 the pretrained FaBERT, and the same two classes are the weakest. It is less than 5 points
 behind FaBERT on both heads, so the four-model comparison uses it without a separate report
 without it.
+
+## Two more seeds (written before running)
+
+The decision checks (`reports/decision_recheck.json`) and the three-model comparison
+(`reports/reading_models.json`) rest on one training run of each model, and their intervals
+measure only which validation reviews happen to be drawn, not the chance in training
+itself. The BiLSTM is cheap to train again, so the full run is repeated with training seeds
+2027 and 2028 (`scripts/train_bilstm.py --seed`, steps 82 and 83): the same best setting,
+vocabulary, training reviews and choosing sample; only the initial weights, dropout and the
+order of the reviews change. `scripts/check_bilstm_seeds.py` (step 84,
+`reports/bilstm_seeds.json`) then reports the spread of Macro F1 over the three seeds,
+FaBERT minus BiLSTM for each seed, and the three-model comparison redone with each seed.
+
+Expected:
+
+- The three seeds are within 0.3 points of each other on each head (the FaBERT pilots on
+  500,000 reviews moved by 0.06 to 0.09 points between seeds; a model trained from scratch
+  moves more).
+- FaBERT stays ahead of the BiLSTM by about 1 point on both heads with every seed, and the
+  BiLSTM stays ahead of TF-IDF.
+- The counts of the three-model comparison change by under 3% from one seed to another for
+  all right and all wrong, and the share of all wrong with the same wrong label stays within
+  one point of 90% and 94%: the shared mistakes do not depend on one run.
