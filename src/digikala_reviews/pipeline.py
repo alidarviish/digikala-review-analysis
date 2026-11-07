@@ -813,6 +813,15 @@ STEPS = [
         [78],
         files("reports/text_ceiling.json"),
         "reads the saved predictions of the three models, which stay on your machine",
+    ),  # The main model decisions with product-level intervals (reports/decision_recheck_plan.md)
+    Step(
+        81,
+        "D58, D65 and the model order again, with paired product-level bootstrap intervals",
+        ["scripts/recheck_decisions.py"],
+        "local",
+        [60, 75, 77],
+        files("reports/decision_recheck.json"),
+        "reads the saved predictions of the four models, which stay on your machine",
     ),
 ]
 
