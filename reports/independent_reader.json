@@ -1,0 +1,896 @@
+{
+  "created_at": "2026-11-07T18:15:03+00:00",
+  "plan": "reports/independent_reader_plan.md",
+  "reader": "Qwen/Qwen3-8B",
+  "reader_revision": null,
+  "heads": {
+    "recommendation": {
+      "mean_mass_on_digits": 1.0,
+      "groups": {
+        "all right": {
+          "overall": {
+            "share": 0.7077777777777777,
+            "count": 637,
+            "of": 900,
+            "interval_95": [
+              0.6772327483972742,
+              0.7365566350449368
+            ]
+          },
+          "by_true_class": {
+            "recommended": {
+              "agrees_with_label": {
+                "share": 0.8866666666666667,
+                "count": 266,
+                "of": 300,
+                "interval_95": [
+                  0.8458006037667913,
+                  0.9177554983339336
+                ]
+              }
+            },
+            "not_recommended": {
+              "agrees_with_label": {
+                "share": 0.9766666666666667,
+                "count": 293,
+                "of": 300,
+                "interval_95": [
+                  0.9526280274818696,
+                  0.9886523397629893
+                ]
+              }
+            },
+            "no_idea": {
+              "agrees_with_label": {
+                "share": 0.26,
+                "count": 78,
+                "of": 300,
+                "interval_95": [
+                  0.21362060292090596,
+                  0.3124480233614029
+                ]
+              }
+            }
+          },
+          "reader_said": {
+            "not_recommended": 502,
+            "recommended": 286,
+            "no_idea": 112
+          }
+        },
+        "all wrong, same label": {
+          "overall": {
+            "share": 0.3244444444444444,
+            "count": 292,
+            "of": 900,
+            "interval_95": [
+              0.2946601875427761,
+              0.3557209751103291
+            ]
+          },
+          "by_true_class": {
+            "recommended": {
+              "agrees_with_label": {
+                "share": 0.09,
+                "count": 27,
+                "of": 300,
+                "interval_95": [
+                  0.0625902254259583,
+                  0.12777701113965256
+                ]
+              },
+              "agrees_with_models": {
+                "share": 0.39666666666666667,
+                "count": 119,
+                "of": 300,
+                "interval_95": [
+                  0.3429508315346272,
+                  0.4529953825591447
+                ]
+              },
+              "models_said": {
+                "no_idea": 277,
+                "not_recommended": 23
+              }
+            },
+            "not_recommended": {
+              "agrees_with_label": {
+                "share": 0.7366666666666667,
+                "count": 221,
+                "of": 300,
+                "interval_95": [
+                  0.6840604961283282,
+                  0.7832884973988395
+                ]
+              },
+              "agrees_with_models": {
+                "share": 0.20333333333333334,
+                "count": 61,
+                "of": 300,
+                "interval_95": [
+                  0.16167385134400633,
+                  0.2524943116994031
+                ]
+              },
+              "models_said": {
+                "no_idea": 255,
+                "recommended": 45
+              }
+            },
+            "no_idea": {
+              "agrees_with_label": {
+                "share": 0.14666666666666667,
+                "count": 44,
+                "of": 300,
+                "interval_95": [
+                  0.11110518719428736,
+                  0.19116251261022277
+                ]
+              },
+              "agrees_with_models": {
+                "share": 0.8166666666666667,
+                "count": 245,
+                "of": 300,
+                "interval_95": [
+                  0.768971381917203,
+                  0.8563547361825283
+                ]
+              },
+              "models_said": {
+                "recommended": 227,
+                "not_recommended": 73
+              }
+            }
+          },
+          "reader_said": {
+            "not_recommended": 479,
+            "recommended": 245,
+            "no_idea": 176
+          },
+          "agrees_with_models": {
+            "share": 0.4722222222222222,
+            "count": 425,
+            "of": 900,
+            "interval_95": [
+              0.4397938349983248,
+              0.5048867287126096
+            ]
+          },
+          "agrees_with_neither": {
+            "share": 0.20333333333333334,
+            "count": 183,
+            "of": 900,
+            "interval_95": [
+              0.17832509588519233,
+              0.2308633245475866
+            ]
+          }
+        }
+      },
+      "decision": {
+        "control": 0.7077777777777777,
+        "with_models": 0.4722222222222222,
+        "with_label": 0.3244444444444444,
+        "verdict": "inconclusive: the reader sides with the models more often, but not twice as often"
+      },
+      "by_label_pair": [
+        {
+          "true": "recommended",
+          "models_said": "not_recommended",
+          "reader_said": {
+            "recommended": 1,
+            "not_recommended": 22,
+            "no_idea": 0
+          },
+          "reader_says_models_label": {
+            "share": 0.9565217391304348,
+            "count": 22,
+            "of": 23,
+            "interval_95": [
+              0.7900884474454931,
+              0.9922833339420488
+            ]
+          },
+          "same_in_all_right_of_this_class": {
+            "share": 0.016666666666666666,
+            "count": 5,
+            "of": 300,
+            "interval_95": [
+              0.007139477305428632,
+              0.038415395068665474
+            ]
+          },
+          "reader_says_true_label": {
+            "share": 0.043478260869565216,
+            "count": 1,
+            "of": 23,
+            "interval_95": [
+              0.007716666057951335,
+              0.2099115525545071
+            ]
+          },
+          "same_in_all_right_of_this_class_true": {
+            "share": 0.8866666666666667,
+            "count": 266,
+            "of": 300,
+            "interval_95": [
+              0.8458006037667913,
+              0.9177554983339336
+            ]
+          }
+        },
+        {
+          "true": "recommended",
+          "models_said": "no_idea",
+          "reader_said": {
+            "recommended": 26,
+            "not_recommended": 154,
+            "no_idea": 97
+          },
+          "reader_says_models_label": {
+            "share": 0.35018050541516244,
+            "count": 97,
+            "of": 277,
+            "interval_95": [
+              0.2964017241540474,
+              0.4080578654997655
+            ]
+          },
+          "same_in_all_right_of_this_class": {
+            "share": 0.09666666666666666,
+            "count": 29,
+            "of": 300,
+            "interval_95": [
+              0.06815029462988952,
+              0.13538170231676833
+            ]
+          },
+          "reader_says_true_label": {
+            "share": 0.09386281588447654,
+            "count": 26,
+            "of": 277,
+            "interval_95": [
+              0.06486028559977165,
+              0.13397595141357704
+            ]
+          },
+          "same_in_all_right_of_this_class_true": {
+            "share": 0.8866666666666667,
+            "count": 266,
+            "of": 300,
+            "interval_95": [
+              0.8458006037667913,
+              0.9177554983339336
+            ]
+          }
+        },
+        {
+          "true": "not_recommended",
+          "models_said": "recommended",
+          "reader_said": {
+            "recommended": 32,
+            "not_recommended": 7,
+            "no_idea": 6
+          },
+          "reader_says_models_label": {
+            "share": 0.7111111111111111,
+            "count": 32,
+            "of": 45,
+            "interval_95": [
+              0.5663145930637776,
+              0.8226991758774302
+            ]
+          },
+          "same_in_all_right_of_this_class": {
+            "share": 0.006666666666666667,
+            "count": 2,
+            "of": 300,
+            "interval_95": [
+              0.0018301483414602509,
+              0.02397758346106338
+            ]
+          },
+          "reader_says_true_label": {
+            "share": 0.15555555555555556,
+            "count": 7,
+            "of": 45,
+            "interval_95": [
+              0.07745423442616176,
+              0.2878390899329196
+            ]
+          },
+          "same_in_all_right_of_this_class_true": {
+            "share": 0.9766666666666667,
+            "count": 293,
+            "of": 300,
+            "interval_95": [
+              0.9526280274818696,
+              0.9886523397629893
+            ]
+          }
+        },
+        {
+          "true": "not_recommended",
+          "models_said": "no_idea",
+          "reader_said": {
+            "recommended": 12,
+            "not_recommended": 214,
+            "no_idea": 29
+          },
+          "reader_says_models_label": {
+            "share": 0.11372549019607843,
+            "count": 29,
+            "of": 255,
+            "interval_95": [
+              0.08035939382825932,
+              0.15855696504474615
+            ]
+          },
+          "same_in_all_right_of_this_class": {
+            "share": 0.016666666666666666,
+            "count": 5,
+            "of": 300,
+            "interval_95": [
+              0.007139477305428632,
+              0.038415395068665474
+            ]
+          },
+          "reader_says_true_label": {
+            "share": 0.8392156862745098,
+            "count": 214,
+            "of": 255,
+            "interval_95": [
+              0.7891494426962644,
+              0.8792133487502842
+            ]
+          },
+          "same_in_all_right_of_this_class_true": {
+            "share": 0.9766666666666667,
+            "count": 293,
+            "of": 300,
+            "interval_95": [
+              0.9526280274818696,
+              0.9886523397629893
+            ]
+          }
+        },
+        {
+          "true": "no_idea",
+          "models_said": "recommended",
+          "reader_said": {
+            "recommended": 174,
+            "not_recommended": 11,
+            "no_idea": 42
+          },
+          "reader_says_models_label": {
+            "share": 0.7665198237885462,
+            "count": 174,
+            "of": 227,
+            "interval_95": [
+              0.7073317005983324,
+              0.8168375737876044
+            ]
+          },
+          "same_in_all_right_of_this_class": {
+            "share": 0.06,
+            "count": 18,
+            "of": 300,
+            "interval_95": [
+              0.03828636939007202,
+              0.09283944546082745
+            ]
+          },
+          "reader_says_true_label": {
+            "share": 0.18502202643171806,
+            "count": 42,
+            "of": 227,
+            "interval_95": [
+              0.1398972628616358,
+              0.24062995831862058
+            ]
+          },
+          "same_in_all_right_of_this_class_true": {
+            "share": 0.26,
+            "count": 78,
+            "of": 300,
+            "interval_95": [
+              0.21362060292090596,
+              0.3124480233614029
+            ]
+          }
+        },
+        {
+          "true": "no_idea",
+          "models_said": "not_recommended",
+          "reader_said": {
+            "recommended": 0,
+            "not_recommended": 71,
+            "no_idea": 2
+          },
+          "reader_says_models_label": {
+            "share": 0.9726027397260274,
+            "count": 71,
+            "of": 73,
+            "interval_95": [
+              0.905498517506993,
+              0.9924542413883135
+            ]
+          },
+          "same_in_all_right_of_this_class": {
+            "share": 0.68,
+            "count": 204,
+            "of": 300,
+            "interval_95": [
+              0.6252238884745567,
+              0.7302246418137117
+            ]
+          },
+          "reader_says_true_label": {
+            "share": 0.0273972602739726,
+            "count": 2,
+            "of": 73,
+            "interval_95": [
+              0.007545758611686396,
+              0.09450148249300705
+            ]
+          },
+          "same_in_all_right_of_this_class_true": {
+            "share": 0.26,
+            "count": 78,
+            "of": 300,
+            "interval_95": [
+              0.21362060292090596,
+              0.3124480233614029
+            ]
+          }
+        }
+      ]
+    },
+    "rating_band": {
+      "mean_mass_on_digits": 1.0,
+      "groups": {
+        "all right": {
+          "overall": {
+            "share": 0.7122222222222222,
+            "count": 641,
+            "of": 900,
+            "interval_95": [
+              0.6817917689562574,
+              0.7408487242922042
+            ]
+          },
+          "by_true_class": {
+            "low": {
+              "agrees_with_label": {
+                "share": 0.9733333333333334,
+                "count": 292,
+                "of": 300,
+                "interval_95": [
+                  0.9482710567929951,
+                  0.9864269302613404
+                ]
+              }
+            },
+            "medium": {
+              "agrees_with_label": {
+                "share": 0.37666666666666665,
+                "count": 113,
+                "of": 300,
+                "interval_95": [
+                  0.3237203646696686,
+                  0.43273156828096226
+                ]
+              }
+            },
+            "high": {
+              "agrees_with_label": {
+                "share": 0.7866666666666666,
+                "count": 236,
+                "of": 300,
+                "interval_95": [
+                  0.7368372917176351,
+                  0.8292474046673848
+                ]
+              }
+            }
+          },
+          "reader_said": {
+            "low": 478,
+            "high": 247,
+            "medium": 175
+          }
+        },
+        "all wrong, same label": {
+          "overall": {
+            "share": 0.28,
+            "count": 252,
+            "of": 900,
+            "interval_95": [
+              0.2516484503910928,
+              0.3102216141995074
+            ]
+          },
+          "by_true_class": {
+            "low": {
+              "agrees_with_label": {
+                "share": 0.54,
+                "count": 162,
+                "of": 300,
+                "interval_95": [
+                  0.4834517093547498,
+                  0.5955368529315322
+                ]
+              },
+              "agrees_with_models": {
+                "share": 0.39666666666666667,
+                "count": 119,
+                "of": 300,
+                "interval_95": [
+                  0.3429508315346272,
+                  0.4529953825591447
+                ]
+              },
+              "models_said": {
+                "medium": 212,
+                "high": 88
+              }
+            },
+            "medium": {
+              "agrees_with_label": {
+                "share": 0.25333333333333335,
+                "count": 76,
+                "of": 300,
+                "interval_95": [
+                  0.2074497498699208,
+                  0.3054541160313411
+                ]
+              },
+              "agrees_with_models": {
+                "share": 0.7166666666666667,
+                "count": 215,
+                "of": 300,
+                "interval_95": [
+                  0.6631855646613876,
+                  0.7646691477226393
+                ]
+              },
+              "models_said": {
+                "high": 266,
+                "low": 34
+              }
+            },
+            "high": {
+              "agrees_with_label": {
+                "share": 0.04666666666666667,
+                "count": 14,
+                "of": 300,
+                "interval_95": [
+                  0.02799893357109902,
+                  0.07679736051770648
+                ]
+              },
+              "agrees_with_models": {
+                "share": 0.6566666666666666,
+                "count": 197,
+                "of": 300,
+                "interval_95": [
+                  0.601259803738608,
+                  0.7081120652159959
+                ]
+              },
+              "models_said": {
+                "medium": 281,
+                "low": 19
+              }
+            }
+          },
+          "reader_said": {
+            "medium": 322,
+            "low": 310,
+            "high": 268
+          },
+          "agrees_with_models": {
+            "share": 0.59,
+            "count": 531,
+            "of": 900,
+            "interval_95": [
+              0.5575510428552977,
+              0.6216839307212749
+            ]
+          },
+          "agrees_with_neither": {
+            "share": 0.13,
+            "count": 117,
+            "of": 900,
+            "interval_95": [
+              0.10959155047529748,
+              0.15355355815434815
+            ]
+          }
+        }
+      },
+      "decision": {
+        "control": 0.7122222222222222,
+        "with_models": 0.59,
+        "with_label": 0.28,
+        "verdict": "shared-bias objection rejected: the reader sides with the models at least twice as often"
+      },
+      "by_label_pair": [
+        {
+          "true": "low",
+          "models_said": "medium",
+          "reader_said": {
+            "low": 153,
+            "medium": 54,
+            "high": 5
+          },
+          "reader_says_models_label": {
+            "share": 0.25471698113207547,
+            "count": 54,
+            "of": 212,
+            "interval_95": [
+              0.20079275859709514,
+              0.3173720993545195
+            ]
+          },
+          "same_in_all_right_of_this_class": {
+            "share": 0.013333333333333334,
+            "count": 4,
+            "of": 300,
+            "interval_95": [
+              0.005196961703277308,
+              0.0337755304802933
+            ]
+          },
+          "reader_says_true_label": {
+            "share": 0.7216981132075472,
+            "count": 153,
+            "of": 212,
+            "interval_95": [
+              0.6578340211903182,
+              0.7776708187380301
+            ]
+          },
+          "same_in_all_right_of_this_class_true": {
+            "share": 0.9733333333333334,
+            "count": 292,
+            "of": 300,
+            "interval_95": [
+              0.9482710567929951,
+              0.9864269302613404
+            ]
+          }
+        },
+        {
+          "true": "low",
+          "models_said": "high",
+          "reader_said": {
+            "low": 9,
+            "medium": 14,
+            "high": 65
+          },
+          "reader_says_models_label": {
+            "share": 0.7386363636363636,
+            "count": 65,
+            "of": 88,
+            "interval_95": [
+              0.6382421994485723,
+              0.8190676093414264
+            ]
+          },
+          "same_in_all_right_of_this_class": {
+            "share": 0.013333333333333334,
+            "count": 4,
+            "of": 300,
+            "interval_95": [
+              0.005196961703277308,
+              0.0337755304802933
+            ]
+          },
+          "reader_says_true_label": {
+            "share": 0.10227272727272728,
+            "count": 9,
+            "of": 88,
+            "interval_95": [
+              0.05474450034574525,
+              0.183072485004257
+            ]
+          },
+          "same_in_all_right_of_this_class_true": {
+            "share": 0.9733333333333334,
+            "count": 292,
+            "of": 300,
+            "interval_95": [
+              0.9482710567929951,
+              0.9864269302613404
+            ]
+          }
+        },
+        {
+          "true": "medium",
+          "models_said": "low",
+          "reader_said": {
+            "low": 32,
+            "medium": 1,
+            "high": 1
+          },
+          "reader_says_models_label": {
+            "share": 0.9411764705882353,
+            "count": 32,
+            "of": 34,
+            "interval_95": [
+              0.8090639295407052,
+              0.9837173449367485
+            ]
+          },
+          "same_in_all_right_of_this_class": {
+            "share": 0.6,
+            "count": 180,
+            "of": 300,
+            "interval_95": [
+              0.5436365958921487,
+              0.6538348098235558
+            ]
+          },
+          "reader_says_true_label": {
+            "share": 0.029411764705882353,
+            "count": 1,
+            "of": 34,
+            "interval_95": [
+              0.005210906218596753,
+              0.14915573433878604
+            ]
+          },
+          "same_in_all_right_of_this_class_true": {
+            "share": 0.37666666666666665,
+            "count": 113,
+            "of": 300,
+            "interval_95": [
+              0.3237203646696686,
+              0.43273156828096226
+            ]
+          }
+        },
+        {
+          "true": "medium",
+          "models_said": "high",
+          "reader_said": {
+            "low": 8,
+            "medium": 75,
+            "high": 183
+          },
+          "reader_says_models_label": {
+            "share": 0.6879699248120301,
+            "count": 183,
+            "of": 266,
+            "interval_95": [
+              0.6299481556282749,
+              0.7406398200466946
+            ]
+          },
+          "same_in_all_right_of_this_class": {
+            "share": 0.023333333333333334,
+            "count": 7,
+            "of": 300,
+            "interval_95": [
+              0.011347660237010695,
+              0.047371972518130384
+            ]
+          },
+          "reader_says_true_label": {
+            "share": 0.2819548872180451,
+            "count": 75,
+            "of": 266,
+            "interval_95": [
+              0.23128350985714355,
+              0.33883443835989174
+            ]
+          },
+          "same_in_all_right_of_this_class_true": {
+            "share": 0.37666666666666665,
+            "count": 113,
+            "of": 300,
+            "interval_95": [
+              0.3237203646696686,
+              0.43273156828096226
+            ]
+          }
+        },
+        {
+          "true": "high",
+          "models_said": "low",
+          "reader_said": {
+            "low": 19,
+            "medium": 0,
+            "high": 0
+          },
+          "reader_says_models_label": {
+            "share": 1.0,
+            "count": 19,
+            "of": 19,
+            "interval_95": [
+              0.8318207737404363,
+              0.9999999999999999
+            ]
+          },
+          "same_in_all_right_of_this_class": {
+            "share": 0.02,
+            "count": 6,
+            "of": 300,
+            "interval_95": [
+              0.009197631503835551,
+              0.04293962106078204
+            ]
+          },
+          "reader_says_true_label": {
+            "share": 0.0,
+            "count": 0,
+            "of": 19,
+            "interval_95": [
+              0.0,
+              0.16817922625956366
+            ]
+          },
+          "same_in_all_right_of_this_class_true": {
+            "share": 0.7866666666666666,
+            "count": 236,
+            "of": 300,
+            "interval_95": [
+              0.7368372917176351,
+              0.8292474046673848
+            ]
+          }
+        },
+        {
+          "true": "high",
+          "models_said": "medium",
+          "reader_said": {
+            "low": 89,
+            "medium": 178,
+            "high": 14
+          },
+          "reader_says_models_label": {
+            "share": 0.6334519572953736,
+            "count": 178,
+            "of": 281,
+            "interval_95": [
+              0.5756643975251866,
+              0.6876399693831968
+            ]
+          },
+          "same_in_all_right_of_this_class": {
+            "share": 0.19333333333333333,
+            "count": 58,
+            "of": 300,
+            "interval_95": [
+              0.1526372665660763,
+              0.24178375590576268
+            ]
+          },
+          "reader_says_true_label": {
+            "share": 0.0498220640569395,
+            "count": 14,
+            "of": 281,
+            "interval_95": [
+              0.029906780281261418,
+              0.08187982201445818
+            ]
+          },
+          "same_in_all_right_of_this_class_true": {
+            "share": 0.7866666666666666,
+            "count": 236,
+            "of": 300,
+            "interval_95": [
+              0.7368372917176351,
+              0.8292474046673848
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "code": {
+    "commit": "36ed533668c279c34f63511c58a172b6135ffd94",
+    "uncommitted_changes": true
+  }
+}

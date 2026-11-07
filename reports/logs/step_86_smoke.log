@@ -1,0 +1,5 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/311 [00:00<?, ?it/s]Loading weights: 100%|██████████| 311/311 [00:00<00:00, 4731.97it/s]
+recommendation: 20 reviews read; mean mass on the digits 0.999
+rating_band: 20 reviews read; mean mass on the digits 0.893
+Done

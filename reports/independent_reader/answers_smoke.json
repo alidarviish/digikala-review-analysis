@@ -1,0 +1,457 @@
+{
+  "created_at": "2026-11-07T17:53:02+00:00",
+  "reader": "Qwen/Qwen3-0.6B",
+  "reader_revision": null,
+  "prompt_intro": "Here is a customer review of a product, written in Persian on an Iranian online shop.\n\nReview:\n{text}\n\n",
+  "questions": {
+    "recommendation": "Would the writer recommend buying this product? Answer with one digit only:\n1 = yes, recommends it\n2 = no, does not recommend it\n3 = no clear opinion either way",
+    "rating_band": "From the text alone, what star rating out of 5 did the writer most likely give? Answer with one digit only:\n1 = low (1 or 2 stars)\n2 = medium (about 3 stars)\n3 = high (4 or 5 stars)"
+  },
+  "answer_codes": {
+    "recommendation": {
+      "1": "recommended",
+      "2": "not_recommended",
+      "3": "no_idea"
+    },
+    "rating_band": {
+      "1": "low",
+      "2": "medium",
+      "3": "high"
+    }
+  },
+  "max_chars": 1500,
+  "minutes": 0.0,
+  "answers": {
+    "recommendation": [
+      {
+        "id": 2829724,
+        "answer": "recommended",
+        "p": [
+          0.771861,
+          0.172225,
+          0.055913
+        ],
+        "mass_on_digits": 0.999325
+      },
+      {
+        "id": 3176324,
+        "answer": "recommended",
+        "p": [
+          0.787804,
+          0.155128,
+          0.057068
+        ],
+        "mass_on_digits": 0.999225
+      },
+      {
+        "id": 3568785,
+        "answer": "recommended",
+        "p": [
+          0.824709,
+          0.143313,
+          0.031977
+        ],
+        "mass_on_digits": 0.999558
+      },
+      {
+        "id": 5347212,
+        "answer": "recommended",
+        "p": [
+          0.754558,
+          0.190782,
+          0.05466
+        ],
+        "mass_on_digits": 0.999196
+      },
+      {
+        "id": 5349213,
+        "answer": "recommended",
+        "p": [
+          0.8059,
+          0.158691,
+          0.035409
+        ],
+        "mass_on_digits": 0.999574
+      },
+      {
+        "id": 7016916,
+        "answer": "recommended",
+        "p": [
+          0.699275,
+          0.227021,
+          0.073703
+        ],
+        "mass_on_digits": 0.998919
+      },
+      {
+        "id": 7412940,
+        "answer": "recommended",
+        "p": [
+          0.72489,
+          0.207685,
+          0.067425
+        ],
+        "mass_on_digits": 0.999081
+      },
+      {
+        "id": 7900097,
+        "answer": "recommended",
+        "p": [
+          0.71844,
+          0.205837,
+          0.075723
+        ],
+        "mass_on_digits": 0.999082
+      },
+      {
+        "id": 8170137,
+        "answer": "recommended",
+        "p": [
+          0.577309,
+          0.309012,
+          0.113679
+        ],
+        "mass_on_digits": 0.998087
+      },
+      {
+        "id": 8315897,
+        "answer": "recommended",
+        "p": [
+          0.754558,
+          0.190782,
+          0.05466
+        ],
+        "mass_on_digits": 0.999317
+      },
+      {
+        "id": 8388134,
+        "answer": "recommended",
+        "p": [
+          0.548918,
+          0.293815,
+          0.157268
+        ],
+        "mass_on_digits": 0.998862
+      },
+      {
+        "id": 8721908,
+        "answer": "recommended",
+        "p": [
+          0.72016,
+          0.233802,
+          0.046038
+        ],
+        "mass_on_digits": 0.999198
+      },
+      {
+        "id": 8891229,
+        "answer": "recommended",
+        "p": [
+          0.667367,
+          0.216662,
+          0.115971
+        ],
+        "mass_on_digits": 0.998811
+      },
+      {
+        "id": 9467522,
+        "answer": "recommended",
+        "p": [
+          0.730679,
+          0.209343,
+          0.059978
+        ],
+        "mass_on_digits": 0.999364
+      },
+      {
+        "id": 10995127,
+        "answer": "recommended",
+        "p": [
+          0.743023,
+          0.187866,
+          0.069112
+        ],
+        "mass_on_digits": 0.999172
+      },
+      {
+        "id": 11091659,
+        "answer": "recommended",
+        "p": [
+          0.689672,
+          0.253716,
+          0.056612
+        ],
+        "mass_on_digits": 0.999036
+      },
+      {
+        "id": 11718123,
+        "answer": "recommended",
+        "p": [
+          0.796268,
+          0.138371,
+          0.065362
+        ],
+        "mass_on_digits": 0.999229
+      },
+      {
+        "id": 11851721,
+        "answer": "recommended",
+        "p": [
+          0.730679,
+          0.209343,
+          0.059978
+        ],
+        "mass_on_digits": 0.999229
+      },
+      {
+        "id": 12029286,
+        "answer": "recommended",
+        "p": [
+          0.589798,
+          0.278601,
+          0.131602
+        ],
+        "mass_on_digits": 0.998892
+      },
+      {
+        "id": 12813558,
+        "answer": "recommended",
+        "p": [
+          0.787804,
+          0.155128,
+          0.057068
+        ],
+        "mass_on_digits": 0.999226
+      }
+    ],
+    "rating_band": [
+      {
+        "id": 2117513,
+        "answer": "high",
+        "p": [
+          0.117962,
+          0.282977,
+          0.599061
+        ],
+        "mass_on_digits": 0.932821
+      },
+      {
+        "id": 3188043,
+        "answer": "low",
+        "p": [
+          0.383652,
+          0.232697,
+          0.383652
+        ],
+        "mass_on_digits": 0.868219
+      },
+      {
+        "id": 4041927,
+        "answer": "high",
+        "p": [
+          0.131602,
+          0.278601,
+          0.589798
+        ],
+        "mass_on_digits": 0.937206
+      },
+      {
+        "id": 4650889,
+        "answer": "high",
+        "p": [
+          0.174552,
+          0.287788,
+          0.537659
+        ],
+        "mass_on_digits": 0.950895
+      },
+      {
+        "id": 4653743,
+        "answer": "high",
+        "p": [
+          0.209832,
+          0.345954,
+          0.444214
+        ],
+        "mass_on_digits": 0.846256
+      },
+      {
+        "id": 5089024,
+        "answer": "low",
+        "p": [
+          0.390991,
+          0.304504,
+          0.304504
+        ],
+        "mass_on_digits": 0.842303
+      },
+      {
+        "id": 5899165,
+        "answer": "low",
+        "p": [
+          0.579641,
+          0.273803,
+          0.146556
+        ],
+        "mass_on_digits": 0.765046
+      },
+      {
+        "id": 7552873,
+        "answer": "high",
+        "p": [
+          0.186324,
+          0.307196,
+          0.50648
+        ],
+        "mass_on_digits": 0.966978
+      },
+      {
+        "id": 7722820,
+        "answer": "low",
+        "p": [
+          0.466899,
+          0.283188,
+          0.249913
+        ],
+        "mass_on_digits": 0.851482
+      },
+      {
+        "id": 8893786,
+        "answer": "high",
+        "p": [
+          0.162891,
+          0.268562,
+          0.568546
+        ],
+        "mass_on_digits": 0.976079
+      },
+      {
+        "id": 9756557,
+        "answer": "high",
+        "p": [
+          0.319168,
+          0.319168,
+          0.361664
+        ],
+        "mass_on_digits": 0.954724
+      },
+      {
+        "id": 9781322,
+        "answer": "high",
+        "p": [
+          0.075723,
+          0.205837,
+          0.71844
+        ],
+        "mass_on_digits": 0.977162
+      },
+      {
+        "id": 10356430,
+        "answer": "low",
+        "p": [
+          0.76768,
+          0.1941,
+          0.038221
+        ],
+        "mass_on_digits": 0.596628
+      },
+      {
+        "id": 11128703,
+        "answer": "low",
+        "p": [
+          0.636855,
+          0.265481,
+          0.097665
+        ],
+        "mass_on_digits": 0.889581
+      },
+      {
+        "id": 11299658,
+        "answer": "high",
+        "p": [
+          0.193301,
+          0.281252,
+          0.525447
+        ],
+        "mass_on_digits": 0.95698
+      },
+      {
+        "id": 11699172,
+        "answer": "low",
+        "p": [
+          0.703314,
+          0.201503,
+          0.095183
+        ],
+        "mass_on_digits": 0.883504
+      },
+      {
+        "id": 11846225,
+        "answer": "high",
+        "p": [
+          0.319168,
+          0.319168,
+          0.361664
+        ],
+        "mass_on_digits": 0.787529
+      },
+      {
+        "id": 12673825,
+        "answer": "low",
+        "p": [
+          0.4055,
+          0.315804,
+          0.278696
+        ],
+        "mass_on_digits": 0.931085
+      },
+      {
+        "id": 12969831,
+        "answer": "high",
+        "p": [
+          0.145154,
+          0.348207,
+          0.506638
+        ],
+        "mass_on_digits": 0.978093
+      },
+      {
+        "id": 13176517,
+        "answer": "high",
+        "p": [
+          0.103758,
+          0.219655,
+          0.676587
+        ],
+        "mass_on_digits": 0.968979
+      }
+    ]
+  },
+  "code": {
+    "commit": "36ed533668c279c34f63511c58a172b6135ffd94",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": "5.21.0",
+      "tokenizers": "0.23.3"
+    },
+    "machine": "6187d3e9-f59f-4c87-8fff-0a0ea6ac513f-pjsf8",
+    "torch": "2.14.1+cu130",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "transformers": "5.21.0"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}

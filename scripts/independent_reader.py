@@ -233,6 +233,37 @@ def shown(s: dict) -> str:
     return f"{s['share']:.3f} ({s['count']}/{s['of']}) [{low:.3f}, {high:.3f}]"
 
 
+def label_pairs(table: pd.DataFrame, head: str) -> list[dict]:
+    """Added after the first results (plan, "Result"): report only, the rule above is unchanged.
+
+    The reader reads middle texts as negative, so each "all wrong, same label" pair (true label,
+    the models' label) is set beside the "all right" reviews of the same true class: how often
+    the reader says the models' label in each."""
+    right = table[table["group"] == ALL_RIGHT]
+    wrong = table[table["group"] == ALL_WRONG_SAME]
+    pairs = []
+    for c in HEADS[head]["labels"]:
+        base = right[right["true"] == c]
+        for said in HEADS[head]["labels"]:
+            sub = wrong[(wrong["true"] == c) & (wrong["models_said"] == said)]
+            if sub.empty:
+                continue
+            pairs.append(
+                {
+                    "true": c,
+                    "models_said": said,
+                    "reader_said": {k: int((sub["answer"] == k).sum()) for k in HEADS[head]["labels"]},
+                    "reader_says_models_label": share(int((sub["answer"] == said).sum()), len(sub)),
+                    "same_in_all_right_of_this_class": share(int((base["answer"] == said).sum()), len(base)),
+                    "reader_says_true_label": share(int((sub["answer"] == c).sum()), len(sub)),
+                    "same_in_all_right_of_this_class_true": share(
+                        int((base["answer"] == c).sum()), len(base)
+                    ),
+                }
+            )
+    return pairs
+
+
 def score():
     sample = json.loads((FOLDER / "sample.json").read_text(encoding="utf-8"))
     answers = json.loads((FOLDER / "answers.json").read_text(encoding="utf-8"))
@@ -286,6 +317,7 @@ def score():
             "verdict": verdict,
         }
         verdicts[head] = verdict
+        entry["by_label_pair"] = label_pairs(table, head)
         result["heads"][head] = entry
     save_json(
         REPORTS_DIR / "independent_reader.json",
@@ -315,6 +347,15 @@ def score():
                 print(text)
             print(f"    reader said {g['reader_said']}")
         print(f"  decision: {e['decision']['verdict']}")
+        print("  each wrong pair beside all-right reviews of the same true class (added after the results):")
+        for x in e["by_label_pair"]:
+            m, b = x["reader_says_models_label"], x["same_in_all_right_of_this_class"]
+            t, bt = x["reader_says_true_label"], x["same_in_all_right_of_this_class_true"]
+            print(
+                f"    true {x['true']:<16} models {x['models_said']:<16} n={m['of']:<4} "
+                f"reader says models' label {m['share']:.3f} (all right {b['share']:.3f}), "
+                f"true label {t['share']:.3f} (all right {bt['share']:.3f}); said {x['reader_said']}"
+            )
     print(f"saved {REPORTS_DIR / 'independent_reader.json'}")
 
 
