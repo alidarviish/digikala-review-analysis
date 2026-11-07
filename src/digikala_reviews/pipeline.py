@@ -845,6 +845,33 @@ STEPS = [
         [78, 82, 83],
         files("reports/bilstm_seeds.json"),
         "reads the saved predictions of the models, which stay on your machine",
+    ),  # A reader that never saw our labels (reports/independent_reader_plan.md)
+    Step(
+        85,
+        "Independent reader: choose the reviews all three models got right or all got wrong",
+        ["scripts/independent_reader.py", "--make-sample"],
+        "local",
+        [78],
+        files("reports/independent_reader/sample.json"),
+        "only review ids go to git; commit and push it before step 86",
+    ),
+    Step(
+        86,
+        "Independent reader: Qwen3-8B answers both questions for each chosen review, zero-shot",
+        ["scripts/independent_reader.py"],
+        "gpu",
+        [85],
+        files("reports/independent_reader/answers.json"),
+        "downloads about 16 GB of weights from the Hugging Face hub; writes ids and answers, no text",
+        smoke=True,
+    ),
+    Step(
+        87,
+        "Independent reader: agreement with the labels and with the three models, and the plan's rule",
+        ["scripts/independent_reader.py", "--score"],
+        "local",
+        [86],
+        files("reports/independent_reader.json"),
     ),
 ]
 
