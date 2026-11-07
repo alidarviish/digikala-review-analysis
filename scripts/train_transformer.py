@@ -41,11 +41,18 @@ check kept (reports/domain_adaptation_plan.md); the hash of those weights is par
 settings:
   artifacts/transformer_adapted/   and   reports/transformer_final/adapted.json
 
+With --no-early-stop --seed N, the kept run is trained again with another training seed (the
+initial weights of the heads, dropout and the order of the reviews; the training reviews and
+the 50,000-review sample stay the same), to measure how much the full run depends on chance
+(reports/full_seeds_plan.md). Seed 2026 is the kept run itself:
+  artifacts/transformer_no_early_stop_seedN/   and   reports/transformer_final/fabert_no_early_stop_seedN.json
+
 Usage:
     python scripts/train_transformer.py            # needs a GPU
     python scripts/train_transformer.py --no-early-stop
     python scripts/train_transformer.py --large
     python scripts/train_transformer.py --adapted
+    python scripts/train_transformer.py --no-early-stop --seed 2027
     python scripts/train_transformer.py --smoke    # a tiny model on a few rows, CPU is fine
     python scripts/train_transformer.py --smoke --stop-after 20   # then run again: tests resuming
 """
@@ -154,12 +161,14 @@ def main():
     parser.add_argument(
         "--adapted", action="store_true", help="FaBERT from the further pretrained weights, every epoch"
     )
+    parser.add_argument("--seed", type=int, help="another training seed, with --no-early-stop only")
     args = parser.parse_args()
     import torch
     from transformers import AutoTokenizer
 
     assert not (args.large and args.no_early_stop), "--large already trains every epoch"
     assert not (args.adapted and (args.large or args.no_early_stop)), "--adapted trains every epoch alone"
+    assert args.seed is None or args.no_early_stop, "--seed is for the kept run (--no-early-stop) only"
     settings = {**SETTINGS, **(LARGE if args.large else {}), **(SMOKE if args.smoke else {})}
     if args.no_early_stop:
         settings["patience"] = None
@@ -180,6 +189,10 @@ def main():
         settings["encoder_sha256"] = file_sha256(weights)
         name = "smoke_adapted" if args.smoke else "adapted"
         out_dir = ARTIFACTS_DIR / ("transformer_adapted_smoke" if args.smoke else "transformer_adapted")
+    if args.seed is not None and args.seed != SETTINGS["seed"]:  # its own names; the kept run stays
+        settings["seed"] = args.seed
+        name += f"_seed{args.seed}"
+        out_dir = out_dir.with_name(f"{out_dir.name}_seed{args.seed}")
     result_path = (
         REPORTS_DIR / ("transformer_final_smoke" if args.smoke else "transformer_final") / f"{name}.json"
     )

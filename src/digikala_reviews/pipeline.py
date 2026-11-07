@@ -872,6 +872,42 @@ STEPS = [
         "local",
         [86],
         files("reports/independent_reader.json"),
+    ),  # How much the full runs depend on chance (reports/full_seeds_plan.md)
+    *[
+        Step(
+            number,
+            f"FaBERT: the kept run again with training seed {seed}",
+            ["scripts/train_transformer.py", "--no-early-stop", "--seed", str(seed)],
+            "gpu",
+            [33],
+            files(f"reports/transformer_final/fabert_no_early_stop_seed{seed}.json"),
+            "about 2 hours; it saves a resume point at every check, so start it again if the session ends",
+            smoke=True,
+        )
+        for number, seed in [(88, 2027), (89, 2028)]
+    ],
+    *[
+        Step(
+            number,
+            f"BiLSTM: every epoch (no early stopping) with training seed {seed}",
+            ["scripts/train_bilstm.py", "--no-early-stop", "--seed", str(seed)],
+            "gpu",
+            [77],
+            files(f"reports/bilstm/final_no_early_stop{'' if seed == 2026 else f'_seed{seed}'}.json"),
+            "about 22 minutes; it saves a resume point at every check; "
+            "its test run needs the test run of step 76 first",
+            smoke=True,
+        )
+        for number, seed in [(90, 2026), (91, 2027), (92, 2028)]
+    ],
+    Step(
+        93,
+        "The three seeds of FaBERT and of the BiLSTM: spread, model order, D58 and the comparison",
+        ["scripts/check_full_seeds.py"],
+        "local",
+        [60, 71, 74, 84, 88, 89, 90, 91, 92],
+        files("reports/full_seeds.json"),
+        "reads the saved predictions of the models, which stay on your machine",
     ),
 ]
 

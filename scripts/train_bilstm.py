@@ -32,6 +32,10 @@ Two parts, run in this order:
          (reports/bilstm_plan.md). Writes artifacts/bilstm_seedN/ and
          reports/bilstm/final_seedN.json; seed 2026 is the run above.
 
+--no-early-stop  the full run for all 4 epochs, the best check still kept, as the kept FaBERT
+         run (reports/full_seeds_plan.md); with or without --seed. Writes
+         artifacts/bilstm_no_early_stop[_seedN]/ and reports/bilstm/final_no_early_stop[_seedN].json.
+
 The four-model comparison later leaves out the 50,000 reviews used here for choosing; this
 script reports the whole validation set, like the other runs. The test set is not read.
 
@@ -42,6 +46,7 @@ Usage:
     python scripts/train_bilstm.py --smoke       # tiny model on a few rows, CPU is fine
     python scripts/train_bilstm.py --smoke --stop-after 6   # then run again: tests resuming
     python scripts/train_bilstm.py --seed 2027   # needs a GPU, after the first full run
+    python scripts/train_bilstm.py --no-early-stop --seed 2027
 """
 
 import argparse
@@ -330,8 +335,10 @@ def main():
         "--stop-after", type=int, help="end the session after this step's check (tests resuming)"
     )
     parser.add_argument("--seed", type=int, help="another training seed for the full run")
+    parser.add_argument("--no-early-stop", action="store_true", help="the full run for every epoch")
     args = parser.parse_args()
     assert not (args.seed and args.tune), "--seed is for the full run only"
+    assert not (args.no_early_stop and args.tune), "--no-early-stop is for the full run only"
     import torch
 
     base = {**SETTINGS, **(TUNE if args.tune else FINAL), **(SMOKE if args.smoke else {})}
@@ -339,8 +346,9 @@ def main():
     report_dir = REPORTS_DIR / f"bilstm{suffix}"
     out_dir = ARTIFACTS_DIR / f"bilstm{suffix}"
     other_seed = args.seed is not None and args.seed != SETTINGS["seed"]
-    if other_seed:  # its own names, so the first run's files stay as they are
-        out_dir = ARTIFACTS_DIR / f"bilstm{suffix}_seed{args.seed}"
+    # its own names, so the first runs' files stay as they are
+    run_name = ("_no_early_stop" if args.no_early_stop else "") + (f"_seed{args.seed}" if other_seed else "")
+    out_dir = ARTIFACTS_DIR / f"bilstm{suffix}{run_name}"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if not args.smoke and device.type != "cuda":
         raise SystemExit("No GPU found: turn the GPU on for this notebook, or run with --smoke")
@@ -444,10 +452,11 @@ def main():
         raise SystemExit(f"{tuning_path} not found: run with --tune first")
     tuning = json.loads(tuning_path.read_text(encoding="utf-8"))
     settings = {**base, **tuning["best"]}
-    result_path = report_dir / "final.json"
+    result_path = report_dir / f"final{run_name}.json"
     if other_seed:
         settings["seed"] = args.seed
-        result_path = report_dir / f"final_seed{args.seed}.json"
+    if args.no_early_stop:
+        settings["patience"] = None
     spec = json.loads(json.dumps({"settings": settings, "data": context["data"]}))
     if finished(result_path, spec):
         print("Already done", flush=True)

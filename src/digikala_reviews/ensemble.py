@@ -138,4 +138,3 @@ def cross_fitted_chooser(features, codes, product_id, seed: int):
         log_proba[~fit_on] = np.log(np.maximum(model.predict_proba(features[~fit_on]), 1e-12))
         predicted[~fit_on] = predict_with_offsets(log_proba[~fit_on], offsets)
     return predicted, log_proba
-
