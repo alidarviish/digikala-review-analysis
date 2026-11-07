@@ -157,3 +157,43 @@ Expected:
 - The counts of the three-model comparison change by under 3% from one seed to another for
   all right and all wrong, and the share of all wrong with the same wrong label stays within
   one point of 90% and 94%: the shared mistakes do not depend on one run.
+
+### Result of the two more seeds
+
+`reports/bilstm/final_seed2027.json`, `final_seed2028.json` (commit eab6ccf, the same GPU,
+torch and cache as seed 2026; the fingerprints differ only in the seed) and
+`reports/bilstm_seeds.json`.
+
+| Seed | Kept check | Stopped | Training | Recommendation | Rating band | FaBERT minus BiLSTM |
+|---|---|---|---|---|---|---|
+| 2026 | epoch 3.0 | 3.5 | 18.7 min | 0.7176 | 0.6826 | +0.0149, +0.0096 |
+| 2027 | epoch 1.0 | 1.5 | 8.2 min | 0.7081 | 0.6765 | +0.0243, +0.0157 |
+| 2028 | epoch 2.5 | 3.0 | 16.3 min | 0.7182 | 0.6811 | +0.0142, +0.0111 |
+
+Spread: 1.01 points (recommendation) and 0.61 (rating band); without seed 2027, 0.06 and 0.15.
+Seed 2027's checks followed seed 2026's up to epoch 1 (0.6947 against 0.6927), then two
+checks in a row without gain stopped it, while seed 2026 passed that point and kept improving
+to epoch 3. With four checks per epoch and a patience of two, early stopping is sensitive to
+the noise of the checks; the kept FaBERT run trains every epoch, so this does not apply to it.
+
+The three-model comparison with each seed, on the same 872,795 reviews:
+
+| Seed | Rec: all right / all wrong / same label | Band: all right / all wrong / same label |
+|---|---|---|
+| 2026 | 604,117 / 66,339 / 90.0% | 577,201 / 124,315 / 94.3% |
+| 2027 | 600,956 / 65,102 / 88.9% | 572,206 / 121,431 / 93.7% |
+| 2028 | 603,706 / 66,692 / 90.1% | 575,511 / 124,329 / 94.3% |
+
+Relative spread of the counts: all right 0.5% and 0.9%, all wrong 2.4% and 2.4%.
+
+| | Expected | Found |
+|---|---|---|
+| Three seeds within 0.3 points | yes | 1.01 and 0.61: wrong, because of seed 2027's early stop |
+| FaBERT ahead by about 1 point with every seed | yes | 1.4 to 2.4 and 1.0 to 1.6: right |
+| BiLSTM ahead of TF-IDF with every seed | yes | right |
+| Counts change by under 3% | yes | at most 2.4%: right |
+| Same wrong label within one point of 90% and 94% | yes | right, except recommendation with seed 2027 (88.9%) |
+
+What it means: the shared mistakes and their same wrong label do not depend on one BiLSTM
+run; the BiLSTM's own score depends on its early stopping rule. Training every epoch with the
+best check kept, as for FaBERT, is tested in `reports/full_seeds_plan.md`.

@@ -75,3 +75,40 @@ errors.
   treated as something to train away.
 - If E is below 60%, the reader cannot recover the band from text alone even when the model
   can, and the A result is not read as evidence either way.
+
+## Result
+
+`reports/error_sample.json`, commit a9cea67. One reader (the project's author) coded the 110
+rows without seeing the key. Counts out of 20 per group:
+
+| Group | Reading: positive / negative / mixed / neutral | Stars: low / medium / high / cannot tell | Stars = true band | Stars = FaBERT's band | Most common tags |
+|---|---|---|---|---|---|
+| A (medium, FaBERT high) | 15 / 0 / 5 / 0 | 1 / 11 / 8 / 0 | 11 | 8 | b 4, e 3 |
+| B (`no_idea` and medium, FaBERT low or high) | 2 / 12 / 4 / 2 | 2 / 9 / 7 / 2 | 9 | 3 | c 6, a 4, b 4 |
+| C (high, FaBERT medium) | 3 / 2 / 15 / 0 | 6 / 14 / 0 / 0 | 0 | 14 | b 11, e 5 |
+| D (`recommended` and low, FaBERT medium or high) | 6 / 5 / 9 / 0 | 3 / 12 / 5 / 0 | 3 | 10 | b 7, e 5, c 4 |
+| E (control, FaBERT right) | 11 / 1 / 8 / 0 | 2 / 6 / 12 / 0 | 13 | 13 | b 7 |
+
+The 10 repeated rows got the same codes both times (10 of 10 for reading, stars and tags).
+
+| | Expected | Found |
+|---|---|---|
+| A reading positive at least 60% | yes | 75%: right |
+| A stars high at least 60% | yes | 40%: wrong |
+| B reading mixed or neutral at least 60% | yes | 30% (60% read negative): wrong |
+| C reading mixed, or tag e or d, at least 50% | yes | 80%: right |
+| D stars not low at least 50%, tag a frequent | yes | 85%: right; tag a in 15%: wrong |
+| E stars equal to the true band, about 75% | yes | 65%: about right |
+| Repeats with the same stars, about 80% | yes | 100% |
+
+The rule: E is above 60%, so the reader can recover the band from the text; but in A the
+text reads high in only 40%, under 60%, so H2' (these medium mistakes come from a rate that
+disagrees with a high-reading text) is **not supported by reading**. What reading does show:
+A texts mostly read positive but at a medium strength; C texts (rated high, read medium by
+FaBERT) are mostly "good, but" and read medium to the reader too, 14 of 20 agreeing with
+FaBERT and none with the label; D texts (recommended but rated low) mostly do not read low.
+
+Limits: one reader, 20 reviews per group (a share is uncertain by about plus or minus 20
+points), only rating band mistakes. A second, independent reader on many more reviews is
+`reports/independent_reader_plan.md`; it agreed with the models on the high reviews read as
+medium (63% against 19% on right high reviews).
