@@ -765,6 +765,27 @@ STEPS = [
         [17, 33, 74],
         files("reports/transformer_final/adapted_vs_fabert.json"),
         "reads both runs' predictions and the TF-IDF predictions, which stay on your machine",
+    ),  # A recurrent model trained from scratch, for the four-model comparison (reports/bilstm_plan.md)
+    Step(
+        76,
+        "BiLSTM: the 8 settings of the plan on 500,000 reviews",
+        ["scripts/train_bilstm.py", "--tune"],
+        "gpu",
+        [23],
+        files("reports/bilstm/tuning.json"),
+        "each finished setting is saved, so start it again if the session ends",
+        smoke=True,
+    ),
+    Step(
+        77,
+        "BiLSTM: the best setting on all training reviews, scored on all of validation",
+        ["scripts/train_bilstm.py"],
+        "gpu",
+        [76],
+        files("reports/bilstm/final.json"),
+        "it saves a resume point at every check, so start it again if the session ends; "
+        "its test run needs the test run of step 76 first",
+        smoke=True,
     ),
 ]
 
