@@ -5,7 +5,9 @@ Reads the validation probabilities saved by scripts/pilot_transformers.py
 (artifacts/tfidf_final/validation_predictions.parquet). For each run and head it scores the
 labels with offsets (tuned on the other half of the sample, by product, as in the runs
 themselves) and compares them with TF-IDF on exactly the same reviews (paired bootstrap).
-Runs of the same model and sample size are also averaged over their seeds.
+Runs of the same model and sample size are also averaged over their seeds. Only the model
+comparison runs are read (names with nothing after __seedN__nROWS); the runs that change the
+training have their own reports.
 
 Writes reports/transformer_pilot/summary.json and prints a table. Nothing is trained.
 
@@ -30,7 +32,9 @@ from digikala_reviews.provenance import git_commit
 from digikala_reviews.tfidf import HEADS, load_cache
 from digikala_reviews.tuning import save_json
 
-NAME = re.compile(r"^(?P<model>.+?)(?:__seed(?P<seed>\d+)__n(?P<rows>\d+))?$")
+# the model comparison runs only; the runs that change the training (__checks10, __merge-...) are
+# compared in their own reports, and averaging them with these would mix different experiments
+NAME = re.compile(r"^(?P<model>(?:(?!__seed).)+)(?:__seed(?P<seed>\d+)__n(?P<rows>\d+))?$")
 
 
 def main():
@@ -45,6 +49,8 @@ def main():
     tfidf = pd.read_parquet(ARTIFACTS_DIR / "tfidf_final" / "validation_predictions.parquet").set_index("id")
     runs, groups = {}, defaultdict(list)
     for path in sorted(arrays_dir.glob("*.npz")):
+        if not NAME.match(path.stem):
+            continue
         record = json.loads((runs_dir / f"{path.stem}.json").read_text(encoding="utf-8"))
         arrays = np.load(path)
         rows = validation.loc[arrays["ids"]]

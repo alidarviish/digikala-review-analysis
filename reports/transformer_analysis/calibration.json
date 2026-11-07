@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-10-29T14:16:22+00:00",
+  "created_at": "2026-11-07T19:05:53+00:00",
   "recommendation": {
     "expected_calibration_error": 0.016213154942326842,
     "bins": [
@@ -158,8 +158,8 @@
     }
   },
   "code": {
-    "commit": "b92fbffc481c6aa357e7e1ac75f80089d26926d3",
-    "uncommitted_changes": true
+    "commit": "59a3ce99500514a06bde550b5a264c71399eefaf",
+    "uncommitted_changes": false
   },
   "model": "transformer",
   "model_files": {
