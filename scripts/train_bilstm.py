@@ -42,13 +42,18 @@ import hashlib
 import json
 import math
 import re
+import sys
 import time
 from collections import Counter
 from datetime import UTC, datetime
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from train_transformer import head_targets, selection_score
+
+# the notebook may start Python without the script's folder on the import path
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from train_transformer import head_targets, selection_score  # noqa: E402
 
 from digikala_reviews.config import ARTIFACTS_DIR, CACHE_DIR, REPORTS_DIR, SPLIT_SEED
 from digikala_reviews.experiments import cross_fitted_offsets, search_offsets
