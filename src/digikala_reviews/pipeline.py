@@ -804,6 +804,15 @@ STEPS = [
         [78],
         files("reports/negative_errors.json"),
         "reads the saved predictions of the three models, which stay on your machine",
+    ),  # A ceiling for any text-only model, from repeated texts (reports/text_ceiling_plan.md)
+    Step(
+        80,
+        "Repeated texts: the best any text-only model can do, against the three models",
+        ["scripts/estimate_text_ceiling.py"],
+        "local",
+        [78],
+        files("reports/text_ceiling.json"),
+        "reads the saved predictions of the three models, which stay on your machine",
     ),
 ]
 
