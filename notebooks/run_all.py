@@ -40,7 +40,8 @@ def _(mo):
       can be reclaimed), then on your machine run
       `uv run python scripts/import_colab_outputs.py <unzipped folder>`.
 
-    One step runs at a time, so two jobs never compete for memory. A step keeps running
+    Several steps may run side by side (each has its own log and output folders), but the
+    same step never twice; watch the memory before starting another. A step keeps running
     when the tab is closed; *Refresh* shows where it is.
     """)
     return
@@ -248,8 +249,8 @@ def _(
     _step = pipeline.STEPS[step_choice.value - 1]
     _running = pipeline.running_steps(pipeline.STEPS)
     _state = pipeline.status(pipeline.STEPS, ROOTS, _running)[_step.number]
-    if _running:
-        _message = f"Step {min(_running)} is running; one step at a time."
+    if _step.number in _running:  # other steps may run beside it; the GPU has room for several
+        _message = f"Step {_step.number} is running already."
     elif smoke_box.value and not _step.smoke:
         _message = f"Step {_step.number} has no test run."
     elif _state != "ready" and not smoke_box.value:  # a test run writes apart, so it may run anytime
