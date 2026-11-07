@@ -945,6 +945,15 @@ STEPS = [
         files("reports/hard_examples_check.json"),
         "reads the saved probabilities of the three FaBERT pilot runs, which stay on your machine",
     ),
+    Step(
+        98,
+        "What the ids removed by cleaning rule P7 look like: report only, the data does not change",
+        ["scripts/analyze_p7_conflicts.py"],
+        "local",
+        [3, 5],
+        files("reports/p7_conflicts.json"),
+        "reads the raw copy and the cleaning record, which stay on your machine",
+    ),
 ]
 
 
