@@ -1,0 +1,121 @@
+{
+  "created_at": "2026-11-07T23:24:07+00:00",
+  "ids": 245,
+  "rows": 490,
+  "normalizer_version": "2",
+  "categories": {
+    "label": 101,
+    "text edit": 111,
+    "rate 0": 4,
+    "two rates": 21,
+    "spacing": 8
+  },
+  "differing_fields": {
+    "body + normalized body": 90,
+    "label": 48,
+    "rate": 24,
+    "body + normalized body + rate + label": 23,
+    "body + normalized body + rate": 21,
+    "body + normalized body + label": 20,
+    "rate + label": 9,
+    "body": 8,
+    "body + rate + label": 1,
+    "body + rate": 1
+  },
+  "label_cases_with_one_label_missing": 58,
+  "same_product": 245,
+  "same_created_at": 245,
+  "different_created_at_last_copy_is_newest": 0,
+  "different_created_at_last_copy_is_older": 0,
+  "split_of_product": {
+    "train": 169,
+    "test": 46,
+    "validation": 29,
+    "none": 1
+  },
+  "by_category": {
+    "label": {
+      "same_product": 101,
+      "same_created_at": 101,
+      "split_of_product": {
+        "train": 69,
+        "test": 18,
+        "validation": 13,
+        "none": 1
+      }
+    },
+    "rate 0": {
+      "same_product": 4,
+      "same_created_at": 4,
+      "split_of_product": {
+        "train": 3,
+        "test": 1
+      }
+    },
+    "spacing": {
+      "same_product": 8,
+      "same_created_at": 8,
+      "split_of_product": {
+        "train": 8
+      }
+    },
+    "text edit": {
+      "same_product": 111,
+      "same_created_at": 111,
+      "split_of_product": {
+        "train": 72,
+        "test": 24,
+        "validation": 15
+      }
+    },
+    "two rates": {
+      "same_product": 21,
+      "same_created_at": 21,
+      "split_of_product": {
+        "train": 17,
+        "test": 3,
+        "validation": 1
+      }
+    }
+  },
+  "example_ids": {
+    "label": [
+      "24565793",
+      "32424494",
+      "33691371",
+      "35073246",
+      "35543298"
+    ],
+    "text edit": [
+      "22662971",
+      "24446421",
+      "28420267",
+      "28564496",
+      "31568671"
+    ],
+    "rate 0": [
+      "12862914",
+      "17111330",
+      "54505117",
+      "54701864"
+    ],
+    "two rates": [
+      "35490608",
+      "42977304",
+      "43678598",
+      "44592842",
+      "45046064"
+    ],
+    "spacing": [
+      "50021711",
+      "50680219",
+      "54261122",
+      "54339907",
+      "54352656"
+    ]
+  },
+  "code": {
+    "commit": "aa52c1ee26ae2d78400a24f947c53dd88687e59a",
+    "uncommitted_changes": false
+  }
+}
