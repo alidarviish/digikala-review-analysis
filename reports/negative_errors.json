@@ -1,0 +1,1439 @@
+{
+  "created_at": "2026-11-07T15:28:38+00:00",
+  "plan": "reports/reading_models_plan.md",
+  "causes_used": [
+    "buyer_labels_disagree",
+    "buyer_labels_strongly_disagree",
+    "rate_exactly_3",
+    "rate_exactly_4",
+    "rate_exactly_2",
+    "text_also_in_train",
+    "emoji",
+    "three_words_or_fewer"
+  ],
+  "checks": {
+    "fabert": {
+      "recommendation": 0.7324370442721989,
+      "rating_band": 0.692190273060563
+    },
+    "tfidf": {
+      "recommendation": 0.7016757031931711,
+      "rating_band": 0.6682810859846451
+    },
+    "bilstm": {
+      "recommendation": 0.7175581115767086,
+      "rating_band": 0.6826093995653655
+    }
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  },
+  "heads": {
+    "recommendation": {
+      "class": "not_recommended",
+      "all_wrong": 15101,
+      "unexplained": {
+        "reviews": 5197,
+        "words_median": 11.0,
+        "words_mean": 15.3,
+        "rate_counts": {
+          "0": 1836,
+          "0 to 1, fractional": 25,
+          "1": 3015,
+          "1 to 2, fractional": 187,
+          "2 to 3, fractional": 134
+        },
+        "all_three_said": {
+          "no_idea": 3449,
+          "recommended": 516
+        },
+        "models_disagree_with_each_other": 1232
+      },
+      "all_wrong_with_a_known_cause": {
+        "reviews": 9904,
+        "words_median": 7.0,
+        "words_mean": 11.23,
+        "rate_counts": {
+          "0": 416,
+          "0 to 1, fractional": 4,
+          "1": 942,
+          "1 to 2, fractional": 31,
+          "2": 3435,
+          "2 to 3, fractional": 225,
+          "3": 3538,
+          "3 to 4, fractional": 160,
+          "4": 551,
+          "4 to 5, fractional": 26,
+          "5": 576
+        },
+        "all_three_said": {
+          "no_idea": 6582,
+          "recommended": 1626
+        },
+        "models_disagree_with_each_other": 1696
+      },
+      "all_right": {
+        "reviews": 41831,
+        "words_median": 10.0,
+        "words_mean": 15.75,
+        "rate_counts": {
+          "0": 4118,
+          "0 to 1, fractional": 313,
+          "1": 25614,
+          "1 to 2, fractional": 1125,
+          "2": 6541,
+          "2 to 3, fractional": 646,
+          "3": 2982,
+          "3 to 4, fractional": 95,
+          "4": 161,
+          "4 to 5, fractional": 22,
+          "5": 214
+        }
+      },
+      "words_typical_of_unexplained": [
+        {
+          "word": "ولی",
+          "z": 40.35141150454937,
+          "reviews_unexplained": 1240,
+          "share_unexplained": 0.2386,
+          "reviews_right": 2788,
+          "share_right": 0.0666
+        },
+        {
+          "word": "خوبه",
+          "z": 31.33797849212029,
+          "reviews_unexplained": 331,
+          "share_unexplained": 0.0637,
+          "reviews_right": 318,
+          "share_right": 0.0076
+        },
+        {
+          "word": "اما",
+          "z": 23.155926457014388,
+          "reviews_unexplained": 456,
+          "share_unexplained": 0.0877,
+          "reviews_right": 961,
+          "share_right": 0.023
+        },
+        {
+          "word": "زیاد",
+          "z": 18.07796177901167,
+          "reviews_unexplained": 203,
+          "share_unexplained": 0.0391,
+          "reviews_right": 300,
+          "share_right": 0.0072
+        },
+        {
+          "word": "برای",
+          "z": 18.06333752177109,
+          "reviews_unexplained": 700,
+          "share_unexplained": 0.1347,
+          "reviews_right": 2788,
+          "share_right": 0.0666
+        },
+        {
+          "word": "عالی",
+          "z": 17.18797221615835,
+          "reviews_unexplained": 80,
+          "share_unexplained": 0.0154,
+          "reviews_right": 182,
+          "share_right": 0.0044
+        },
+        {
+          "word": "نسبت",
+          "z": 16.792798504394717,
+          "reviews_unexplained": 212,
+          "share_unexplained": 0.0408,
+          "reviews_right": 474,
+          "share_right": 0.0113
+        },
+        {
+          "word": "کتاب",
+          "z": 15.305009169579755,
+          "reviews_unexplained": 201,
+          "share_unexplained": 0.0387,
+          "reviews_right": 469,
+          "share_right": 0.0112
+        },
+        {
+          "word": "معمولی",
+          "z": 14.613955399731267,
+          "reviews_unexplained": 141,
+          "share_unexplained": 0.0271,
+          "reviews_right": 236,
+          "share_right": 0.0056
+        },
+        {
+          "word": "باشه",
+          "z": 13.735577633307336,
+          "reviews_unexplained": 269,
+          "share_unexplained": 0.0518,
+          "reviews_right": 783,
+          "share_right": 0.0187
+        },
+        {
+          "word": "من",
+          "z": 13.38320976540229,
+          "reviews_unexplained": 1093,
+          "share_unexplained": 0.2103,
+          "reviews_right": 5741,
+          "share_right": 0.1372
+        },
+        {
+          "word": "قیمتش",
+          "z": 12.805075534196687,
+          "reviews_unexplained": 180,
+          "share_unexplained": 0.0346,
+          "reviews_right": 530,
+          "share_right": 0.0127
+        },
+        {
+          "word": "قیمت",
+          "z": 12.464941971607178,
+          "reviews_unexplained": 364,
+          "share_unexplained": 0.07,
+          "reviews_right": 1534,
+          "share_right": 0.0367
+        },
+        {
+          "word": "مناسب",
+          "z": 11.917859307126443,
+          "reviews_unexplained": 172,
+          "share_unexplained": 0.0331,
+          "reviews_right": 560,
+          "share_right": 0.0134
+        },
+        {
+          "word": "مناسبه",
+          "z": 11.457677211759346,
+          "reviews_unexplained": 50,
+          "share_unexplained": 0.0096,
+          "reviews_right": 40,
+          "share_right": 0.001
+        },
+        {
+          "word": "معمولیه",
+          "z": 11.153545180367393,
+          "reviews_unexplained": 51,
+          "share_unexplained": 0.0098,
+          "reviews_right": 31,
+          "share_right": 0.0007
+        },
+        {
+          "word": "عالیه",
+          "z": 11.095835862970908,
+          "reviews_unexplained": 24,
+          "share_unexplained": 0.0046,
+          "reviews_right": 45,
+          "share_right": 0.0011
+        },
+        {
+          "word": "خوبیه",
+          "z": 11.04125616050276,
+          "reviews_unexplained": 32,
+          "share_unexplained": 0.0062,
+          "reviews_right": 16,
+          "share_right": 0.0004
+        },
+        {
+          "word": "یکم",
+          "z": 10.734082492368763,
+          "reviews_unexplained": 89,
+          "share_unexplained": 0.0171,
+          "reviews_right": 181,
+          "share_right": 0.0043
+        },
+        {
+          "word": "خاصی",
+          "z": 10.513111623142699,
+          "reviews_unexplained": 66,
+          "share_unexplained": 0.0127,
+          "reviews_right": 88,
+          "share_right": 0.0021
+        },
+        {
+          "word": "البته",
+          "z": 10.469506117623439,
+          "reviews_unexplained": 88,
+          "share_unexplained": 0.0169,
+          "reviews_right": 176,
+          "share_right": 0.0042
+        },
+        {
+          "word": "کمی",
+          "z": 10.373414566160767,
+          "reviews_unexplained": 91,
+          "share_unexplained": 0.0175,
+          "reviews_right": 191,
+          "share_right": 0.0046
+        },
+        {
+          "word": "دوست",
+          "z": 9.992473209177636,
+          "reviews_unexplained": 63,
+          "share_unexplained": 0.0121,
+          "reviews_right": 103,
+          "share_right": 0.0025
+        },
+        {
+          "word": "بزرگتر",
+          "z": 9.496516966283062,
+          "reviews_unexplained": 62,
+          "share_unexplained": 0.0119,
+          "reviews_right": 103,
+          "share_right": 0.0025
+        },
+        {
+          "word": "تر",
+          "z": 9.361268239969819,
+          "reviews_unexplained": 154,
+          "share_unexplained": 0.0296,
+          "reviews_right": 496,
+          "share_right": 0.0119
+        },
+        {
+          "word": "داره",
+          "z": 9.333893276926002,
+          "reviews_unexplained": 493,
+          "share_unexplained": 0.0949,
+          "reviews_right": 2630,
+          "share_right": 0.0629
+        },
+        {
+          "word": "قشنگه",
+          "z": 8.770457437217141,
+          "reviews_unexplained": 33,
+          "share_unexplained": 0.0063,
+          "reviews_right": 41,
+          "share_right": 0.001
+        },
+        {
+          "word": "بزرگ",
+          "z": 8.743944733252373,
+          "reviews_unexplained": 106,
+          "share_unexplained": 0.0204,
+          "reviews_right": 297,
+          "share_right": 0.0071
+        },
+        {
+          "word": "سایز",
+          "z": 8.688398078097757,
+          "reviews_unexplained": 272,
+          "share_unexplained": 0.0523,
+          "reviews_right": 1147,
+          "share_right": 0.0274
+        },
+        {
+          "word": "نکردم",
+          "z": 8.40809745143614,
+          "reviews_unexplained": 99,
+          "share_unexplained": 0.019,
+          "reviews_right": 284,
+          "share_right": 0.0068
+        },
+        {
+          "word": "زیبا",
+          "z": 8.130468988404731,
+          "reviews_unexplained": 27,
+          "share_unexplained": 0.0052,
+          "reviews_right": 49,
+          "share_right": 0.0012
+        },
+        {
+          "word": "فکر",
+          "z": 8.053848968730586,
+          "reviews_unexplained": 136,
+          "share_unexplained": 0.0262,
+          "reviews_right": 462,
+          "share_right": 0.011
+        },
+        {
+          "word": "متوسط",
+          "z": 7.88348510802697,
+          "reviews_unexplained": 31,
+          "share_unexplained": 0.006,
+          "reviews_right": 34,
+          "share_right": 0.0008
+        },
+        {
+          "word": "خب",
+          "z": 7.853515101722711,
+          "reviews_unexplained": 51,
+          "share_unexplained": 0.0098,
+          "reviews_right": 99,
+          "share_right": 0.0024
+        },
+        {
+          "word": "هنوز",
+          "z": 7.852686370368552,
+          "reviews_unexplained": 55,
+          "share_unexplained": 0.0106,
+          "reviews_right": 128,
+          "share_right": 0.0031
+        },
+        {
+          "word": "گرفتم",
+          "z": 7.765012894717081,
+          "reviews_unexplained": 181,
+          "share_unexplained": 0.0348,
+          "reviews_right": 760,
+          "share_right": 0.0182
+        },
+        {
+          "word": "زیادی",
+          "z": 7.648946188192987,
+          "reviews_unexplained": 71,
+          "share_unexplained": 0.0137,
+          "reviews_right": 184,
+          "share_right": 0.0044
+        },
+        {
+          "word": "شاید",
+          "z": 7.613168247099847,
+          "reviews_unexplained": 87,
+          "share_unexplained": 0.0167,
+          "reviews_right": 246,
+          "share_right": 0.0059
+        },
+        {
+          "word": "بهتر",
+          "z": 7.554697176945774,
+          "reviews_unexplained": 115,
+          "share_unexplained": 0.0221,
+          "reviews_right": 395,
+          "share_right": 0.0094
+        },
+        {
+          "word": "نظر",
+          "z": 7.550369976339027,
+          "reviews_unexplained": 189,
+          "share_unexplained": 0.0364,
+          "reviews_right": 803,
+          "share_right": 0.0192
+        }
+      ],
+      "words_typical_of_right": [
+        {
+          "word": "اصلا",
+          "z": -33.78496611741617,
+          "reviews_unexplained": 177,
+          "share_unexplained": 0.0341,
+          "reviews_right": 11532,
+          "share_right": 0.2757
+        },
+        {
+          "word": "بی",
+          "z": -19.097227504887538,
+          "reviews_unexplained": 61,
+          "share_unexplained": 0.0117,
+          "reviews_right": 4349,
+          "share_right": 0.104
+        },
+        {
+          "word": "کیفیت",
+          "z": -19.03699065336848,
+          "reviews_unexplained": 300,
+          "share_unexplained": 0.0577,
+          "reviews_right": 6428,
+          "share_right": 0.1537
+        },
+        {
+          "word": "واقعا",
+          "z": -13.253500526357197,
+          "reviews_unexplained": 84,
+          "share_unexplained": 0.0162,
+          "reviews_right": 2671,
+          "share_right": 0.0639
+        },
+        {
+          "word": "بسیار",
+          "z": -13.122351868382285,
+          "reviews_unexplained": 73,
+          "share_unexplained": 0.014,
+          "reviews_right": 2569,
+          "share_right": 0.0614
+        },
+        {
+          "word": "نمیکنم",
+          "z": -13.121782793672631,
+          "reviews_unexplained": 27,
+          "share_unexplained": 0.0052,
+          "reviews_right": 2179,
+          "share_right": 0.0521
+        },
+        {
+          "word": "بد",
+          "z": -13.119237050220583,
+          "reviews_unexplained": 165,
+          "share_unexplained": 0.0317,
+          "reviews_right": 3319,
+          "share_right": 0.0793
+        },
+        {
+          "word": "هیچ",
+          "z": -12.696135299481849,
+          "reviews_unexplained": 52,
+          "share_unexplained": 0.01,
+          "reviews_right": 2090,
+          "share_right": 0.05
+        },
+        {
+          "word": "مرجوع",
+          "z": -11.988725846331358,
+          "reviews_unexplained": 241,
+          "share_unexplained": 0.0464,
+          "reviews_right": 3630,
+          "share_right": 0.0868
+        },
+        {
+          "word": "نخرید",
+          "z": -11.986905320957577,
+          "reviews_unexplained": 9,
+          "share_unexplained": 0.0017,
+          "reviews_right": 2374,
+          "share_right": 0.0568
+        },
+        {
+          "word": "کالا",
+          "z": -11.685143593026016,
+          "reviews_unexplained": 145,
+          "share_unexplained": 0.0279,
+          "reviews_right": 2841,
+          "share_right": 0.0679
+        },
+        {
+          "word": "ارزش",
+          "z": -11.554347650570437,
+          "reviews_unexplained": 58,
+          "share_unexplained": 0.0112,
+          "reviews_right": 1934,
+          "share_right": 0.0462
+        },
+        {
+          "word": "افتضاح",
+          "z": -11.25632256518182,
+          "reviews_unexplained": 6,
+          "share_unexplained": 0.0012,
+          "reviews_right": 2365,
+          "share_right": 0.0565
+        },
+        {
+          "word": "نداره",
+          "z": -11.171005693152923,
+          "reviews_unexplained": 289,
+          "share_unexplained": 0.0556,
+          "reviews_right": 3977,
+          "share_right": 0.0951
+        },
+        {
+          "word": "توصیه",
+          "z": -10.948893187068427,
+          "reviews_unexplained": 32,
+          "share_unexplained": 0.0062,
+          "reviews_right": 1615,
+          "share_right": 0.0386
+        },
+        {
+          "word": "بدرد",
+          "z": -10.490718831467975,
+          "reviews_unexplained": 28,
+          "share_unexplained": 0.0054,
+          "reviews_right": 1400,
+          "share_right": 0.0335
+        },
+        {
+          "word": "دور",
+          "z": -10.310916063895103,
+          "reviews_unexplained": 26,
+          "share_unexplained": 0.005,
+          "reviews_right": 1351,
+          "share_right": 0.0323
+        },
+        {
+          "word": "حتی",
+          "z": -10.300145664884052,
+          "reviews_unexplained": 43,
+          "share_unexplained": 0.0083,
+          "reviews_right": 1469,
+          "share_right": 0.0351
+        },
+        {
+          "word": "نمیخوره",
+          "z": -9.941135494211903,
+          "reviews_unexplained": 20,
+          "share_unexplained": 0.0038,
+          "reviews_right": 1251,
+          "share_right": 0.0299
+        },
+        {
+          "word": "پول",
+          "z": -9.753965604648574,
+          "reviews_unexplained": 28,
+          "share_unexplained": 0.0054,
+          "reviews_right": 1233,
+          "share_right": 0.0295
+        },
+        {
+          "word": "هم",
+          "z": -9.689746355571677,
+          "reviews_unexplained": 522,
+          "share_unexplained": 0.1004,
+          "reviews_right": 5953,
+          "share_right": 0.1423
+        },
+        {
+          "word": "جنس",
+          "z": -9.644055911668698,
+          "reviews_unexplained": 271,
+          "share_unexplained": 0.0521,
+          "reviews_right": 3646,
+          "share_right": 0.0872
+        },
+        {
+          "word": "خرید",
+          "z": -9.543602513131608,
+          "reviews_unexplained": 144,
+          "share_unexplained": 0.0277,
+          "reviews_right": 2415,
+          "share_right": 0.0577
+        },
+        {
+          "word": "پیشنهاد",
+          "z": -9.218933868846596,
+          "reviews_unexplained": 44,
+          "share_unexplained": 0.0085,
+          "reviews_right": 1480,
+          "share_right": 0.0354
+        },
+        {
+          "word": "کاملا",
+          "z": -9.207814185355378,
+          "reviews_unexplained": 76,
+          "share_unexplained": 0.0146,
+          "reviews_right": 1648,
+          "share_right": 0.0394
+        },
+        {
+          "word": "پلاستیک",
+          "z": -9.103720871282441,
+          "reviews_unexplained": 50,
+          "share_unexplained": 0.0096,
+          "reviews_right": 1295,
+          "share_right": 0.031
+        },
+        {
+          "word": "دیجی",
+          "z": -8.832502122939669,
+          "reviews_unexplained": 92,
+          "share_unexplained": 0.0177,
+          "reviews_right": 1811,
+          "share_right": 0.0433
+        },
+        {
+          "word": "درد",
+          "z": -8.649199847401876,
+          "reviews_unexplained": 57,
+          "share_unexplained": 0.011,
+          "reviews_right": 1298,
+          "share_right": 0.031
+        },
+        {
+          "word": "کلا",
+          "z": -8.461352581018023,
+          "reviews_unexplained": 55,
+          "share_unexplained": 0.0106,
+          "reviews_right": 1264,
+          "share_right": 0.0302
+        },
+        {
+          "word": "نمی",
+          "z": -8.165353960319823,
+          "reviews_unexplained": 87,
+          "share_unexplained": 0.0167,
+          "reviews_right": 1512,
+          "share_right": 0.0361
+        },
+        {
+          "word": "خراب",
+          "z": -8.108773687873688,
+          "reviews_unexplained": 51,
+          "share_unexplained": 0.0098,
+          "reviews_right": 1149,
+          "share_right": 0.0275
+        },
+        {
+          "word": "و",
+          "z": -8.041493935969696,
+          "reviews_unexplained": 1748,
+          "share_unexplained": 0.3363,
+          "reviews_right": 15788,
+          "share_right": 0.3774
+        },
+        {
+          "word": "ندارد",
+          "z": -7.598642974883092,
+          "reviews_unexplained": 27,
+          "share_unexplained": 0.0052,
+          "reviews_right": 837,
+          "share_right": 0.02
+        },
+        {
+          "word": "شد",
+          "z": -7.472639550929814,
+          "reviews_unexplained": 206,
+          "share_unexplained": 0.0396,
+          "reviews_right": 2523,
+          "share_right": 0.0603
+        },
+        {
+          "word": "ضعیف",
+          "z": -7.320457456237939,
+          "reviews_unexplained": 46,
+          "share_unexplained": 0.0089,
+          "reviews_right": 979,
+          "share_right": 0.0234
+        },
+        {
+          "word": "بده",
+          "z": -7.285844902329289,
+          "reviews_unexplained": 22,
+          "share_unexplained": 0.0042,
+          "reviews_right": 749,
+          "share_right": 0.0179
+        },
+        {
+          "word": "فیک",
+          "z": -7.147208689931986,
+          "reviews_unexplained": 8,
+          "share_unexplained": 0.0015,
+          "reviews_right": 667,
+          "share_right": 0.0159
+        },
+        {
+          "word": "پاره",
+          "z": -7.130460474711086,
+          "reviews_unexplained": 50,
+          "share_unexplained": 0.0096,
+          "reviews_right": 994,
+          "share_right": 0.0238
+        },
+        {
+          "word": "انگار",
+          "z": -6.9944712569028145,
+          "reviews_unexplained": 75,
+          "share_unexplained": 0.0144,
+          "reviews_right": 1213,
+          "share_right": 0.029
+        },
+        {
+          "word": "نبودم",
+          "z": -6.878820398728077,
+          "reviews_unexplained": 33,
+          "share_unexplained": 0.0063,
+          "reviews_right": 786,
+          "share_right": 0.0188
+        }
+      ]
+    },
+    "rating_band": {
+      "class": "low",
+      "all_wrong": 20389,
+      "unexplained": {
+        "reviews": 3795,
+        "words_median": 11.0,
+        "words_mean": 16.29,
+        "rate_counts": {
+          "0 to 1, fractional": 43,
+          "1": 3279,
+          "1 to 2, fractional": 251,
+          "2 to 3, fractional": 222
+        },
+        "all_three_said": {
+          "medium": 2688,
+          "high": 336
+        },
+        "models_disagree_with_each_other": 771
+      },
+      "all_wrong_with_a_known_cause": {
+        "reviews": 16594,
+        "words_median": 6.0,
+        "words_mean": 9.85,
+        "rate_counts": {
+          "0 to 1, fractional": 184,
+          "1": 3540,
+          "1 to 2, fractional": 596,
+          "2": 11517,
+          "2 to 3, fractional": 757
+        },
+        "all_three_said": {
+          "medium": 9916,
+          "high": 4356
+        },
+        "models_disagree_with_each_other": 2322
+      },
+      "all_right": {
+        "reviews": 45409,
+        "words_median": 10.0,
+        "words_mean": 14.85,
+        "rate_counts": {
+          "0 to 1, fractional": 406,
+          "1": 32214,
+          "1 to 2, fractional": 1378,
+          "2": 10942,
+          "2 to 3, fractional": 469
+        }
+      },
+      "words_typical_of_unexplained": [
+        {
+          "word": "خوبه",
+          "z": 34.60244257986822,
+          "reviews_unexplained": 291,
+          "share_unexplained": 0.0767,
+          "reviews_right": 325,
+          "share_right": 0.0072
+        },
+        {
+          "word": "ولی",
+          "z": 33.448672348375396,
+          "reviews_unexplained": 879,
+          "share_unexplained": 0.2316,
+          "reviews_right": 3130,
+          "share_right": 0.0689
+        },
+        {
+          "word": "عالی",
+          "z": 20.739809616305312,
+          "reviews_unexplained": 71,
+          "share_unexplained": 0.0187,
+          "reviews_right": 180,
+          "share_right": 0.004
+        },
+        {
+          "word": "نسبت",
+          "z": 18.061563741291497,
+          "reviews_unexplained": 157,
+          "share_unexplained": 0.0414,
+          "reviews_right": 403,
+          "share_right": 0.0089
+        },
+        {
+          "word": "اما",
+          "z": 17.960042156028496,
+          "reviews_unexplained": 299,
+          "share_unexplained": 0.0788,
+          "reviews_right": 1049,
+          "share_right": 0.0231
+        },
+        {
+          "word": "معمولی",
+          "z": 17.21986812624828,
+          "reviews_unexplained": 120,
+          "share_unexplained": 0.0316,
+          "reviews_right": 186,
+          "share_right": 0.0041
+        },
+        {
+          "word": "زیاد",
+          "z": 17.218845095055823,
+          "reviews_unexplained": 150,
+          "share_unexplained": 0.0395,
+          "reviews_right": 297,
+          "share_right": 0.0065
+        },
+        {
+          "word": "برای",
+          "z": 16.884781612877113,
+          "reviews_unexplained": 515,
+          "share_unexplained": 0.1357,
+          "reviews_right": 2916,
+          "share_right": 0.0642
+        },
+        {
+          "word": "قیمتش",
+          "z": 16.239647757608193,
+          "reviews_unexplained": 159,
+          "share_unexplained": 0.0419,
+          "reviews_right": 478,
+          "share_right": 0.0105
+        },
+        {
+          "word": "قیمت",
+          "z": 15.821134736345646,
+          "reviews_unexplained": 291,
+          "share_unexplained": 0.0767,
+          "reviews_right": 1393,
+          "share_right": 0.0307
+        },
+        {
+          "word": "عالیه",
+          "z": 14.338976960614612,
+          "reviews_unexplained": 31,
+          "share_unexplained": 0.0082,
+          "reviews_right": 46,
+          "share_right": 0.001
+        },
+        {
+          "word": "خوبیه",
+          "z": 13.865605992271176,
+          "reviews_unexplained": 43,
+          "share_unexplained": 0.0113,
+          "reviews_right": 19,
+          "share_right": 0.0004
+        },
+        {
+          "word": "مناسب",
+          "z": 13.528449640972092,
+          "reviews_unexplained": 138,
+          "share_unexplained": 0.0364,
+          "reviews_right": 535,
+          "share_right": 0.0118
+        },
+        {
+          "word": "داره",
+          "z": 13.158498906163485,
+          "reviews_unexplained": 404,
+          "share_unexplained": 0.1065,
+          "reviews_right": 2533,
+          "share_right": 0.0558
+        },
+        {
+          "word": "باشه",
+          "z": 12.290667985941475,
+          "reviews_unexplained": 198,
+          "share_unexplained": 0.0522,
+          "reviews_right": 834,
+          "share_right": 0.0184
+        },
+        {
+          "word": "معمولیه",
+          "z": 11.745930823859542,
+          "reviews_unexplained": 42,
+          "share_unexplained": 0.0111,
+          "reviews_right": 20,
+          "share_right": 0.0004
+        },
+        {
+          "word": "مناسبه",
+          "z": 11.310962010204305,
+          "reviews_unexplained": 36,
+          "share_unexplained": 0.0095,
+          "reviews_right": 37,
+          "share_right": 0.0008
+        },
+        {
+          "word": "کمی",
+          "z": 11.037286083037282,
+          "reviews_unexplained": 72,
+          "share_unexplained": 0.019,
+          "reviews_right": 178,
+          "share_right": 0.0039
+        },
+        {
+          "word": "تر",
+          "z": 10.798753801970706,
+          "reviews_unexplained": 129,
+          "share_unexplained": 0.034,
+          "reviews_right": 489,
+          "share_right": 0.0108
+        },
+        {
+          "word": "کتاب",
+          "z": 10.696115836930671,
+          "reviews_unexplained": 103,
+          "share_unexplained": 0.0271,
+          "reviews_right": 426,
+          "share_right": 0.0094
+        },
+        {
+          "word": "یکم",
+          "z": 10.373358714185724,
+          "reviews_unexplained": 67,
+          "share_unexplained": 0.0177,
+          "reviews_right": 188,
+          "share_right": 0.0041
+        },
+        {
+          "word": "خاصی",
+          "z": 10.295748387102643,
+          "reviews_unexplained": 49,
+          "share_unexplained": 0.0129,
+          "reviews_right": 81,
+          "share_right": 0.0018
+        },
+        {
+          "word": "البته",
+          "z": 9.683626475597924,
+          "reviews_unexplained": 63,
+          "share_unexplained": 0.0166,
+          "reviews_right": 178,
+          "share_right": 0.0039
+        },
+        {
+          "word": "نظر",
+          "z": 9.38218792439038,
+          "reviews_unexplained": 150,
+          "share_unexplained": 0.0395,
+          "reviews_right": 742,
+          "share_right": 0.0163
+        },
+        {
+          "word": "کم",
+          "z": 9.340202767517084,
+          "reviews_unexplained": 132,
+          "share_unexplained": 0.0348,
+          "reviews_right": 587,
+          "share_right": 0.0129
+        },
+        {
+          "word": "هست",
+          "z": 9.225571154490133,
+          "reviews_unexplained": 328,
+          "share_unexplained": 0.0864,
+          "reviews_right": 2253,
+          "share_right": 0.0496
+        },
+        {
+          "word": "قشنگه",
+          "z": 9.146055920751786,
+          "reviews_unexplained": 25,
+          "share_unexplained": 0.0066,
+          "reviews_right": 37,
+          "share_right": 0.0008
+        },
+        {
+          "word": "دوست",
+          "z": 9.004097664554727,
+          "reviews_unexplained": 43,
+          "share_unexplained": 0.0113,
+          "reviews_right": 104,
+          "share_right": 0.0023
+        },
+        {
+          "word": "زیادی",
+          "z": 8.822472103675373,
+          "reviews_unexplained": 59,
+          "share_unexplained": 0.0155,
+          "reviews_right": 169,
+          "share_right": 0.0037
+        },
+        {
+          "word": "میشه",
+          "z": 8.681965455228736,
+          "reviews_unexplained": 302,
+          "share_unexplained": 0.0796,
+          "reviews_right": 1990,
+          "share_right": 0.0438
+        },
+        {
+          "word": "باید",
+          "z": 8.663799496153699,
+          "reviews_unexplained": 169,
+          "share_unexplained": 0.0445,
+          "reviews_right": 902,
+          "share_right": 0.0199
+        },
+        {
+          "word": "های",
+          "z": 8.647008825451202,
+          "reviews_unexplained": 196,
+          "share_unexplained": 0.0516,
+          "reviews_right": 1147,
+          "share_right": 0.0253
+        },
+        {
+          "word": "خوش",
+          "z": 8.522845062007008,
+          "reviews_unexplained": 27,
+          "share_unexplained": 0.0071,
+          "reviews_right": 65,
+          "share_right": 0.0014
+        },
+        {
+          "word": "من",
+          "z": 8.462312210996965,
+          "reviews_unexplained": 754,
+          "share_unexplained": 0.1987,
+          "reviews_right": 6381,
+          "share_right": 0.1405
+        },
+        {
+          "word": "ممنون",
+          "z": 8.431224378458616,
+          "reviews_unexplained": 25,
+          "share_unexplained": 0.0066,
+          "reviews_right": 76,
+          "share_right": 0.0017
+        },
+        {
+          "word": "بزرگتر",
+          "z": 8.021776252513414,
+          "reviews_unexplained": 42,
+          "share_unexplained": 0.0111,
+          "reviews_right": 111,
+          "share_right": 0.0024
+        },
+        {
+          "word": "زیبا",
+          "z": 7.870568327027027,
+          "reviews_unexplained": 18,
+          "share_unexplained": 0.0047,
+          "reviews_right": 54,
+          "share_right": 0.0012
+        },
+        {
+          "word": "فکر",
+          "z": 7.708993446353598,
+          "reviews_unexplained": 101,
+          "share_unexplained": 0.0266,
+          "reviews_right": 465,
+          "share_right": 0.0102
+        },
+        {
+          "word": "ندیدم",
+          "z": 7.68354355977816,
+          "reviews_unexplained": 36,
+          "share_unexplained": 0.0095,
+          "reviews_right": 81,
+          "share_right": 0.0018
+        },
+        {
+          "word": "نرم",
+          "z": 7.648664725186263,
+          "reviews_unexplained": 53,
+          "share_unexplained": 0.014,
+          "reviews_right": 220,
+          "share_right": 0.0048
+        }
+      ],
+      "words_typical_of_right": [
+        {
+          "word": "اصلا",
+          "z": -28.04391626273193,
+          "reviews_unexplained": 153,
+          "share_unexplained": 0.0403,
+          "reviews_right": 11242,
+          "share_right": 0.2476
+        },
+        {
+          "word": "بی",
+          "z": -16.174968868279745,
+          "reviews_unexplained": 48,
+          "share_unexplained": 0.0126,
+          "reviews_right": 4348,
+          "share_right": 0.0958
+        },
+        {
+          "word": "کیفیت",
+          "z": -14.558263439565318,
+          "reviews_unexplained": 228,
+          "share_unexplained": 0.0601,
+          "reviews_right": 6324,
+          "share_right": 0.1393
+        },
+        {
+          "word": "مرجوع",
+          "z": -14.146549514537682,
+          "reviews_unexplained": 109,
+          "share_unexplained": 0.0287,
+          "reviews_right": 4030,
+          "share_right": 0.0887
+        },
+        {
+          "word": "بد",
+          "z": -11.817142997406117,
+          "reviews_unexplained": 112,
+          "share_unexplained": 0.0295,
+          "reviews_right": 3530,
+          "share_right": 0.0777
+        },
+        {
+          "word": "نخرید",
+          "z": -10.773016831165314,
+          "reviews_unexplained": 10,
+          "share_unexplained": 0.0026,
+          "reviews_right": 2323,
+          "share_right": 0.0512
+        },
+        {
+          "word": "نمیکنم",
+          "z": -10.605640107831052,
+          "reviews_unexplained": 24,
+          "share_unexplained": 0.0063,
+          "reviews_right": 1961,
+          "share_right": 0.0432
+        },
+        {
+          "word": "هیچ",
+          "z": -10.189931853824474,
+          "reviews_unexplained": 47,
+          "share_unexplained": 0.0124,
+          "reviews_right": 2060,
+          "share_right": 0.0454
+        },
+        {
+          "word": "شده",
+          "z": -9.921843146428799,
+          "reviews_unexplained": 187,
+          "share_unexplained": 0.0493,
+          "reviews_right": 3931,
+          "share_right": 0.0866
+        },
+        {
+          "word": "فرستادن",
+          "z": -9.851337708121426,
+          "reviews_unexplained": 49,
+          "share_unexplained": 0.0129,
+          "reviews_right": 1982,
+          "share_right": 0.0436
+        },
+        {
+          "word": "افتضاح",
+          "z": -9.492342265067634,
+          "reviews_unexplained": 3,
+          "share_unexplained": 0.0008,
+          "reviews_right": 2439,
+          "share_right": 0.0537
+        },
+        {
+          "word": "کالا",
+          "z": -9.366274196535432,
+          "reviews_unexplained": 123,
+          "share_unexplained": 0.0324,
+          "reviews_right": 3054,
+          "share_right": 0.0673
+        },
+        {
+          "word": "ارزش",
+          "z": -9.206395803290194,
+          "reviews_unexplained": 43,
+          "share_unexplained": 0.0113,
+          "reviews_right": 1862,
+          "share_right": 0.041
+        },
+        {
+          "word": "واقعا",
+          "z": -9.16673753109843,
+          "reviews_unexplained": 90,
+          "share_unexplained": 0.0237,
+          "reviews_right": 2662,
+          "share_right": 0.0586
+        },
+        {
+          "word": "بدرد",
+          "z": -8.753309159838034,
+          "reviews_unexplained": 29,
+          "share_unexplained": 0.0076,
+          "reviews_right": 1453,
+          "share_right": 0.032
+        },
+        {
+          "word": "ارسال",
+          "z": -8.752061132210299,
+          "reviews_unexplained": 80,
+          "share_unexplained": 0.0211,
+          "reviews_right": 2176,
+          "share_right": 0.0479
+        },
+        {
+          "word": "شد",
+          "z": -8.606746688735589,
+          "reviews_unexplained": 124,
+          "share_unexplained": 0.0327,
+          "reviews_right": 2765,
+          "share_right": 0.0609
+        },
+        {
+          "word": "توصیه",
+          "z": -8.423491193623443,
+          "reviews_unexplained": 25,
+          "share_unexplained": 0.0066,
+          "reviews_right": 1496,
+          "share_right": 0.0329
+        },
+        {
+          "word": "جنس",
+          "z": -8.348952412019889,
+          "reviews_unexplained": 177,
+          "share_unexplained": 0.0466,
+          "reviews_right": 3614,
+          "share_right": 0.0796
+        },
+        {
+          "word": "بسیار",
+          "z": -8.348634035115266,
+          "reviews_unexplained": 80,
+          "share_unexplained": 0.0211,
+          "reviews_right": 2375,
+          "share_right": 0.0523
+        },
+        {
+          "word": "نمیخوره",
+          "z": -8.294119274793243,
+          "reviews_unexplained": 23,
+          "share_unexplained": 0.0061,
+          "reviews_right": 1271,
+          "share_right": 0.028
+        },
+        {
+          "word": "دور",
+          "z": -8.21900077695728,
+          "reviews_unexplained": 32,
+          "share_unexplained": 0.0084,
+          "reviews_right": 1368,
+          "share_right": 0.0301
+        },
+        {
+          "word": "خراب",
+          "z": -7.9913674382736,
+          "reviews_unexplained": 33,
+          "share_unexplained": 0.0087,
+          "reviews_right": 1336,
+          "share_right": 0.0294
+        },
+        {
+          "word": "پول",
+          "z": -7.83800406799237,
+          "reviews_unexplained": 29,
+          "share_unexplained": 0.0076,
+          "reviews_right": 1240,
+          "share_right": 0.0273
+        },
+        {
+          "word": "کردم",
+          "z": -7.800167792935595,
+          "reviews_unexplained": 255,
+          "share_unexplained": 0.0672,
+          "reviews_right": 4282,
+          "share_right": 0.0943
+        },
+        {
+          "word": "حتی",
+          "z": -7.727027393100709,
+          "reviews_unexplained": 43,
+          "share_unexplained": 0.0113,
+          "reviews_right": 1428,
+          "share_right": 0.0314
+        },
+        {
+          "word": "کاملا",
+          "z": -7.597510847717023,
+          "reviews_unexplained": 52,
+          "share_unexplained": 0.0137,
+          "reviews_right": 1631,
+          "share_right": 0.0359
+        },
+        {
+          "word": "پلاستیک",
+          "z": -7.560984243391595,
+          "reviews_unexplained": 37,
+          "share_unexplained": 0.0097,
+          "reviews_right": 1293,
+          "share_right": 0.0285
+        },
+        {
+          "word": "پاره",
+          "z": -7.437362316530503,
+          "reviews_unexplained": 25,
+          "share_unexplained": 0.0066,
+          "reviews_right": 1112,
+          "share_right": 0.0245
+        },
+        {
+          "word": "کلا",
+          "z": -7.432208880107679,
+          "reviews_unexplained": 36,
+          "share_unexplained": 0.0095,
+          "reviews_right": 1294,
+          "share_right": 0.0285
+        },
+        {
+          "word": "درد",
+          "z": -7.250945812268415,
+          "reviews_unexplained": 40,
+          "share_unexplained": 0.0105,
+          "reviews_right": 1293,
+          "share_right": 0.0285
+        },
+        {
+          "word": "انگار",
+          "z": -7.209973170725725,
+          "reviews_unexplained": 42,
+          "share_unexplained": 0.0111,
+          "reviews_right": 1293,
+          "share_right": 0.0285
+        },
+        {
+          "word": "نداره",
+          "z": -6.762827934141203,
+          "reviews_unexplained": 244,
+          "share_unexplained": 0.0643,
+          "reviews_right": 3858,
+          "share_right": 0.085
+        },
+        {
+          "word": "خرید",
+          "z": -6.730177478394977,
+          "reviews_unexplained": 108,
+          "share_unexplained": 0.0285,
+          "reviews_right": 2290,
+          "share_right": 0.0504
+        },
+        {
+          "word": "شکسته",
+          "z": -6.6961725460488895,
+          "reviews_unexplained": 18,
+          "share_unexplained": 0.0047,
+          "reviews_right": 871,
+          "share_right": 0.0192
+        },
+        {
+          "word": "کالای",
+          "z": -6.303283859246893,
+          "reviews_unexplained": 16,
+          "share_unexplained": 0.0042,
+          "reviews_right": 783,
+          "share_right": 0.0172
+        },
+        {
+          "word": "بده",
+          "z": -6.270439118337562,
+          "reviews_unexplained": 19,
+          "share_unexplained": 0.005,
+          "reviews_right": 815,
+          "share_right": 0.0179
+        },
+        {
+          "word": "دادم",
+          "z": -6.236295917170722,
+          "reviews_unexplained": 99,
+          "share_unexplained": 0.0261,
+          "reviews_right": 1964,
+          "share_right": 0.0433
+        },
+        {
+          "word": "فیک",
+          "z": -6.181172717702443,
+          "reviews_unexplained": 7,
+          "share_unexplained": 0.0018,
+          "reviews_right": 684,
+          "share_right": 0.0151
+        },
+        {
+          "word": "نبودم",
+          "z": -6.083158361571317,
+          "reviews_unexplained": 24,
+          "share_unexplained": 0.0063,
+          "reviews_right": 838,
+          "share_right": 0.0185
+        }
+      ]
+    }
+  },
+  "code": {
+    "commit": "25b8e6cdcd6d82b769cbb2072af90aed44850573",
+    "uncommitted_changes": false
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-11-07T15:21:17+00:00",
+  "created_at": "2026-11-07T15:27:59+00:00",
   "plan": "reports/reading_models_plan.md",
   "models": {
     "fabert": "transformer_no_early_stop",
@@ -402,6 +402,10 @@
             "count": 150799,
             "share": 0.249619
           },
+          "rate_exactly_2": {
+            "count": 11261,
+            "share": 0.01864
+          },
           "text_also_in_train": {
             "count": 242483,
             "share": 0.401384
@@ -415,8 +419,8 @@
             "share": 0.282386
           },
           "none_of_these": {
-            "count": 212451,
-            "share": 0.351672
+            "count": 207565,
+            "share": 0.343584
           },
           "reviews": 604117
         },
@@ -437,6 +441,10 @@
             "count": 17669,
             "share": 0.234324
           },
+          "rate_exactly_2": {
+            "count": 6033,
+            "share": 0.080009
+          },
           "text_also_in_train": {
             "count": 6745,
             "share": 0.089451
@@ -450,8 +458,8 @@
             "share": 0.079532
           },
           "none_of_these": {
-            "count": 24124,
-            "share": 0.31993
+            "count": 21222,
+            "share": 0.281444
           },
           "reviews": 75404
         },
@@ -472,6 +480,10 @@
             "count": 13219,
             "share": 0.199264
           },
+          "rate_exactly_2": {
+            "count": 6592,
+            "share": 0.099368
+          },
           "text_also_in_train": {
             "count": 19038,
             "share": 0.286981
@@ -485,8 +497,8 @@
             "share": 0.23897
           },
           "none_of_these": {
-            "count": 14008,
-            "share": 0.211158
+            "count": 11370,
+            "share": 0.171392
           },
           "reviews": 66339
         }
@@ -508,6 +520,10 @@
           "rate_exactly_4": {
             "count": 7358,
             "share": 0.309212
+          },
+          "rate_exactly_2": {
+            "count": 723,
+            "share": 0.030383
           },
           "text_also_in_train": {
             "count": 6483,
@@ -544,6 +560,10 @@
             "count": 551,
             "share": 0.036488
           },
+          "rate_exactly_2": {
+            "count": 3435,
+            "share": 0.227468
+          },
           "text_also_in_train": {
             "count": 2867,
             "share": 0.189855
@@ -557,8 +577,8 @@
             "share": 0.181048
           },
           "none_of_these": {
-            "count": 7835,
-            "share": 0.51884
+            "count": 5197,
+            "share": 0.344149
           },
           "reviews": 15101
         },
@@ -578,6 +598,10 @@
           "rate_exactly_4": {
             "count": 5310,
             "share": 0.193499
+          },
+          "rate_exactly_2": {
+            "count": 2434,
+            "share": 0.088696
           },
           "text_also_in_train": {
             "count": 9688,
@@ -970,6 +994,10 @@
             "count": 157875,
             "share": 0.273518
           },
+          "rate_exactly_2": {
+            "count": 10942,
+            "share": 0.018957
+          },
           "text_also_in_train": {
             "count": 239398,
             "share": 0.414757
@@ -983,8 +1011,8 @@
             "share": 0.307286
           },
           "none_of_these": {
-            "count": 203741,
-            "share": 0.352981
+            "count": 197391,
+            "share": 0.34198
           },
           "reviews": 577201
         },
@@ -1005,6 +1033,10 @@
             "count": 29375,
             "share": 0.306015
           },
+          "rate_exactly_2": {
+            "count": 5891,
+            "share": 0.06137
+          },
           "text_also_in_train": {
             "count": 13648,
             "share": 0.142179
@@ -1018,8 +1050,8 @@
             "share": 0.085486
           },
           "none_of_these": {
-            "count": 27263,
-            "share": 0.284013
+            "count": 23770,
+            "share": 0.247625
           },
           "reviews": 95992
         },
@@ -1040,6 +1072,10 @@
             "count": 28184,
             "share": 0.226714
           },
+          "rate_exactly_2": {
+            "count": 11517,
+            "share": 0.092644
+          },
           "text_also_in_train": {
             "count": 44668,
             "share": 0.359313
@@ -1053,8 +1089,8 @@
             "share": 0.275059
           },
           "none_of_these": {
-            "count": 14759,
-            "share": 0.118723
+            "count": 11111,
+            "share": 0.089378
           },
           "reviews": 124315
         }
@@ -1077,6 +1113,10 @@
             "count": 0,
             "share": 0.0
           },
+          "rate_exactly_2": {
+            "count": 11517,
+            "share": 0.564863
+          },
           "text_also_in_train": {
             "count": 5997,
             "share": 0.294129
@@ -1090,8 +1130,8 @@
             "share": 0.261465
           },
           "none_of_these": {
-            "count": 7443,
-            "share": 0.36505
+            "count": 3795,
+            "share": 0.18613
           },
           "reviews": 20389
         },
@@ -1109,6 +1149,10 @@
             "share": 0.880192
           },
           "rate_exactly_4": {
+            "count": 0,
+            "share": 0.0
+          },
+          "rate_exactly_2": {
             "count": 0,
             "share": 0.0
           },
@@ -1147,6 +1191,10 @@
             "count": 28184,
             "share": 0.730534
           },
+          "rate_exactly_2": {
+            "count": 0,
+            "share": 0.0
+          },
           "text_also_in_train": {
             "count": 10352,
             "share": 0.268326
@@ -1169,7 +1217,7 @@
     }
   },
   "code": {
-    "commit": "90cc7fe5b346f3f19c1d05f752f5866e511f51d3",
+    "commit": "25b8e6cdcd6d82b769cbb2072af90aed44850573",
     "uncommitted_changes": false
   }
 }
