@@ -786,6 +786,15 @@ STEPS = [
         "it saves a resume point at every check, so start it again if the session ends; "
         "its test run needs the test run of step 76 first",
         smoke=True,
+    ),  # Models that read differently, review by review (reports/reading_models_plan.md)
+    Step(
+        78,
+        "FaBERT, TF-IDF and the BiLSTM review by review: all right, all wrong, and known causes",
+        ["scripts/compare_reading_models.py"],
+        "local",
+        [17, 33, 71, 77],
+        files("reports/reading_models.json"),
+        "reads the saved predictions of the three models, which stay on your machine",
     ),
 ]
 
