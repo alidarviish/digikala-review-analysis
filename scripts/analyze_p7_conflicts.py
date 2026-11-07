@@ -46,6 +46,10 @@ ORDER = ["label", "text edit", "rate 0", "two rates", "spacing"]
 EXAMPLES = 5
 
 
+def product_key(values: pd.Series) -> pd.Series:
+    return pd.to_numeric(values, errors="coerce").astype("Int64").astype(str)
+
+
 def category(diff: dict, rates: list[float]) -> str:
     if diff["label"]:
         return "label"
@@ -68,6 +72,8 @@ def main():
     rows = pd.concat(parts, ignore_index=True).sort_values("src_row", ignore_index=True)
     assert set(rows["src_row"]) == set(conflict["src_row"]), "the raw rows do not match excluded_rows"
     assignment = pd.read_parquet(SPLITS_DIR / "split_assignment.parquet", columns=["product_id", "split"])
+    # the raw copy keeps every column as text, the split assignment has numbers: compare as numbers
+    assignment["product_id"] = product_key(assignment["product_id"])
     product_split = assignment.drop_duplicates("product_id").set_index("product_id")["split"]
 
     rows["label"] = rows["recommendation_status"].where(~is_missing(rows["recommendation_status"]), "none")
@@ -98,7 +104,7 @@ def main():
                 "same_created_at": group["created_at"].nunique() == 1,
                 "last_copy_is_newest": newer_last,
                 "one_label_missing": diff["label"] and (group["label"] == "none").any(),
-                "split": str(product_split.get(group["product_id"].iloc[0], "none")),
+                "split": str(product_split.get(product_key(group["product_id"]).iloc[0], "none")),
             }
         )
         if len(examples[name]) < EXAMPLES:
@@ -142,6 +148,9 @@ def main():
         f" and older {result['different_created_at_last_copy_is_older']} times"
     )
     print(f"split of the product: {result['split_of_product']}")
+    assert result["split_of_product"].get("none", 0) < result["ids"], (
+        "no product matched the split assignment"
+    )
     print(f"saved {OUTPUT}")
 
 
