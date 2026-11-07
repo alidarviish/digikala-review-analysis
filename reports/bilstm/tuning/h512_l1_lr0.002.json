@@ -1,0 +1,91 @@
+{
+  "created_at": "2026-11-07T11:57:44+00:00",
+  "fingerprint": {
+    "settings": {
+      "min_count": 5,
+      "max_vocabulary": 200000,
+      "max_tokens": 128,
+      "embedding": 300,
+      "dropout": 0.3,
+      "batch_size": 256,
+      "weight_decay": 0.01,
+      "warmup_share": 0.06,
+      "selection_rows": 50000,
+      "seed": 2026,
+      "train_rows": 500000,
+      "max_epochs": 2,
+      "checks_per_epoch": 1,
+      "patience": null,
+      "vocabulary_size": 55254,
+      "vocabulary_sha256": "3ffabb5220a17d3412a1b082c6902a41bce4de2b9eacd2e25c0651204fa581be",
+      "hidden": 512,
+      "layers": 1,
+      "learning_rate": 0.002
+    },
+    "data": {
+      "normalizer_version": "2",
+      "sha256": {
+        "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+        "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+      }
+    }
+  },
+  "setting": {
+    "hidden": 512,
+    "layers": 1,
+    "learning_rate": 0.002
+  },
+  "score": 0.6832521829468863,
+  "best_epoch": 2.0,
+  "checks": [
+    {
+      "step": 1954,
+      "epoch": 1.0,
+      "score": 0.6745118949978468,
+      "recommendation_macro_f1": 0.6890737247066129,
+      "rating_band_macro_f1": 0.6599500652890807,
+      "recommendation_validation_loss": 0.3593176603317261,
+      "rating_band_validation_loss": 0.5274701118469238,
+      "kept": true
+    },
+    {
+      "step": 3908,
+      "epoch": 2.0,
+      "score": 0.6832521829468863,
+      "recommendation_macro_f1": 0.6992520923049249,
+      "rating_band_macro_f1": 0.6672522735888475,
+      "recommendation_validation_loss": 0.35016483068466187,
+      "rating_band_validation_loss": 0.5212233662605286,
+      "kept": true
+    }
+  ],
+  "train_minutes": 1.2,
+  "code": {
+    "commit": "528b676484856868a618aaed8f1ad204a5bbb933",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": "5.21.0",
+      "tokenizers": "0.23.3"
+    },
+    "machine": "1f234fb3-b53a-4532-a71b-469fbd0edc62-sbqsw",
+    "torch": "2.14.1+cu130",
+    "cuda": "13.0",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_supervised.parquet": "eb864838fbabc8ae5554c757407eec742ae47e78d0e8b188e79278b0c4f2a9eb",
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  }
+}

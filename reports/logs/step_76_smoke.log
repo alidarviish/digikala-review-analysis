@@ -1,0 +1,24 @@
+Traceback (most recent call last):
+  File "/marimo/work/repo/scripts/train_bilstm.py", line 51, in <module>
+    from train_transformer import head_targets, selection_score
+ModuleNotFoundError: No module named 'train_transformer'
+Code 528b676484856868a618aaed8f1ad204a5bbb933, device NVIDIA RTX PRO 6000 Blackwell Server Edition
+vocabulary 3,682 ids (0s)
+2,000 training reviews encoded
+Setting h8_l1_lr0.002
+  check at epoch 1.0: 0.3025 (kept)
+  check at epoch 2.0: 0.3281 (kept)
+Setting h8_l2_lr0.002
+  check at epoch 1.0: 0.3022 (kept)
+  check at epoch 2.0: 0.2977 (not better)
+Setting h16_l1_lr0.002
+  check at epoch 1.0: 0.3193 (kept)
+  check at epoch 2.0: 0.3181 (not better)
+Setting h16_l2_lr0.002
+  check at epoch 1.0: 0.3021 (kept)
+  check at epoch 2.0: 0.2939 (not better)
+  h8_l1_lr0.002: 0.3281 (epoch 2.0)
+  h16_l1_lr0.002: 0.3193 (epoch 1.0)
+  h8_l2_lr0.002: 0.3022 (epoch 1.0)
+  h16_l2_lr0.002: 0.3021 (epoch 1.0)
+Best: h8_l1_lr0.002

@@ -83,3 +83,54 @@ labels disagreeing, a rate of exactly 3, a text also in train with another label
 very short text) and how many have none.
 
 The test set is not read.
+
+## Result
+
+`reports/bilstm/tuning.json` and `reports/bilstm/final.json`, from commit 528b676 on the molab
+GPU. The vocabulary has 55,254 ids: only that many tokens are seen 5 times or more, so the
+200,000 cap was never reached.
+
+Tuning, mean Macro F1 of the two heads with offsets on the 50,000-review sample, each setting
+best at epoch 2:
+
+| Setting (hidden, layers, learning rate) | Score |
+|---|---|
+| 512, 2, 2e-3 | 0.6836 |
+| 512, 1, 2e-3 | 0.6833 |
+| 256, 2, 2e-3 | 0.6826 |
+| 512, 2, 1e-3 | 0.6812 |
+| 256, 2, 1e-3 | 0.6802 |
+| 256, 1, 2e-3 | 0.6796 |
+| 512, 1, 1e-3 | 0.6768 |
+| 256, 1, 1e-3 | 0.6749 |
+
+The best setting is on the edge of the grid in all three directions and at the last epoch;
+as planned, this is written down and not chased.
+
+Full run (512, 2 layers, 2e-3) on all 3,552,498 training reviews: the kept check is at epoch
+3.0 (0.7020 on the sample); training stopped after epoch 3.5; 18.7 minutes of training. On
+the whole validation set, Macro F1 with offsets:
+
+| Head | BiLSTM [95%] | FaBERT (kept run) | TF-IDF |
+|---|---|---|---|
+| recommendation | 0.7176 [0.7161, 0.7190] | 0.7324 | 0.7017 |
+| rating band | 0.6826 [0.6813, 0.6839] | 0.6922 | 0.6683 |
+
+F1 per class, BiLSTM / FaBERT: `recommended` 0.942 / 0.944, `not_recommended` 0.719 / 0.744,
+`no_idea` 0.492 / 0.510; `low` 0.696 / 0.711, `medium` 0.466 / 0.479, `high` 0.885 / 0.887.
+
+| | Expected | Found |
+|---|---|---|
+| 2 layers better than 1 | yes | yes in all four pairs, but by only 0.0003 at 512 and 2e-3 |
+| Spread of the 8 settings | within 1.5 points | 0.87 points: right |
+| Recommendation | 0.69 to 0.71 | 0.7176: wrong, higher |
+| Rating band | 0.65 to 0.68 | 0.6826: wrong, a little higher |
+| Against FaBERT | 2 to 4 points lower | 1.0 to 1.5 points lower: wrong, closer |
+| Against TF-IDF | close | 1.4 to 1.6 points higher: wrong, better |
+| `no_idea` and `medium` the weakest | yes | yes, about 1.3 to 1.8 points below FaBERT |
+| Time | under 2 minutes per setting, 20 to 60 for the full run | about 1.5 and 19 minutes: right |
+
+A model that starts from nothing and reads only our reviews comes within 1 to 1.5 points of
+the pretrained FaBERT, and the same two classes are the weakest. It is less than 5 points
+behind FaBERT on both heads, so the four-model comparison uses it without a separate report
+without it.

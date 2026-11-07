@@ -1,0 +1,12 @@
+Code 528b676484856868a618aaed8f1ad204a5bbb933, device NVIDIA RTX PRO 6000 Blackwell Server Edition
+vocabulary 3,682 ids (0s)
+2,000 training reviews encoded
+  check at epoch 0.25: 0.3063 (kept)
+  check at epoch 0.5: 0.3185 (kept)
+  check at epoch 0.75: 0.3129 (not better)
+  check at epoch 1.0: 0.3170 (not better)
+  stopped early: no gain in the last checks
+Scoring the whole validation set with the weights from step 16
+  recommendation: without offsets 0.2667, with offsets 0.2913
+  rating_band: without offsets 0.3043, with offsets 0.3043
+Done

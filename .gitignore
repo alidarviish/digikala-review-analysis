@@ -31,3 +31,6 @@ __marimo__/
 Thumbs.db
 desktop.ini
 .vscode/
+
+# BiLSTM runs: the vocabulary is rebuilt from train, the weights and predictions stay outside git
+artifacts/bilstm*/
