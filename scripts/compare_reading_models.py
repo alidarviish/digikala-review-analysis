@@ -44,6 +44,7 @@ CAUSES = [
     "buyer_labels_disagree",
     "buyer_labels_strongly_disagree",
     "rate_exactly_3",
+    "rate_exactly_4",
     "text_also_in_train",
     "emoji",
     "three_words_or_fewer",
@@ -150,6 +151,8 @@ def main():
         "buyer_labels_disagree": disagree,
         "buyer_labels_strongly_disagree": strong,
         "rate_exactly_3": np.isclose(validation["rate"].to_numpy(dtype=float), 3.0),
+        # added after the first run, before running again (reports/reading_models_plan.md)
+        "rate_exactly_4": np.isclose(validation["rate"].to_numpy(dtype=float), 4.0),
         "text_also_in_train": validation["text_seen_in_train"].to_numpy(dtype=bool),
         "emoji": emoji,
         "three_words_or_fewer": short,

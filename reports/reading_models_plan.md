@@ -63,3 +63,17 @@ Report only: nothing in the models, labels or splits changes.
   right"; for rating band, at least half of "all wrong" has a rate of exactly 3.
 - No known cause: under 40% of "all wrong" for rating band; more for recommendation, where
   the causes measured so far are weaker.
+
+## Added after the first run, before running again
+
+The first run (`reports/reading_models.json`, commit d5ebe40) left 55.1% of the high reviews
+that all three models got wrong without any known cause; on 33,037 of them all three said
+medium. In the hand reading (`reports/error_sample_plan.md`, group C), reviews rated high
+but read as medium were mostly "good, but ..." texts. Hypothesis: these are mostly reviews
+rated exactly 4, where the text reads like a 3. One cause is added, "a rate of exactly 4",
+and the comparison is run again; nothing else changes.
+
+Expected, before running again: of the high reviews all three models get wrong, at least 70%
+have a rate of exactly 4 (against about 40% of all high reviews: 227,836 of 586,764 high
+reviews with a whole rate in validation are rated 4), and no known cause drops from 55.1%
+to under 20% for them. For the other classes and groups the new cause changes little.
