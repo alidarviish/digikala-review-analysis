@@ -92,7 +92,7 @@ TRANSFORMER_CARDS = [
         "title": "FaBERT trained for every epoch against the first run",
         "reference": ("first run", "transformer_final"),
         "variant": ("every epoch", "transformer_no_early_stop"),
-        "subtitle": "all 3.55 million training reviews · kept at epoch 1.75 and 2.75 · whole validation set",
+        "subtitle": "all 3.55 million training reviews · kept at epoch 1.25 and 2.75 · whole validation set",
         "training_curve": "checks",
         "checks": ("transformer_final/fabert.json", "transformer_final/fabert_no_early_stop.json"),
     },
