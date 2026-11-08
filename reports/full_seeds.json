@@ -1,0 +1,224 @@
+{
+  "created_at": "2026-11-08T06:25:57+00:00",
+  "plan": "reports/full_seeds_plan.md",
+  "seeds": [
+    2026,
+    2027,
+    2028
+  ],
+  "kept_epoch": {
+    "fabert_2026": 2.75,
+    "fabert_2027": 2.0,
+    "fabert_2028": 2.0,
+    "bilstm_2026": 3.75,
+    "bilstm_2027": 3.75,
+    "bilstm_2028": 2.5,
+    "adapted": 2.75
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  },
+  "heads": {
+    "recommendation": {
+      "macro_f1": {
+        "fabert_2026": 0.7324370442721989,
+        "fabert_2027": 0.7317389788926901,
+        "fabert_2028": 0.7311910301028887,
+        "bilstm_2026": 0.719537537876771,
+        "bilstm_2027": 0.7191628918263687,
+        "bilstm_2028": 0.7182330271317453,
+        "adapted": 0.7336597252799493,
+        "tfidf": 0.7016757031931711,
+        "fabert_2026 + tfidf": 0.7344318559099552,
+        "fabert_2027 + tfidf": 0.7339768003502808,
+        "fabert_2028 + tfidf": 0.7336947454825626
+      },
+      "fabert": {
+        "spread": 0.00124601416931025,
+        "mean": 0.731789017755926
+      },
+      "bilstm_no_early_stop": {
+        "spread": 0.0013045107450256888,
+        "mean": 0.7189778189449617
+      },
+      "bilstm_with_early_stop_for_reference": {
+        "2026": 0.7175581115767086,
+        "2027": 0.7080936488485287,
+        "2028": 0.7182330271317453
+      },
+      "fabert_minus_bilstm": {
+        "2026": 0.012899506395427918,
+        "2027": 0.012576087066321406,
+        "2028": 0.012958002971143356
+      },
+      "bilstm_minus_tfidf": {
+        "2026": 0.01786183468359992,
+        "2027": 0.017487188633197648,
+        "2028": 0.01655732393857423
+      },
+      "d58_with_each_fabert_seed": {
+        "2026": {
+          "difference": 0.0019948116377562775,
+          "interval_95_products": [
+            0.0013611534726320014,
+            0.0026012151968856172
+          ],
+          "above_zero": true
+        },
+        "2027": {
+          "difference": 0.0022378214575906608,
+          "interval_95_products": [
+            0.0015471772839724313,
+            0.002899124129355335
+          ],
+          "above_zero": true
+        },
+        "2028": {
+          "difference": 0.0025037153796739764,
+          "interval_95_products": [
+            0.0018072473048093562,
+            0.003173062591816633
+          ],
+          "above_zero": true
+        }
+      },
+      "adapted_against_fabert_seeds": {
+        "adapted": 0.7336597252799493,
+        "fabert_lowest": 0.7311910301028887,
+        "fabert_highest": 0.7324370442721989,
+        "above_every_fabert_seed": true
+      },
+      "three_model_comparison": {
+        "2026": {
+          "all_right": 604466,
+          "all_wrong": 66392,
+          "all_wrong_same_label": 59794,
+          "all_wrong_no_known_cause": 11306
+        },
+        "2027": {
+          "all_right": 606007,
+          "all_wrong": 67534,
+          "all_wrong_same_label": 60965,
+          "all_wrong_no_known_cause": 11727
+        },
+        "2028": {
+          "all_right": 605012,
+          "all_wrong": 67364,
+          "all_wrong_same_label": 60838,
+          "all_wrong_no_known_cause": 11706
+        }
+      },
+      "relative_spread_of_counts": {
+        "all_right": 0.0025464269878296988,
+        "all_wrong": 0.017020219583685228,
+        "all_wrong_same_label": 0.019345033232927855,
+        "all_wrong_no_known_cause": 0.03635683237859467
+      },
+      "reviews_compared": 745860
+    },
+    "rating_band": {
+      "macro_f1": {
+        "fabert_2026": 0.692190273060563,
+        "fabert_2027": 0.692922088033402,
+        "fabert_2028": 0.6927095634121611,
+        "bilstm_2026": 0.6837638121254231,
+        "bilstm_2027": 0.6842018468975262,
+        "bilstm_2028": 0.6810551555823531,
+        "adapted": 0.6931107551567047,
+        "tfidf": 0.6682810859846451,
+        "fabert_2026 + tfidf": 0.6935241490531752,
+        "fabert_2027 + tfidf": 0.6933060265009127,
+        "fabert_2028 + tfidf": 0.6941121599499648
+      },
+      "fabert": {
+        "spread": 0.0007318149728390289,
+        "mean": 0.6926073081687086
+      },
+      "bilstm_no_early_stop": {
+        "spread": 0.003146691315173089,
+        "mean": 0.6830069382017675
+      },
+      "bilstm_with_early_stop_for_reference": {
+        "2026": 0.6826093995653655,
+        "2027": 0.6764686906428126,
+        "2028": 0.6810551555823531
+      },
+      "fabert_minus_bilstm": {
+        "2026": 0.008426460935139879,
+        "2027": 0.008720241135875884,
+        "2028": 0.011654407829807978
+      },
+      "bilstm_minus_tfidf": {
+        "2026": 0.015482726140778058,
+        "2027": 0.015920760912881082,
+        "2028": 0.012774069597707993
+      },
+      "d58_with_each_fabert_seed": {
+        "2026": {
+          "difference": 0.0013338759926121435,
+          "interval_95_products": [
+            0.0008840185462640316,
+            0.00177180864603024
+          ],
+          "above_zero": true
+        },
+        "2027": {
+          "difference": 0.0003839384675106139,
+          "interval_95_products": [
+            0.00010563689700829882,
+            0.0006554059475780026
+          ],
+          "above_zero": true
+        },
+        "2028": {
+          "difference": 0.0014025965378037242,
+          "interval_95_products": [
+            0.0009552989408405099,
+            0.0018413163538727295
+          ],
+          "above_zero": true
+        }
+      },
+      "adapted_against_fabert_seeds": {
+        "adapted": 0.6931107551567047,
+        "fabert_lowest": 0.692190273060563,
+        "fabert_highest": 0.692922088033402,
+        "above_every_fabert_seed": true
+      },
+      "three_model_comparison": {
+        "2026": {
+          "all_right": 577256,
+          "all_wrong": 124834,
+          "all_wrong_same_label": 117788,
+          "all_wrong_no_known_cause": 11196
+        },
+        "2027": {
+          "all_right": 579883,
+          "all_wrong": 126413,
+          "all_wrong_same_label": 119465,
+          "all_wrong_no_known_cause": 11380
+        },
+        "2028": {
+          "all_right": 577907,
+          "all_wrong": 125703,
+          "all_wrong_same_label": 118683,
+          "all_wrong_no_known_cause": 11304
+        }
+      },
+      "relative_spread_of_counts": {
+        "all_right": 0.0045422426840556395,
+        "all_wrong": 0.012566653402307998,
+        "all_wrong_same_label": 0.014134563517036772,
+        "all_wrong_no_known_cause": 0.016292798110979927
+      },
+      "reviews_compared": 797508
+    }
+  },
+  "code": {
+    "commit": "c5b243fc4c65ebc5554f351ac2102e3873acc969",
+    "uncommitted_changes": false
+  }
+}

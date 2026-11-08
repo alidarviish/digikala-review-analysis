@@ -1,0 +1,136 @@
+Code 33c768894cd6c38da35be73bcd8eb1b32cd68e1f, device NVIDIA RTX PRO 6000 Blackwell Server Edition
+vocabulary 55,254 ids (15s)
+3,552,498 training reviews encoded
+    step 500/55,508, loss 1.2863, 0.5 min
+    step 1,000/55,508, loss 0.9776, 1.1 min
+    step 1,500/55,508, loss 0.9387, 2.0 min
+    step 2,000/55,508, loss 0.9153, 2.9 min
+    step 2,500/55,508, loss 0.9077, 3.8 min
+    step 3,000/55,508, loss 0.9016, 4.7 min
+  check at epoch 0.25: 0.6762 (kept)
+    step 3,500/55,508, loss 0.8944, 5.6 min
+    step 4,000/55,508, loss 0.8869, 6.5 min
+    step 4,500/55,508, loss 0.8780, 7.4 min
+    step 5,000/55,508, loss 0.8769, 8.3 min
+    step 5,500/55,508, loss 0.8653, 9.2 min
+    step 6,000/55,508, loss 0.8736, 10.0 min
+    step 6,500/55,508, loss 0.8631, 10.9 min
+  check at epoch 0.5: 0.6833 (kept)
+    step 7,000/55,508, loss 0.8643, 11.9 min
+    step 7,500/55,508, loss 0.8581, 12.8 min
+    step 8,000/55,508, loss 0.8605, 13.7 min
+    step 8,500/55,508, loss 0.8579, 14.6 min
+    step 9,000/55,508, loss 0.8553, 15.4 min
+    step 9,500/55,508, loss 0.8568, 16.3 min
+    step 10,000/55,508, loss 0.8577, 17.2 min
+  check at epoch 0.75: 0.6884 (kept)
+    step 10,500/55,508, loss 0.8563, 18.2 min
+    step 11,000/55,508, loss 0.8576, 19.1 min
+    step 11,500/55,508, loss 0.8552, 19.9 min
+    step 12,000/55,508, loss 0.8467, 20.8 min
+    step 12,500/55,508, loss 0.8459, 21.7 min
+    step 13,000/55,508, loss 0.8502, 22.6 min
+    step 13,500/55,508, loss 0.8500, 23.5 min
+  check at epoch 1.0: 0.6947 (kept)
+    step 14,000/55,508, loss 0.8495, 24.4 min
+    step 14,500/55,508, loss 0.8287, 25.3 min
+    step 15,000/55,508, loss 0.8432, 26.2 min
+    step 15,500/55,508, loss 0.8379, 27.1 min
+    step 16,000/55,508, loss 0.8339, 28.0 min
+    step 16,500/55,508, loss 0.8344, 28.9 min
+    step 17,000/55,508, loss 0.8389, 29.8 min
+  check at epoch 1.25: 0.6934 (not better)
+    step 17,500/55,508, loss 0.8352, 30.7 min
+    step 18,000/55,508, loss 0.8362, 31.6 min
+    step 18,500/55,508, loss 0.8332, 32.5 min
+    step 19,000/55,508, loss 0.8285, 33.4 min
+    step 19,500/55,508, loss 0.8278, 34.3 min
+    step 20,000/55,508, loss 0.8296, 35.1 min
+    step 20,500/55,508, loss 0.8360, 36.0 min
+  check at epoch 1.5: 0.6938 (not better)
+    step 21,000/55,508, loss 0.8302, 36.9 min
+    step 21,500/55,508, loss 0.8370, 37.8 min
+    step 22,000/55,508, loss 0.8362, 38.7 min
+    step 22,500/55,508, loss 0.8332, 39.6 min
+    step 23,000/55,508, loss 0.8311, 40.5 min
+    step 23,500/55,508, loss 0.8291, 41.4 min
+    step 24,000/55,508, loss 0.8368, 42.3 min
+  check at epoch 1.75: 0.6988 (kept)
+    step 24,500/55,508, loss 0.8285, 43.2 min
+    step 25,000/55,508, loss 0.8294, 44.1 min
+    step 25,500/55,508, loss 0.8242, 45.0 min
+    step 26,000/55,508, loss 0.8296, 45.9 min
+    step 26,500/55,508, loss 0.8352, 46.8 min
+    step 27,000/55,508, loss 0.8289, 47.7 min
+    step 27,500/55,508, loss 0.8347, 48.6 min
+  check at epoch 2.0: 0.6986 (not better)
+    step 28,000/55,508, loss 0.8210, 49.5 min
+    step 28,500/55,508, loss 0.8136, 50.4 min
+    step 29,000/55,508, loss 0.8169, 51.3 min
+    step 29,500/55,508, loss 0.8167, 52.2 min
+    step 30,000/55,508, loss 0.8129, 53.1 min
+    step 30,500/55,508, loss 0.8145, 54.0 min
+    step 31,000/55,508, loss 0.8137, 54.9 min
+  check at epoch 2.25: 0.6966 (not better)
+    step 31,500/55,508, loss 0.8187, 55.8 min
+    step 32,000/55,508, loss 0.8173, 56.7 min
+    step 32,500/55,508, loss 0.8154, 57.6 min
+    step 33,000/55,508, loss 0.8209, 58.4 min
+    step 33,500/55,508, loss 0.8127, 59.3 min
+    step 34,000/55,508, loss 0.8147, 60.2 min
+    step 34,500/55,508, loss 0.8125, 61.1 min
+  check at epoch 2.5: 0.6961 (not better)
+    step 35,000/55,508, loss 0.8120, 62.0 min
+    step 35,500/55,508, loss 0.8202, 62.9 min
+    step 36,000/55,508, loss 0.8165, 63.8 min
+    step 36,500/55,508, loss 0.8103, 64.7 min
+    step 37,000/55,508, loss 0.8130, 65.6 min
+    step 37,500/55,508, loss 0.8149, 66.5 min
+    step 38,000/55,508, loss 0.8131, 67.4 min
+  check at epoch 2.75: 0.6936 (not better)
+    step 38,500/55,508, loss 0.8103, 68.3 min
+    step 39,000/55,508, loss 0.8145, 69.2 min
+    step 39,500/55,508, loss 0.8110, 70.1 min
+    step 40,000/55,508, loss 0.8054, 71.0 min
+    step 40,500/55,508, loss 0.8129, 71.9 min
+    step 41,000/55,508, loss 0.8130, 72.7 min
+    step 41,500/55,508, loss 0.8031, 73.6 min
+  check at epoch 3.0: 0.6992 (kept)
+    step 42,000/55,508, loss 0.8000, 74.5 min
+    step 42,500/55,508, loss 0.8053, 75.4 min
+    step 43,000/55,508, loss 0.7972, 76.3 min
+    step 43,500/55,508, loss 0.7944, 77.2 min
+    step 44,000/55,508, loss 0.7995, 78.1 min
+    step 44,500/55,508, loss 0.7985, 79.0 min
+    step 45,000/55,508, loss 0.8043, 79.9 min
+  check at epoch 3.25: 0.6987 (not better)
+    step 45,500/55,508, loss 0.7891, 80.8 min
+    step 46,000/55,508, loss 0.7921, 81.7 min
+    step 46,500/55,508, loss 0.7985, 82.6 min
+    step 47,000/55,508, loss 0.8010, 83.5 min
+    step 47,500/55,508, loss 0.7939, 84.4 min
+    step 48,000/55,508, loss 0.7970, 85.3 min
+    step 48,500/55,508, loss 0.8018, 86.2 min
+  check at epoch 3.5: 0.6997 (kept)
+    step 49,000/55,508, loss 0.7929, 87.1 min
+    step 49,500/55,508, loss 0.8048, 88.0 min
+    step 50,000/55,508, loss 0.7945, 88.9 min
+    step 50,500/55,508, loss 0.7957, 89.8 min
+    step 51,000/55,508, loss 0.7933, 90.7 min
+    step 51,500/55,508, loss 0.7895, 91.6 min
+    step 52,000/55,508, loss 0.7965, 92.4 min
+  check at epoch 3.75: 0.7000 (kept)
+    step 52,500/55,508, loss 0.7996, 93.4 min
+    step 53,000/55,508, loss 0.7989, 94.3 min
+    step 53,500/55,508, loss 0.7928, 95.2 min
+    step 54,000/55,508, loss 0.7968, 96.1 min
+    step 54,500/55,508, loss 0.7872, 96.9 min
+    step 55,000/55,508, loss 0.7927, 97.8 min
+    step 55,500/55,508, loss 0.7925, 98.7 min
+  check at epoch 4.0: 0.6997 (not better)
+  check at epoch 4.0: 0.6997 (not better)
+Scoring the whole validation set with the weights from step 52,035
+[W1108 01:41:18.097559189 CUDACachingAllocator.cpp:3934] memory allocation failed with OOM on device 0 while trying to allocate 3170893824 bytes (free: 1325662208, total: 101975851008).
+  recommendation: without offsets 0.6944, with offsets 0.7192
+  rating_band: without offsets 0.6634, with offsets 0.6842
+Done
