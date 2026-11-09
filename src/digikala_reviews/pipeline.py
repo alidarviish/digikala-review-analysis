@@ -953,6 +953,46 @@ STEPS = [
         [3, 5],
         files("reports/p7_conflicts.json"),
         "reads the raw copy and the cleaning record, which stay on your machine",
+    ),  # Semi-supervised learning as the project defines it (reports/semi_supervised_official_plan.md)
+    Step(
+        99,
+        "Semi-supervised: the kept FaBERT guesses the hidden labels from its own softmax",
+        ["scripts/pseudo_label.py", "--official"],
+        "gpu",
+        [33],
+        files("reports/semi_supervised/teacher.json"),
+        "needs fabert_final.pt and train_pseudo_unlabeled.parquet in the cache folder; about 10 minutes",
+        smoke=True,
+    ),
+    Step(
+        100,
+        "Semi-supervised: the student, one more epoch with the pseudo-labels at 0.90",
+        ["scripts/train_transformer.py", "--semi", "student"],
+        "gpu",
+        [99],
+        files("reports/semi_supervised/student.json"),
+        "starts from fabert_final.pt in the cache folder; about 40 minutes; "
+        "its test run needs the test run of step 99",
+        smoke=True,
+    ),
+    Step(
+        101,
+        "Semi-supervised: the control, one more epoch on train_supervised alone",
+        ["scripts/train_transformer.py", "--semi", "control"],
+        "gpu",
+        [33],
+        files("reports/semi_supervised/control.json"),
+        "starts from fabert_final.pt in the cache folder; about 32 minutes",
+        smoke=True,
+    ),
+    Step(
+        102,
+        "Semi-supervised: quality of the pseudo-labels, and the three models on validation",
+        ["scripts/check_semi_supervised.py"],
+        "local",
+        [100, 101],
+        files("reports/semi_supervised.json"),
+        "reads the hidden reviews' reference labels and the models' predictions, on your machine",
     ),
 ]
 

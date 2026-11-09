@@ -47,12 +47,23 @@ the 50,000-review sample stay the same), to measure how much the full run depend
 (reports/full_seeds_plan.md). Seed 2026 is the kept run itself:
   artifacts/transformer_no_early_stop_seedN/   and   reports/transformer_final/fabert_no_early_stop_seedN.json
 
+With --semi student or --semi control (reports/semi_supervised_official_plan.md), a copy of the
+kept run (its weights put in the cache folder as fabert_final.pt, with their hash in the
+settings) is fine-tuned further for one epoch with the same settings: the student on
+train_supervised plus the hidden reviews whose own-softmax guess (reports/semi_supervised/
+pseudo_labels.parquet, scripts/pseudo_label.py --official) reaches 0.90, which count only for
+the recommendation loss; the control on train_supervised alone. The starting model is scored
+first, as check 0, so it is kept if no check beats it:
+  artifacts/semi_supervised_<student|control>/   and   reports/semi_supervised/<student|control>.json
+
 Usage:
     python scripts/train_transformer.py            # needs a GPU
     python scripts/train_transformer.py --no-early-stop
     python scripts/train_transformer.py --large
     python scripts/train_transformer.py --adapted
     python scripts/train_transformer.py --no-early-stop --seed 2027
+    python scripts/train_transformer.py --semi student   # after scripts/pseudo_label.py --official
+    python scripts/train_transformer.py --semi control
     python scripts/train_transformer.py --smoke    # a tiny model on a few rows, CPU is fine
     python scripts/train_transformer.py --smoke --stop-after 20   # then run again: tests resuming
 """
@@ -66,7 +77,13 @@ from datetime import UTC, datetime
 import numpy as np
 import pandas as pd
 
-from digikala_reviews.config import ARTIFACTS_DIR, CACHE_DIR, REPORTS_DIR, SPLIT_SEED
+from digikala_reviews.config import (
+    ARTIFACTS_DIR,
+    CACHE_DIR,
+    PSEUDO_LABEL_THRESHOLD,
+    REPORTS_DIR,
+    SPLIT_SEED,
+)
 from digikala_reviews.experiments import compare, cross_fitted_offsets, product_half, search_offsets
 from digikala_reviews.finetune import (
     IGNORE,
@@ -108,6 +125,8 @@ SMOKE = {
 }
 SMOKE_VALIDATION_ROWS = 1_500  # the final scoring in a smoke run uses only this many reviews
 CACHE_FILES = ["train_supervised.parquet", "validation.parquet"]
+HIDDEN = "train_pseudo_unlabeled.parquet"  # the hidden reviews' text
+START_WEIGHTS = "fabert_final.pt"  # the kept run's model.pt, put in the cache folder
 LOG_EVERY = 500
 
 
@@ -162,6 +181,11 @@ def main():
         "--adapted", action="store_true", help="FaBERT from the further pretrained weights, every epoch"
     )
     parser.add_argument("--seed", type=int, help="another training seed, with --no-early-stop only")
+    parser.add_argument(
+        "--semi",
+        choices=["student", "control"],
+        help="one more epoch from the kept run, with or without pseudo-labels",
+    )
     args = parser.parse_args()
     import torch
     from transformers import AutoTokenizer
@@ -169,6 +193,9 @@ def main():
     assert not (args.large and args.no_early_stop), "--large already trains every epoch"
     assert not (args.adapted and (args.large or args.no_early_stop)), "--adapted trains every epoch alone"
     assert args.seed is None or args.no_early_stop, "--seed is for the kept run (--no-early-stop) only"
+    assert not (args.semi and (args.large or args.adapted or args.no_early_stop or args.seed)), (
+        "--semi runs alone"
+    )
     settings = {**SETTINGS, **(LARGE if args.large else {}), **(SMOKE if args.smoke else {})}
     if args.no_early_stop:
         settings["patience"] = None
@@ -196,6 +223,25 @@ def main():
     result_path = (
         REPORTS_DIR / ("transformer_final_smoke" if args.smoke else "transformer_final") / f"{name}.json"
     )
+    pseudo_path = (
+        REPORTS_DIR / ("semi_supervised_smoke" if args.smoke else "semi_supervised") / "pseudo_labels.parquet"
+    )
+    start_path = CACHE_DIR / START_WEIGHTS
+    if args.semi:  # one more epoch from the kept run; its own names
+        settings.update(max_epochs=1, patience=None)
+        if args.smoke:  # a tiny untrained model stands in for the kept run
+            start_path = ARTIFACTS_DIR / "semi_supervised_start_smoke.pt"
+        else:
+            settings["start_sha256"] = file_sha256(start_path)
+        if args.semi == "student":
+            settings.update(
+                pseudo_threshold=PSEUDO_LABEL_THRESHOLD, pseudo_labels_sha256=file_sha256(pseudo_path)
+            )
+        name = args.semi
+        out_dir = ARTIFACTS_DIR / (f"semi_supervised_{args.semi}" + ("_smoke" if args.smoke else ""))
+        result_path = (
+            REPORTS_DIR / ("semi_supervised_smoke" if args.smoke else "semi_supervised") / f"{name}.json"
+        )
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if not args.smoke and device.type != "cuda":
         raise SystemExit("No GPU found: turn the GPU on for this notebook, or run with --smoke")
@@ -208,7 +254,7 @@ def main():
             "gpu": torch.cuda.get_device_name(0) if device.type == "cuda" else None,
             "transformers": library_version("transformers"),
         },
-        "data": check_cache(CACHE_DIR, CACHE_FILES),
+        "data": check_cache(CACHE_DIR, CACHE_FILES + ([HIDDEN] if args.semi == "student" else [])),
     }
     spec = json.loads(json.dumps({"settings": settings, "data": context["data"]}))
     if finished(result_path, spec):
@@ -223,6 +269,25 @@ def main():
     if settings["train_rows"]:
         train = train.iloc[fixed_sample(len(train), settings["train_rows"], SPLIT_SEED)].reset_index(
             drop=True
+        )
+    pseudo_reviews = 0
+    if args.semi == "student":  # the accepted guesses count only for the recommendation loss
+        hidden = pd.read_parquet(CACHE_DIR / HIDDEN, columns=["id", "text"])
+        guessed = pd.read_parquet(pseudo_path)
+        found = guessed.merge(hidden, on="id", how="left", validate="one_to_one")
+        assert found["text"].notna().all(), "a guessed review is missing from the hidden reviews' cache"
+        found = found[found["p"] >= PSEUDO_LABEL_THRESHOLD]
+        pseudo_reviews = len(found)
+        added = pd.DataFrame(
+            {
+                "text": found["text"].to_numpy(),
+                "recommendation_status": found["label"].to_numpy(),
+                "rating_band": None,
+            }
+        )
+        train = pd.concat([train[["text", "recommendation_status", "rating_band"]], added], ignore_index=True)
+        print(
+            f"  {pseudo_reviews:,} pseudo-labeled reviews added (p >= {PSEUDO_LABEL_THRESHOLD})", flush=True
         )
     validation = load_cache(CACHE_FILES[1], extra_columns=["product_id"])
     labeled_any = validation["recommendation_status"].notna() | validation["rating_band"].notna()
@@ -255,6 +320,12 @@ def main():
     encoder = str(ARTIFACTS_DIR / settings["encoder"]) if settings.get("encoder") else None
     model = build_model(torch, settings["model"], settings["dropout"], list(HEADS), encoder=encoder)
     model = model.to(device)
+    if args.semi:
+        if args.smoke and not start_path.exists():
+            torch.save({"weights": model.state_dict(), "settings": settings}, start_path)
+        start = torch.load(start_path, map_location=device, weights_only=False)
+        model.load_state_dict({k: v.float() for k, v in start["weights"].items()})
+        del start
     decay = [p for p in model.parameters() if p.ndim >= 2]
     no_decay = [p for p in model.parameters() if p.ndim < 2]  # biases and norm weights
     optimizer = torch.optim.AdamW(
@@ -305,6 +376,29 @@ def main():
     # a run resumed after it already stopped early goes straight to the final scoring
     def patience_used_up():
         return settings["patience"] is not None and state["checks_without_gain"] >= settings["patience"]
+
+    if args.semi and not state["history"]:  # check 0: the starting model, kept unless a check beats it
+        score, per_head, losses = selection_score(
+            predict(torch, model, tokenizer, selection_ids, device), selection
+        )
+        state["history"].append(
+            {
+                "step": 0,
+                "epoch": 0.0,
+                "score": score,
+                **{f"{h}_macro_f1": v for h, v in per_head.items()},
+                **{f"{h}_validation_loss": v for h, v in losses.items()},
+                "validation_loss_both_heads": sum(losses.values()),
+                "kept": True,
+            }
+        )
+        state.update(best=score, best_step=0)
+        weights = {k: v.to(torch.bfloat16) for k, v in model.state_dict().items()}
+        save_atomic({"weights": weights, "settings": settings, "step": 0}, best_path)
+        print(
+            f"  check 0 (the starting model): {score:.4f}, validation loss {sum(losses.values()):.4f}",
+            flush=True,
+        )
 
     start, running, stop = time.perf_counter(), [], patience_used_up()
     while state["step"] < total_steps and not stop:
@@ -432,6 +526,7 @@ def main():
             "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
             "fingerprint": spec,
             "training_reviews": len(train_ids),
+            "pseudo_labeled_reviews": pseudo_reviews,
             "steps_per_epoch": steps_per_epoch,
             "kept_step": saved["step"],
             "kept_epoch": round(saved["step"] / steps_per_epoch, 2),

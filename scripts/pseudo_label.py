@@ -11,9 +11,15 @@ your own machine).
 Writes reports/pseudo_labels/masked.parquet (id, label, p) and reports/pseudo_labels/scoring.json
 (with the hash of the weights used). The plan is in reports/semi_supervised_plan.md.
 
+With --official (reports/semi_supervised_official_plan.md) the guess and its probability come
+from the model's own softmax: no temperature, since the temperature was fitted on validation
+labels and the project allows no validation label in making pseudo-labels. Writes
+reports/semi_supervised/pseudo_labels.parquet (id, label, p) and reports/semi_supervised/teacher.json.
+
 Usage:
     python scripts/pseudo_label.py            # needs a GPU
     python scripts/pseudo_label.py --smoke    # a tiny untrained model on a few reviews, CPU is fine
+    python scripts/pseudo_label.py --official # needs a GPU
 """
 
 import argparse
@@ -45,19 +51,29 @@ SMOKE_ROWS = 500
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--smoke", action="store_true", help="a tiny untrained model on a few reviews")
+    parser.add_argument(
+        "--official", action="store_true", help="the model's own probabilities, no temperature"
+    )
     args = parser.parse_args()
     import torch
     from transformers import AutoTokenizer
 
     assert HEADS["recommendation"]["labels"] == RECOMMENDATION_LABELS, "label order"
-    folder = REPORTS_DIR / ("pseudo_labels_smoke" if args.smoke else "pseudo_labels")
+    folder = REPORTS_DIR / ("semi_supervised" if args.official else "pseudo_labels")
+    folder = folder.with_name(folder.name + "_smoke") if args.smoke else folder
+    table_name, record_name = (
+        ("pseudo_labels.parquet", "teacher.json") if args.official else ("masked.parquet", "scoring.json")
+    )
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if not args.smoke and device.type != "cuda":
         raise SystemExit("No GPU found: turn the GPU on for this notebook, or run with --smoke")
     data = check_cache(CACHE_DIR, [MASKED])
     masked = pd.read_parquet(CACHE_DIR / MASKED, columns=["id", "text"])
-    temperature = json.loads((REPORTS_DIR / "calibration.json").read_text(encoding="utf-8"))
-    temperature = temperature["heads"]["recommendation"]["temperature_all_validation"]
+    if args.official:
+        temperature = 1.0  # the model's own softmax
+    else:
+        temperature = json.loads((REPORTS_DIR / "calibration.json").read_text(encoding="utf-8"))
+        temperature = temperature["heads"]["recommendation"]["temperature_all_validation"]
 
     if args.smoke:
         masked = masked.iloc[:SMOKE_ROWS]
@@ -85,9 +101,9 @@ def main():
             "p": p.astype(np.float32),
         }
     )
-    table.to_parquet(folder / "masked.parquet", index=False)
+    table.to_parquet(folder / table_name, index=False)
     save_json(
-        folder / "scoring.json",
+        folder / record_name,
         {
             "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
             "reviews": int(len(table)),
@@ -105,7 +121,7 @@ def main():
             "data": data,
         },
     )
-    print(f"saved {folder / 'masked.parquet'}; {(p >= 0.9).mean():.1%} reach 0.9", flush=True)
+    print(f"saved {folder / table_name}; {(p >= 0.9).mean():.1%} reach 0.9", flush=True)
     print("Done", flush=True)
 
 
