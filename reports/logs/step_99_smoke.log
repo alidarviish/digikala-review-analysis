@@ -1,0 +1,5 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/87 [00:00<?, ?it/s]Loading weights: 100%|██████████| 87/87 [00:00<00:00, 18891.31it/s]
+500 hidden reviews, model hf-internal-testing/tiny-random-BertModel, temperature 1.000
+saved /marimo/work/outputs/reports/semi_supervised_smoke/pseudo_labels.parquet; 0.0% reach 0.9
+Done

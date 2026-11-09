@@ -94,3 +94,76 @@ Expected for the end-of-epoch models, on the whole validation set, recommendatio
 offsets: the control 0.2 to 0.5 point under the supervised model, the student 0.1 to 0.4 under
 it, and the student 0.1 to 0.3 above the control (on the sample the student was above the
 control at every check). Rating band: both within 0.3 point of the supervised model.
+
+## Result
+
+`reports/semi_supervised.json` (commit 2b57540). The guesses: step 99, commit e86f8eb (the
+scoring code did not change between the two commits); the student and the control: steps 100
+and 101 run again with the end-of-epoch weights kept. All three started from this machine's
+kept weights (hash 2828ba5); the guesses use the model's own softmax (temperature 1.0); the
+student read exactly the guesses that were checked.
+
+Pseudo-labels, against the reference labels of the hidden reviews (79.1% `recommended`,
+11.3% `no_idea`, 9.6% `not_recommended`), read after training:
+
+| Threshold | Kept | Right | Kept classes: recommended / not_recommended / no_idea | Kept and right, share of each true class |
+|---|---|---|---|---|
+| 0.80 | 79.8% | 95.5% | 92.6% / 6.9% / 0.5% | 89.9% / 50.1% / 2.9% |
+| **0.90 (used)** | **72.4% (533,043)** | **96.9%** | 94.9% / 5.0% / 0.1% | 84.4% / 34.7% / 0.4% |
+| 0.95 | 60.5% | 98.0% | 96.4% / 3.6% / 0.0% | 72.3% / 21.6% / 0.0% |
+
+The extra epoch: neither the student nor the control found a check better than the starting
+model on the 50,000-review sample (0.7126); the student's checks were 0.7072 to 0.7124, the
+control's 0.7070 to 0.7104. So both kept check 0, and the semi-supervised model chosen by the
+rule is the supervised model itself.
+
+Whole validation set, recommendation (788,717 reviews), with offsets unless said:
+
+| Model | Accuracy | Macro F1 | Macro precision | Macro recall | Macro F1 without offsets | F1: recommended / not_recommended / no_idea |
+|---|---|---|---|---|---|---|
+| Supervised (kept FaBERT) | 0.8736 | 0.7324 | 0.7346 | 0.7320 | 0.7253 | 0.944 / 0.744 / 0.510 |
+| Control, end of epoch | 0.8731 | 0.7300 | 0.7342 | 0.7278 | 0.7174 | 0.944 / 0.739 / 0.507 |
+| Student, end of epoch | 0.8756 | 0.7310 | 0.7359 | 0.7268 | 0.7179 | 0.945 / 0.744 / 0.503 |
+
+| Difference in Macro F1 with offsets [95%, products drawn] | Recommendation | Rating band |
+|---|---|---|
+| Student minus control, best checks (the rule) | +0.0000 | +0.0000 |
+| Student minus control, end of epoch | +0.0010 [+0.0002, +0.0017] | +0.0018 [+0.0012, +0.0025] |
+| Student, end of epoch, minus supervised | -0.0015 [-0.0023, -0.0007] | -0.0001 [-0.0007, +0.0006] |
+| Control, end of epoch, minus supervised | -0.0024 [-0.0033, -0.0016] | -0.0019 [-0.0026, -0.0013] |
+
+Verdict by the rule: **no measurable gain**. The student did not beat the control: by the rule
+both are the starting model.
+
+| | Expected | Found |
+|---|---|---|
+| Accepted at 0.90 | 75 to 82% | 72.4%: wrong, a little fewer |
+| Accepted guesses right | 96 to 98% | 96.9%: right |
+| Accepted classes | 93 to 97% recommended, 3 to 6% not_recommended, under 1% no_idea | 94.9%, 5.0%, 0.1%: right |
+| Control against supervised (best checks) | within 0.1 point | the same model: right |
+| Student against control (best checks) | a tie | the same model: right |
+| End of epoch: control under supervised | 0.2 to 0.5 point | 0.24: right |
+| End of epoch: student under supervised | 0.1 to 0.4 point | 0.15: right |
+| End of epoch: student above control | 0.1 to 0.3 point | 0.10: right, at the edge |
+| End of epoch: rating band within 0.3 point | yes | -0.01 and -0.19: right |
+| `no_idea` F1 a little lower with the pseudo-labels | yes | 0.503 against 0.507 (control) and 0.510: right |
+
+What it means:
+
+- The model was already at its best: one more epoch at the same learning rate makes it worse
+  (control: -0.24 point on recommendation), with or without pseudo-labels.
+- The pseudo-labels soften that drop (the student ends 0.10 point above the control on
+  recommendation and 0.18 on rating band, measurable), but the semi-supervised model ends 0.15
+  point under the supervised one on recommendation and ties it on rating band.
+- The confident guesses are almost all `recommended` (94.9%) and right 96.9% of the time, but
+  they cover only 0.4% of the hidden `no_idea` reviews: they add reviews of the class the model
+  already knows, so recall moves towards `recommended` (accuracy 0.8756 against 0.8736, `no_idea`
+  recall 0.515 against 0.540) and Macro F1 does not rise.
+- The answer to the project's question, "can unlabeled reviews improve the classifier?", is no
+  for this model and protocol, as in the pilot. The final system does not change.
+- The scores on the sample were not identical between the first and the second run with the
+  same seed (for example the student's first check 0.7099 and 0.7072): training on the GPU is
+  not exactly repeatable, which is why the decisions rest on intervals and on the seed spread.
+
+The end-of-epoch student is the semi-supervised model compared with the supervised one on the
+test set at the end.

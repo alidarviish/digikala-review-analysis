@@ -1,0 +1,318 @@
+Code e86f8ebd0e87d49ed031ded987a81ffb2e2ae53b, device NVIDIA RTX PRO 6000 Blackwell Server Edition
+  533,043 pseudo-labeled reviews added (p >= 0.9)
+  tokenized 4,085,541 reviews (125s)
+  tokenized 50,000 reviews (1s)
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 5611.51it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sbunlp/fabert
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.bias                       | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+pooler.dense.bias                          | MISSING    | 
+pooler.dense.weight                        | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+4,085,541 training reviews, 63,837 steps per epoch, check every 15,959
+  check 0 (the starting model): 0.7126, validation loss 0.8075
+    step 500/63,837, loss 0.6836, 0.4 min
+    step 1,000/63,837, loss 0.6806, 0.9 min
+    step 1,500/63,837, loss 0.6814, 1.5 min
+    step 2,000/63,837, loss 0.6853, 2.0 min
+    step 2,500/63,837, loss 0.6945, 2.6 min
+    step 3,000/63,837, loss 0.6923, 3.1 min
+    step 3,500/63,837, loss 0.7063, 3.7 min
+    step 4,000/63,837, loss 0.7043, 4.2 min
+    step 4,500/63,837, loss 0.7213, 4.7 min
+    step 5,000/63,837, loss 0.7136, 5.3 min
+    step 5,500/63,837, loss 0.6985, 5.8 min
+    step 6,000/63,837, loss 0.7094, 6.4 min
+    step 6,500/63,837, loss 0.7074, 6.9 min
+    step 7,000/63,837, loss 0.7083, 7.5 min
+    step 7,500/63,837, loss 0.7105, 8.0 min
+    step 8,000/63,837, loss 0.7135, 8.5 min
+    step 8,500/63,837, loss 0.7096, 9.1 min
+    step 9,000/63,837, loss 0.7095, 9.6 min
+    step 9,500/63,837, loss 0.7136, 10.2 min
+    step 10,000/63,837, loss 0.7198, 10.7 min
+    step 10,500/63,837, loss 0.7119, 11.3 min
+    step 11,000/63,837, loss 0.7149, 11.8 min
+    step 11,500/63,837, loss 0.7098, 12.3 min
+    step 12,000/63,837, loss 0.7058, 12.9 min
+    step 12,500/63,837, loss 0.7140, 13.4 min
+    step 13,000/63,837, loss 0.7199, 14.0 min
+    step 13,500/63,837, loss 0.7111, 14.5 min
+    step 14,000/63,837, loss 0.7160, 15.0 min
+    step 14,500/63,837, loss 0.7129, 15.5 min
+    step 15,000/63,837, loss 0.7069, 16.0 min
+    step 15,500/63,837, loss 0.7232, 16.6 min
+  check at epoch 0.25: 0.7099, validation loss 0.8213 (not better)
+    step 16,000/63,837, loss 0.7164, 17.2 min
+    step 16,500/63,837, loss 0.7232, 17.7 min
+    step 17,000/63,837, loss 0.7137, 18.2 min
+    step 17,500/63,837, loss 0.7193, 18.8 min
+    step 18,000/63,837, loss 0.7036, 19.3 min
+    step 18,500/63,837, loss 0.7133, 19.9 min
+    step 19,000/63,837, loss 0.7123, 20.4 min
+    step 19,500/63,837, loss 0.7254, 21.0 min
+    step 20,000/63,837, loss 0.7166, 21.5 min
+    step 20,500/63,837, loss 0.7154, 22.0 min
+    step 21,000/63,837, loss 0.7206, 22.6 min
+    step 21,500/63,837, loss 0.7226, 23.1 min
+    step 22,000/63,837, loss 0.7108, 23.7 min
+    step 22,500/63,837, loss 0.7178, 24.2 min
+    step 23,000/63,837, loss 0.7234, 24.7 min
+    step 23,500/63,837, loss 0.7290, 25.3 min
+    step 24,000/63,837, loss 0.7298, 25.8 min
+    step 24,500/63,837, loss 0.7138, 26.4 min
+    step 25,000/63,837, loss 0.7173, 26.9 min
+    step 25,500/63,837, loss 0.7191, 27.4 min
+    step 26,000/63,837, loss 0.7193, 28.0 min
+    step 26,500/63,837, loss 0.7228, 28.5 min
+    step 27,000/63,837, loss 0.7208, 29.1 min
+    step 27,500/63,837, loss 0.7039, 29.6 min
+    step 28,000/63,837, loss 0.7050, 30.2 min
+    step 28,500/63,837, loss 0.7216, 30.6 min
+    step 29,000/63,837, loss 0.7156, 31.1 min
+    step 29,500/63,837, loss 0.7148, 31.7 min
+    step 30,000/63,837, loss 0.7197, 32.2 min
+    step 30,500/63,837, loss 0.7136, 32.8 min
+    step 31,000/63,837, loss 0.7112, 33.3 min
+    step 31,500/63,837, loss 0.7194, 33.8 min
+  check at epoch 0.5: 0.7094, validation loss 0.8173 (not better)
+    step 32,000/63,837, loss 0.7026, 34.5 min
+    step 32,500/63,837, loss 0.7130, 35.0 min
+    step 33,000/63,837, loss 0.7056, 35.5 min
+    step 33,500/63,837, loss 0.7188, 36.1 min
+    step 34,000/63,837, loss 0.7152, 36.6 min
+    step 34,500/63,837, loss 0.7019, 37.2 min
+    step 35,000/63,837, loss 0.7053, 37.7 min
+    step 35,500/63,837, loss 0.7153, 38.3 min
+    step 36,000/63,837, loss 0.7151, 38.8 min
+    step 36,500/63,837, loss 0.7111, 39.3 min
+    step 37,000/63,837, loss 0.7161, 39.9 min
+    step 37,500/63,837, loss 0.7058, 40.4 min
+    step 38,000/63,837, loss 0.7088, 41.0 min
+    step 38,500/63,837, loss 0.7073, 41.5 min
+    step 39,000/63,837, loss 0.7128, 42.1 min
+    step 39,500/63,837, loss 0.7078, 42.6 min
+    step 40,000/63,837, loss 0.7108, 43.1 min
+    step 40,500/63,837, loss 0.7032, 43.7 min
+    step 41,000/63,837, loss 0.7055, 44.2 min
+    step 41,500/63,837, loss 0.7075, 44.8 min
+    step 42,000/63,837, loss 0.7156, 45.3 min
+    step 42,500/63,837, loss 0.7138, 45.8 min
+    step 43,000/63,837, loss 0.7048, 46.4 min
+    step 43,500/63,837, loss 0.7089, 46.9 min
+    step 44,000/63,837, loss 0.6974, 47.4 min
+    step 44,500/63,837, loss 0.7119, 48.0 min
+    step 45,000/63,837, loss 0.7140, 48.5 min
+    step 45,500/63,837, loss 0.6998, 49.1 min
+    step 46,000/63,837, loss 0.7035, 49.6 min
+    step 46,500/63,837, loss 0.6957, 50.1 min
+    step 47,000/63,837, loss 0.7123, 50.7 min
+    step 47,500/63,837, loss 0.7068, 51.2 min
+  check at epoch 0.75: 0.7108, validation loss 0.8248 (not better)
+    step 48,000/63,837, loss 0.6982, 51.9 min
+    step 48,500/63,837, loss 0.6879, 52.4 min
+    step 49,000/63,837, loss 0.7032, 52.9 min
+    step 49,500/63,837, loss 0.6993, 53.5 min
+    step 50,000/63,837, loss 0.7061, 54.0 min
+    step 50,500/63,837, loss 0.7050, 54.6 min
+    step 51,000/63,837, loss 0.7054, 55.1 min
+    step 51,500/63,837, loss 0.7049, 55.7 min
+    step 52,000/63,837, loss 0.7142, 56.2 min
+    step 52,500/63,837, loss 0.7101, 56.7 min
+    step 53,000/63,837, loss 0.7076, 57.3 min
+    step 53,500/63,837, loss 0.6958, 57.8 min
+    step 54,000/63,837, loss 0.7085, 58.4 min
+    step 54,500/63,837, loss 0.6999, 58.9 min
+    step 55,000/63,837, loss 0.6992, 59.5 min
+    step 55,500/63,837, loss 0.7071, 60.0 min
+    step 56,000/63,837, loss 0.6832, 60.5 min
+    step 56,500/63,837, loss 0.7017, 60.8 min
+    step 57,000/63,837, loss 0.7032, 61.1 min
+    step 57,500/63,837, loss 0.7068, 61.4 min
+    step 58,000/63,837, loss 0.7039, 61.9 min
+    step 58,500/63,837, loss 0.6986, 62.2 min
+    step 59,000/63,837, loss 0.6993, 62.5 min
+    step 59,500/63,837, loss 0.7039, 62.8 min
+    step 60,000/63,837, loss 0.7041, 63.1 min
+    step 60,500/63,837, loss 0.6883, 63.4 min
+    step 61,000/63,837, loss 0.6921, 63.6 min
+    step 61,500/63,837, loss 0.6942, 63.9 min
+    step 62,000/63,837, loss 0.7054, 64.2 min
+    step 62,500/63,837, loss 0.7140, 64.5 min
+    step 63,000/63,837, loss 0.7050, 64.7 min
+    step 63,500/63,837, loss 0.7044, 65.0 min
+  check at epoch 1.0: 0.7097, validation loss 0.8192 (not better)
+  check at epoch 1.0: 0.7092, validation loss 0.8192 (not better)
+Scoring the whole validation set with the weights from step 0
+  tokenized 922,795 reviews (33s)
+  recommendation: without offsets 0.7253, with offsets 0.7324
+  rating_band: without offsets 0.6799, with offsets 0.6922
+Done
+Code 2b5754094a509be0fb9dc0efabd46c52bd8205ef, device NVIDIA RTX PRO 6000 Blackwell Server Edition
+  533,043 pseudo-labeled reviews added (p >= 0.9)
+  tokenized 4,085,541 reviews (127s)
+  tokenized 50,000 reviews (1s)
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 5127.00it/s]
+[transformers] [1mBertModel LOAD REPORT[0m from: sbunlp/fabert
+Key                                        | Status     | 
+-------------------------------------------+------------+-
+cls.predictions.transform.LayerNorm.bias   | UNEXPECTED | 
+cls.predictions.transform.dense.weight     | UNEXPECTED | 
+cls.predictions.transform.LayerNorm.weight | UNEXPECTED | 
+cls.predictions.transform.dense.bias       | UNEXPECTED | 
+cls.predictions.bias                       | UNEXPECTED | 
+pooler.dense.weight                        | MISSING    | 
+pooler.dense.bias                          | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+4,085,541 training reviews, 63,837 steps per epoch, check every 15,959
+  check 0 (the starting model): 0.7126, validation loss 0.8075
+    step 500/63,837, loss 0.6837, 0.6 min
+    step 1,000/63,837, loss 0.6805, 1.1 min
+    step 1,500/63,837, loss 0.6816, 1.6 min
+    step 2,000/63,837, loss 0.6853, 2.2 min
+    step 2,500/63,837, loss 0.6944, 2.7 min
+    step 3,000/63,837, loss 0.6924, 3.3 min
+    step 3,500/63,837, loss 0.7062, 3.8 min
+    step 4,000/63,837, loss 0.7045, 4.4 min
+    step 4,500/63,837, loss 0.7211, 4.9 min
+    step 5,000/63,837, loss 0.7133, 5.4 min
+    step 5,500/63,837, loss 0.6987, 6.0 min
+    step 6,000/63,837, loss 0.7092, 6.5 min
+    step 6,500/63,837, loss 0.7081, 7.1 min
+    step 7,000/63,837, loss 0.7080, 7.6 min
+    step 7,500/63,837, loss 0.7110, 8.1 min
+    step 8,000/63,837, loss 0.7145, 8.7 min
+    step 8,500/63,837, loss 0.7104, 9.2 min
+    step 9,000/63,837, loss 0.7095, 9.8 min
+    step 9,500/63,837, loss 0.7156, 10.3 min
+    step 10,000/63,837, loss 0.7203, 10.9 min
+    step 10,500/63,837, loss 0.7125, 11.4 min
+    step 11,000/63,837, loss 0.7135, 11.9 min
+    step 11,500/63,837, loss 0.7091, 12.5 min
+    step 12,000/63,837, loss 0.7066, 13.0 min
+    step 12,500/63,837, loss 0.7157, 13.6 min
+    step 13,000/63,837, loss 0.7213, 14.1 min
+    step 13,500/63,837, loss 0.7107, 14.6 min
+    step 14,000/63,837, loss 0.7151, 15.1 min
+    step 14,500/63,837, loss 0.7119, 15.7 min
+    step 15,000/63,837, loss 0.7065, 16.2 min
+    step 15,500/63,837, loss 0.7250, 16.7 min
+  check at epoch 0.25: 0.7072, validation loss 0.8210 (not better)
+    step 16,000/63,837, loss 0.7157, 17.4 min
+    step 16,500/63,837, loss 0.7218, 17.9 min
+    step 17,000/63,837, loss 0.7134, 18.5 min
+    step 17,500/63,837, loss 0.7221, 19.0 min
+    step 18,000/63,837, loss 0.7046, 19.6 min
+    step 18,500/63,837, loss 0.7132, 20.1 min
+    step 19,000/63,837, loss 0.7124, 20.6 min
+    step 19,500/63,837, loss 0.7259, 21.2 min
+    step 20,000/63,837, loss 0.7173, 21.7 min
+    step 20,500/63,837, loss 0.7139, 22.3 min
+    step 21,000/63,837, loss 0.7200, 22.8 min
+    step 21,500/63,837, loss 0.7212, 23.3 min
+    step 22,000/63,837, loss 0.7106, 23.9 min
+    step 22,500/63,837, loss 0.7190, 24.4 min
+    step 23,000/63,837, loss 0.7227, 25.0 min
+    step 23,500/63,837, loss 0.7279, 25.5 min
+    step 24,000/63,837, loss 0.7295, 26.0 min
+    step 24,500/63,837, loss 0.7134, 26.6 min
+    step 25,000/63,837, loss 0.7169, 27.1 min
+    step 25,500/63,837, loss 0.7201, 27.7 min
+    step 26,000/63,837, loss 0.7174, 28.2 min
+    step 26,500/63,837, loss 0.7209, 28.7 min
+    step 27,000/63,837, loss 0.7195, 29.3 min
+    step 27,500/63,837, loss 0.7039, 29.8 min
+    step 28,000/63,837, loss 0.7037, 30.3 min
+    step 28,500/63,837, loss 0.7228, 30.9 min
+    step 29,000/63,837, loss 0.7172, 31.4 min
+    step 29,500/63,837, loss 0.7144, 31.9 min
+    step 30,000/63,837, loss 0.7210, 32.5 min
+    step 30,500/63,837, loss 0.7131, 33.0 min
+    step 31,000/63,837, loss 0.7127, 33.6 min
+    step 31,500/63,837, loss 0.7170, 34.1 min
+  check at epoch 0.5: 0.7100, validation loss 0.8182 (not better)
+    step 32,000/63,837, loss 0.7028, 34.7 min
+    step 32,500/63,837, loss 0.7123, 35.3 min
+    step 33,000/63,837, loss 0.7056, 35.8 min
+    step 33,500/63,837, loss 0.7179, 36.3 min
+    step 34,000/63,837, loss 0.7146, 36.9 min
+    step 34,500/63,837, loss 0.7039, 37.4 min
+    step 35,000/63,837, loss 0.7054, 38.0 min
+    step 35,500/63,837, loss 0.7130, 38.5 min
+    step 36,000/63,837, loss 0.7145, 39.0 min
+    step 36,500/63,837, loss 0.7105, 39.6 min
+    step 37,000/63,837, loss 0.7155, 40.1 min
+    step 37,500/63,837, loss 0.7069, 40.7 min
+    step 38,000/63,837, loss 0.7080, 41.2 min
+    step 38,500/63,837, loss 0.7081, 41.7 min
+    step 39,000/63,837, loss 0.7128, 42.3 min
+    step 39,500/63,837, loss 0.7083, 42.8 min
+    step 40,000/63,837, loss 0.7133, 43.4 min
+    step 40,500/63,837, loss 0.7037, 43.9 min
+    step 41,000/63,837, loss 0.7042, 44.5 min
+    step 41,500/63,837, loss 0.7064, 45.0 min
+    step 42,000/63,837, loss 0.7177, 45.5 min
+    step 42,500/63,837, loss 0.7135, 46.0 min
+    step 43,000/63,837, loss 0.7039, 46.6 min
+    step 43,500/63,837, loss 0.7073, 47.1 min
+    step 44,000/63,837, loss 0.6985, 47.7 min
+    step 44,500/63,837, loss 0.7113, 48.2 min
+    step 45,000/63,837, loss 0.7144, 48.7 min
+    step 45,500/63,837, loss 0.6996, 49.3 min
+    step 46,000/63,837, loss 0.7045, 49.8 min
+    step 46,500/63,837, loss 0.6962, 50.4 min
+    step 47,000/63,837, loss 0.7140, 50.9 min
+    step 47,500/63,837, loss 0.7065, 51.5 min
+  check at epoch 0.75: 0.7103, validation loss 0.8260 (not better)
+    step 48,000/63,837, loss 0.6982, 52.1 min
+    step 48,500/63,837, loss 0.6875, 52.6 min
+    step 49,000/63,837, loss 0.7044, 53.2 min
+    step 49,500/63,837, loss 0.6993, 53.7 min
+    step 50,000/63,837, loss 0.7071, 54.2 min
+    step 50,500/63,837, loss 0.7073, 54.8 min
+    step 51,000/63,837, loss 0.7045, 55.3 min
+    step 51,500/63,837, loss 0.7034, 55.9 min
+    step 52,000/63,837, loss 0.7152, 56.4 min
+    step 52,500/63,837, loss 0.7119, 56.9 min
+    step 53,000/63,837, loss 0.7067, 57.5 min
+    step 53,500/63,837, loss 0.6942, 58.0 min
+    step 54,000/63,837, loss 0.7087, 58.6 min
+    step 54,500/63,837, loss 0.6992, 59.1 min
+    step 55,000/63,837, loss 0.6994, 59.7 min
+    step 55,500/63,837, loss 0.7072, 60.1 min
+    step 56,000/63,837, loss 0.6850, 60.3 min
+    step 56,500/63,837, loss 0.7014, 60.7 min
+    step 57,000/63,837, loss 0.7022, 61.1 min
+    step 57,500/63,837, loss 0.7068, 61.5 min
+    step 58,000/63,837, loss 0.7047, 61.7 min
+    step 58,500/63,837, loss 0.6969, 62.0 min
+    step 59,000/63,837, loss 0.6974, 62.3 min
+    step 59,500/63,837, loss 0.7051, 62.6 min
+    step 60,000/63,837, loss 0.7043, 62.9 min
+    step 60,500/63,837, loss 0.6876, 63.4 min
+    step 61,000/63,837, loss 0.6921, 63.7 min
+    step 61,500/63,837, loss 0.6944, 64.0 min
+    step 62,000/63,837, loss 0.7055, 64.3 min
+    step 62,500/63,837, loss 0.7143, 64.6 min
+    step 63,000/63,837, loss 0.7054, 64.8 min
+    step 63,500/63,837, loss 0.7048, 65.1 min
+  check at epoch 1.0: 0.7124, validation loss 0.8188 (not better)
+  check at epoch 1.0: 0.7112, validation loss 0.8188 (not better)
+Scoring the whole validation set with the weights from step 0
+  tokenized 922,795 reviews (35s)
+Scoring the whole validation set with the weights from step 63,837
+  tokenized 922,795 reviews (36s)
+  recommendation: without offsets 0.7253, with offsets 0.7324
+  rating_band: without offsets 0.6799, with offsets 0.6922
+Done

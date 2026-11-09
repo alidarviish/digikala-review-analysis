@@ -1,0 +1,37 @@
+{
+  "created_at": "2026-11-09T17:50:58+00:00",
+  "reviews": 500,
+  "model": "hf-internal-testing/tiny-random-BertModel",
+  "weights_sha256": null,
+  "temperature": 1.0,
+  "share_at_least_0.9": 0.0,
+  "guessed_classes": {
+    "not_recommended": 1.0
+  },
+  "code": {
+    "commit": "e86f8ebd0e87d49ed031ded987a81ffb2e2ae53b",
+    "uncommitted_changes": false
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": "5.21.0",
+      "tokenizers": "0.23.3"
+    },
+    "machine": "4ca9ebc9-1727-4c53-a86e-7277bcf246dd-48zkc",
+    "torch": "2.14.1+cu130",
+    "transformers": "5.21.0"
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "train_pseudo_unlabeled.parquet": "972dbbf26b8ca0b1860d454c558d1fb6f3ffb1a649f1528dda936d13496331d2"
+    }
+  }
+}
