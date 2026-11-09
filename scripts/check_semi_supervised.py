@@ -6,7 +6,9 @@
    read here only, after training, to measure): share kept, class shares, accuracy, and for each
    true class the share kept with the right label, at 0.80, 0.90 and 0.95. Only 0.90 was used.
 2. The supervised model (the kept FaBERT run), the control (one more epoch on train_supervised)
-   and the student (one more epoch with the pseudo-labels), on the whole validation set: every
+   and the student (one more epoch with the pseudo-labels), each at its best check (the rule) and
+   at the end of its epoch (added before the second run, so that the semi-supervised model
+   the project compares is the one the extra training made), on the whole validation set: every
    required score with and without offsets, and the paired differences in Macro F1 with
    offsets, with intervals that draw products (1,000 rounds, seed 2026).
 3. The rule of the plan: the pseudo-labels help if the student beats the control on
@@ -54,12 +56,22 @@ OUTPUT = REPORTS_DIR / "semi_supervised.json"
 THRESHOLDS = [0.8, PSEUDO_LABEL_THRESHOLD, 0.95]
 MIN_LEAD = 0.0012  # the spread of the kept run over three seeds (reports/full_seeds.json)
 ROUNDS, SEED = 1000, 2026
-MODELS = {  # name: (folder of its predictions, its report, relative to reports/)
-    "supervised": (FINAL_TRANSFORMER_DIR, "transformer_final/fabert_no_early_stop.json"),
-    "control": ("semi_supervised_control", "semi_supervised/control.json"),
-    "student": ("semi_supervised_student", "semi_supervised/student.json"),
+MODELS = {  # name: (folder of its predictions, its report relative to reports/, which weights)
+    "supervised": (FINAL_TRANSFORMER_DIR, "transformer_final/fabert_no_early_stop.json", "kept"),
+    "control": ("semi_supervised_control", "semi_supervised/control.json", "kept"),
+    "student": ("semi_supervised_student", "semi_supervised/student.json", "kept"),
+    # the weights at the end of the extra epoch, which that training actually made
+    "control at the end": ("semi_supervised_control", "semi_supervised/control.json", "last"),
+    "student at the end": ("semi_supervised_student", "semi_supervised/student.json", "last"),
 }
-PAIRS = [("student", "control"), ("student", "supervised"), ("control", "supervised")]
+PAIRS = [
+    ("student", "control"),
+    ("student", "supervised"),
+    ("control", "supervised"),
+    ("student at the end", "control at the end"),
+    ("student at the end", "supervised"),
+    ("control at the end", "supervised"),
+]
 
 
 def read(path) -> dict:
@@ -79,7 +91,7 @@ def scores(y_true, found, labels, head) -> dict:
 def main():
     kept_hash = file_sha256(ARTIFACTS_DIR / FINAL_TRANSFORMER_DIR / "model.pt")
     teacher = read(FOLDER / "teacher.json")
-    records = {name: read(REPORTS_DIR / report) for name, (_, report) in MODELS.items()}
+    records = {name: read(REPORTS_DIR / report) for name, (_, report, _) in MODELS.items()}
     assert teacher["weights_sha256"] == kept_hash, "the guesses were not made with the kept weights"
     assert teacher["temperature"] == 1.0, "the guesses must come from the model's own softmax"
     for name in ("control", "student"):
@@ -103,8 +115,11 @@ def main():
     validation = load_cache("validation.parquet", extra_columns=["product_id"])
     data = check_cache(CACHE_DIR, ["validation.parquet"])
     tables = {}
-    for name, (folder, _) in MODELS.items():
-        table = pd.read_parquet(ARTIFACTS_DIR / folder / "validation_predictions.parquet")
+    for name, (folder, _, weights) in MODELS.items():
+        file = (
+            "validation_predictions.parquet" if weights == "kept" else "validation_predictions_last.parquet"
+        )
+        table = pd.read_parquet(ARTIFACTS_DIR / folder / file)
         assert table["id"].is_unique and set(table["id"]) == set(validation["id"]), f"{name}: ids differ"
         tables[name] = validation[["id"]].merge(table, on="id", how="left", validate="one_to_one")
     _, product_index = np.unique(validation["product_id"].to_numpy(), return_inverse=True)
@@ -122,7 +137,8 @@ def main():
             plain = np.array(labels)[log_proba.argmax(axis=1)]  # the model's own top class
             found = {"with_offsets": scores(y_true, with_offsets, labels, head)}
             found["without_offsets"] = scores(y_true, plain, labels, head)
-            recorded = records[name]["heads"][head]["with_offsets"]["macro_f1"]
+            record = records[name] if MODELS[name][2] == "kept" else records[name]["last_check"]
+            recorded = record["heads"][head]["with_offsets"]["macro_f1"]
             assert abs(found["with_offsets"]["macro_f1"] - recorded) < 1e-9, (
                 f"{head} {name}: Macro F1 differs"
             )
@@ -157,7 +173,7 @@ def main():
         "hidden_reviews": int(len(guessed)),
         "accepted": accepted,
         "pseudo_labels": pseudo,
-        "kept_check": {name: records[name]["kept_epoch"] for name in MODELS},
+        "kept_check": {name: records[name]["kept_epoch"] for name in ("supervised", "control", "student")},
         "heads": heads,
         "rule": {"min_lead": MIN_LEAD, "lead": lead, "pseudo_labels_help": bool(helps)},
         "data": data,
@@ -179,12 +195,13 @@ def main():
     for head, e in heads.items():
         print(f"\n=== {head}")
         print(
-            "  model        accuracy  macro F1  macro P  macro R  (with offsets)   macro F1 without offsets"
+            "  model                accuracy  macro F1  macro P  macro R  (with offsets)"
+            "   macro F1 without offsets"
         )
         for name, m in e["models"].items():
             w, p = m["with_offsets"], m["without_offsets"]
             print(
-                f"  {name:<12} {w['accuracy']:.4f}    {w['macro_f1']:.4f}    {w['macro_precision']:.4f}   "
+                f"  {name:<20} {w['accuracy']:.4f}    {w['macro_f1']:.4f}    {w['macro_precision']:.4f}   "
                 f"{w['macro_recall']:.4f}                   {p['macro_f1']:.4f}"
             )
         for pair, d in e["differences_with_offsets"].items():

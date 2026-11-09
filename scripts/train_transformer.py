@@ -53,7 +53,8 @@ settings) is fine-tuned further for one epoch with the same settings: the studen
 train_supervised plus the hidden reviews whose own-softmax guess (reports/semi_supervised/
 pseudo_labels.parquet, scripts/pseudo_label.py --official) reaches 0.90, which count only for
 the recommendation loss; the control on train_supervised alone. The starting model is scored
-first, as check 0, so it is kept if no check beats it:
+first, as check 0, so it is kept if no check beats it; the weights at the end of the epoch are
+kept and scored too (model_last.pt, validation_predictions_last.parquet, "last_check"):
   artifacts/semi_supervised_<student|control>/   and   reports/semi_supervised/<student|control>.json
 
 Usage:
@@ -228,7 +229,7 @@ def main():
     )
     start_path = CACHE_DIR / START_WEIGHTS
     if args.semi:  # one more epoch from the kept run; its own names
-        settings.update(max_epochs=1, patience=None)
+        settings.update(max_epochs=1, patience=None, keep_last=True)
         if args.smoke:  # a tiny untrained model stands in for the kept run
             start_path = ARTIFACTS_DIR / "semi_supervised_start_smoke.pt"
         else:
@@ -478,45 +479,69 @@ def main():
             if state["step"] >= total_steps:
                 break
     train_minutes = round((time.perf_counter() - start) / 60, 1)
+    if args.semi:  # keep the end of the epoch too, not only the best check
+        weights = {k: v.to(torch.bfloat16) for k, v in model.state_dict().items()}
+        save_atomic(
+            {"weights": weights, "settings": settings, "step": state["step"]}, out_dir / "model_last.pt"
+        )
 
     # everything below uses exactly the saved weights
-    saved = torch.load(best_path, map_location=device, weights_only=False)
-    model.load_state_dict({k: v.float() for k, v in saved["weights"].items()})
-    print(f"Scoring the whole validation set with the weights from step {saved['step']:,}", flush=True)
-    log_proba = predict(torch, model, tokenizer, encode(validation["text"].to_numpy()), device)
+    def score_saved(weights_path, predictions_path):
+        """Score the whole validation set with saved weights; write the predictions."""
+        saved = torch.load(weights_path, map_location=device, weights_only=False)
+        model.load_state_dict({k: v.float() for k, v in saved["weights"].items()})
+        print(f"Scoring the whole validation set with the weights from step {saved['step']:,}", flush=True)
+        log_proba = predict(torch, model, tokenizer, encode(validation["text"].to_numpy()), device)
 
-    tfidf_path = ARTIFACTS_DIR / "tfidf_final" / "validation_predictions.parquet"
-    tfidf = pd.read_parquet(tfidf_path).set_index("id").loc[validation["id"]] if tfidf_path.exists() else None
-    table = pd.DataFrame({"id": validation["id"].to_numpy()})
-    heads, offsets_for_test = {}, {}
-    for head in HEADS:
-        labels_ = HEADS[head]["labels"]
-        labeled, y_true, codes, halves = head_targets(validation, head)
-        crossed, per_half = cross_fitted_offsets(log_proba[head][labeled], codes, halves)
-        with_offsets = np.array(labels_)[crossed]
-        plain = np.array(labels_)[log_proba[head].argmax(axis=1)]
-        offsets_for_test[head] = dict(
-            zip(labels_, search_offsets(log_proba[head][labeled], codes).tolist(), strict=True)
+        tfidf_path = ARTIFACTS_DIR / "tfidf_final" / "validation_predictions.parquet"
+        tfidf = (
+            pd.read_parquet(tfidf_path).set_index("id").loc[validation["id"]] if tfidf_path.exists() else None
         )
-        heads[head] = {
-            "without_offsets": classification_report(y_true, plain[labeled], labels_),
-            "with_offsets": classification_report(y_true, with_offsets, labels_),
-            "with_offsets_interval_95": bootstrap_macro_f1(y_true, with_offsets, labels_),
-            "offsets_per_half": {k: dict(zip(labels_, v.tolist(), strict=True)) for k, v in per_half.items()},
-            "offsets_for_test": offsets_for_test[head],
+        table = pd.DataFrame({"id": validation["id"].to_numpy()})
+        heads, offsets_for_test = {}, {}
+        for head in HEADS:
+            labels_ = HEADS[head]["labels"]
+            labeled, y_true, codes, halves = head_targets(validation, head)
+            crossed, per_half = cross_fitted_offsets(log_proba[head][labeled], codes, halves)
+            with_offsets = np.array(labels_)[crossed]
+            plain = np.array(labels_)[log_proba[head].argmax(axis=1)]
+            offsets_for_test[head] = dict(
+                zip(labels_, search_offsets(log_proba[head][labeled], codes).tolist(), strict=True)
+            )
+            heads[head] = {
+                "without_offsets": classification_report(y_true, plain[labeled], labels_),
+                "with_offsets": classification_report(y_true, with_offsets, labels_),
+                "with_offsets_interval_95": bootstrap_macro_f1(y_true, with_offsets, labels_),
+                "offsets_per_half": {
+                    k: dict(zip(labels_, v.tolist(), strict=True)) for k, v in per_half.items()
+                },
+                "offsets_for_test": offsets_for_test[head],
+            }
+            if tfidf is not None:
+                tfidf_labels = tfidf[f"{head}__predicted_with_offsets"].to_numpy()[labeled].astype(str)
+                heads[head]["vs_tfidf_with_offsets"] = compare(head, y_true, with_offsets, tfidf_labels)
+            for i, label in enumerate(labels_):
+                table[f"{head}__log_proba__{label}"] = log_proba[head][:, i].astype(np.float32)
+            table[f"{head}__predicted"] = plain
+            column = np.full(len(table), None, dtype=object)
+            column[labeled] = with_offsets
+            table[f"{head}__predicted_with_offsets"] = column
+        table.to_parquet(predictions_path.with_suffix(".tmp"), index=False)
+        predictions_path.with_suffix(".tmp").replace(predictions_path)
+        return saved, heads, offsets_for_test
+
+    saved, heads, offsets_for_test = score_saved(best_path, out_dir / "validation_predictions.parquet")
+    last = None
+    if args.semi:  # the model at the end of its epoch, which the extra training actually made
+        last_saved, last_heads, _ = score_saved(
+            out_dir / "model_last.pt", out_dir / "validation_predictions_last.parquet"
+        )
+        last = {
+            "step": last_saved["step"],
+            "epoch": round(last_saved["step"] / steps_per_epoch, 2),
+            "heads": last_heads,
         }
-        if tfidf is not None:
-            tfidf_labels = tfidf[f"{head}__predicted_with_offsets"].to_numpy()[labeled].astype(str)
-            heads[head]["vs_tfidf_with_offsets"] = compare(head, y_true, with_offsets, tfidf_labels)
-        for i, label in enumerate(labels_):
-            table[f"{head}__log_proba__{label}"] = log_proba[head][:, i].astype(np.float32)
-        table[f"{head}__predicted"] = plain
-        column = np.full(len(table), None, dtype=object)
-        column[labeled] = with_offsets
-        table[f"{head}__predicted_with_offsets"] = column
-    predictions_path = out_dir / "validation_predictions.parquet"
-    table.to_parquet(predictions_path.with_suffix(".tmp"), index=False)
-    predictions_path.with_suffix(".tmp").replace(predictions_path)
+        model.load_state_dict({k: v.float() for k, v in saved["weights"].items()})
     torch.save({**saved, "offsets_for_test": offsets_for_test}, best_path.with_suffix(".tmp"))
     best_path.with_suffix(".tmp").replace(best_path)
 
@@ -534,6 +559,7 @@ def main():
             "train_minutes_this_session": train_minutes,
             "checks": state["history"],
             "heads": heads,
+            **({"last_check": last} if last else {}),
             "validation_reviews": int(len(validation)),
             **context,
         },

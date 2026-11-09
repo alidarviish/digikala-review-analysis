@@ -70,3 +70,27 @@ system changes only if the rule is met, and only after talking it over.
   student (about 4.1 million reviews) and 32 for the control; the two can run side by side.
 
 The test set is not read until the final evaluation.
+
+## Added after the first run, before running again
+
+The first run (commit e86f8eb) is recorded but not imported: 72.4% of the hidden reviews
+reached 0.90 (533,043 pseudo-labeled reviews), and both the student and the control kept
+check 0. No check beat the starting model on the 50,000-review sample (0.7126): the student's
+checks were 0.7099, 0.7094, 0.7108 and 0.7097, the control's 0.7078, 0.7086, 0.7079 and
+0.7079, and the validation loss rose from 0.808 to about 0.82. So by the rule the answer is
+already "no measurable gain", but the semi-supervised model it selects is the supervised model
+itself, and the comparison the project asks for (supervised against semi-supervised, on
+validation and test) would compare a model with itself.
+
+Added now: the student and the control are trained again exactly as before, and the weights at
+the end of the epoch are also kept and scored on the whole validation set
+(`model_last.pt`, `validation_predictions_last.parquet`, "last_check" in the report). The best
+check is still chosen and the rule above is unchanged. The end-of-epoch student is the model the
+semi-supervised training actually made, and it is the one compared with the supervised model as
+the project asks (on validation now, on test at the end); the end-of-epoch control shows how
+much of any difference is the extra epoch. Report only.
+
+Expected for the end-of-epoch models, on the whole validation set, recommendation Macro F1 with
+offsets: the control 0.2 to 0.5 point under the supervised model, the student 0.1 to 0.4 under
+it, and the student 0.1 to 0.3 above the control (on the sample the student was above the
+control at every check). Rating band: both within 0.3 point of the supervised model.
