@@ -130,7 +130,7 @@ Summary made with 58a68b1 · local
 | PartAI/TookaBERT-Large | 500,000 | 3 | 0.7243 | 0.6872 | 0.7058 | 0.7050 to 0.7062 | 11.0 |
 | sbunlp/fabert | 500,000 | 3 | 0.7231 | 0.6861 | 0.7046 | 0.7043 to 0.7049 | 4.3 |
 
-Summary made with 42ec92d (uncommitted) · local
+Summary made with 085b8f7 · local
 
 TookaBERT-Large minus FaBERT, both on 500,000 reviews, same reviews per seed:
 
@@ -165,7 +165,7 @@ Checks on the 50,000-review validation sample, with offsets:
 | 3.75 | 208,155 | 0.7093 | 0.7307 | 0.6878 | 0.8363 |  |
 | 4.0 | 222,032 | 0.7087 | 0.7297 | 0.6877 | 0.8372 |  |
 
-Trained with 287977c · molab GPU. Whole validation set (compared with b92fbff (uncommitted) · local):
+Trained with 287977c · molab GPU. Whole validation set (compared with 59a3ce9 · local):
 
 | Head | FaBERT without offsets | FaBERT with offsets | TF-IDF with offsets | Difference [95%] |
 |---|---|---|---|---|
@@ -236,6 +236,7 @@ seeds is a tie.
 | Learning rate (reports/learning_rate_plan.md) | learning rate 5e-5 | 0.7043 | 0.7051 | -0.0008 | 0.0009 | tie | 3f49121 |
 | Learning rate (reports/learning_rate_plan.md) | layer decay 0.9 | 0.7032 | 0.7051 | -0.0019 | 0.0010 | worse | 3f49121 |
 | Pseudo-labels (reports/semi_supervised_plan.md) | pseudo-labels 0.9 | 0.7047 | 0.7051 | -0.0003 | 0.0007 | tie | 2279ab7 |
+| Domain-adapted FaBERT (reports/domain_adaptation_plan.md) | domain-adapted | 0.7072 | 0.7051 | +0.0021 | 0.0006 | better | be670fa |
 
 ## Calibration of the final FaBERT model (reports/calibration_plan.md)
 
@@ -246,8 +247,105 @@ Temperature scaling, fitted on one half of validation by product and scored on t
 | recommendation | 1.124 | 0.0162 -> 0.0055 | 0.3121 -> 0.3095 | 72.3%, 96.9% right -> 69.1%, 97.3% right | 0.7324 -> 0.7327 |
 | rating_band | 1.108 | 0.0240 -> 0.0046 | 0.4925 -> 0.4898 | 45.6%, 92.9% right -> 37.2%, 93.9% right | 0.6922 -> 0.6923 |
 
+## Every required score of the final models (whole validation set, with offsets)
+
+Made with 2204338. Macro precision and recall are plain means over the classes; the ordinal error is how many bands a prediction is off on average, and the share off by two.
+
+recommendation (788,717 reviews):
+
+| Model | Accuracy | Macro F1 | Macro precision | Macro recall | Balanced accuracy |
+|---|---|---|---|---|---|
+| tfidf | 0.8487 | 0.7017 | 0.6976 | 0.7110 | 0.7110 |
+| fabert | 0.8736 | 0.7324 | 0.7346 | 0.7320 | 0.7320 |
+| adapted | 0.8731 | 0.7337 | 0.7337 | 0.7356 | 0.7356 |
+| large | 0.8759 | 0.7324 | 0.7397 | 0.7269 | 0.7269 |
+| bilstm | 0.8694 | 0.7176 | 0.7302 | 0.7083 | 0.7083 |
+| fabert + tfidf | 0.8733 | 0.7344 | 0.7327 | 0.7376 | 0.7376 |
+
+rating_band (843,458 reviews):
+
+| Model | Accuracy | Macro F1 | Macro precision | Macro recall | Balanced accuracy | Ordinal error | Off by two |
+|---|---|---|---|---|---|---|---|
+| tfidf | 0.7765 | 0.6683 | 0.6781 | 0.6596 | 0.6596 | 0.2405 | 1.70% |
+| fabert | 0.7945 | 0.6922 | 0.7046 | 0.6813 | 0.6813 | 0.2176 | 1.21% |
+| adapted | 0.7958 | 0.6931 | 0.7050 | 0.6826 | 0.6826 | 0.2165 | 1.23% |
+| large | 0.7942 | 0.6938 | 0.7022 | 0.6861 | 0.6861 | 0.2182 | 1.24% |
+| bilstm | 0.7903 | 0.6826 | 0.6970 | 0.6701 | 0.6701 | 0.2233 | 1.36% |
+| fabert + tfidf | 0.7957 | 0.6935 | 0.7046 | 0.6836 | 0.6836 | 0.2167 | 1.24% |
+
+## The main decisions, with product-level intervals (reports/decision_recheck_plan.md)
+
+Made with d54d70f.
+
+| Decision | Comparison | recommendation | rating_band |
+|---|---|---|---|
+| D58 final system | fabert + tfidf against fabert | +0.0020 [+0.0014, +0.0026] | +0.0013 [+0.0009, +0.0018] |
+| D65 best single model | adapted against fabert | +0.0012 [+0.0004, +0.0021] | +0.0009 [+0.0003, +0.0016] |
+| D65 final system unchanged | adapted + tfidf against fabert + tfidf | +0.0001 [-0.0008, +0.0008] | +0.0008 [+0.0002, +0.0015] |
+| model order | fabert against tfidf | +0.0308 [+0.0295, +0.0320] | +0.0239 [+0.0229, +0.0250] |
+| model order | bilstm against tfidf | +0.0159 [+0.0146, +0.0172] | +0.0143 [+0.0132, +0.0153] |
+| model order | fabert against bilstm | +0.0149 [+0.0137, +0.0161] | +0.0096 [+0.0087, +0.0105] |
+
+## The full runs with three training seeds (reports/full_seeds_plan.md)
+
+Made with c5b243f. The official model is the seed 2026 run.
+
+| Model | Head | Seed 2026 | Seed 2027 | Seed 2028 | Spread |
+|---|---|---|---|---|---|
+| FaBERT | recommendation | 0.7324 | 0.7317 | 0.7312 | 0.0012 |
+| BiLSTM, every epoch | recommendation | 0.7195 | 0.7192 | 0.7182 | 0.0013 |
+| FaBERT | rating_band | 0.6922 | 0.6929 | 0.6927 | 0.0007 |
+| BiLSTM, every epoch | rating_band | 0.6838 | 0.6842 | 0.6811 | 0.0031 |
+
+D58 (FaBERT + TF-IDF minus FaBERT) with each FaBERT seed:
+
+| Head | Seed 2026 | Seed 2027 | Seed 2028 |
+|---|---|---|---|
+| recommendation | +0.0020 [+0.0014, +0.0026] | +0.0022 [+0.0015, +0.0029] | +0.0025 [+0.0018, +0.0032] |
+| rating_band | +0.0013 [+0.0009, +0.0018] | +0.0004 [+0.0001, +0.0007] | +0.0014 [+0.0010, +0.0018] |
+
+## Three models that read differently (reports/reading_models_plan.md)
+
+FaBERT, TF-IDF and the BiLSTM on 872,795 validation reviews. Made with 25b8e6c.
+
+| Head | Reviews | All right | All wrong | All wrong, same label | All wrong, no known cause |
+|---|---|---|---|---|---|
+| recommendation | 745,860 | 81.0% | 8.9% | 90.0% | 17.1% |
+| rating_band | 797,508 | 72.4% | 15.6% | 94.3% | 8.9% |
+
+## The accuracy ceiling of any text-only model on repeated texts (reports/text_ceiling_plan.md)
+
+Texts seen at least 5 times. Made with 3e8e982.
+
+| Head | Reviews | Ceiling | FaBERT | BiLSTM | TF-IDF |
+|---|---|---|---|---|---|
+| recommendation | 184,278 (24.7%) | 0.9296 | 0.9262 | 0.9261 | 0.9229 |
+| rating_band | 211,200 (26.5%) | 0.8482 | 0.8363 | 0.8363 | 0.8331 |
+
+## A reader that never saw the labels (reports/independent_reader_plan.md)
+
+Qwen/Qwen3-8B, zero-shot. Made with 59a3ce9.
+
+| Head | All right: agrees with the label | All wrong, same label: with the label | with the models | Verdict |
+|---|---|---|---|---|
+| recommendation | 70.8% | 32.4% | 47.2% | inconclusive: the reader sides with the models more often, but not twice as often |
+| rating_band | 71.2% | 28.0% | 59.0% | shared-bias objection rejected: the reader sides with the models at least twice as often |
+
+## Ids removed by cleaning rule P7 (report only)
+
+245 ids, 490 rows; every pair shares a product and a creation time. Made with aa52c1e.
+
+| What differs | Ids |
+|---|---|
+| label | 101 |
+| text edit | 111 |
+| rate 0 | 4 |
+| two rates | 21 |
+| spacing | 8 |
+
 ## Not measured
 
 | What | Why |
 |---|---|
 | Test set | kept untouched until the end; scored once for each final model |
+| Semi-supervised learning as the project defines it | not run yet: the pseudo-label run above was a pilot that differs from the project's protocol (see reports/semi_supervised_plan.md) |
