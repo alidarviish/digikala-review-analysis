@@ -110,3 +110,23 @@ What it means:
   already knows best; they teach it nothing about `no_idea`, the class that limits Macro F1.
 - Kept: the final system as before (`reports/ensemble_plan.md`). The answer to the question
   is "no measurable gain", with the measured quality of the guesses above.
+
+## Against the project's protocol (added 2026-11-09, before the official run)
+
+A check of the project definition against this pilot found three differences, so it does not
+count as the required semi-supervised experiment; it stays as a pilot, and its result above
+stands as such:
+
+1. The 0.9 threshold was applied to probabilities scaled with a temperature fitted on the
+   validation labels (`reports/calibration_plan.md`). The project asks that no validation or
+   test label be used to make or select pseudo-labels; the threshold must be applied to the
+   model's own probabilities.
+2. The student was FaBERT trained from its pretrained weights on the 500,000-review pilot.
+   The project asks for a copy of the supervised model itself, fine-tuned further on
+   `train_supervised` plus the accepted pseudo-labeled reviews, with the rating band loss
+   masked for those reviews.
+3. The project asks for both models to be compared on the same validation and test sets, with
+   accuracy, Macro F1, Macro precision, Macro recall and per-class scores, and for a notebook
+   `04_semi_supervised.ipynb` with the fixed 0.90 threshold.
+
+The official run follows the project's protocol and gets its own plan before it runs.

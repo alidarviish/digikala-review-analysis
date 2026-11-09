@@ -1,4 +1,4 @@
-"""Write every result of the TF-IDF and Transformer stages into one table, from the saved files.
+"""Write every result of the project so far into one file, from the saved files.
 
 Nothing is trained or scored again; each number is read from a JSON file in reports/ and
 printed with the commit it was made with. Scores are Macro F1 on the validation set. A
@@ -20,6 +20,11 @@ OUT = REPORTS_DIR / "results_summary.md"
 # Measurements that are missing on purpose or by accident, with the reason. Kept by hand.
 NOT_MEASURED = [
     ("Test set", "kept untouched until the end; scored once for each final model"),
+    (
+        "Semi-supervised learning as the project defines it",
+        "not run yet: the pseudo-label run above was a pilot that differs from the project's protocol "
+        "(see reports/semi_supervised_plan.md)",
+    ),
 ]
 
 
@@ -470,6 +475,205 @@ def label_sample():
     ] + table(["Original label", "Reviews", "Hand label agrees", "FaBERT agrees with the hand label"], rows)
 
 
+def required_metrics():
+    """Every required score of every final model (scripts/score_required_metrics.py)."""
+    path = REPORTS_DIR / "required_metrics.json"
+    if not path.exists():
+        return []
+    found = load(path)
+    lines = [
+        "## Every required score of the final models (whole validation set, with offsets)",
+        "",
+        f"Made with {short(found['code'])}. Macro precision and recall are plain means over the classes; "
+        "the ordinal error is how many bands a prediction is off on average, and the share off by two.",
+        "",
+    ]
+    for head, models in found["heads"].items():
+        rows = []
+        for name, e in models.items():
+            row = [
+                name,
+                f"{e['accuracy']:.4f}",
+                f"{e['macro_f1']:.4f}",
+                f"{e['macro_precision']:.4f}",
+                f"{e['macro_recall']:.4f}",
+                f"{e['balanced_accuracy']:.4f}",
+            ]
+            if "ordinal_distance_error" in e:
+                o = e["ordinal_distance_error"]
+                row += [f"{o['mean_distance']:.4f}", f"{o['share_off_by_two']:.2%}"]
+            rows.append(row)
+        header = ["Model", "Accuracy", "Macro F1", "Macro precision", "Macro recall", "Balanced accuracy"]
+        if head == "rating_band":
+            header += ["Ordinal error", "Off by two"]
+        lines += [f"{head} ({next(iter(models.values()))['rows']:,} reviews):", ""] + table(header, rows)
+    return lines
+
+
+def decision_recheck():
+    """The main decisions with intervals that draw products (reports/decision_recheck_plan.md)."""
+    path = REPORTS_DIR / "decision_recheck.json"
+    if not path.exists():
+        return []
+    found = load(path)
+    heads = list(found["heads"])
+    first = found["heads"][heads[0]]["comparisons"]
+    rows = []
+    for i, c in enumerate(first):
+        row = [c["decision"], f"{c['variant']} against {c['reference']}"]
+        for head in heads:
+            d = found["heads"][head]["comparisons"][i]
+            row.append(f"{d['difference']:+.4f} {interval(d['interval_95_products'])}")
+        rows.append(row)
+    return [
+        "## The main decisions, with product-level intervals (reports/decision_recheck_plan.md)",
+        "",
+        f"Made with {short(found['code'])}.",
+        "",
+    ] + table(["Decision", "Comparison", *heads], rows)
+
+
+def full_seeds():
+    """The full runs trained again with other seeds (reports/full_seeds_plan.md)."""
+    path = REPORTS_DIR / "full_seeds.json"
+    if not path.exists():
+        return []
+    found = load(path)
+    seeds = [str(s) for s in found["seeds"]]
+    rows, d58 = [], []
+    for head, e in found["heads"].items():
+        f = e["macro_f1"]
+        for model, label in [("fabert", "FaBERT"), ("bilstm", "BiLSTM, every epoch")]:
+            values = [f[f"{model}_{s}"] for s in seeds]
+            rows.append([label, head, *[f"{v:.4f}" for v in values], f"{max(values) - min(values):.4f}"])
+        d58.append(
+            [head]
+            + [
+                f"{e['d58_with_each_fabert_seed'][s]['difference']:+.4f} "
+                f"{interval(e['d58_with_each_fabert_seed'][s]['interval_95_products'])}"
+                for s in seeds
+            ]
+        )
+    return (
+        [
+            "## The full runs with three training seeds (reports/full_seeds_plan.md)",
+            "",
+            f"Made with {short(found['code'])}. The official model is the seed 2026 run.",
+            "",
+        ]
+        + table(["Model", "Head", *[f"Seed {s}" for s in seeds], "Spread"], rows)
+        + ["D58 (FaBERT + TF-IDF minus FaBERT) with each FaBERT seed:", ""]
+        + table(["Head", *[f"Seed {s}" for s in seeds]], d58)
+    )
+
+
+def error_analyses():
+    """What the mistakes are made of: the reading models, the text ceiling, the independent reader."""
+    lines = []
+    path = REPORTS_DIR / "reading_models.json"
+    if path.exists():
+        found = load(path)
+        rows = []
+        for head, e in found["heads"].items():
+            g = e["overall"]["groups"]
+            no_cause = e["causes"]["all wrong"]["none_of_these"]["share"]
+            rows.append(
+                [
+                    head,
+                    f"{e['reviews']:,}",
+                    f"{g['all right']['share']:.1%}",
+                    f"{g['all wrong']['share']:.1%}",
+                    f"{e['all_wrong_same_label']['share']:.1%}",
+                    f"{no_cause:.1%}",
+                ]
+            )
+        lines += [
+            "## Three models that read differently (reports/reading_models_plan.md)",
+            "",
+            f"FaBERT, TF-IDF and the BiLSTM on 872,795 validation reviews. Made with {short(found['code'])}.",
+            "",
+        ] + table(
+            [
+                "Head",
+                "Reviews",
+                "All right",
+                "All wrong",
+                "All wrong, same label",
+                "All wrong, no known cause",
+            ],
+            rows,
+        )
+    path = REPORTS_DIR / "text_ceiling.json"
+    if path.exists():
+        found = load(path)
+        rows = []
+        for head, e in found["heads"].items():
+            r = e["by_min_count"]["5"]
+            m = r["models"]
+            rows.append(
+                [
+                    head,
+                    f"{r['reviews']:,} ({r['share_of_compared_reviews']:.1%})",
+                    f"{r['ceiling_accuracy']:.4f}",
+                    f"{m['fabert']['accuracy']:.4f}",
+                    f"{m['bilstm']['accuracy']:.4f}",
+                    f"{m['tfidf']['accuracy']:.4f}",
+                ]
+            )
+        lines += [
+            "## The accuracy ceiling of any text-only model on repeated texts (reports/text_ceiling_plan.md)",
+            "",
+            f"Texts seen at least 5 times. Made with {short(found['code'])}.",
+            "",
+        ] + table(["Head", "Reviews", "Ceiling", "FaBERT", "BiLSTM", "TF-IDF"], rows)
+    path = REPORTS_DIR / "independent_reader.json"
+    if path.exists():
+        found = load(path)
+        rows = []
+        for head, e in found["heads"].items():
+            d = e["decision"]
+            rows.append(
+                [
+                    head,
+                    f"{d['control']:.1%}",
+                    f"{d['with_label']:.1%}",
+                    f"{d['with_models']:.1%}",
+                    d["verdict"],
+                ]
+            )
+        lines += [
+            "## A reader that never saw the labels (reports/independent_reader_plan.md)",
+            "",
+            f"{found['reader']}, zero-shot. Made with {short(found['code'])}.",
+            "",
+        ] + table(
+            [
+                "Head",
+                "All right: agrees with the label",
+                "All wrong, same label: with the label",
+                "with the models",
+                "Verdict",
+            ],
+            rows,
+        )
+    return lines
+
+
+def p7_conflicts():
+    path = REPORTS_DIR / "p7_conflicts.json"
+    if not path.exists():
+        return []
+    found = load(path)
+    rows = [[name, count] for name, count in found["categories"].items()]
+    return [
+        "## Ids removed by cleaning rule P7 (report only)",
+        "",
+        f"{found['ids']} ids, {found['rows']} rows; every pair shares a product and a creation time. "
+        f"Made with {short(found['code'])}.",
+        "",
+    ] + table(["What differs", "Ids"], rows)
+
+
 def main():
     lines = [
         "# All results",
@@ -482,6 +686,7 @@ def main():
     lines += tfidf_tuning() + tfidf_experiments() + tfidf_final() + transformer_pilot()
     lines += transformer_pilot_whole() + transformer_final() + final_per_class()
     lines += label_sample() + training_variants() + calibration()
+    lines += required_metrics() + decision_recheck() + full_seeds() + error_analyses() + p7_conflicts()
     lines += ["## Not measured", ""] + table(["What", "Why"], NOT_MEASURED)
     OUT.write_text("\n".join(lines), encoding="utf-8")
     print(f"Written to {OUT}")

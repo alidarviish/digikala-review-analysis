@@ -122,31 +122,46 @@ The test set has not been read yet; it is scored once, at the end. Every number 
 `reports/`, and all of them are collected with their commits in
 [`reports/results_summary.md`](reports/results_summary.md).
 
-| Model | Recommendation Macro F1 | Balanced accuracy | Rating band Macro F1 | Balanced accuracy |
-|---|---:|---:|---:|---:|
-| TF-IDF + Logistic Regression, with offsets | 0.7017 | 0.7110 | 0.6683 | 0.6596 |
-| FaBERT, fine-tuned, with offsets | 0.7324 | 0.7320 | 0.6922 | 0.6813 |
+| Model | Recommendation Macro F1 | Balanced accuracy | Rating band Macro F1 | Balanced accuracy | Ordinal error |
+|---|---:|---:|---:|---:|---:|
+| TF-IDF + Logistic Regression, with offsets | 0.7017 | 0.7110 | 0.6683 | 0.6596 | 0.241 |
+| FaBERT, fine-tuned, with offsets | 0.7324 | 0.7320 | 0.6922 | 0.6813 | 0.218 |
+| Final system: FaBERT + TF-IDF | 0.7344 | 0.7376 | 0.6935 | 0.6836 | 0.217 |
 
 Offsets are one number per class added to the model's log probabilities before the top class is chosen, tuned
 for Macro F1 on one half of validation and scored on the other. Balanced accuracy is the mean recall over the
-classes, so it is not raised by the large `recommended` and `high` classes.
+classes, so it is not raised by the large `recommended` and `high` classes. The ordinal error is how many bands a
+prediction is off on average; only about 1.2% of FaBERT's rating bands are two bands off. Every required score
+for every model is in [`reports/required_metrics.json`](reports/required_metrics.json).
 
+- **The numbers are stable.** FaBERT trained again with two other seeds moves by about 0.1 point (0.7312 to
+  0.7324, 0.6922 to 0.6929), far less than the differences the decisions rest on
+  ([`reports/full_seeds_plan.md`](reports/full_seeds_plan.md)).
 - **The hard part is the ambiguous classes.** FaBERT reaches an F1 of 0.94 on `recommended` and 0.89 on `high`,
   but 0.51 on `no_idea` and 0.48 on `medium`.
-- **Much of that is in the labels.** In 200 validation reviews labeled again by hand from the text alone, the
-  `recommended` and `not_recommended` labels held in 95% and 94% of cases, `no_idea` in 34%. Buyers often choose
-  "no idea" while writing a mild complaint, and their star rating usually agrees with their choice, so the text alone
-  cannot tell.
+- **Much of that is in the labels, not the model.** Three models that read the text in different ways (FaBERT,
+  TF-IDF and a BiLSTM trained from scratch) get 9% and 16% of reviews all wrong, and on 90% and 94% of those they
+  give the same wrong label. These are mostly reviews rated exactly 3 (or 4 for `high`, 2 for `low`), or whose
+  two buyer labels point different ways: 81% of the reviews rated 3 that FaBERT reads as `high` were recommended
+  by the buyer ([`reports/reading_models_plan.md`](reports/reading_models_plan.md),
+  [`reports/label_analyses.md`](reports/label_analyses.md)). A large language model that never saw the labels
+  sides with the three models on these rating-band mistakes ([`reports/independent_reader_plan.md`](reports/independent_reader_plan.md)).
+- **On repeated texts the models are at the limit.** For texts seen at least 5 times (a quarter of the reviews),
+  no text-only model can be more accurate than giving each text its most frequent label; FaBERT reaches 99.6% and
+  98.6% of that ceiling ([`reports/text_ceiling_plan.md`](reports/text_ceiling_plan.md)).
 - **Changing the training did not help.** Merging repeated texts, focal loss, class weights, leaving out the
-  hardest labels and an easy-to-hard curriculum all tied with or lost to the usual training
+  hardest labels, two curricula and other learning rates all tied with or lost to the usual training
   ([`reports/hard_examples_plan.md`](reports/hard_examples_plan.md),
-  [`reports/difficulty_plan.md`](reports/difficulty_plan.md)).
-- **A larger model does not help either.** TookaBERT-Large, three times the size and trained the same way on all
-  training reviews, ties FaBERT on recommendation and is 0.16 point higher on rating band
-  ([`reports/large_final_plan.md`](reports/large_final_plan.md)), so FaBERT is kept.
-- **Combining the two models helps a little.** The mean of FaBERT's and TF-IDF's probabilities (weight 0.7 to 0.8
-  for FaBERT) scores 0.2 point higher on recommendation and 0.1 point on rating band than FaBERT alone, both
-  measurable; three FaBERT models trained with other seeds do not help
-  ([`reports/ensemble_plan.md`](reports/ensemble_plan.md)).
+  [`reports/difficulty_plan.md`](reports/difficulty_plan.md)). Pretraining FaBERT further on the review texts
+  gives the best single model (0.7337 and 0.6931), but combined with TF-IDF it adds nothing on recommendation, so
+  the final system stays as it is ([`reports/domain_adaptation_plan.md`](reports/domain_adaptation_plan.md)).
+- **A larger model does not help either.** TookaBERT-Large, three times the size, ties FaBERT on recommendation
+  and is 0.16 point higher on rating band ([`reports/large_final_plan.md`](reports/large_final_plan.md)).
+- **Combining FaBERT with TF-IDF helps a little.** +0.2 point on recommendation and +0.1 on rating band, with
+  intervals above zero that draw whole products, and with each of the three FaBERT seeds
+  ([`reports/ensemble_plan.md`](reports/ensemble_plan.md), [`reports/decision_recheck_plan.md`](reports/decision_recheck_plan.md)).
 - **The probabilities are close to honest.** One temperature per head (1.12 and 1.11) brings the calibration
   error below 0.01 without changing the scores ([`reports/calibration_plan.md`](reports/calibration_plan.md)).
+- **Still to come:** the semi-supervised experiment as the project defines it (the pseudo-label pilot in
+  [`reports/semi_supervised_plan.md`](reports/semi_supervised_plan.md) differs from it), the offline prediction
+  script, and the single reading of the test set.
