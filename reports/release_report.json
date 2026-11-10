@@ -1,0 +1,589 @@
+{
+  "created_at": "2026-11-10T16:02:27+00:00",
+  "project": "Digikala review analysis: recommendation and rating band from the review text alone",
+  "release_tag": "v1.0",
+  "official_system": "final_system",
+  "input": "the review body only, normalized (normalizer version in data)",
+  "data": {
+    "source": "https://huggingface.co/datasets/RadeAI/Digikala_comments_products",
+    "licence": "MIT (dataset README)",
+    "raw_files": {
+      "digikala-comments.csv": {
+        "sha256": "c7a8aa3020334fde8ec24944576a03fe5785e6fe12cd01042f5836632ddf8297",
+        "rows": 6156289
+      },
+      "digikala-products.csv": {
+        "sha256": "0f646e1b0ba5a07510a168d98ae397ae25a947b1423ccdaefc029170b7831acd",
+        "rows": 1283496
+      }
+    },
+    "cleaning": {
+      "rows_raw": 6156289,
+      "rows_excluded": {
+        "duplicate_id_extra_copy": 2984,
+        "missing_body": 845,
+        "duplicate_id_conflict": 490
+      },
+      "rows_clean": 6151970
+    },
+    "split": {
+      "strategy": "StratifiedGroupKFold, 20 folds, groups = product_id, strata = recommendation x rating_band (missing as its own class); 14 folds train, 3 validation, 3 test, which folds go where is drawn with the seed",
+      "fractions": {
+        "train": 0.7,
+        "validation": 0.15,
+        "test": 0.15
+      },
+      "sklearn_version": "1.9.1",
+      "products_in_several_parts": 0,
+      "left_out_empty_after_normalization": 7
+    },
+    "seeds": {
+      "SPLIT_SEED": 2026,
+      "MASK_SEED": "digikala-semi-supervised-v1"
+    },
+    "masking": {
+      "rate": 0.2,
+      "rule": "inside each recommendation class of the train part, sort by stable_hash(id) = int(sha256(f'{MASK_SEED}|{id}').hexdigest()[:16], 16) and mask the first floor(rate * class_count) rows; ties broken by id",
+      "rounding": "floor",
+      "masked_total": 736134
+    },
+    "rating_band": {
+      "edges": [
+        2.5,
+        4.0
+      ],
+      "definition": "low: 0 < rate < 2.5, medium: 2.5 <= rate < 4.0, high: 4.0 <= rate <= 5",
+      "encoding": {
+        "low": 0,
+        "medium": 1,
+        "high": 2
+      },
+      "rate_zero_policy": "invalid",
+      "rate_zero_meaning": "a rate of exactly 0 means no rating was recorded, so there is no band"
+    },
+    "row_counts": {
+      "train_supervised.csv": 3552498,
+      "train_pseudo_unlabeled.csv": 736134,
+      "natural_unlabeled.csv": 625700,
+      "validation.csv": 922795,
+      "test.csv": 922795,
+      "audit/masked_labels_reference.csv": 736134
+    },
+    "normalizer_version": "2",
+    "test_set_read": "once, by scripts/final_evaluation.py; nothing was chosen on it"
+  },
+  "files": {
+    "split_manifest": {
+      "path": "reports/split_manifest.json",
+      "bytes": 5379,
+      "sha256": "814448838ad1a9eebedd556849ecc0c91798299bd7f1691f85e875666462dc0d",
+      "availability": "public: asset of the GitHub release v1.0"
+    },
+    "split/train_supervised.csv": {
+      "path": "data/splits/train_supervised.csv",
+      "bytes": 439807499,
+      "sha256": "ffc5d0095d2efadf5949c805449fdbb3ed6aa7fbb3b4c40385d043f8463fda0a",
+      "availability": "public: asset of the GitHub release v1.0"
+    },
+    "split/train_pseudo_unlabeled.csv": {
+      "path": "data/splits/train_pseudo_unlabeled.csv",
+      "bytes": 71889250,
+      "sha256": "633df12954d6ca8d5170bde05bd311e57f1a6e4f35b2c406a210d34c6bcb913d",
+      "availability": "public: asset of the GitHub release v1.0"
+    },
+    "split/natural_unlabeled.csv": {
+      "path": "data/splits/natural_unlabeled.csv",
+      "bytes": 58683289,
+      "sha256": "dc74ef74776e740cf99ce400cfac1a0568e1e381bda5fd8282dfc58296146188",
+      "availability": "public: asset of the GitHub release v1.0"
+    },
+    "split/validation.csv": {
+      "path": "data/splits/validation.csv",
+      "bytes": 119908714,
+      "sha256": "af17de315193748e43fc245f79b5971d0c7fd71bd774726afc6d785415399a6e",
+      "availability": "public: asset of the GitHub release v1.0"
+    },
+    "split/test.csv": {
+      "path": "data/splits/test.csv",
+      "bytes": 119418216,
+      "sha256": "e1396ecb1bd89f00e9bfe848c95e9ffb6e93403b248a95e4210ea3960f7947a6",
+      "availability": "public: asset of the GitHub release v1.0"
+    },
+    "split/audit/masked_labels_reference.csv": {
+      "path": "data/splits/audit/masked_labels_reference.csv",
+      "bytes": 18967780,
+      "sha256": "62722cb4b2bbeb530aea79f68877baecaa49cd0892a656644b729a8a812f69c9",
+      "availability": "public: asset of the GitHub release v1.0"
+    },
+    "tfidf_model": {
+      "path": "artifacts/tfidf_final/model.joblib",
+      "bytes": 42402678,
+      "sha256": "54116e1f9058ee06abd916fd3d9eace6018d69fa000c11f3cdbc3b347f1e32fe",
+      "availability": "public: asset of the GitHub release v1.0"
+    },
+    "fabert_weights": {
+      "path": "artifacts/transformer_no_early_stop/model.pt",
+      "bytes": 248948487,
+      "sha256": "2828ba578eb13e09deace624e83e509aca924ee014d8461ceac6ff76383ebee0",
+      "availability": "private: given to the reviewer with the submission (FaBERT declares no licence)"
+    },
+    "semi_supervised_student_weights": {
+      "path": "artifacts/semi_supervised_student/model_last.pt",
+      "bytes": 248962396,
+      "sha256": "deaf0d82b5ccff109931d0c2021e89c7584efe22faab5351994ff7bb80edfc77",
+      "availability": "private: given to the reviewer with the submission (FaBERT declares no licence)"
+    },
+    "fabert_tokenizer/config.json": {
+      "path": "artifacts/fabert_files/config.json",
+      "bytes": 717,
+      "sha256": "f4bec28834eda9ef6cc380806617a6fa153ce5de91206573328128bd6751c33c",
+      "availability": "private: given to the reviewer with the submission (FaBERT declares no licence)"
+    },
+    "fabert_tokenizer/tokenizer.json": {
+      "path": "artifacts/fabert_files/tokenizer.json",
+      "bytes": 1361999,
+      "sha256": "66c04c8d00d0eba8330307827ea0a39a337503946b0975cb773e2ccfaa05a7a0",
+      "availability": "private: given to the reviewer with the submission (FaBERT declares no licence)"
+    },
+    "fabert_tokenizer/tokenizer_config.json": {
+      "path": "artifacts/fabert_files/tokenizer_config.json",
+      "bytes": 391,
+      "sha256": "b0c32b573842e890469d78481f6cdc7f419299fde5f6576ca435bca4866649ac",
+      "availability": "private: given to the reviewer with the submission (FaBERT declares no licence)"
+    }
+  },
+  "models": {
+    "tfidf": {
+      "what": "TF-IDF word 1-3-grams (Persian tokens, min_df 5) and one logistic regression per head",
+      "features": 1192046,
+      "settings": {
+        "recommendation": {
+          "C": 0.5,
+          "class_weight": "balanced"
+        },
+        "rating_band": {
+          "C": 1.0,
+          "class_weight": null
+        }
+      },
+      "offsets": {
+        "recommendation": {
+          "no_idea": 0.0,
+          "not_recommended": -0.4,
+          "recommended": 0.7
+        },
+        "rating_band": {
+          "high": 0.0,
+          "low": 0.7,
+          "medium": 0.8
+        }
+      },
+      "file": "tfidf_model"
+    },
+    "fabert": {
+      "what": "sbunlp/fabert fine-tuned on train_supervised, a linear head per task on the first token",
+      "hub_commit": "4cad2850ab81452041924fad29010ec0361322b6",
+      "licence": "not declared by the model's authors (checked 2026-11-08)",
+      "settings": {
+        "model": "sbunlp/fabert",
+        "learning_rate": 3e-05,
+        "max_epochs": 4,
+        "checks_per_epoch": 4,
+        "patience": null,
+        "batch_size": 64,
+        "max_length": 128,
+        "weight_decay": 0.01,
+        "warmup_share": 0.06,
+        "dropout": 0.1,
+        "selection_rows": 50000,
+        "train_rows": null,
+        "seed": 2026
+      },
+      "kept_epoch": 2.75,
+      "offsets": {
+        "recommendation": {
+          "recommended": 0.0,
+          "not_recommended": 0.4,
+          "no_idea": 0.6
+        },
+        "rating_band": {
+          "low": 0.0,
+          "medium": 0.2,
+          "high": -0.7
+        }
+      },
+      "file": "fabert_weights"
+    },
+    "final_system": {
+      "what": "weighted mean of FaBERT's and TF-IDF's probabilities, per-class offsets, and 'uncertain' when the mixed probability of the answer is under the threshold (official)",
+      "per_head": {
+        "recommendation": {
+          "fabert_weight": 0.7,
+          "offsets": {
+            "recommended": 0.0,
+            "not_recommended": 0.0,
+            "no_idea": 0.2
+          },
+          "threshold": 0.5872707157664022
+        },
+        "rating_band": {
+          "fabert_weight": 0.8,
+          "offsets": {
+            "low": 0.0,
+            "medium": 0.2,
+            "high": -0.7
+          },
+          "threshold": 0.4929359392116056
+        }
+      },
+      "uses": [
+        "fabert_weights",
+        "tfidf_model"
+      ]
+    },
+    "semi_supervised_student": {
+      "what": "FaBERT fine-tuned one more epoch with the accepted pseudo-labels; for comparison only",
+      "pseudo_labeled_reviews": 533043,
+      "offsets": {
+        "recommendation": {
+          "recommended": 0.0,
+          "not_recommended": 0.3,
+          "no_idea": 0.6
+        },
+        "rating_band": {
+          "low": 0.0,
+          "medium": 0.2,
+          "high": -0.8
+        }
+      },
+      "file": "semi_supervised_student_weights"
+    }
+  },
+  "results": {
+    "recommendation": {
+      "test_reviews": 788717,
+      "models": {
+        "tfidf": {
+          "test": {
+            "accuracy": 0.8489825881780156,
+            "macro_f1": 0.7021203004037814,
+            "macro_precision": 0.6985371755072357,
+            "macro_recall": 0.7110912070186322,
+            "balanced_accuracy": 0.7110912070186322,
+            "f1_per_class": {
+              "recommended": 0.9281344520304874,
+              "not_recommended": 0.7060922588936589,
+              "no_idea": 0.472134190287198
+            }
+          },
+          "test_macro_f1_interval_95_products": [
+            0.7004786686593865,
+            0.7036229659036094
+          ],
+          "validation": {
+            "accuracy": 0.8487023862805037,
+            "macro_f1": 0.7016757031931711,
+            "balanced_accuracy": 0.7110033290736869
+          }
+        },
+        "fabert": {
+          "test": {
+            "accuracy": 0.8731915249702998,
+            "macro_f1": 0.7345932812287921,
+            "macro_precision": 0.7338118658681516,
+            "macro_recall": 0.7374095832225986,
+            "balanced_accuracy": 0.7374095832225986,
+            "f1_per_class": {
+              "recommended": 0.9434977072082791,
+              "not_recommended": 0.7458014955256813,
+              "no_idea": 0.5144806409524159
+            }
+          },
+          "test_macro_f1_interval_95_products": [
+            0.7331361694066917,
+            0.7361474821997828
+          ],
+          "validation": {
+            "accuracy": 0.8736111938756234,
+            "macro_f1": 0.7324370442721989,
+            "balanced_accuracy": 0.7320481352724965
+          }
+        },
+        "final system": {
+          "test": {
+            "accuracy": 0.8734451013481388,
+            "macro_f1": 0.7349369832303781,
+            "macro_precision": 0.7332227317336462,
+            "macro_recall": 0.7381589926411651,
+            "balanced_accuracy": 0.7381589926411651,
+            "f1_per_class": {
+              "recommended": 0.9433877673453985,
+              "not_recommended": 0.7482812003542384,
+              "no_idea": 0.5131419819914974
+            }
+          },
+          "test_macro_f1_interval_95_products": [
+            0.7334473060311799,
+            0.736431744602339
+          ],
+          "validation": {
+            "accuracy": 0.8732650621198732,
+            "macro_f1": 0.7344318559099552,
+            "balanced_accuracy": 0.7376191396141142
+          }
+        },
+        "student": {
+          "test": {
+            "accuracy": 0.8756030363235482,
+            "macro_f1": 0.7329952919611364,
+            "macro_precision": 0.7381581350163109,
+            "macro_recall": 0.7291782741000182,
+            "balanced_accuracy": 0.7291782741000182,
+            "f1_per_class": {
+              "recommended": 0.9451100732539068,
+              "not_recommended": 0.7442174434142914,
+              "no_idea": 0.509658359215211
+            }
+          },
+          "test_macro_f1_interval_95_products": [
+            0.7313952928782822,
+            0.7345329532904058
+          ],
+          "validation": {
+            "accuracy": 0.8756157151424402,
+            "macro_f1": 0.7309688556836319,
+            "balanced_accuracy": 0.7268197865110234
+          }
+        }
+      },
+      "differences_macro_f1": {
+        "fabert minus tfidf": {
+          "difference": 0.03247298082501071,
+          "interval_95_products": [
+            0.031232635480088814,
+            0.03387255574454286
+          ]
+        },
+        "final system minus fabert": {
+          "difference": 0.0003437020015860659,
+          "interval_95_products": [
+            -0.00022013808227832886,
+            0.0009270152809147834
+          ]
+        },
+        "student minus fabert": {
+          "difference": -0.0015979892676556418,
+          "interval_95_products": [
+            -0.002450068970066588,
+            -0.0007986677817630518
+          ]
+        }
+      },
+      "final_system_uncertain": {
+        "share": 0.09983935936463903,
+        "answered_accuracy": 0.91890384409526,
+        "answered_macro_f1": 0.7644961036196607
+      }
+    },
+    "rating_band": {
+      "test_reviews": 843458,
+      "models": {
+        "tfidf": {
+          "test": {
+            "accuracy": 0.7765045799553741,
+            "macro_f1": 0.6683764232806313,
+            "macro_precision": 0.675685625334923,
+            "macro_recall": 0.6616540720006494,
+            "balanced_accuracy": 0.6616540720006494,
+            "f1_per_class": {
+              "low": 0.6812149446777209,
+              "medium": 0.449049845471115,
+              "high": 0.8748644796930579
+            },
+            "ordinal_distance_error": {
+              "mean_distance": 0.24092130254262809,
+              "share_off_by_two": 0.01742588249800227
+            }
+          },
+          "test_macro_f1_interval_95_products": [
+            0.6667839732745492,
+            0.66995315203695
+          ],
+          "validation": {
+            "accuracy": 0.7764796824501042,
+            "macro_f1": 0.6682810859846451,
+            "balanced_accuracy": 0.6595514526161529
+          }
+        },
+        "fabert": {
+          "test": {
+            "accuracy": 0.7941166009451567,
+            "macro_f1": 0.6917815438855967,
+            "macro_precision": 0.704039948210514,
+            "macro_recall": 0.6809553584049447,
+            "balanced_accuracy": 0.6809553584049447,
+            "f1_per_class": {
+              "low": 0.7102019439993515,
+              "medium": 0.4784247876317226,
+              "high": 0.8867179000257156
+            },
+            "ordinal_distance_error": {
+              "mean_distance": 0.21805827913185957,
+              "share_off_by_two": 0.012174880077016283
+            }
+          },
+          "test_macro_f1_interval_95_products": [
+            0.6902738004714294,
+            0.6933581829414857
+          ],
+          "validation": {
+            "accuracy": 0.7945114042430091,
+            "macro_f1": 0.692190273060563,
+            "balanced_accuracy": 0.6812651018015435
+          }
+        },
+        "final system": {
+          "test": {
+            "accuracy": 0.7928527561538334,
+            "macro_f1": 0.692655627936254,
+            "macro_precision": 0.7039810048325479,
+            "macro_recall": 0.682717920463654,
+            "balanced_accuracy": 0.682717920463654,
+            "f1_per_class": {
+              "low": 0.7111183221112144,
+              "medium": 0.48140575925301715,
+              "high": 0.8854428024445308
+            },
+            "ordinal_distance_error": {
+              "mean_distance": 0.21912057269004503,
+              "share_off_by_two": 0.011973328843878415
+            }
+          },
+          "test_macro_f1_interval_95_products": [
+            0.6910802434389477,
+            0.6942081360391942
+          ],
+          "validation": {
+            "accuracy": 0.7956815869906978,
+            "macro_f1": 0.6935241490531752,
+            "balanced_accuracy": 0.683613422621561
+          }
+        },
+        "student": {
+          "test": {
+            "accuracy": 0.7916327783956048,
+            "macro_f1": 0.6911431774024258,
+            "macro_precision": 0.7031062515549654,
+            "macro_recall": 0.6807447140964767,
+            "balanced_accuracy": 0.6807447140964767,
+            "f1_per_class": {
+              "low": 0.7097594110171348,
+              "medium": 0.47905826690407133,
+              "high": 0.884611854286071
+            },
+            "ordinal_distance_error": {
+              "mean_distance": 0.22040220141370406,
+              "share_off_by_two": 0.01203497980930882
+            }
+          },
+          "test_macro_f1_interval_95_products": [
+            0.6896377559880541,
+            0.6927354032811447
+          ],
+          "validation": {
+            "accuracy": 0.7948279582385845,
+            "macro_f1": 0.692096834579211,
+            "balanced_accuracy": 0.681521142573796
+          }
+        }
+      },
+      "differences_macro_f1": {
+        "fabert minus tfidf": {
+          "difference": 0.023405120604965357,
+          "interval_95_products": [
+            0.02239351902882896,
+            0.02449655006256902
+          ]
+        },
+        "final system minus fabert": {
+          "difference": 0.0008740840506573644,
+          "interval_95_products": [
+            0.000450180717123258,
+            0.0012551776975557067
+          ]
+        },
+        "student minus fabert": {
+          "difference": -0.000638366483170838,
+          "interval_95_products": [
+            -0.0013515580639498121,
+            -7.986460303083294e-06
+          ]
+        }
+      },
+      "final_system_uncertain": {
+        "share": 0.10029545039587033,
+        "answered_accuracy": 0.8395784219285958,
+        "answered_macro_f1": 0.7093134298331775
+      }
+    }
+  },
+  "semi_supervised": {
+    "threshold": 0.9,
+    "hidden_reviews": 736134,
+    "accepted": 533043,
+    "accepted_share": 0.7241113710275575,
+    "accepted_accuracy": 0.9689874925662657,
+    "accepted_classes": {
+      "recommended": 0.949360558153845,
+      "not_recommended": 0.04984776087482623,
+      "no_idea": 0.0007916809713287671
+    },
+    "answer": "no measurable gain: the semi-supervised model is below the supervised one in Macro F1 on validation and test"
+  },
+  "offline_prediction": {
+    "script": "scripts/predict.py",
+    "check": {
+      "passed": true,
+      "reviews": 2000
+    },
+    "latency_one_review_ms": {
+      "normalize": 0.05,
+      "tfidf": 1.61,
+      "fabert": 44.379999999999995
+    },
+    "demo": "reports/predict_demo.md"
+  },
+  "limitations": [
+    "FaBERT declares no licence: its fine-tuned weights are not published",
+    "on the test set the final system matches FaBERT on recommendation (+0.03 point, interval across zero) and leads it by 0.09 point on the rating band",
+    "the middle classes (no_idea, medium) stay near F1 0.5: identical texts often carry other labels",
+    "reviews longer than 128 tokens (about 0.2%) are cut for FaBERT",
+    "GPU training is not bit-for-bit repeatable; decisions rest on intervals and seed spread"
+  ],
+  "reproduce": [
+    "uv sync --group transformer",
+    "put the dataset's two CSV files in data/raw (see README)",
+    "uvx marimo edit notebooks/run_all.py  # the steps of src/digikala_reviews/pipeline.py",
+    "uv run python scripts/verify_standard_files.py  # the split files must match the hashes above",
+    "uv run python scripts/predict.py \"<review text>\"  # after scripts/save_fabert_files.py, once"
+  ],
+  "environment": {
+    "python": "3.13.17",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": "5.21.0",
+      "tokenizers": "0.23.3"
+    },
+    "machine": "DESKTOP-5P8IBHG",
+    "torch": "2.14.1+cpu"
+  },
+  "code": {
+    "commit": "761ceecfbb4175efa89e6c7c6a25124ea7968ae6",
+    "uncommitted_changes": false
+  }
+}
