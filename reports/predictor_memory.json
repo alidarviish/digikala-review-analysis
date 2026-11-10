@@ -1,0 +1,43 @@
+{
+  "created_at": "2026-11-10T18:24:28+00:00",
+  "plan": "reports/extensions_plan.md",
+  "memory_gb": {
+    "before_loading": {
+      "peak": 0.588,
+      "now": 0.588
+    },
+    "after_loading": {
+      "peak": 2.162,
+      "now": 1.628
+    },
+    "after_200_reviews": {
+      "peak": 2.162,
+      "now": 1.654
+    },
+    "models_alone": 1.04
+  },
+  "load_seconds": 22.6,
+  "latency_ms_one_review": {
+    "median": 46.435,
+    "p95": 96.30749999999995
+  },
+  "environment": {
+    "python": "3.13.17",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": "5.21.0",
+      "tokenizers": "0.23.3"
+    },
+    "machine": "DESKTOP-5P8IBHG",
+    "torch": "2.14.1+cpu"
+  },
+  "code": {
+    "commit": "e66dbe2870d63403077ae5bb639437281cc5262e",
+    "uncommitted_changes": false
+  }
+}
