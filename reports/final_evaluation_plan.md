@@ -64,3 +64,69 @@ final system 0.7344 and 0.6935, the student 0.7310 and 0.6921 (recommendation an
 - 9.5 to 10.5% of the reviews answered "uncertain" on each head.
 
 The test set has not been read.
+
+## Result
+
+`reports/final_evaluation.json` (commit f2fd9cf; the test texts were scored on molab by steps 106
+and 107 at commit 622c56b, with this machine's kept weights: FaBERT 2828ba5, the student
+deaf0d8). The test labels were read once, by step 108.
+
+Test set, with offsets (788,717 reviews with a recommendation label, 843,458 with a rating band):
+
+| Model | Recommendation: accuracy | Macro F1 [95%, products] | Balanced acc. | Validation F1 | Rating band: accuracy | Macro F1 [95%, products] | Balanced acc. | Ordinal error | Validation F1 |
+|---|---|---|---|---|---|---|---|---|---|
+| TF-IDF | 0.8490 | 0.7021 [0.7005, 0.7036] | 0.7111 | 0.7017 | 0.7765 | 0.6684 [0.6668, 0.6700] | 0.6617 | 0.241 | 0.6683 |
+| FaBERT | 0.8732 | 0.7346 [0.7331, 0.7361] | 0.7374 | 0.7324 | 0.7941 | 0.6918 [0.6903, 0.6934] | 0.6810 | 0.218 | 0.6922 |
+| **Final system** | 0.8734 | **0.7349** [0.7334, 0.7364] | 0.7382 | 0.7344 | 0.7929 | **0.6927** [0.6911, 0.6942] | 0.6827 | 0.219 | 0.6935 |
+| Semi-supervised student | 0.8756 | 0.7330 [0.7314, 0.7345] | 0.7292 | 0.7310 | 0.7916 | 0.6911 [0.6896, 0.6927] | 0.6807 | 0.220 | 0.6921 |
+
+F1 of each class, with offsets:
+
+| Model | recommended | not_recommended | no_idea | low | medium | high |
+|---|---|---|---|---|---|---|
+| TF-IDF | 0.928 | 0.706 | 0.472 | 0.681 | 0.449 | 0.875 |
+| FaBERT | 0.943 | 0.746 | 0.514 | 0.710 | 0.478 | 0.887 |
+| Final system | 0.943 | 0.748 | 0.513 | 0.711 | 0.481 | 0.885 |
+| Student | 0.945 | 0.744 | 0.510 | 0.710 | 0.479 | 0.885 |
+
+| Difference in Macro F1 with offsets [95%, products] | Recommendation | Rating band |
+|---|---|---|
+| FaBERT minus TF-IDF | +0.0325 [+0.0312, +0.0339] | +0.0234 [+0.0224, +0.0245] |
+| Final system minus FaBERT | +0.0003 [-0.0002, +0.0009] | +0.0009 [+0.0005, +0.0013] |
+| Student minus FaBERT (after adding pseudo-labels) | -0.0016 [-0.0025, -0.0008] | -0.0006 [-0.0014, -0.0000] |
+
+The semi-supervised student against the supervised model, recommendation, change of each score:
+accuracy +0.0024, Macro F1 -0.0016, Macro precision +0.0043, Macro recall (= balanced accuracy)
+-0.0082; recall of `recommended` +0.0074, `not_recommended` -0.0097, `no_idea` -0.0224; F1 of
+`recommended` +0.0016, `not_recommended` -0.0016, `no_idea` -0.0048.
+
+The final system answered "uncertain" on 10.0% of the reviews of each head; on the reviews it
+answered, accuracy 0.9189 and Macro F1 0.7645 for recommendation (validation 0.9188 and 0.7633),
+0.8396 and 0.7093 for rating band (validation 0.8407 and 0.7078).
+
+| | Expected | Found |
+|---|---|---|
+| Test within 0.5 point of validation | yes | every model, -0.10 to +0.22 point: right |
+| Order: final system, FaBERT, TF-IDF | yes | yes on both heads: right (on recommendation the final system leads FaBERT by 0.03 point only) |
+| FaBERT 2 to 3.5 points above TF-IDF, interval above zero | yes | +3.25 and +2.34: right |
+| Final system 0.05 to 0.3 point above FaBERT | yes | recommendation +0.03 with the interval across zero: wrong; rating band +0.09: right |
+| Student 0 to 0.3 point under FaBERT on recommendation | yes | -0.16: right |
+| 9.5 to 10.5% "uncertain" | yes | 10.0% and 10.0%: right |
+
+What it means:
+
+- The validation scores hold on the unseen products: no model moved more than a quarter point,
+  so nothing was fitted to validation by the many choices made on it.
+- The fine-tuned Transformer beats the TF-IDF baseline clearly on both heads (+3.3 and +2.3
+  points), on every class.
+- Mixing in TF-IDF (D58) helps the rating band a little (+0.09 point, measurable) but adds
+  nothing measurable on recommendation on test (+0.03, interval across zero), where validation
+  had shown +0.20. The final system stays as chosen; on recommendation it is as good as FaBERT
+  alone.
+- The semi-supervised model is worse than the supervised one on Macro F1 (-0.16 point on
+  recommendation, measurable) while its accuracy is higher (+0.24 point): the pseudo-labels,
+  almost all `recommended`, pull the model towards that class and away from `no_idea` (recall
+  -2.2 points). The answer to "can unlabeled reviews improve the classifier?" is no, for this
+  model and protocol, on test as on validation.
+- Answering "uncertain" on 10% of reviews raises accuracy to 91.9% and 84.0%, exactly as on
+  validation.
