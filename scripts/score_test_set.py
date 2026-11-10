@@ -8,6 +8,10 @@ folder, so molab does not need the artifacts:
   --model fabert    fabert_final.pt          (the kept run's model.pt)
   --model student   semi_student_last.pt     (the student's model_last.pt, end of its epoch)
 
+The models of the optional extensions (reports/extensions_plan.md) are trained on molab, so their
+weights are read from the artifacts folder there: rate, frozen, student_t080, student_t095,
+student_both and student_natural. The rate model's predicted rate is written too (rate__predicted).
+
 The tokenizer and the configuration are those the model was trained with (hub commit
 4cad2850ab81). Scoring is the same as for validation in scripts/train_transformer.py: 128
 tokens, bfloat16 on the GPU, the model's log-probabilities of each head.
@@ -41,14 +45,22 @@ from digikala_reviews.provenance import check_cache, environment, git_commit, li
 from digikala_reviews.tfidf import HEADS  # noqa: E402
 from digikala_reviews.tuning import save_json  # noqa: E402
 
-WEIGHTS = {"fabert": "fabert_final.pt", "student": "semi_student_last.pt"}
+WEIGHTS = {"fabert": "fabert_final.pt", "student": "semi_student_last.pt"}  # in the cache folder
+EXTENSIONS = {  # in the artifacts folder of the machine that trained them
+    "rate": "transformer_rate/model.pt",
+    "frozen": "transformer_frozen/model.pt",
+    "student_t080": "semi_supervised_student_t080/model_last.pt",
+    "student_t095": "semi_supervised_student_t095/model_last.pt",
+    "student_both": "semi_supervised_student_both/model_last.pt",
+    "student_natural": "semi_supervised_student_natural/model_last.pt",
+}
 HUB_COMMIT = "4cad2850ab81452041924fad29010ec0361322b6"
 SMOKE_ROWS = 2_000
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", choices=list(WEIGHTS), required=True)
+    parser.add_argument("--model", choices=list(WEIGHTS) + list(EXTENSIONS), required=True)
     parser.add_argument("--smoke", action="store_true", help="the first 2,000 texts only")
     args = parser.parse_args()
     import torch
@@ -63,12 +75,22 @@ def main():
     out_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.parent.mkdir(parents=True, exist_ok=True)
 
-    weights_path = CACHE_DIR / WEIGHTS[args.model]
+    if args.model in WEIGHTS:
+        weights_path = CACHE_DIR / WEIGHTS[args.model]
+    else:
+        weights_path = ARTIFACTS_DIR / EXTENSIONS[args.model]
     saved = torch.load(weights_path, map_location=device, weights_only=False)
     settings = saved["settings"]
     tokenizer = AutoTokenizer.from_pretrained(settings["model"], revision=HUB_COMMIT)
     config = AutoConfig.from_pretrained(settings["model"], revision=HUB_COMMIT)
-    model = build_model(torch, settings["model"], settings["dropout"], list(HEADS), config=config)
+    model = build_model(
+        torch,
+        settings["model"],
+        settings["dropout"],
+        list(HEADS),
+        config=config,
+        rate_head="rate_mean" in settings,
+    )
     model.load_state_dict({k: v.float() for k, v in saved["weights"].items()})
     model = model.to(device)
     del saved
@@ -90,6 +112,9 @@ def main():
     for head, spec in HEADS.items():
         for i, label in enumerate(spec["labels"]):
             table[f"{head}__log_proba__{label}"] = log_proba[head][:, i].astype(np.float32)
+    if "rate" in log_proba:  # back to the 0 to 5 scale, as for validation
+        predicted_rate = log_proba["rate"] * settings["rate_std"] + settings["rate_mean"]
+        table["rate__predicted"] = np.clip(predicted_rate, 0, 5).astype(np.float32)
     table.to_parquet(out_path.with_suffix(".tmp"), index=False)
     out_path.with_suffix(".tmp").replace(out_path)
     save_json(
@@ -97,7 +122,7 @@ def main():
         {
             "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
             "model": args.model,
-            "weights": WEIGHTS[args.model],
+            "weights": WEIGHTS.get(args.model) or EXTENSIONS[args.model],
             "weights_sha256": file_sha256(weights_path),
             "hub_commit": HUB_COMMIT,
             "max_length": settings["max_length"],

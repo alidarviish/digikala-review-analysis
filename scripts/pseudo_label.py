@@ -16,10 +16,18 @@ from the model's own softmax: no temperature, since the temperature was fitted o
 labels and the project allows no validation label in making pseudo-labels. Writes
 reports/semi_supervised/pseudo_labels.parquet (id, label, p) and reports/semi_supervised/teacher.json.
 
+Two optional extensions (reports/extensions_plan.md), both with the model's own softmax as
+--official: --band guesses the rating band of the same hidden reviews and writes
+reports/semi_supervised/pseudo_labels_band.parquet and teacher_band.json; --natural guesses the
+recommendation of the naturally unlabeled reviews (natural_unlabeled.parquet in the cache folder)
+and writes pseudo_labels_natural.parquet and teacher_natural.json.
+
 Usage:
     python scripts/pseudo_label.py            # needs a GPU
     python scripts/pseudo_label.py --smoke    # a tiny untrained model on a few reviews, CPU is fine
     python scripts/pseudo_label.py --official # needs a GPU
+    python scripts/pseudo_label.py --band     # needs a GPU
+    python scripts/pseudo_label.py --natural  # needs a GPU
 """
 
 import argparse
@@ -44,6 +52,7 @@ from digikala_reviews.tfidf import HEADS
 from digikala_reviews.tuning import save_json
 
 MASKED = "train_pseudo_unlabeled.parquet"
+NATURAL = "natural_unlabeled.parquet"
 WEIGHTS = "fabert_final.pt"
 SMOKE_ROWS = 500
 
@@ -54,7 +63,13 @@ def main():
     parser.add_argument(
         "--official", action="store_true", help="the model's own probabilities, no temperature"
     )
+    parser.add_argument("--band", action="store_true", help="the rating band of the hidden reviews")
+    parser.add_argument("--natural", action="store_true", help="the naturally unlabeled reviews")
     args = parser.parse_args()
+    assert not (args.band and args.natural), "one at a time"
+    args.official = args.official or args.band or args.natural  # the model's own softmax
+    head = "rating_band" if args.band else "recommendation"
+    pool = NATURAL if args.natural else MASKED
     import torch
     from transformers import AutoTokenizer
 
@@ -64,11 +79,14 @@ def main():
     table_name, record_name = (
         ("pseudo_labels.parquet", "teacher.json") if args.official else ("masked.parquet", "scoring.json")
     )
+    if args.band or args.natural:
+        extra = "band" if args.band else "natural"
+        table_name, record_name = f"pseudo_labels_{extra}.parquet", f"teacher_{extra}.json"
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if not args.smoke and device.type != "cuda":
         raise SystemExit("No GPU found: turn the GPU on for this notebook, or run with --smoke")
-    data = check_cache(CACHE_DIR, [MASKED])
-    masked = pd.read_parquet(CACHE_DIR / MASKED, columns=["id", "text"])
+    data = check_cache(CACHE_DIR, [pool])
+    masked = pd.read_parquet(CACHE_DIR / pool, columns=["id", "text"])
     if args.official:
         temperature = 1.0  # the model's own softmax
     else:
@@ -87,17 +105,19 @@ def main():
         model = build_model(torch, name, saved["settings"]["dropout"], list(HEADS)).to(device)
         model.load_state_dict({k: v.float() for k, v in saved["weights"].items()})
     tokenizer = AutoTokenizer.from_pretrained(name)
-    print(f"{len(masked):,} hidden reviews, model {name}, temperature {temperature:.3f}", flush=True)
+    print(
+        f"{len(masked):,} reviews of {pool}, {head}, model {name}, temperature {temperature:.3f}", flush=True
+    )
 
     encoded = tokenizer(list(masked["text"]), truncation=True, max_length=128)["input_ids"]
-    log_proba = predict(torch, model, tokenizer, encoded, device)["recommendation"]
+    log_proba = predict(torch, model, tokenizer, encoded, device)[head]
     label, p = guesses(log_proba, temperature)
 
     folder.mkdir(parents=True, exist_ok=True)
     table = pd.DataFrame(
         {
             "id": masked["id"].to_numpy(),
-            "label": np.array(RECOMMENDATION_LABELS)[label],
+            "label": np.array(HEADS[head]["labels"])[label],
             "p": p.astype(np.float32),
         }
     )
@@ -107,6 +127,8 @@ def main():
         {
             "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
             "reviews": int(len(table)),
+            "pool": pool,
+            "head": head,
             "model": name,
             "weights_sha256": weights_hash,
             "temperature": temperature,

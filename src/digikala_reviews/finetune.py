@@ -37,13 +37,22 @@ def mean_log_loss(log_proba: np.ndarray, codes: np.ndarray) -> float:
 
 
 def build_model(
-    torch, name: str, dropout: float, heads: list[str], classes: int = 3, encoder=None, config=None
+    torch,
+    name: str,
+    dropout: float,
+    heads: list[str],
+    classes: int = 3,
+    encoder=None,
+    config=None,
+    rate_head: bool = False,
 ):
     """One encoder with a linear head per task on the first token. torch is passed in, so this
     module can be imported (and tested) where PyTorch is not installed. encoder: a folder with
     other weights for the same model (scripts/adapt_pretrain.py); the name is used otherwise.
     config: build the encoder from this configuration with no pretrained weights, for loading
-    saved weights without downloading anything (src/digikala_reviews/predictor.py)."""
+    saved weights without downloading anything (src/digikala_reviews/predictor.py).
+    rate_head: one more linear head, "rate", with a single output for the exact rate
+    (reports/extensions_plan.md, extension 1)."""
     from transformers import AutoModel
 
     class TwoHeads(torch.nn.Module):
@@ -55,12 +64,18 @@ def build_model(
                 self.encoder = AutoModel.from_pretrained(encoder or name)
             size = self.encoder.config.hidden_size
             self.dropout = torch.nn.Dropout(dropout)
-            self.heads = torch.nn.ModuleDict({head: torch.nn.Linear(size, classes) for head in heads})
+            layers = {head: torch.nn.Linear(size, classes) for head in heads}
+            if rate_head:
+                layers["rate"] = torch.nn.Linear(size, 1)
+            self.heads = torch.nn.ModuleDict(layers)
 
         def forward(self, input_ids, attention_mask):
             first = self.encoder(input_ids=input_ids, attention_mask=attention_mask).last_hidden_state[:, 0]
             first = self.dropout(first)
-            return {head: layer(first) for head, layer in self.heads.items()}
+            found = {head: layer(first) for head, layer in self.heads.items()}
+            if "rate" in found:
+                found["rate"] = found["rate"].squeeze(-1)  # one number per review
+            return found
 
     return TwoHeads()
 

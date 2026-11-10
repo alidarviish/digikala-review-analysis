@@ -46,3 +46,18 @@ def test_a_model_built_from_a_configuration_takes_saved_weights():
     ids = torch.tensor([[1, 5, 7, 2]])
     mask = torch.ones_like(ids)
     assert torch.allclose(first(ids, mask)["a"], second(ids, mask)["a"])
+
+
+def test_the_rate_head_gives_one_number_per_review():
+    torch = pytest.importorskip("torch")
+    transformers = pytest.importorskip("transformers")
+    from digikala_reviews.finetune import build_model
+
+    config = transformers.BertConfig(
+        vocab_size=50, hidden_size=8, num_hidden_layers=1, num_attention_heads=2, intermediate_size=16
+    )
+    model = build_model(torch, "unused", 0.1, ["a", "b"], config=config, rate_head=True)
+    ids = torch.tensor([[1, 5, 7, 2], [1, 6, 2, 0]])
+    found = model(ids, (ids > 0).long())
+    assert set(found) == {"a", "b", "rate"}
+    assert found["a"].shape == (2, 3) and found["rate"].shape == (2,)

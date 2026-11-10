@@ -57,6 +57,20 @@ first, as check 0, so it is kept if no check beats it; the weights at the end of
 kept and scored too (model_last.pt, validation_predictions_last.parquet, "last_check"):
   artifacts/semi_supervised_<student|control>/   and   reports/semi_supervised/<student|control>.json
 
+The optional extensions (reports/extensions_plan.md), each with its own names:
+  --rate        a third head predicts the exact rate (standardized; a rate of 0, "no rating
+                recorded", is masked), loss = recommendation + rating band + rate (MSE), every epoch:
+                artifacts/transformer_rate/  and  reports/transformer_final/rate.json
+  --frozen      the pretrained encoder is frozen and only the heads are trained (learning rate
+                1e-3), every epoch:  artifacts/transformer_frozen/  and  reports/transformer_final/frozen.json
+  --semi student --threshold 0.8 (or 0.95): the student with the guesses accepted at that threshold
+  --semi student --band-pseudo: the student also gets the teacher's rating band guesses at 0.90
+                (reports/semi_supervised/pseudo_labels_band.parquet, scripts/pseudo_label.py --band)
+  --semi student --natural: the student also gets the guesses for the naturally unlabeled reviews
+                at 0.90 (reports/semi_supervised/pseudo_labels_natural.parquet, --natural there)
+  These students write artifacts/semi_supervised_student_<t080|t095|both|natural>/ and
+  reports/semi_supervised/student_<...>.json.
+
 Usage:
     python scripts/train_transformer.py            # needs a GPU
     python scripts/train_transformer.py --no-early-stop
@@ -127,6 +141,8 @@ SMOKE = {
 SMOKE_VALIDATION_ROWS = 1_500  # the final scoring in a smoke run uses only this many reviews
 CACHE_FILES = ["train_supervised.parquet", "validation.parquet"]
 HIDDEN = "train_pseudo_unlabeled.parquet"  # the hidden reviews' text
+NATURAL = "natural_unlabeled.parquet"  # the reviews without a recommendation in the raw data
+FROZEN_LEARNING_RATE = 1e-3  # only the heads are trained (reports/extensions_plan.md)
 START_WEIGHTS = "fabert_final.pt"  # the kept run's model.pt, put in the cache folder
 LOG_EVERY = 500
 
@@ -141,9 +157,12 @@ def predict(torch, model, tokenizer, encoded, device):
             with torch.autocast(device_type=device.type, dtype=torch.bfloat16, enabled=device.type == "cuda"):
                 outputs = model(batch["input_ids"].to(device), batch["attention_mask"].to(device))
             for head, logits in outputs.items():
-                parts[head].append(torch.log_softmax(logits.float(), dim=-1).cpu().numpy())
+                if head == "rate":  # the exact rate, standardized: one number, not probabilities
+                    parts.setdefault(head, []).append(logits.float().cpu().numpy())
+                else:
+                    parts[head].append(torch.log_softmax(logits.float(), dim=-1).cpu().numpy())
     back = np.argsort(order)
-    return {head: np.vstack(p)[back] for head, p in parts.items()}
+    return {head: np.concatenate(p)[back] for head, p in parts.items()}
 
 
 def head_targets(table, head):
@@ -187,6 +206,11 @@ def main():
         choices=["student", "control"],
         help="one more epoch from the kept run, with or without pseudo-labels",
     )
+    parser.add_argument("--rate", action="store_true", help="a third head for the exact rate, every epoch")
+    parser.add_argument("--frozen", action="store_true", help="the encoder frozen, only the heads trained")
+    parser.add_argument("--threshold", type=float, help="with --semi student: another acceptance threshold")
+    parser.add_argument("--band-pseudo", action="store_true", help="with --semi student: band guesses too")
+    parser.add_argument("--natural", action="store_true", help="with --semi student: the natural pool too")
     args = parser.parse_args()
     import torch
     from transformers import AutoTokenizer
@@ -197,6 +221,16 @@ def main():
     assert not (args.semi and (args.large or args.adapted or args.no_early_stop or args.seed)), (
         "--semi runs alone"
     )
+    extension = args.rate or args.frozen
+    assert not (extension and (args.semi or args.large or args.adapted or args.no_early_stop or args.seed)), (
+        "--rate and --frozen run alone"
+    )
+    assert not (args.rate and args.frozen), "--rate and --frozen are two runs"
+    variant = args.threshold is not None or args.band_pseudo or args.natural
+    assert not variant or args.semi == "student", (
+        "--threshold, --band-pseudo and --natural are for the student"
+    )
+    threshold = PSEUDO_LABEL_THRESHOLD if args.threshold is None else args.threshold
     settings = {**SETTINGS, **(LARGE if args.large else {}), **(SMOKE if args.smoke else {})}
     if args.no_early_stop:
         settings["patience"] = None
@@ -221,12 +255,23 @@ def main():
         settings["seed"] = args.seed
         name += f"_seed{args.seed}"
         out_dir = out_dir.with_name(f"{out_dir.name}_seed{args.seed}")
+    if extension:  # its own names; every epoch, the best check kept, as the kept run
+        settings["patience"] = None
+        if args.rate:
+            settings["rate_head"] = True
+        else:
+            settings.update(frozen=True, learning_rate=FROZEN_LEARNING_RATE)
+        name = ("smoke_" if args.smoke else "") + ("rate" if args.rate else "frozen")
+        out_dir = (
+            ARTIFACTS_DIR / f"transformer_{'rate' if args.rate else 'frozen'}{'_smoke' if args.smoke else ''}"
+        )
     result_path = (
         REPORTS_DIR / ("transformer_final_smoke" if args.smoke else "transformer_final") / f"{name}.json"
     )
-    pseudo_path = (
-        REPORTS_DIR / ("semi_supervised_smoke" if args.smoke else "semi_supervised") / "pseudo_labels.parquet"
-    )
+    semi_folder = REPORTS_DIR / ("semi_supervised_smoke" if args.smoke else "semi_supervised")
+    pseudo_path = semi_folder / "pseudo_labels.parquet"
+    band_path = semi_folder / "pseudo_labels_band.parquet"
+    natural_path = semi_folder / "pseudo_labels_natural.parquet"
     start_path = CACHE_DIR / START_WEIGHTS
     if args.semi:  # one more epoch from the kept run; its own names
         settings.update(max_epochs=1, patience=None, keep_last=True)
@@ -235,11 +280,18 @@ def main():
         else:
             settings["start_sha256"] = file_sha256(start_path)
         if args.semi == "student":
-            settings.update(
-                pseudo_threshold=PSEUDO_LABEL_THRESHOLD, pseudo_labels_sha256=file_sha256(pseudo_path)
-            )
-        name = args.semi
-        out_dir = ARTIFACTS_DIR / (f"semi_supervised_{args.semi}" + ("_smoke" if args.smoke else ""))
+            settings.update(pseudo_threshold=threshold, pseudo_labels_sha256=file_sha256(pseudo_path))
+        suffix = ""
+        if args.threshold is not None:
+            suffix = f"_t{round(threshold * 100):03d}"
+        if args.band_pseudo:
+            settings["band_pseudo_labels_sha256"] = file_sha256(band_path)
+            suffix += "_both"
+        if args.natural:
+            settings["natural_pseudo_labels_sha256"] = file_sha256(natural_path)
+            suffix += "_natural"
+        name = args.semi + suffix
+        out_dir = ARTIFACTS_DIR / (f"semi_supervised_{name}" + ("_smoke" if args.smoke else ""))
         result_path = (
             REPORTS_DIR / ("semi_supervised_smoke" if args.smoke else "semi_supervised") / f"{name}.json"
         )
@@ -255,7 +307,10 @@ def main():
             "gpu": torch.cuda.get_device_name(0) if device.type == "cuda" else None,
             "transformers": library_version("transformers"),
         },
-        "data": check_cache(CACHE_DIR, CACHE_FILES + ([HIDDEN] if args.semi == "student" else [])),
+        "data": check_cache(
+            CACHE_DIR,
+            CACHE_FILES + ([HIDDEN] if args.semi == "student" else []) + ([NATURAL] if args.natural else []),
+        ),
     }
     spec = json.loads(json.dumps({"settings": settings, "data": context["data"]}))
     if finished(result_path, spec):
@@ -266,30 +321,49 @@ def main():
     result_path.parent.mkdir(parents=True, exist_ok=True)
     torch.manual_seed(settings["seed"])
 
-    train = load_cache(CACHE_FILES[0])
+    train = load_cache(CACHE_FILES[0], extra_columns=["rate"] if args.rate else ())
     if settings["train_rows"]:
         train = train.iloc[fixed_sample(len(train), settings["train_rows"], SPLIT_SEED)].reset_index(
             drop=True
         )
     pseudo_reviews = 0
-    if args.semi == "student":  # the accepted guesses count only for the recommendation loss
+    if args.semi == "student":  # each accepted guess counts only for the loss of its own head
         hidden = pd.read_parquet(CACHE_DIR / HIDDEN, columns=["id", "text"])
-        guessed = pd.read_parquet(pseudo_path)
-        found = guessed.merge(hidden, on="id", how="left", validate="one_to_one")
+        found = pd.read_parquet(pseudo_path).merge(hidden, on="id", how="left", validate="one_to_one")
         assert found["text"].notna().all(), "a guessed review is missing from the hidden reviews' cache"
-        found = found[found["p"] >= PSEUDO_LABEL_THRESHOLD]
-        pseudo_reviews = len(found)
+        rec = found["label"].where(found["p"] >= threshold)
+        band = None
+        if args.band_pseudo:
+            band_guess = found[["id"]].merge(
+                pd.read_parquet(band_path), on="id", how="left", validate="one_to_one"
+            )
+            assert band_guess["label"].notna().all(), "a hidden review has no band guess"
+            band = band_guess["label"].where(band_guess["p"] >= threshold).to_numpy()
         added = pd.DataFrame(
-            {
-                "text": found["text"].to_numpy(),
-                "recommendation_status": found["label"].to_numpy(),
-                "rating_band": None,
-            }
+            {"text": found["text"].to_numpy(), "recommendation_status": rec.to_numpy(), "rating_band": band}
         )
+        if args.natural:
+            pool = pd.read_parquet(CACHE_DIR / NATURAL, columns=["id", "text"])
+            natural = pd.read_parquet(natural_path).merge(pool, on="id", how="left", validate="one_to_one")
+            assert natural["text"].notna().all(), "a guessed review is missing from the natural pool's cache"
+            natural = natural[natural["p"] >= threshold]
+            added = pd.concat(
+                [
+                    added,
+                    pd.DataFrame(
+                        {
+                            "text": natural["text"].to_numpy(),
+                            "recommendation_status": natural["label"].to_numpy(),
+                            "rating_band": None,
+                        }
+                    ),
+                ],
+                ignore_index=True,
+            )
+        added = added[added["recommendation_status"].notna() | added["rating_band"].notna()]
+        pseudo_reviews = len(added)
         train = pd.concat([train[["text", "recommendation_status", "rating_band"]], added], ignore_index=True)
-        print(
-            f"  {pseudo_reviews:,} pseudo-labeled reviews added (p >= {PSEUDO_LABEL_THRESHOLD})", flush=True
-        )
+        print(f"  {pseudo_reviews:,} pseudo-labeled reviews added (p >= {threshold})", flush=True)
     validation = load_cache(CACHE_FILES[1], extra_columns=["product_id"])
     labeled_any = validation["recommendation_status"].notna() | validation["rating_band"].notna()
     selection_table = validation[labeled_any]
@@ -316,19 +390,37 @@ def main():
     labels = {
         head: label_codes(train[HEADS[head]["column"]].to_numpy(), HEADS[head]["labels"]) for head in HEADS
     }
+    if args.rate:  # standardized with the training rates; 0 means "no rating recorded" and is masked
+        rate = train["rate"].to_numpy(dtype=float)
+        rate[rate <= 0] = np.nan
+        settings.update(rate_mean=float(np.nanmean(rate)), rate_std=float(np.nanstd(rate)))
+        labels["rate"] = (rate - settings["rate_mean"]) / settings["rate_std"]
+        print(f"  rate: mean {settings['rate_mean']:.3f}, std {settings['rate_std']:.3f}", flush=True)
     selection = {head: head_targets(selection_table, head) for head in HEADS}
 
     encoder = str(ARTIFACTS_DIR / settings["encoder"]) if settings.get("encoder") else None
-    model = build_model(torch, settings["model"], settings["dropout"], list(HEADS), encoder=encoder)
+    model = build_model(
+        torch, settings["model"], settings["dropout"], list(HEADS), encoder=encoder, rate_head=args.rate
+    )
     model = model.to(device)
+    if args.frozen:  # feature extraction: the pretrained encoder does not change
+        for parameter in model.encoder.parameters():
+            parameter.requires_grad_(False)
+
+    def train_mode():
+        model.train()
+        if args.frozen:
+            model.encoder.eval()  # no dropout inside the frozen encoder
+
     if args.semi:
         if args.smoke and not start_path.exists():
             torch.save({"weights": model.state_dict(), "settings": settings}, start_path)
         start = torch.load(start_path, map_location=device, weights_only=False)
         model.load_state_dict({k: v.float() for k, v in start["weights"].items()})
         del start
-    decay = [p for p in model.parameters() if p.ndim >= 2]
-    no_decay = [p for p in model.parameters() if p.ndim < 2]  # biases and norm weights
+    trained = [p for p in model.parameters() if p.requires_grad]
+    decay = [p for p in trained if p.ndim >= 2]
+    no_decay = [p for p in trained if p.ndim < 2]  # biases and norm weights
     optimizer = torch.optim.AdamW(
         [
             {"params": decay, "weight_decay": settings["weight_decay"]},
@@ -342,6 +434,7 @@ def main():
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lambda s: linear_warmup(s, total_steps, warmup))
     check_every = max(1, steps_per_epoch // settings["checks_per_epoch"])
     loss_fn = torch.nn.CrossEntropyLoss(ignore_index=IGNORE)
+    rate_loss_fn = torch.nn.MSELoss()
     use_bf16 = device.type == "cuda"
 
     resume_path, best_path = out_dir / "resume.pt", out_dir / "model.pt"
@@ -406,14 +499,18 @@ def main():
         epoch, done_in_epoch = divmod(state["step"], steps_per_epoch)
         order = np.random.default_rng(settings["seed"] + epoch).permutation(len(train_ids))
         order = order[done_in_epoch * settings["batch_size"] :]  # continue inside the epoch after a resume
-        model.train()
+        train_mode()
         for batch in batches(torch, tokenizer, train_ids, order, settings["batch_size"], labels):
             with torch.autocast(device_type=device.type, dtype=torch.bfloat16, enabled=use_bf16):
                 outputs = model(batch["input_ids"].to(device), batch["attention_mask"].to(device))
             loss = 0.0
             for head, logits in outputs.items():
                 target = batch["labels"][head].to(device)
-                if (target != IGNORE).any():
+                if head == "rate":  # lambda 2 = 1; reviews without a rate are left out
+                    known = ~torch.isnan(target)
+                    if known.any():
+                        loss = loss + rate_loss_fn(logits.float()[known], target[known].float())
+                elif (target != IGNORE).any():
                     loss = loss + loss_fn(logits.float(), target)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -434,7 +531,7 @@ def main():
                 score, per_head, losses = selection_score(
                     predict(torch, model, tokenizer, selection_ids, device), selection
                 )
-                model.train()
+                train_mode()
                 improved = score > state["best"]
                 state["history"].append(
                     {
@@ -526,6 +623,9 @@ def main():
             column = np.full(len(table), None, dtype=object)
             column[labeled] = with_offsets
             table[f"{head}__predicted_with_offsets"] = column
+        if "rate" in log_proba:  # back to the 0 to 5 scale
+            predicted_rate = log_proba["rate"] * settings["rate_std"] + settings["rate_mean"]
+            table["rate__predicted"] = np.clip(predicted_rate, 0, 5).astype(np.float32)
         table.to_parquet(predictions_path.with_suffix(".tmp"), index=False)
         predictions_path.with_suffix(".tmp").replace(predictions_path)
         return saved, heads, offsets_for_test

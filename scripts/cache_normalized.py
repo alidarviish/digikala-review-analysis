@@ -11,6 +11,7 @@ can be noticed.
 Usage:
     uv run python scripts/cache_normalized.py
     uv run python scripts/cache_normalized.py --files train_pseudo_unlabeled.csv
+    uv run python scripts/cache_normalized.py --files natural_unlabeled.csv
 """
 
 import argparse
@@ -26,7 +27,7 @@ from digikala_reviews.resources import peak_memory_gb, require_free_memory
 from digikala_reviews.standard_files import read_split_file
 
 FILES = ["train_supervised.csv", "validation.csv", "test.csv"]
-OTHER_FILES = ["train_pseudo_unlabeled.csv"]  # built only when named with --files
+OTHER_FILES = ["train_pseudo_unlabeled.csv", "natural_unlabeled.csv"]  # built only when named with --files
 CHUNK_ROWS = 250_000
 
 
