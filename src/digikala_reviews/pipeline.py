@@ -1052,6 +1052,15 @@ STEPS = [
         files("reports/final_evaluation.json"),
         "runs once; it stops if its report exists",
     ),
+    Step(
+        109,
+        "Release report: the delivered files with their hashes, the models and the main results",
+        ["scripts/write_release_report.py"],
+        "local",
+        [1, 3, 8, 17, 33, 100, 102, 103, 104, 105, 108],
+        files("reports/release_report.json"),
+        "hashes the split files and the model files on your machine; the test set is not read",
+    ),
 ]
 
 
