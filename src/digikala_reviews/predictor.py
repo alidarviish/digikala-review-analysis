@@ -138,6 +138,20 @@ class Predictor:
                     parts[head].append(torch.log_softmax(logits.float(), dim=-1).numpy())
         return {head: np.vstack(p).astype(float) for head, p in parts.items()}
 
+    def tokenize(self, body: str) -> dict:
+        """The review as FaBERT reads it: normalized, cut at max_length tokens."""
+        text = normalize(body)
+        count = len(self.tokenizer(text)["input_ids"])  # before the cut
+        cut = self.tokenizer(text, truncation=True, max_length=self.max_length)
+        return {
+            "normalized_text": text,
+            "tokens": self.tokenizer.convert_ids_to_tokens(cut["input_ids"]),
+            "input_ids": cut["input_ids"],
+            "attention_mask": cut["attention_mask"],
+            "token_count": count,
+            "truncated": count > self.max_length,
+        }
+
     def predict(self, body: str) -> dict:
         """Everything the system says about one review."""
         start = time.perf_counter()

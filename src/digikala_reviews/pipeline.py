@@ -1238,6 +1238,15 @@ STEPS = [
         files("reports/final_evaluation_extensions.json"),
         "runs once; it stops if its report exists",
     ),
+    Step(
+        128,
+        "Extensions: memory of the offline predictor",
+        ["scripts/measure_predictor_memory.py"],
+        "local",
+        [104, 105],
+        files("reports/predictor_memory.json"),
+        "loads the models on the CPU of your machine",
+    ),
 ]
 
 
