@@ -1,0 +1,253 @@
+{
+  "created_at": "2026-11-10T09:30:35+00:00",
+  "plan": "reports/uncertain_plan.md",
+  "uncertain_share": 0.1,
+  "heads": {
+    "recommendation": {
+      "share_uncertain": 0.10002066647479388,
+      "all_reviews": {
+        "reviews": 788717,
+        "accuracy": 0.8732650621198732,
+        "macro_f1": 0.7344318559099552,
+        "recall": {
+          "recommended": 0.9374765627253584,
+          "not_recommended": 0.732363280733751,
+          "no_idea": 0.5430175753832331
+        }
+      },
+      "answered_reviews": {
+        "reviews": 709829,
+        "accuracy": 0.9187635331889793,
+        "macro_f1": 0.7632969250637038,
+        "recall": {
+          "recommended": 0.973119942140367,
+          "not_recommended": 0.8654280906324897,
+          "no_idea": 0.42858107765826314
+        }
+      },
+      "uncertain_reviews": {
+        "reviews": 78888,
+        "system_right": 0.4638728323699422,
+        "true_class_share": {
+          "recommended": 0.408541,
+          "not_recommended": 0.213404,
+          "no_idea": 0.378055
+        },
+        "true_class_share_all_reviews": {
+          "recommended": 0.791166,
+          "not_recommended": 0.095936,
+          "no_idea": 0.112899
+        },
+        "times_its_share": {
+          "recommended": 0.516,
+          "not_recommended": 2.224,
+          "no_idea": 3.349
+        }
+      },
+      "per_half": {
+        "tuned_on_a": {
+          "fabert_weight": 0.7,
+          "threshold": 0.586170478358957
+        },
+        "tuned_on_b": {
+          "fabert_weight": 0.7,
+          "threshold": 0.5885518478240417
+        }
+      },
+      "coverage_curve": [
+        {
+          "coverage": 0.5,
+          "accuracy": 0.9834262269308598,
+          "macro_f1": 0.6797925042193
+        },
+        {
+          "coverage": 0.55,
+          "accuracy": 0.9806889906268874,
+          "macro_f1": 0.6818317130744943
+        },
+        {
+          "coverage": 0.6,
+          "accuracy": 0.9769541237875874,
+          "macro_f1": 0.686974255426271
+        },
+        {
+          "coverage": 0.65,
+          "accuracy": 0.973323762449626,
+          "macro_f1": 0.686024580654511
+        },
+        {
+          "coverage": 0.7,
+          "accuracy": 0.9686760779710996,
+          "macro_f1": 0.699814578015444
+        },
+        {
+          "coverage": 0.75,
+          "accuracy": 0.961814794653936,
+          "macro_f1": 0.7214934453556738
+        },
+        {
+          "coverage": 0.8,
+          "accuracy": 0.951631921442088,
+          "macro_f1": 0.7466687075479079
+        },
+        {
+          "coverage": 0.85,
+          "accuracy": 0.9367609921704512,
+          "macro_f1": 0.7651018464722634
+        },
+        {
+          "coverage": 0.9,
+          "accuracy": 0.9187329628299136,
+          "macro_f1": 0.7632010801380212
+        },
+        {
+          "coverage": 0.95,
+          "accuracy": 0.8983719058670913,
+          "macro_f1": 0.7512306450169604
+        },
+        {
+          "coverage": 1.0,
+          "accuracy": 0.8732650621198732,
+          "macro_f1": 0.7344318559099552
+        }
+      ],
+      "for_test": {
+        "fabert_weight": 0.7,
+        "offsets": {
+          "recommended": 0.0,
+          "not_recommended": 0.0,
+          "no_idea": 0.2
+        },
+        "threshold": 0.5872707157664022
+      }
+    },
+    "rating_band": {
+      "share_uncertain": 0.09947383272196125,
+      "all_reviews": {
+        "reviews": 843458,
+        "accuracy": 0.7956815869906978,
+        "macro_f1": 0.6935241490531752,
+        "recall": {
+          "low": 0.6847773288945229,
+          "medium": 0.46817423073289033,
+          "high": 0.8978887082372696
+        }
+      },
+      "answered_reviews": {
+        "reviews": 759556,
+        "accuracy": 0.8406990399654535,
+        "macro_f1": 0.7077929432528868,
+        "recall": {
+          "low": 0.7661099818711201,
+          "medium": 0.34557854273062383,
+          "high": 0.962396550338806
+        }
+      },
+      "uncertain_reviews": {
+        "reviews": 83902,
+        "system_right": 0.38814331005220376,
+        "true_class_share": {
+          "low": 0.138197,
+          "medium": 0.382184,
+          "high": 0.479619
+        },
+        "true_class_share_all_reviews": {
+          "low": 0.100073,
+          "medium": 0.188219,
+          "high": 0.711708
+        },
+        "times_its_share": {
+          "low": 1.381,
+          "medium": 2.031,
+          "high": 0.674
+        }
+      },
+      "per_half": {
+        "tuned_on_a": {
+          "fabert_weight": 0.8,
+          "threshold": 0.5194491533922121
+        },
+        "tuned_on_b": {
+          "fabert_weight": 0.7,
+          "threshold": 0.48142743748782907
+        }
+      },
+      "coverage_curve": [
+        {
+          "coverage": 0.5,
+          "accuracy": 0.9235788859670546,
+          "macro_f1": 0.6254351791163025
+        },
+        {
+          "coverage": 0.55,
+          "accuracy": 0.9168466615793853,
+          "macro_f1": 0.6252433268784529
+        },
+        {
+          "coverage": 0.6,
+          "accuracy": 0.9095805957614979,
+          "macro_f1": 0.6252877309309305
+        },
+        {
+          "coverage": 0.65,
+          "accuracy": 0.9021811297077235,
+          "macro_f1": 0.6286348511793621
+        },
+        {
+          "coverage": 0.7,
+          "accuracy": 0.8938825007918079,
+          "macro_f1": 0.636183192857497
+        },
+        {
+          "coverage": 0.75,
+          "accuracy": 0.884679589120352,
+          "macro_f1": 0.6613733665853859
+        },
+        {
+          "coverage": 0.8,
+          "accuracy": 0.8737102936425368,
+          "macro_f1": 0.674015005198045
+        },
+        {
+          "coverage": 0.85,
+          "accuracy": 0.8591079575807705,
+          "macro_f1": 0.700280912011842
+        },
+        {
+          "coverage": 0.9,
+          "accuracy": 0.8409760351568675,
+          "macro_f1": 0.7081202093823316
+        },
+        {
+          "coverage": 0.95,
+          "accuracy": 0.8196821355697411,
+          "macro_f1": 0.7020508838707636
+        },
+        {
+          "coverage": 1.0,
+          "accuracy": 0.7956815869906978,
+          "macro_f1": 0.6935241490531752
+        }
+      ],
+      "for_test": {
+        "fabert_weight": 0.8,
+        "offsets": {
+          "low": 0.0,
+          "medium": 0.2,
+          "high": -0.7
+        },
+        "threshold": 0.4929359392116056
+      }
+    }
+  },
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "validation.parquet": "b20ef9e78cc85919cd1dd4e44cd1b7faddc716987b3840845ef0f7194a09049f"
+    }
+  },
+  "code": {
+    "commit": "d324ed272b01937f5f355c05b02a4d20a0719f86",
+    "uncommitted_changes": false
+  }
+}
