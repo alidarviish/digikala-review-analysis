@@ -1061,6 +1061,15 @@ STEPS = [
         files("reports/release_report.json"),
         "hashes the split files and the model files on your machine; the test set is not read",
     ),
+    Step(
+        110,
+        "Error cases: validation mistakes of the final system in the categories the project names",
+        ["scripts/make_error_cases.py"],
+        "local",
+        [17, 33, 60],
+        files("reports/error_cases.json"),
+        "reads the saved validation predictions on your machine",
+    ),
 ]
 
 
