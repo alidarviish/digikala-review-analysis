@@ -994,6 +994,15 @@ STEPS = [
         files("reports/semi_supervised.json"),
         "reads the hidden reviews' reference labels and the models' predictions, on your machine",
     ),
+    Step(
+        103,
+        "The final system answers 'uncertain' for its least confident 10% (reports/uncertain_plan.md)",
+        ["scripts/uncertain_output.py"],
+        "local",
+        [17, 33, 60],
+        files("reports/uncertain.json"),
+        "reads the saved predictions of FaBERT and TF-IDF, which stay on your machine",
+    ),
 ]
 
 
