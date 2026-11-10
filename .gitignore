@@ -10,6 +10,7 @@ artifacts/**/*.npz
 artifacts/**/*.parquet
 artifacts/**/checkpoints/
 artifacts/fabert_adapted*/
+artifacts/fabert_files/  # FaBERT tokenizer and config, saved by scripts/save_fabert_files.py; license not declared
 
 # Python
 __pycache__/

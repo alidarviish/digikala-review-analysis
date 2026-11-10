@@ -1,0 +1,14 @@
+{
+  "created_at": "2026-11-10T09:47:34+00:00",
+  "model": "sbunlp/fabert",
+  "hub_commit": "4cad2850ab81452041924fad29010ec0361322b6",
+  "files": {
+    "config.json": "f4bec28834eda9ef6cc380806617a6fa153ce5de91206573328128bd6751c33c",
+    "tokenizer.json": "66c04c8d00d0eba8330307827ea0a39a337503946b0975cb773e2ccfaa05a7a0",
+    "tokenizer_config.json": "b0c32b573842e890469d78481f6cdc7f419299fde5f6576ca435bca4866649ac"
+  },
+  "code": {
+    "commit": "233e53aac4954351c404a3092e4ff2fb49f1a9f9",
+    "uncommitted_changes": false
+  }
+}
