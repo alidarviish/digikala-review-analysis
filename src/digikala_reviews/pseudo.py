@@ -17,10 +17,10 @@ def guesses(log_proba, temperature: float) -> tuple[np.ndarray, np.ndarray]:
     return scaled.argmax(axis=1), np.exp(scaled.max(axis=1))
 
 
-def quality(guessed, p_top, true, thresholds) -> dict:
+def quality(guessed, p_top, true, thresholds, labels=RECOMMENDATION_LABELS) -> dict:
     """For each threshold: the share of reviews kept, how often their guess is right, the
     share of each class among the kept guesses, and for each true class the share of its
-    reviews that were kept with the right label."""
+    reviews that were kept with the right label. labels: the classes of the head guessed."""
     guessed, p_top, true = np.asarray(guessed), np.asarray(p_top), np.asarray(true)
     result = {}
     for threshold in thresholds:
@@ -31,12 +31,11 @@ def quality(guessed, p_top, true, thresholds) -> dict:
             "share_kept": float(kept.mean()),
             "accuracy": float(right.sum() / kept.sum()) if kept.any() else None,
             "kept_classes": {
-                label: float((guessed[kept] == label).mean()) if kept.any() else 0.0
-                for label in RECOMMENDATION_LABELS
+                label: float((guessed[kept] == label).mean()) if kept.any() else 0.0 for label in labels
             },
             "kept_right_per_true_class": {
                 label: float(right[true == label].mean()) if (true == label).any() else None
-                for label in RECOMMENDATION_LABELS
+                for label in labels
             },
         }
     return result

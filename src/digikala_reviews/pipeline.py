@@ -1211,6 +1211,33 @@ STEPS = [
         "the weights trained in step 118, on the same machine",
         smoke=True,
     ),
+    Step(
+        125,
+        "Extensions: the TF-IDF ridge regression for the exact rate",
+        ["scripts/fit_rate_ridge.py"],
+        "any",
+        [17],
+        files("reports/extensions/rate_ridge.json"),
+        "about 6 GB of memory: on molab, with the TF-IDF model in the cache folder as tfidf_model.joblib",
+    ),
+    Step(
+        126,
+        "Extensions: everything scored on validation",
+        ["scripts/check_extensions.py"],
+        "local",
+        [17, 33, 101, 111, 112, 113, 114, 115, 116, 117, 118, 125],
+        files("reports/extensions_validation.json"),
+        "reads the band guesses' reference labels and the models' predictions, on your machine",
+    ),
+    Step(
+        127,
+        "Extensions: the second and last reading of the test set, for the extensions only",
+        ["scripts/final_evaluation_extensions.py"],
+        "local",
+        [108, 119, 120, 121, 122, 123, 124, 125, 126],
+        files("reports/final_evaluation_extensions.json"),
+        "runs once; it stops if its report exists",
+    ),
 ]
 
 
