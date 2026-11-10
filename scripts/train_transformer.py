@@ -391,7 +391,7 @@ def main():
         head: label_codes(train[HEADS[head]["column"]].to_numpy(), HEADS[head]["labels"]) for head in HEADS
     }
     if args.rate:  # standardized with the training rates; 0 means "no rating recorded" and is masked
-        rate = train["rate"].to_numpy(dtype=float)
+        rate = np.array(train["rate"], dtype=float)  # a copy: pandas may give a read-only view
         rate[rate <= 0] = np.nan
         settings.update(rate_mean=float(np.nanmean(rate)), rate_std=float(np.nanstd(rate)))
         labels["rate"] = (rate - settings["rate_mean"]) / settings["rate_std"]
