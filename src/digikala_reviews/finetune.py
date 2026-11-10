@@ -36,16 +36,23 @@ def mean_log_loss(log_proba: np.ndarray, codes: np.ndarray) -> float:
     return float(-log_proba[np.arange(len(codes)), codes].mean())
 
 
-def build_model(torch, name: str, dropout: float, heads: list[str], classes: int = 3, encoder=None):
+def build_model(
+    torch, name: str, dropout: float, heads: list[str], classes: int = 3, encoder=None, config=None
+):
     """One encoder with a linear head per task on the first token. torch is passed in, so this
     module can be imported (and tested) where PyTorch is not installed. encoder: a folder with
-    other weights for the same model (scripts/adapt_pretrain.py); the name is used otherwise."""
+    other weights for the same model (scripts/adapt_pretrain.py); the name is used otherwise.
+    config: build the encoder from this configuration with no pretrained weights, for loading
+    saved weights without downloading anything (src/digikala_reviews/predictor.py)."""
     from transformers import AutoModel
 
     class TwoHeads(torch.nn.Module):
         def __init__(self):
             super().__init__()
-            self.encoder = AutoModel.from_pretrained(encoder or name)
+            if config is not None:
+                self.encoder = AutoModel.from_config(config)
+            else:
+                self.encoder = AutoModel.from_pretrained(encoder or name)
             size = self.encoder.config.hidden_size
             self.dropout = torch.nn.Dropout(dropout)
             self.heads = torch.nn.ModuleDict({head: torch.nn.Linear(size, classes) for head in heads})

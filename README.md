@@ -26,6 +26,29 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
+To run FaBERT on your own machine (CPU only), add the `transformer` group:
+
+```bash
+uv sync --group transformer
+```
+
+## Offline prediction
+
+The saved models answer for a review text, with no internet once FaBERT's tokenizer and
+configuration are saved (the trained weights come from `artifacts/`, see the pipeline):
+
+```bash
+uv run python scripts/save_fabert_files.py      # once
+uv run python scripts/predict.py "کیفیتش خوبه ولی گرونه"
+uv run python scripts/predict.py --json "کیفیتش خوبه ولی گرونه"
+uv run python scripts/predict.py --demo         # examples, written to reports/predict_demo.md
+```
+
+For each head it prints the label and probabilities of TF-IDF, FaBERT and the final system
+(both combined; `uncertain` when its confidence is under the threshold of
+`reports/uncertain.json`), the words that pushed TF-IDF most, the token count and whether the
+text was cut at 128 tokens, and the latency of each model.
+
 ## Data
 
 The dataset is not included in this repository. Download `digikala.rar` from

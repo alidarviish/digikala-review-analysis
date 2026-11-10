@@ -1003,6 +1003,24 @@ STEPS = [
         files("reports/uncertain.json"),
         "reads the saved predictions of FaBERT and TF-IDF, which stay on your machine",
     ),
+    Step(
+        104,
+        "FaBERT's tokenizer and configuration saved for offline prediction (reports/predictor_plan.md)",
+        ["scripts/save_fabert_files.py"],
+        "local",
+        [33],
+        files("reports/fabert_files.json", "artifacts/fabert_files/config.json"),
+        "needs the internet once (Hugging Face); the weights are not downloaded",
+    ),
+    Step(
+        105,
+        "The offline predictor checked against the saved validation predictions",
+        ["scripts/check_predictor.py"],
+        "local",
+        [17, 33, 103, 104],
+        files("reports/predictor_check.json"),
+        "runs FaBERT on the CPU of your machine; a few minutes",
+    ),
 ]
 
 
