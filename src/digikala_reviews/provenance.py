@@ -7,6 +7,7 @@ to one commit, one set of library versions and one exact data file.
 import json
 import platform
 import re
+import shutil
 import subprocess
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
@@ -24,12 +25,15 @@ def git_commit(root: Path = PROJECT_ROOT) -> dict:
     """The commit of the code, and whether the code differed from it.
 
     Only the code paths count: a new result file or a downloaded zip in the folder does not
-    make the code uncommitted, but an edited or new script does.
+    make the code uncommitted, but an edited or new script does. Where git is not installed
+    (the service's container) both are unknown (None).
     """
 
     def git(*args):
         return subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True).stdout.strip()
 
+    if shutil.which("git") is None:
+        return {"commit": None, "uncommitted_changes": None}
     return {
         "commit": git("rev-parse", "HEAD") or None,
         "uncommitted_changes": bool(git("status", "--porcelain", "--", *CODE_PATHS)),

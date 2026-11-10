@@ -1,0 +1,14 @@
+# Only what the image needs is sent to Docker
+.git
+.venv
+data
+artifacts
+notebooks
+resources
+assets
+tests
+scripts
+**/__pycache__
+reports/**
+!reports/uncertain.json
+!reports/transformer_final/fabert_no_early_stop.json

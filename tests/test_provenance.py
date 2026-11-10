@@ -51,3 +51,10 @@ def test_machine_kind_reads_the_recorded_environment():
     assert (
         machine_kind({"machine": "bb4baea4-610b-426e-bd9a-9221e6c0aecf-lfj27", "gpu": "RTX"}) == "molab GPU"
     )
+
+
+def test_without_git_the_commit_is_unknown(tmp_path, monkeypatch):
+    import shutil
+
+    monkeypatch.setattr(shutil, "which", lambda name: None)
+    assert git_commit(tmp_path) == {"commit": None, "uncommitted_changes": None}

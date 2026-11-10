@@ -1,0 +1,9 @@
+# docker compose up --build    then    http://localhost:8000/docs
+services:
+  api:
+    build: .
+    image: digikala-review-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./artifacts:/app/artifacts:ro  # the trained models, read only
