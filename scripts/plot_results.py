@@ -12,6 +12,9 @@ Charts are written to reports/figures/results_*.png:
   results_where_it_helps       both final models by review length and by seen / new text
   results_loss_analysis        where FaBERT's validation loss is, and how close it is to the floor
   results_label_sample         the hand-labeled sample against the original labels and FaBERT
+  results_test_models          the four models of the final evaluation, validation against test
+  results_test_confusion       the final system's confusion matrices on the test set
+  results_test_semi            what the pseudo-labels changed on the test set, score by score
 
 Usage:
     uv run python scripts/plot_results.py
@@ -577,6 +580,117 @@ def label_sample():
     plotting.save(fig, "results_label_sample")
 
 
+TEST_MODELS = {
+    "tfidf": "TF-IDF",
+    "fabert": "FaBERT",
+    "final system": "Final system",
+    "student": "Semi-supervised",
+}
+
+
+def test_models(evaluation):
+    fig, axes = plt.subplots(1, 2, figsize=(10.5, 3.9), sharey=True)
+    for ax, head in zip(axes, HEADS, strict=True):
+        models = evaluation["heads"][head]["models"]
+        y = np.arange(len(TEST_MODELS))
+        for i, key in enumerate(TEST_MODELS):
+            m = models[key]
+            test, valid = m["with_offsets"]["macro_f1"], m["validation"]["macro_f1"]
+            low, high = m["macro_f1_interval_95_products"]
+            color = plotting.SERIES[0] if key == "final system" else plotting.SERIES[0] + "88"
+            ax.barh(i, test, height=0.55, color=color)
+            ax.plot([low, high], [i, i], color=plotting.INK, linewidth=1.3)
+            ax.plot(valid, i, marker="D", markersize=5, color=plotting.SERIES[1], linestyle="none")
+            ax.text(high + 0.002, i, f"{test:.4f}", va="center", fontsize=8, color=plotting.INK_SECONDARY)
+        ax.set_yticks(y, list(TEST_MODELS.values()))
+        ax.invert_yaxis()
+        ax.set_xlim(0.65, 0.75)
+        ax.set_xlabel("Macro F1 with offsets")
+        ax.grid(axis="y", visible=False)
+        ax.set_title(HEAD_TITLES[head])
+    axes[1].plot([], [], marker="D", color=plotting.SERIES[1], linestyle="none", label="validation")
+    axes[1].legend(loc="lower right", fontsize=8.5)
+    fig.suptitle(
+        "Test set, read once: bars and lines are test Macro F1 with its 95% interval (products drawn)",
+        x=0.01,
+        ha="left",
+        fontsize=12,
+        fontweight="bold",
+    )
+    fig.tight_layout()
+    plotting.save(fig, "results_test_models")
+
+
+def test_confusion(evaluation):
+    fig, axes = plt.subplots(1, 2, figsize=(9.5, 4.2))
+    for ax, head in zip(axes, HEADS, strict=True):
+        scores = evaluation["heads"][head]["models"]["final system"]["with_offsets"]
+        labels = scores["confusion_matrix"]["labels"]
+        counts = np.array(scores["confusion_matrix"]["rows_are_true_class"], dtype=float)
+        shares = counts / counts.sum(axis=1, keepdims=True) * 100
+        ax.imshow(shares, cmap="Blues", vmin=0, vmax=100)
+        ax.grid(False)
+        for i in range(len(labels)):
+            for j in range(len(labels)):
+                color = "white" if shares[i, j] > 55 else plotting.INK
+                ax.text(
+                    j,
+                    i,
+                    f"{shares[i, j]:.1f}%\n{plotting.compact(counts[i, j])}",
+                    ha="center",
+                    va="center",
+                    fontsize=8.5,
+                    color=color,
+                )
+        names = [label.replace("_", " ") for label in labels]
+        ax.set_xticks(range(len(labels)), names, rotation=20, ha="right")
+        ax.set_yticks(range(len(labels)), names)
+        ax.set_xlabel("Predicted")
+        ax.set_ylabel("True")
+        ax.set_title(f"{HEAD_TITLES[head]} · Macro F1 {scores['macro_f1']:.3f}", fontsize=10.5)
+    fig.suptitle(
+        "The final system on the test set (rows sum to 100%)",
+        x=0.01,
+        ha="left",
+        fontsize=12,
+        fontweight="bold",
+    )
+    fig.tight_layout()
+    plotting.save(fig, "results_test_confusion")
+
+
+def test_semi(evaluation):
+    change = evaluation["heads"]["recommendation"]["differences"]["student minus fabert"]["change"]
+    keys = ["accuracy", "macro_f1", "macro_precision", "macro_recall"] + [
+        f"{c} {k}" for c in HEADS["recommendation"]["labels"] for k in ("precision", "recall", "f1")
+    ]
+    values = [100 * change[k] for k in keys]
+    fig, ax = plt.subplots(figsize=(8, 4.6))
+    y = np.arange(len(keys))
+    ax.barh(
+        y, values, height=0.55, color=[plotting.SERIES[2] if v > 0 else plotting.SERIES[1] for v in values]
+    )
+    for i, v in enumerate(values):
+        ax.text(
+            v + (0.05 if v >= 0 else -0.05),
+            i,
+            f"{v:+.2f}",
+            va="center",
+            ha="left" if v >= 0 else "right",
+            fontsize=8,
+            color=plotting.INK_SECONDARY,
+        )
+    ax.axvline(0, color=plotting.AXIS, linewidth=1)
+    ax.set_yticks(y, [k.replace("_", " ") for k in keys])
+    ax.invert_yaxis()
+    ax.set_xlim(min(values) - 0.8, max(values) + 0.8)
+    ax.set_xlabel("Semi-supervised minus supervised, points")
+    ax.grid(axis="y", visible=False)
+    ax.set_title("What the pseudo-labels changed on the test set (recommendation)")
+    fig.tight_layout()
+    plotting.save(fig, "results_test_semi")
+
+
 def main():
     plotting.apply_style()
     comparison = load("transformer_final/vs_tfidf.json")
@@ -590,6 +704,10 @@ def main():
     where_it_helps()
     loss_analysis()
     label_sample()
+    evaluation = load("final_evaluation.json")
+    test_models(evaluation)
+    test_confusion(evaluation)
+    test_semi(evaluation)
     print("Charts written to", plotting.FIGURES_DIR)
 
 
