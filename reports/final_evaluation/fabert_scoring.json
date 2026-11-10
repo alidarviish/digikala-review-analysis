@@ -1,0 +1,38 @@
+{
+  "created_at": "2026-11-10T15:19:27+00:00",
+  "model": "fabert",
+  "weights": "fabert_final.pt",
+  "weights_sha256": "2828ba578eb13e09deace624e83e509aca924ee014d8461ceac6ff76383ebee0",
+  "hub_commit": "4cad2850ab81452041924fad29010ec0361322b6",
+  "max_length": 128,
+  "reviews": 922795,
+  "minutes": 1.2,
+  "predictions_sha256": "505133e051d87a4fc756570772127f1638066b38ac713c446e22904563d99848",
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "test.parquet": "11436727fe3214ad3be68a900cbd346549a3ddc5fe3dfbd1ba85288b0c701382"
+    }
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": "5.21.0",
+      "tokenizers": "0.23.3"
+    },
+    "machine": "db662be9-62a4-401e-a050-953b3d6598a5-ksj2x",
+    "torch": "2.14.1+cu130",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "transformers": "5.21.0"
+  },
+  "code": {
+    "commit": "622c56bf8c6572ceeba37e0f6296cd5a5870a0be",
+    "uncommitted_changes": false
+  }
+}

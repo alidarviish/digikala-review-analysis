@@ -1,0 +1,2 @@
+Scoring 922,795 test texts with fabert_final.pt
+done in 1.2 min; saved /marimo/work/outputs/artifacts/final_evaluation/fabert_test_predictions.parquet and /marimo/work/outputs/reports/final_evaluation/fabert_scoring.json
