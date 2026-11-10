@@ -1,0 +1,1376 @@
+{
+  "created_at": "2026-11-10T16:12:03+00:00",
+  "seed": 2026,
+  "rules": {
+    "negation_words": [
+      "نبود",
+      "نبودم",
+      "نخرید",
+      "ندارد",
+      "نداره",
+      "نداشت",
+      "نمیکنه",
+      "نه",
+      "نکرد",
+      "نکنه",
+      "نیست",
+      "نیستم"
+    ],
+    "positive_words": [
+      "بهترین",
+      "عالی",
+      "عالیه",
+      "عالی‌ه",
+      "فوق",
+      "فوق‌العاده",
+      "محشر",
+      "محشره"
+    ],
+    "max_words": 40
+  },
+  "cases": [
+    {
+      "category": "negation",
+      "note": "",
+      "reviews_fitting_the_rule": 31952,
+      "id": 18009897,
+      "text": "بد نبود خوب بود",
+      "rate": 3.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": "no_idea",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.759
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.716
+          },
+          "final": {
+            "label": "recommended",
+            "p": 0.566
+          },
+          "tfidf_words": [
+            "نبود",
+            "بد نبود خوب",
+            "بد",
+            "نبود خوب بود"
+          ]
+        },
+        "rating_band": {
+          "true": "medium",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.4
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.395
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.396
+          },
+          "tfidf_words": [
+            "بد نبود خوب",
+            "نبود",
+            "خوب بود",
+            "بد نبود"
+          ]
+        }
+      }
+    },
+    {
+      "category": "negation",
+      "note": "",
+      "reviews_fitting_the_rule": 31952,
+      "id": 27120569,
+      "text": "هم پلاستیکی بود وهم وسایل جانبی از جمله شیر اتصال به شلنگ همراش نبود",
+      "rate": 0.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "recommended",
+          "tfidf": {
+            "label": "not_recommended",
+            "p": 0.525
+          },
+          "fabert": {
+            "label": "not_recommended",
+            "p": 0.659
+          },
+          "final": {
+            "label": "not_recommended",
+            "p": 0.619
+          },
+          "tfidf_words": [
+            "نبود",
+            "پلاستیکی",
+            "اتصال به",
+            "اتصال"
+          ]
+        },
+        "rating_band": {
+          "true": null
+        }
+      }
+    },
+    {
+      "category": "negation",
+      "note": "",
+      "reviews_fitting_the_rule": 31952,
+      "id": 49719918,
+      "text": "کاربردش راحت نیست",
+      "rate": 0.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "not_recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.6
+          },
+          "fabert": {
+            "label": "no_idea",
+            "p": 0.556
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.569
+          },
+          "tfidf_words": [
+            "راحت نیست",
+            "نیست",
+            "کاربردش"
+          ]
+        },
+        "rating_band": {
+          "true": null
+        }
+      }
+    },
+    {
+      "category": "sarcasm",
+      "note": "",
+      "reviews_fitting_the_rule": 394,
+      "id": 54203397,
+      "text": "واقعن عالی بود",
+      "rate": 2.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": "not_recommended",
+          "tfidf": {
+            "label": "recommended",
+            "p": 0.876
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.996
+          },
+          "final": {
+            "label": "recommended",
+            "p": 0.96
+          },
+          "tfidf_words": [
+            "عالی بود",
+            "واقعن",
+            "عالی",
+            "واقعن عالی"
+          ]
+        },
+        "rating_band": {
+          "true": "low",
+          "tfidf": {
+            "label": "high",
+            "p": 0.951
+          },
+          "fabert": {
+            "label": "high",
+            "p": 0.966
+          },
+          "final": {
+            "label": "high",
+            "p": 0.963
+          },
+          "tfidf_words": [
+            "واقعن عالی",
+            "واقعن",
+            "عالی بود",
+            "عالی"
+          ]
+        }
+      }
+    },
+    {
+      "category": "sarcasm",
+      "note": "",
+      "reviews_fitting_the_rule": 394,
+      "id": 49449812,
+      "text": "عالی",
+      "rate": 5.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": "not_recommended",
+          "tfidf": {
+            "label": "recommended",
+            "p": 0.939
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.991
+          },
+          "final": {
+            "label": "recommended",
+            "p": 0.976
+          },
+          "tfidf_words": [
+            "عالی"
+          ]
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "high",
+            "p": 0.97
+          },
+          "fabert": {
+            "label": "high",
+            "p": 0.971
+          },
+          "final": {
+            "label": "high",
+            "p": 0.971
+          },
+          "tfidf_words": [
+            "عالی"
+          ]
+        }
+      }
+    },
+    {
+      "category": "sarcasm",
+      "note": "",
+      "reviews_fitting_the_rule": 394,
+      "id": 44920946,
+      "text": "عالی بود، یکیشو هدیه دادم به بابای عشقم، اون یکیش تا از اون یکیش جدا افتاد کمرش شکست و انداختمش دور، پس نتیجه میگیریم حتما از هر دو با هم استفاده کنید 😘",
+      "rate": 3.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "not_recommended",
+          "tfidf": {
+            "label": "recommended",
+            "p": 0.283
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.996
+          },
+          "final": {
+            "label": "recommended",
+            "p": 0.782
+          },
+          "tfidf_words": [
+            "عالی بود ،",
+            "حتما",
+            "عالی بود",
+            "هدیه"
+          ]
+        },
+        "rating_band": {
+          "true": "medium",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.268
+          },
+          "fabert": {
+            "label": "high",
+            "p": 0.99
+          },
+          "final": {
+            "label": "high",
+            "p": 0.863
+          },
+          "tfidf_words": [
+            "شکست و",
+            "هدیه دادم",
+            "با هم",
+            "هدیه"
+          ]
+        }
+      }
+    },
+    {
+      "category": "short",
+      "note": "",
+      "reviews_fitting_the_rule": 19134,
+      "id": 18452180,
+      "text": "عالی بود",
+      "rate": 3.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": "no_idea",
+          "tfidf": {
+            "label": "recommended",
+            "p": 0.962
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.992
+          },
+          "final": {
+            "label": "recommended",
+            "p": 0.983
+          },
+          "tfidf_words": [
+            "عالی بود",
+            "عالی"
+          ]
+        },
+        "rating_band": {
+          "true": "medium",
+          "tfidf": {
+            "label": "high",
+            "p": 0.934
+          },
+          "fabert": {
+            "label": "high",
+            "p": 0.933
+          },
+          "final": {
+            "label": "high",
+            "p": 0.933
+          },
+          "tfidf_words": [
+            "عالی بود",
+            "عالی"
+          ]
+        }
+      }
+    },
+    {
+      "category": "short",
+      "note": "",
+      "reviews_fitting_the_rule": 19134,
+      "id": 27487055,
+      "text": "کیفیت صفحاتش پایینه",
+      "rate": 0.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "not_recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.433
+          },
+          "fabert": {
+            "label": "no_idea",
+            "p": 0.549
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.514
+          },
+          "tfidf_words": [
+            "پایینه",
+            "صفحاتش"
+          ]
+        },
+        "rating_band": {
+          "true": null
+        }
+      }
+    },
+    {
+      "category": "short",
+      "note": "",
+      "reviews_fitting_the_rule": 19134,
+      "id": 18846372,
+      "text": "متاسفانه ماندگاری نداره",
+      "rate": 0.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": "not_recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.592
+          },
+          "fabert": {
+            "label": "no_idea",
+            "p": 0.481
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.514
+          },
+          "tfidf_words": [
+            "متاسفانه",
+            "نداره",
+            "ماندگاری نداره",
+            "ماندگاری"
+          ]
+        },
+        "rating_band": {
+          "true": null
+        }
+      }
+    },
+    {
+      "category": "mixed",
+      "note": "",
+      "reviews_fitting_the_rule": 27106,
+      "id": 54535275,
+      "text": "بد نبود کیفیتش خوبه اما رنگشو زیاد دوست نداشتم",
+      "rate": 4.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.923
+          },
+          "fabert": {
+            "label": "no_idea",
+            "p": 0.467
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.604
+          },
+          "tfidf_words": [
+            "اما",
+            "نبود",
+            "زیاد",
+            "دوست نداشتم"
+          ]
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.675
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.484
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.522
+          },
+          "tfidf_words": [
+            "بد نبود کیفیتش",
+            "اما",
+            "زیاد",
+            "دوست نداشتم"
+          ]
+        }
+      }
+    },
+    {
+      "category": "mixed",
+      "note": "",
+      "reviews_fitting_the_rule": 27106,
+      "id": 43966168,
+      "text": "جنسش به نظرم خیلی معمولیه من توی شگفت انگیز با قیمت 230 خریدم در همون اندازه قیمت بد نیست ولی نه بیشتر",
+      "rate": 4.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.861
+          },
+          "fabert": {
+            "label": "no_idea",
+            "p": 0.672
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.729
+          },
+          "tfidf_words": [
+            "معمولیه",
+            "معمولیه من",
+            "بد نیست ولی",
+            "ولی"
+          ]
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.864
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.818
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.827
+          },
+          "tfidf_words": [
+            "معمولیه من",
+            "معمولیه",
+            "بد نیست ولی",
+            "خیلی معمولیه"
+          ]
+        }
+      }
+    },
+    {
+      "category": "mixed",
+      "note": "",
+      "reviews_fitting_the_rule": 27106,
+      "id": 32261833,
+      "text": "جنسش کاملا معمولیه بعد از یک ماه استفاده پوسته پوسته شد ولی با این قیمت بد نیست.",
+      "rate": 3.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "not_recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.825
+          },
+          "fabert": {
+            "label": "no_idea",
+            "p": 0.732
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.76
+          },
+          "tfidf_words": [
+            "کاملا معمولیه",
+            "معمولیه",
+            "بد نیست .",
+            "ولی"
+          ]
+        },
+        "rating_band": {
+          "true": "medium",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.821
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.838
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.833
+          },
+          "tfidf_words": [
+            "کاملا معمولیه",
+            "معمولیه",
+            "پوسته پوسته شد",
+            "پوسته شد"
+          ]
+        }
+      }
+    },
+    {
+      "category": "spelling",
+      "note": "",
+      "reviews_fitting_the_rule": 1585,
+      "id": 11125336,
+      "text": "کوچک وضعیف است وبی کیفیت",
+      "rate": 3.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "no_idea",
+          "tfidf": {
+            "label": "not_recommended",
+            "p": 0.952
+          },
+          "fabert": {
+            "label": "not_recommended",
+            "p": 0.916
+          },
+          "final": {
+            "label": "not_recommended",
+            "p": 0.927
+          },
+          "tfidf_words": [
+            "وبی",
+            "وضعیف",
+            "وبی کیفیت",
+            "کوچک"
+          ]
+        },
+        "rating_band": {
+          "true": "medium",
+          "tfidf": {
+            "label": "low",
+            "p": 0.746
+          },
+          "fabert": {
+            "label": "low",
+            "p": 0.879
+          },
+          "final": {
+            "label": "low",
+            "p": 0.839
+          },
+          "tfidf_words": [
+            "وبی کیفیت",
+            "وبی",
+            "وضعیف",
+            "کوچک"
+          ]
+        }
+      }
+    },
+    {
+      "category": "spelling",
+      "note": "",
+      "reviews_fitting_the_rule": 1585,
+      "id": 6225840,
+      "text": "بوش خوبه ملایمه ولی نرم کنندگی نداره تاثییر نداره انگار",
+      "rate": 0.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "not_recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.478
+          },
+          "fabert": {
+            "label": "no_idea",
+            "p": 0.706
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.638
+          },
+          "tfidf_words": [
+            "نداره",
+            "ولی",
+            "انگار",
+            "ملایمه"
+          ]
+        },
+        "rating_band": {
+          "true": null
+        }
+      }
+    },
+    {
+      "category": "spelling",
+      "note": "",
+      "reviews_fitting_the_rule": 1585,
+      "id": 25052030,
+      "text": "چرا هروز قیمت افزایش پیدا میکنه",
+      "rate": 2.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "no_idea",
+          "tfidf": {
+            "label": "recommended",
+            "p": 0.26
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.877
+          },
+          "final": {
+            "label": "recommended",
+            "p": 0.692
+          },
+          "tfidf_words": [
+            "پیدا",
+            "هروز",
+            "افزایش",
+            "میکنه"
+          ]
+        },
+        "rating_band": {
+          "true": "low",
+          "tfidf": {
+            "label": "high",
+            "p": 0.602
+          },
+          "fabert": {
+            "label": "high",
+            "p": 0.727
+          },
+          "final": {
+            "label": "high",
+            "p": 0.702
+          },
+          "tfidf_words": [
+            "پیدا",
+            "هروز",
+            "افزایش",
+            "افزایش پیدا میکنه"
+          ]
+        }
+      }
+    },
+    {
+      "category": "duplicate",
+      "note": "",
+      "reviews_fitting_the_rule": 22924,
+      "id": 51807721,
+      "text": "خوب",
+      "rate": 1.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": "no_idea",
+          "tfidf": {
+            "label": "recommended",
+            "p": 0.655
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.934
+          },
+          "final": {
+            "label": "recommended",
+            "p": 0.85
+          },
+          "tfidf_words": [
+            "خوب"
+          ]
+        },
+        "rating_band": {
+          "true": "low",
+          "tfidf": {
+            "label": "high",
+            "p": 0.839
+          },
+          "fabert": {
+            "label": "high",
+            "p": 0.837
+          },
+          "final": {
+            "label": "high",
+            "p": 0.837
+          },
+          "tfidf_words": [
+            "خوب"
+          ]
+        }
+      }
+    },
+    {
+      "category": "duplicate",
+      "note": "",
+      "reviews_fitting_the_rule": 22924,
+      "id": 28464979,
+      "text": "بوی جالبی نداره",
+      "rate": 5.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": "recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.545
+          },
+          "fabert": {
+            "label": "no_idea",
+            "p": 0.648
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.617
+          },
+          "tfidf_words": [
+            "نداره",
+            "جالبی نداره",
+            "جالبی",
+            "بوی"
+          ]
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.6
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.632
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.623
+          },
+          "tfidf_words": [
+            "جالبی نداره",
+            "جالبی",
+            "نداره",
+            "بوی"
+          ]
+        }
+      }
+    },
+    {
+      "category": "duplicate",
+      "note": "",
+      "reviews_fitting_the_rule": 22924,
+      "id": 54389839,
+      "text": "خوبه ولی خیلی نازکه",
+      "rate": 5.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": "recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.849
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.681
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.469
+          },
+          "tfidf_words": [
+            "ولی",
+            "نازکه",
+            "خیلی نازکه",
+            "ولی خیلی نازکه"
+          ]
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.495
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.377
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.401
+          },
+          "tfidf_words": [
+            "ولی",
+            "نازکه",
+            "خوبه ولی",
+            "خیلی نازکه"
+          ]
+        }
+      }
+    },
+    {
+      "category": "contradictory",
+      "note": "",
+      "reviews_fitting_the_rule": 17734,
+      "id": 49558513,
+      "text": "خوبه",
+      "rate": 2.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": "no_idea",
+          "tfidf": {
+            "label": "recommended",
+            "p": 0.666
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.938
+          },
+          "final": {
+            "label": "recommended",
+            "p": 0.856
+          },
+          "tfidf_words": [
+            "خوبه"
+          ]
+        },
+        "rating_band": {
+          "true": "low",
+          "tfidf": {
+            "label": "high",
+            "p": 0.82
+          },
+          "fabert": {
+            "label": "high",
+            "p": 0.837
+          },
+          "final": {
+            "label": "high",
+            "p": 0.834
+          },
+          "tfidf_words": [
+            "خوبه"
+          ]
+        }
+      }
+    },
+    {
+      "category": "contradictory",
+      "note": "",
+      "reviews_fitting_the_rule": 17734,
+      "id": 52246419,
+      "text": "معمولی",
+      "rate": 3.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": "recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.86
+          },
+          "fabert": {
+            "label": "no_idea",
+            "p": 0.593
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.673
+          },
+          "tfidf_words": [
+            "معمولی"
+          ]
+        },
+        "rating_band": {
+          "true": "medium",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.802
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.763
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.771
+          },
+          "tfidf_words": [
+            "معمولی"
+          ]
+        }
+      }
+    },
+    {
+      "category": "contradictory",
+      "note": "",
+      "reviews_fitting_the_rule": 17734,
+      "id": 52053812,
+      "text": "قیمت بالا",
+      "rate": 4.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": "recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.532
+          },
+          "fabert": {
+            "label": "no_idea",
+            "p": 0.412
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.448
+          },
+          "tfidf_words": [
+            "قیمت بالا",
+            "قیمت"
+          ]
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.47
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.505
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.495
+          },
+          "tfidf_words": [
+            "قیمت بالا",
+            "قیمت"
+          ]
+        }
+      }
+    },
+    {
+      "category": "boundary",
+      "note": "",
+      "reviews_fitting_the_rule": 45828,
+      "id": 48221959,
+      "text": "یک ماهه استفاده میکنم، خوله مشکلی نداشته، فقط فیک و سنگین بودنش حس بدی به آدم میده",
+      "rate": 4.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "recommended",
+          "tfidf": {
+            "label": "recommended",
+            "p": 0.485
+          },
+          "fabert": {
+            "label": "no_idea",
+            "p": 0.717
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.592
+          },
+          "tfidf_words": [
+            "مشکلی",
+            "، فقط",
+            "به آدم",
+            "استفاده میکنم"
+          ]
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.329
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.707
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.593
+          },
+          "tfidf_words": [
+            "نداشته",
+            "به آدم میده",
+            "حس",
+            "حس بدی"
+          ]
+        }
+      }
+    },
+    {
+      "category": "boundary",
+      "note": "",
+      "reviews_fitting_the_rule": 45828,
+      "id": 46943506,
+      "text": "بدک نیست",
+      "rate": 4.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": null
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.59
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.575
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.578
+          },
+          "tfidf_words": [
+            "بدک",
+            "نیست"
+          ]
+        }
+      }
+    },
+    {
+      "category": "boundary",
+      "note": "",
+      "reviews_fitting_the_rule": 45828,
+      "id": 38711948,
+      "text": "رایحه معمولی داره و ارزش خرید داره",
+      "rate": 4.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "recommended",
+          "tfidf": {
+            "label": "recommended",
+            "p": 0.462
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.906
+          },
+          "final": {
+            "label": "recommended",
+            "p": 0.773
+          },
+          "tfidf_words": [
+            "ارزش خرید داره",
+            "خرید داره",
+            "داره",
+            "و"
+          ]
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.694
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.436
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.513
+          },
+          "tfidf_words": [
+            "معمولی داره و",
+            "معمولی",
+            "معمولی داره",
+            "رایحه معمولی"
+          ]
+        }
+      }
+    },
+    {
+      "category": "disagreement",
+      "note": "FaBERT right, TF-IDF wrong",
+      "reviews_fitting_the_rule": 41034,
+      "id": 34220192,
+      "text": "کیفیتش مثل قبل نیست ولی باز خوبه",
+      "rate": 4.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.617
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.782
+          },
+          "final": {
+            "label": "recommended",
+            "p": 0.623
+          },
+          "tfidf_words": [
+            "ولی",
+            "باز خوبه",
+            "نیست",
+            "مثل قبل نیست"
+          ]
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.328
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.365
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.358
+          },
+          "tfidf_words": [
+            "قبل نیست",
+            "ولی",
+            "مثل قبل نیست",
+            "نیست"
+          ]
+        }
+      }
+    },
+    {
+      "category": "disagreement",
+      "note": "FaBERT right, TF-IDF wrong",
+      "reviews_fitting_the_rule": 41034,
+      "id": 49950687,
+      "text": "خوبه بدک نیست",
+      "rate": 4.0,
+      "seen_in_train": true,
+      "heads": {
+        "recommendation": {
+          "true": "recommended",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.671
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.773
+          },
+          "final": {
+            "label": "recommended",
+            "p": 0.638
+          },
+          "tfidf_words": [
+            "بدک",
+            "نیست",
+            "خوبه بدک نیست",
+            "خوبه بدک"
+          ]
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.348
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.389
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.381
+          },
+          "tfidf_words": [
+            "بدک",
+            "نیست",
+            "خوبه بدک",
+            "خوبه"
+          ]
+        }
+      }
+    },
+    {
+      "category": "disagreement",
+      "note": "TF-IDF right, FaBERT wrong",
+      "reviews_fitting_the_rule": 21388,
+      "id": 22911749,
+      "text": "خوب بود ولی من معمولی میخواستم برام کبریتی فرستادن",
+      "rate": 4.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "no_idea",
+          "tfidf": {
+            "label": "no_idea",
+            "p": 0.735
+          },
+          "fabert": {
+            "label": "recommended",
+            "p": 0.683
+          },
+          "final": {
+            "label": "recommended",
+            "p": 0.526
+          },
+          "tfidf_words": [
+            "ولی",
+            "معمولی",
+            "من معمولی",
+            "کبریتی"
+          ]
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.395
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.319
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.341
+          },
+          "tfidf_words": [
+            "من معمولی",
+            "معمولی",
+            "ولی",
+            "خوب بود"
+          ]
+        }
+      }
+    },
+    {
+      "category": "disagreement",
+      "note": "TF-IDF right, FaBERT wrong",
+      "reviews_fitting_the_rule": 21388,
+      "id": 49675290,
+      "text": "یکم سخت در میاد",
+      "rate": 4.0,
+      "seen_in_train": false,
+      "heads": {
+        "recommendation": {
+          "true": "recommended",
+          "tfidf": {
+            "label": "recommended",
+            "p": 0.396
+          },
+          "fabert": {
+            "label": "no_idea",
+            "p": 0.432
+          },
+          "final": {
+            "label": "no_idea",
+            "p": 0.441
+          },
+          "tfidf_words": [
+            "یکم",
+            "یکم سخت",
+            "میاد",
+            "سخت در میاد"
+          ]
+        },
+        "rating_band": {
+          "true": "high",
+          "tfidf": {
+            "label": "medium",
+            "p": 0.463
+          },
+          "fabert": {
+            "label": "medium",
+            "p": 0.431
+          },
+          "final": {
+            "label": "medium",
+            "p": 0.441
+          },
+          "tfidf_words": [
+            "یکم",
+            "سخت",
+            "میاد",
+            "سخت در"
+          ]
+        }
+      }
+    }
+  ],
+  "code": {
+    "commit": "a34bd7b605b917529d272568163294f2b8f8fa62",
+    "uncommitted_changes": false
+  }
+}
