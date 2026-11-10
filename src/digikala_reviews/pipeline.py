@@ -1021,6 +1021,37 @@ STEPS = [
         files("reports/predictor_check.json"),
         "runs FaBERT on the CPU of your machine; a few minutes",
     ),
+    # The final evaluation (reports/final_evaluation_plan.md): the test texts on the GPU, then
+    # the test labels read once on your machine
+    Step(
+        106,
+        "Final evaluation: FaBERT scores the test texts (no labels)",
+        ["scripts/score_test_set.py", "--model", "fabert"],
+        "gpu",
+        [33],
+        files("reports/final_evaluation/fabert_scoring.json"),
+        "test.parquet and fabert_final.pt in the cache folder; about 10 minutes",
+        smoke=True,
+    ),
+    Step(
+        107,
+        "Final evaluation: the semi-supervised student scores the test texts (no labels)",
+        ["scripts/score_test_set.py", "--model", "student"],
+        "gpu",
+        [100],
+        files("reports/final_evaluation/student_scoring.json"),
+        "test.parquet and semi_student_last.pt (the student's model_last.pt) in the cache folder",
+        smoke=True,
+    ),
+    Step(
+        108,
+        "Final evaluation: the one reading of the test labels, four models fixed before",
+        ["scripts/final_evaluation.py"],
+        "local",
+        [17, 33, 94, 100, 103, 106, 107],
+        files("reports/final_evaluation.json"),
+        "runs once; it stops if its report exists",
+    ),
 ]
 
 
