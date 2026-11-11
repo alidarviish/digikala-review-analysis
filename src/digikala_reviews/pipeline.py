@@ -1218,7 +1218,7 @@ STEPS = [
         "any",
         [17],
         files("reports/extensions/rate_ridge.json"),
-        "about 6 GB of memory: on molab, with the TF-IDF model in the cache folder as tfidf_model.joblib",
+        "about 3 GB of memory (measured); on molab the TF-IDF model goes in the cache as tfidf_model.joblib",
     ),
     Step(
         126,

@@ -13,7 +13,7 @@ Writes artifacts/tfidf_final/rate_ridge.joblib, artifacts/tfidf_final/rate_valid
 constant baseline).
 
 Usage:
-    uv run python scripts/fit_rate_ridge.py     # about 6 GB of memory
+    uv run python scripts/fit_rate_ridge.py     # about 3 GB of memory (measured)
 """
 
 import json
@@ -48,7 +48,7 @@ def main():
         model_path = CACHE_DIR / "tfidf_model.joblib"
     assert file_sha256(model_path) == expected, f"{model_path} is not the final TF-IDF model"
     data = check_cache(CACHE_DIR, ["train_supervised.parquet", "validation.parquet"])
-    require_free_memory(6, "the TF-IDF features of the training reviews")
+    require_free_memory(3.5, "the TF-IDF features of the training reviews")
     vectorizer = joblib.load(model_path)["vectorizer"]
 
     start = time.perf_counter()
