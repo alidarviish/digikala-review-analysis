@@ -1,0 +1,63 @@
+=== exact rate (validation, reviews with a real rate)
+  FaBERT rate head           MAE 0.546  RMSE 0.740  R2 0.584  Spearman 0.674
+  TF-IDF ridge               MAE 0.609  RMSE 0.798  R2 0.516  Spearman 0.621
+  constant (training mean)   MAE 0.877  RMSE 1.146  R2 -0.000  Spearman -
+
+=== recommendation, Macro F1 with offsets
+  tfidf                0.7017
+  fabert               0.7324
+  rate model           0.7327
+  frozen               0.6592
+  control              0.7300
+  student 0.90         0.7310
+  student 0.80         0.7308
+  student 0.95         0.7310
+  student both heads   0.7299
+  student natural      0.7306
+  rate model minus fabert: +0.0003 [-0.0006, +0.0012]
+  frozen minus fabert: -0.0733 [-0.0748, -0.0718]
+  frozen minus tfidf: -0.0425 [-0.0440, -0.0411]
+  student 0.80 minus control: +0.0008 [-0.0000, +0.0015]
+  student 0.95 minus control: +0.0010 [+0.0002, +0.0017]
+  student both heads minus control: -0.0001 [-0.0010, +0.0007]
+  student natural minus control: +0.0006 [-0.0003, +0.0014]
+  student 0.80 minus student 0.90: -0.0002 [-0.0010, +0.0006]
+  student 0.95 minus student 0.90: +0.0000 [-0.0008, +0.0008]
+  student both heads minus student 0.90: -0.0011 [-0.0019, -0.0003]
+  student natural minus student 0.90: -0.0004 [-0.0011, +0.0005]
+  student 0.80 minus fabert: -0.0016 [-0.0024, -0.0009]
+  student 0.95 minus fabert: -0.0015 [-0.0022, -0.0006]
+  student both heads minus fabert: -0.0026 [-0.0034, -0.0017]
+  student natural minus fabert: -0.0018 [-0.0026, -0.0011]
+
+=== rating_band, Macro F1 with offsets
+  tfidf                0.6683
+  fabert               0.6922
+  rate model           0.6926
+  frozen               0.6174
+  control              0.6903
+  student 0.90         0.6921
+  student 0.80         0.6923
+  student 0.95         0.6915
+  student both heads   0.6919
+  student natural      0.6922
+  rate model minus fabert: +0.0004 [-0.0003, +0.0011]
+  frozen minus fabert: -0.0748 [-0.0761, -0.0734]
+  frozen minus tfidf: -0.0509 [-0.0522, -0.0495]
+  student 0.80 minus control: +0.0020 [+0.0014, +0.0026]
+  student 0.95 minus control: +0.0012 [+0.0006, +0.0019]
+  student both heads minus control: +0.0016 [+0.0010, +0.0023]
+  student natural minus control: +0.0019 [+0.0012, +0.0026]
+  student 0.80 minus student 0.90: +0.0002 [-0.0005, +0.0008]
+  student 0.95 minus student 0.90: -0.0006 [-0.0012, -0.0000]
+  student both heads minus student 0.90: -0.0002 [-0.0009, +0.0004]
+  student natural minus student 0.90: +0.0001 [-0.0006, +0.0007]
+  student 0.80 minus fabert: +0.0001 [-0.0006, +0.0007]
+  student 0.95 minus fabert: -0.0007 [-0.0013, -0.0001]
+  student both heads minus fabert: -0.0003 [-0.0010, +0.0003]
+  student natural minus fabert: -0.0000 [-0.0007, +0.0006]
+
+band guesses at 0.9: kept 45.2%, right 92.4%, classes {'low': 0.06605300324000997, 'medium': 3.323087147960455e-05, 'high': 0.9339137658885104}
+natural pool: 77.1% reach 0.9, classes {'recommended': 0.8465686431197059, 'not_recommended': 0.07707367748122103, 'no_idea': 0.07635767939907304}
+pseudo-labels help by the rule: student 0.80 no, student 0.95 no, student both heads no, student natural no
+saved /mnt/e/Boot Camp AI 145/digikala-review-analysis/reports/extensions_validation.json
