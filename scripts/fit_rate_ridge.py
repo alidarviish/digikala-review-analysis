@@ -63,6 +63,7 @@ def main():
     validation = load_cache("validation.parquet")
     predicted = np.clip(model.predict(vectorizer.transform(validation["text"])), 0, 5)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     joblib.dump(model, OUT_DIR / "rate_ridge.joblib", compress=3)
     pd.DataFrame(
         {"id": validation["id"].to_numpy(), "rate__predicted": predicted.astype(np.float32)}
