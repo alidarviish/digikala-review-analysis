@@ -1,7 +1,7 @@
 {
-  "created_at": "2026-10-28T11:23:00+00:00",
+  "created_at": "2026-11-11T21:18:48+00:00",
   "passed": true,
-  "rebuild_check": "identical",
+  "rebuild_check": "skipped: the files were not rebuilt since the last passed run",
   "checks": [
     {
       "check": "every id of the split is in the cleaned data",
@@ -26,7 +26,7 @@
     {
       "check": "files are rebuilt byte for byte",
       "passed": true,
-      "detail": "identical"
+      "detail": "skipped: the files were not rebuilt since the last passed run"
     },
     {
       "check": "recommended: floor(0.2 x class count) rows masked",
@@ -289,5 +289,5 @@
     "test.csv": "e1396ecb1bd89f00e9bfe848c95e9ffb6e93403b248a95e4210ea3960f7947a6",
     "audit/masked_labels_reference.csv": "62722cb4b2bbeb530aea79f68877baecaa49cd0892a656644b729a8a812f69c9"
   },
-  "seconds": 210
+  "seconds": 262
 }

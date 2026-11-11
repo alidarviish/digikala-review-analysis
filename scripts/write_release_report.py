@@ -78,6 +78,10 @@ def main():
     semi = read("semi_supervised.json")
     predictor = read("predictor_check.json")
     tokenizer = read("fabert_files.json")
+    extensions_validation = read("extensions_validation.json")
+    extensions_test = read("final_evaluation_extensions.json")
+    memory = read("predictor_memory.json")
+    docker = read("docker_check.json")
     cache = json.loads((CACHE_DIR / "cache_info.json").read_text(encoding="utf-8"))
 
     files = {"split_manifest": entry(REPORTS_DIR / "split_manifest.json", PUBLIC)}
@@ -148,6 +152,22 @@ def main():
             }
 
     pseudo = semi["pseudo_labels"][str(semi["threshold"])]
+    extensions = {
+        "plan": "reports/extensions_plan.md",
+        "official_result_unchanged": True,
+        "exact_rate": {
+            "valid_rate": "0 < rate <= 5 (D75)",
+            "validation": {name: r["scores"] for name, r in extensions_validation["rate"].items()},
+            "test": {name: r["scores"] for name, r in extensions_test["rate"].items()},
+        },
+        "test_macro_f1": {
+            head: {name: m["macro_f1"] for name, m in extensions_test["heads"][head]["models"].items()}
+            for head in HEADS
+        },
+        "test_differences_macro_f1": {head: extensions_test["heads"][head]["differences"] for head in HEADS},
+        "pseudo_labels_help_by_the_rule": extensions_validation["rule_pseudo_labels_help"],
+        "weights": "the extensions' FaBERT weights are not among the delivered files",
+    }
     report = {
         "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
         "project": "Digikala review analysis: recommendation and rating band from the review text alone",
@@ -167,7 +187,9 @@ def main():
             "rating_band": manifest["rating_band"],
             "row_counts": manifest["row_counts"],
             "normalizer_version": cache["normalizer_version"],
-            "test_set_read": "once, by scripts/final_evaluation.py; nothing was chosen on it",
+            "test_set_read": "once for the four official models (scripts/final_evaluation.py), and once more "
+            "for the extensions' models, reported apart (scripts/final_evaluation_extensions.py, D74); "
+            "nothing was chosen on it",
         },
         "files": files,
         "models": models,
@@ -188,6 +210,36 @@ def main():
             "latency_one_review_ms": {k: v["median_ms"] for k, v in predictor["latency_one_review"].items()},
             "demo": "reports/predict_demo.md",
         },
+        "extensions": extensions,
+        "service": {
+            "code": ["app/main.py", "Dockerfile", "compose.yaml", "requirements-service.txt"],
+            "endpoints": [
+                "/health",
+                "/ready",
+                "/normalize",
+                "/tokenize",
+                "/predict",
+                "/predict/tfidf",
+                "/predict/transformer",
+                "/predict/compare",
+            ],
+            "tests": "tests/test_api.py",
+            "memory_gb": memory["memory_gb"],
+            "latency_ms_one_review": memory["latency_ms_one_review"],
+            "docker": {
+                k: docker[k]
+                for k in (
+                    "image_size_gb",
+                    "seconds_until_ready",
+                    "models_loaded_seconds",
+                    "health_check",
+                    "torch_inside",
+                    "gpu_inside",
+                    "all_as_expected",
+                    "review_text_in_log",
+                )
+            },
+        },
         "limitations": [
             "FaBERT declares no licence: its fine-tuned weights are not published",
             "on the test set the final system matches FaBERT on recommendation (+0.03 point, interval across "
@@ -195,6 +247,8 @@ def main():
             "the middle classes (no_idea, medium) stay near F1 0.5: identical texts often carry other labels",
             "reviews longer than 128 tokens (about 0.2%) are cut for FaBERT",
             "GPU training is not bit-for-bit repeatable; decisions rest on intervals and seed spread",
+            "one validation review has a rate of 2,500; the exact-rate scores leave it out (D75)",
+            "the service is built and checked for the CPU only",
         ],
         "reproduce": [
             "uv sync --group transformer",
@@ -202,6 +256,7 @@ def main():
             "uvx marimo edit notebooks/run_all.py  # the steps of src/digikala_reviews/pipeline.py",
             "uv run python scripts/verify_standard_files.py  # the split files must match the hashes above",
             'uv run python scripts/predict.py "<review text>"  # after scripts/save_fabert_files.py, once',
+            "uv sync --all-groups && uv run uvicorn app.main:app  # or: docker compose up --build",
         ],
         "environment": {
             **environment(),
