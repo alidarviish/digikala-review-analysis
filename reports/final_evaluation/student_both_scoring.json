@@ -1,0 +1,38 @@
+{
+  "created_at": "2026-11-10T20:59:13+00:00",
+  "model": "student_both",
+  "weights": "semi_supervised_student_both/model_last.pt",
+  "weights_sha256": "e840f0af7d6274c8fbbb3a5130c2a58f72ae12b756addee6c28bd27cab642a80",
+  "hub_commit": "4cad2850ab81452041924fad29010ec0361322b6",
+  "max_length": 128,
+  "reviews": 922795,
+  "minutes": 1.8,
+  "predictions_sha256": "02ddfa6ed678ed847a956c15de379d6252c4a7225add487bd17ca1a09473f02a",
+  "data": {
+    "normalizer_version": "2",
+    "sha256": {
+      "test.parquet": "11436727fe3214ad3be68a900cbd346549a3ddc5fe3dfbd1ba85288b0c701382"
+    }
+  },
+  "environment": {
+    "python": "3.13.11",
+    "libraries": {
+      "numpy": "2.5.4",
+      "pandas": "3.1.0",
+      "pyarrow": "26.0.0",
+      "scipy": "1.18.1",
+      "scikit-learn": "1.9.1",
+      "joblib": "1.6.0",
+      "transformers": "5.21.0",
+      "tokenizers": "0.23.3"
+    },
+    "machine": "c37fbd6e-cd40-477a-9a7e-29f313f391d2-bcmzc",
+    "torch": "2.14.1+cu130",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "transformers": "5.21.0"
+  },
+  "code": {
+    "commit": "fbe9b26a13b1575fc514e758006d1c58eb2af460",
+    "uncommitted_changes": false
+  }
+}

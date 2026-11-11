@@ -1,0 +1,2 @@
+Scoring 922,795 test texts with model.pt
+done in 0.8 min; saved /marimo/work/outputs/artifacts/final_evaluation/rate_test_predictions.parquet and /marimo/work/outputs/reports/final_evaluation/rate_scoring.json

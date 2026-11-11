@@ -1,0 +1,2 @@
+Scoring 922,795 test texts with model_last.pt
+done in 1.3 min; saved /marimo/work/outputs/artifacts/final_evaluation/student_natural_test_predictions.parquet and /marimo/work/outputs/reports/final_evaluation/student_natural_scoring.json
