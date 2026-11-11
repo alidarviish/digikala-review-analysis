@@ -179,8 +179,9 @@ def histogram(true, predicted) -> dict:
 
 
 def rate_section(table, predictions, train_mean) -> dict:
-    rated = table["rate"].to_numpy(dtype=float) > 0
-    true = table["rate"].to_numpy(dtype=float)[rated]
+    rate = table["rate"].to_numpy(dtype=float)
+    rated = (rate > 0) & (rate <= 5)  # 0: no rating recorded; above 5: not a valid rate
+    true = rate[rated]
     lengths = length_bucket(word_count(table["text"].to_numpy()[rated]))
     classes = table["recommendation_status"].fillna("none").to_numpy()[rated]
     found = {}
