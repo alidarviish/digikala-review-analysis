@@ -1,0 +1,50 @@
+=== exact rate (test, reviews with a real rate)
+  FaBERT rate head           MAE 0.547  RMSE 0.741  R2 0.582  Spearman 0.672
+  TF-IDF ridge               MAE 0.609  RMSE 0.799  R2 0.515  Spearman 0.621
+  constant (training mean)   MAE 0.877  RMSE 1.147  R2 -0.000  Spearman -
+
+=== recommendation, Macro F1 with offsets (test)
+  fabert               0.7346
+  student 0.90         0.7330
+  rate model           0.7338
+  frozen               0.6605
+  student 0.80         0.7322
+  student 0.95         0.7323
+  student both heads   0.7321
+  student natural      0.7325
+  tfidf                0.7021
+  rate model minus fabert: -0.0008 [-0.0017, +0.0001]
+  frozen minus fabert: -0.0741 [-0.0756, -0.0726]
+  frozen minus tfidf: -0.0416 [-0.0430, -0.0401]
+  student 0.80 minus student 0.90: -0.0008 [-0.0016, -0.0001]
+  student 0.95 minus student 0.90: -0.0007 [-0.0015, +0.0000]
+  student both heads minus student 0.90: -0.0009 [-0.0017, -0.0001]
+  student natural minus student 0.90: -0.0005 [-0.0012, +0.0003]
+  student 0.80 minus fabert: -0.0024 [-0.0032, -0.0017]
+  student 0.95 minus fabert: -0.0023 [-0.0031, -0.0015]
+  student both heads minus fabert: -0.0025 [-0.0034, -0.0017]
+  student natural minus fabert: -0.0020 [-0.0029, -0.0012]
+
+=== rating_band, Macro F1 with offsets (test)
+  fabert               0.6918
+  student 0.90         0.6911
+  rate model           0.6920
+  frozen               0.6167
+  student 0.80         0.6910
+  student 0.95         0.6912
+  student both heads   0.6908
+  student natural      0.6912
+  tfidf                0.6684
+  rate model minus fabert: +0.0002 [-0.0005, +0.0009]
+  frozen minus fabert: -0.0751 [-0.0765, -0.0737]
+  frozen minus tfidf: -0.0517 [-0.0530, -0.0503]
+  student 0.80 minus student 0.90: -0.0001 [-0.0007, +0.0005]
+  student 0.95 minus student 0.90: +0.0000 [-0.0006, +0.0006]
+  student both heads minus student 0.90: -0.0003 [-0.0009, +0.0002]
+  student natural minus student 0.90: +0.0001 [-0.0005, +0.0007]
+  student 0.80 minus fabert: -0.0007 [-0.0014, -0.0001]
+  student 0.95 minus fabert: -0.0006 [-0.0013, -0.0000]
+  student both heads minus fabert: -0.0010 [-0.0016, -0.0003]
+  student natural minus fabert: -0.0006 [-0.0013, +0.0001]
+
+saved /mnt/e/Boot Camp AI 145/digikala-review-analysis/reports/final_evaluation_extensions.json
