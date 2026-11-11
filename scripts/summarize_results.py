@@ -1,8 +1,8 @@
-"""Write every result of the project so far into one file, from the saved files.
+"""Write every result of the project into one file, from the saved files.
 
 Nothing is trained or scored again; each number is read from a JSON file in reports/ and
-printed with the commit it was made with. Scores are Macro F1 on the validation set. A
-difference is shown with its 95% bootstrap interval: [low, high].
+printed with the commit it was made with. Scores are Macro F1 on the validation set, except in
+the sections on the test set. A difference is shown with its 95% bootstrap interval: [low, high].
 
 Writes reports/results_summary.md.
 
@@ -19,11 +19,18 @@ OUT = REPORTS_DIR / "results_summary.md"
 
 # Measurements that are missing on purpose or by accident, with the reason. Kept by hand.
 NOT_MEASURED = [
-    ("Test set", "kept untouched until the end; scored once for each final model"),
     (
-        "Semi-supervised learning as the project defines it",
-        "not run yet: the pseudo-label run above was a pilot that differs from the project's protocol "
-        "(see reports/semi_supervised_plan.md)",
+        "Class-balanced pseudo-labels",
+        "not part of the project's protocol or of the extensions plan (reports/extensions_plan.md)",
+    ),
+    (
+        "The quality of the naturally unlabeled reviews' pseudo-labels",
+        "those reviews have no label to check them against",
+    ),
+    ("The service on a GPU", "it is built and checked for the CPU only (reports/docker_check.json)"),
+    (
+        "The test set for any model outside the two fixed lists",
+        "read once for the four official models and once for the extensions (D73, D74)",
     ),
 ]
 
@@ -674,19 +681,188 @@ def p7_conflicts():
     ] + table(["What differs", "Ids"], rows)
 
 
+def final_evaluation():
+    """The four official models on the test set, read once (reports/final_evaluation_plan.md)."""
+    path = REPORTS_DIR / "final_evaluation.json"
+    if not path.exists():
+        return []
+    found = load(path)
+    lines = [
+        "## The test set: the four official models (reports/final_evaluation_plan.md)",
+        "",
+        f"Made with {short(found['code'])}. Test Macro F1 with offsets tuned on all of validation, its 95% "
+        "interval drawing products, and the validation Macro F1 beside it.",
+        "",
+    ]
+    for head, entry in found["heads"].items():
+        rows = []
+        for name, m in entry["models"].items():
+            w = m["with_offsets"]
+            rows.append(
+                [
+                    name,
+                    f"{w['accuracy']:.4f}",
+                    f"{w['macro_f1']:.4f} [{m['macro_f1_interval_95_products'][0]:.4f}, "
+                    f"{m['macro_f1_interval_95_products'][1]:.4f}]",
+                    f"{w['balanced_accuracy']:.4f}",
+                    f"{m['validation']['macro_f1']:.4f}",
+                ]
+            )
+        header = ["Model", "Accuracy", "Macro F1 [95%]", "Balanced accuracy", "Validation Macro F1"]
+        lines += [f"{head} ({w['rows']:,} reviews):", ""] + table(header, rows)
+        u = entry["models"]["final system"]["uncertain"]
+        answered = u["answered_reviews"]
+        lines += [
+            f'The final system answers "uncertain" on {u["share"]:.1%} of them; on the others accuracy '
+            f"{answered['accuracy']:.4f}.",
+            "",
+        ]
+    return lines
+
+
+def semi_supervised_official():
+    """The semi-supervised experiment as the project defines it (reports/semi_supervised_official_plan.md)."""
+    path = REPORTS_DIR / "semi_supervised.json"
+    if not path.exists():
+        return []
+    found = load(path)
+    accepted = found["pseudo_labels"][str(found["threshold"])]
+    kept = ", ".join(f"{name} {epoch}" for name, epoch in found["kept_check"].items())
+    rows = [
+        [
+            name,
+            f"{m['with_offsets']['macro_f1']:.4f}",
+            f"{found['heads']['rating_band']['models'][name]['with_offsets']['macro_f1']:.4f}",
+        ]
+        for name, m in found["heads"]["recommendation"]["models"].items()
+    ]
+    differences = found["heads"]["recommendation"]["differences_with_offsets"]
+    rows_differences = [
+        [name, f"{d['difference']:+.4f} {interval(d['interval_95_products'])}"]
+        for name, d in differences.items()
+    ]
+    return (
+        [
+            "## Semi-supervised learning, the project's protocol (reports/semi_supervised_official_plan.md)",
+            "",
+            f"Made with {short(found['code'])}. Threshold {found['threshold']}: {found['accepted']:,} of "
+            f"{found['hidden_reviews']:,} hidden reviews accepted, {accepted['accuracy']:.1%} of them right; "
+            f"the rule (more than {found['rule']['min_lead']:.4f} over the control, interval above zero): "
+            f"pseudo-labels help = {found['rule']['pseudo_labels_help']}. Checks kept (epochs): "
+            f"{kept}; the student and the control kept their start, the teacher, because "
+            "no later check was better, so the comparison uses both at the end of their epoch.",
+            "",
+        ]
+        + table(["Model (validation)", "recommendation", "rating_band"], rows)
+        + table(["Recommendation difference", "Macro F1 [95%]"], rows_differences)
+    )
+
+
+def extensions():
+    """The optional extensions on validation and on the test set (reports/extensions_plan.md)."""
+    path, test_path = (
+        REPORTS_DIR / "extensions_validation.json",
+        REPORTS_DIR / "final_evaluation_extensions.json",
+    )
+    if not path.exists() or not test_path.exists():
+        return []
+    found, test = load(path), load(test_path)
+    rate_rows = []
+    for name, r in found["rate"].items():
+        row = [name]
+        for scores in (r["scores"], test["rate"][name]["scores"]):
+            spearman = "–" if scores["spearman"] is None else f"{scores['spearman']:.3f}"
+            r2 = round(scores["r2"], 3) + 0.0  # no "-0.000" for the constant
+            row += [f"{scores['mae']:.3f}", f"{scores['rmse']:.3f}", f"{r2:.3f}", spearman]
+        rate_rows.append(row)
+    lines = [
+        "## The extensions (reports/extensions_plan.md)",
+        "",
+        f"Validation made with {short(found['code'])}; the test set read a second and last time with "
+        f"{short(test['code'])} (D74). The exact rate is scored on the reviews with a valid rate (D75).",
+        "",
+        "Exact rate:",
+        "",
+    ]
+    header = ["Model", "Val MAE", "Val RMSE", "Val R2", "Val Spearman"]
+    header += ["Test MAE", "Test RMSE", "Test R2", "Test Spearman"]
+    lines += table(header, rate_rows)
+    for head in found["heads"]:
+        rows = []
+        for name, m in test["heads"][head]["models"].items():
+            rows.append(
+                [name, f"{found['heads'][head]['models'][name]['macro_f1']:.4f}", f"{m['macro_f1']:.4f}"]
+            )
+        differences = [
+            [name, f"{d['difference']:+.4f} {interval(d['interval_95_products'])}"]
+            for name, d in test["heads"][head]["differences"].items()
+        ]
+        lines += [f"{head}, Macro F1 with offsets:", ""] + table(["Model", "Validation", "Test"], rows)
+        lines += table(["Test difference", "Macro F1 [95%]"], differences)
+    rule = ", ".join(f"{name} {'yes' if v else 'no'}" for name, v in found["rule_pseudo_labels_help"].items())
+    band = found["band_guesses"]["quality"]["0.9"]
+    lines += [
+        f"Pseudo-labels help by the rule (on validation): {rule}. Band guesses at 0.9: "
+        f"{band['share_kept']:.1%} kept, {band['accuracy']:.1%} right. Naturally unlabeled reviews at 0.9: "
+        f"{found['natural_guesses']['share_at_least_0.9']:.1%}.",
+        "",
+    ]
+    return lines
+
+
+def service():
+    """Memory of the predictor and the service inside Docker (reports/extensions_plan.md, 6 to 8)."""
+    memory_path, docker_path = REPORTS_DIR / "predictor_memory.json", REPORTS_DIR / "docker_check.json"
+    if not memory_path.exists() or not docker_path.exists():
+        return []
+    memory, docker = load(memory_path), load(docker_path)
+    m, latency = memory["memory_gb"], memory["latency_ms_one_review"]
+    rows = [
+        ["Models in memory", f"{m['models_alone']} GB", short(memory["code"])],
+        [
+            "Process after loading, peak while loading",
+            f"{m['after_loading']['now']} GB, {m['after_loading']['peak']} GB",
+            short(memory["code"]),
+        ],
+        [
+            "One review (median, 95th percentile)",
+            f"{latency['median']:.0f} ms, {latency['p95']:.0f} ms",
+            short(memory["code"]),
+        ],
+        ["Docker image", f"{docker['image_size_gb']} GB", short(docker["code"])],
+        [
+            "Container ready after (models loaded in)",
+            f"{docker['seconds_until_ready']} s ({docker['models_loaded_seconds']} s)",
+            short(docker["code"]),
+        ],
+        [
+            "Health check; GPU inside",
+            f"{docker['health_check']}; {docker['gpu_inside']}",
+            short(docker["code"]),
+        ],
+        [
+            "Requests answered as expected; review text in the log",
+            f"{docker['all_as_expected']}; {docker['review_text_in_log']}",
+            short(docker["code"]),
+        ],
+    ]
+    return ["## The service (CPU)", ""] + table(["What", "Measured", "Made with"], rows)
+
+
 def main():
     lines = [
         "# All results",
         "",
         "Written by `scripts/summarize_results.py` from the files in `reports/`; do not edit by hand.",
-        "Macro F1 on the validation set. A difference is shown with its 95% bootstrap interval",
-        "[low, high]: a change counts only when the whole interval is above zero.",
+        "Macro F1 on the validation set, except where a section says test. A difference is shown with",
+        "its 95% bootstrap interval [low, high]: a change counts only when the whole interval is above zero.",
         "",
     ]
     lines += tfidf_tuning() + tfidf_experiments() + tfidf_final() + transformer_pilot()
     lines += transformer_pilot_whole() + transformer_final() + final_per_class()
     lines += label_sample() + training_variants() + calibration()
     lines += required_metrics() + decision_recheck() + full_seeds() + error_analyses() + p7_conflicts()
+    lines += final_evaluation() + semi_supervised_official() + extensions() + service()
     lines += ["## Not measured", ""] + table(["What", "Why"], NOT_MEASURED)
     OUT.write_text("\n".join(lines), encoding="utf-8")
     print(f"Written to {OUT}")

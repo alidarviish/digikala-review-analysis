@@ -5,9 +5,13 @@ Classifying Persian product reviews from [Digikala](https://www.digikala.com) us
 - **Recommendation:** does the reviewer recommend the product (`recommended`, `not_recommended`, `no_idea`)?
 - **Rating band:** is the review's rating `low`, `medium` or `high`?
 
-The plan is to compare a TF-IDF + Logistic Regression baseline with a fine-tuned Persian Transformer, and to test whether pseudo-labeling unlabeled reviews improves the recommendation classifier.
+A TF-IDF + Logistic Regression baseline is compared with a fine-tuned Persian Transformer (FaBERT), and pseudo-labeling
+of unlabeled reviews is tested on the recommendation classifier.
 
-> Work in progress.
+**Result.** On the held-out test set, read once at the end, the final system (FaBERT and TF-IDF combined) reaches
+Macro F1 **0.735** on recommendation and **0.693** on the rating band (accuracy 87.3% and 79.3%), 3.2 and 2.3 points
+above TF-IDF. Pseudo-labeling with the project's protocol did **not** help (−0.16 point). The full account is in
+[`reports/final_report.md`](reports/final_report.md).
 
 ## Setup
 
@@ -26,10 +30,12 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-To run FaBERT on your own machine (CPU only), add the `transformer` group:
+The optional groups: `transformer` runs FaBERT on your own machine (CPU only), `api` the prediction service, `dev`
+the notebooks and tests. Everything at once:
 
 ```bash
-uv sync --group transformer
+uv sync --all-groups
+uv run pytest
 ```
 
 ## Offline prediction
@@ -48,6 +54,27 @@ For each head it prints the label and probabilities of TF-IDF, FaBERT and the fi
 (both combined; `uncertain` when its confidence is under the threshold of
 `reports/uncertain.json`), the words that pushed TF-IDF most, the token count and whether the
 text was cut at 128 tokens, and the latency of each model.
+
+## Prediction service
+
+The same predictor behind an HTTP API (FastAPI). The trained models must be in `artifacts/` (see the pipeline):
+
+```bash
+uv run uvicorn app.main:app --port 8000      # then http://localhost:8000/docs
+docker compose up --build                     # or in a CPU-only container; artifacts/ is mounted read-only
+```
+
+| Endpoint | What it answers |
+|---|---|
+| `GET /health`, `GET /ready` | the service is alive; the models are loaded (503 until they are) |
+| `POST /normalize`, `POST /tokenize` | the normalized text; FaBERT's tokens, token count and truncation |
+| `POST /predict` | `{"text": "...", "model": "final"}` (or `tfidf`, `transformer`): both heads with probabilities |
+| `POST /predict/tfidf`, `POST /predict/transformer` | the same for one model |
+| `POST /predict/compare` | the three models side by side |
+
+An empty text or one longer than 5,000 characters gets 422, an unknown model 400, a request before the models are
+loaded 503. Review texts are never logged. In the container the service is ready 33 seconds after start; the image is
+2.45 GB without the models ([`reports/docker_check.json`](reports/docker_check.json)).
 
 ## Data
 
@@ -139,10 +166,39 @@ About 37% of validation and test reviews have exactly the same normalized text a
 short ones like `عالی`. That is not leakage, since the products differ, but it makes part of the test easy, so
 results are reported both for all reviews and for texts never seen in training.
 
-## Results so far (validation set)
+## Results on the test set
 
-The test set has not been read yet; it is scored once, at the end. Every number below comes from a file in
-`reports/`, and all of them are collected with their commits in
+The test set was read once, at the end, for four models fixed before
+([`reports/final_evaluation_plan.md`](reports/final_evaluation_plan.md)). Macro F1 with offsets and its 95% interval,
+drawing whole products ([`reports/final_evaluation.json`](reports/final_evaluation.json)):
+
+| Model | Recommendation: accuracy | Macro F1 | Rating band: accuracy | Macro F1 | Ordinal error |
+|---|---:|---:|---:|---:|---:|
+| TF-IDF + Logistic Regression | 0.849 | 0.7021 [0.7005, 0.7036] | 0.777 | 0.6684 [0.6668, 0.6700] | 0.241 |
+| FaBERT, fine-tuned | 0.873 | 0.7346 [0.7331, 0.7361] | 0.794 | 0.6918 [0.6903, 0.6934] | 0.218 |
+| **Final system: FaBERT + TF-IDF** | **0.873** | **0.7349** [0.7334, 0.7364] | **0.793** | **0.6927** [0.6911, 0.6942] | **0.219** |
+| Semi-supervised student | 0.876 | 0.7330 [0.7314, 0.7345] | 0.792 | 0.6911 [0.6896, 0.6927] | 0.220 |
+
+![The four models on test and validation](reports/figures/results_test_models.png)
+
+- **Validation was a reliable guide:** every model is within a quarter point of its validation score.
+- **The final system can say "uncertain"** on its least confident 10% of reviews; on the others its accuracy is
+  91.9% and 84.0%.
+- **Pseudo-labeling did not help.** 72.4% of the hidden reviews got a pseudo-label, 96.9% of them right, but 94.9%
+  were `recommended`: the student gains accuracy and loses the hard `no_idea` class
+  ([`notebooks/04_semi_supervised.ipynb`](notebooks/04_semi_supervised.ipynb)).
+- **The hard classes are `no_idea` and `medium`** (F1 near 0.5 for every model); a third of the errors read in the
+  error analysis are label problems rather than model errors.
+
+**Extensions** (all the optional ones, reported apart; [`reports/final_report.md`](reports/final_report.md),
+section 7): FaBERT also predicts the exact rate (R² 0.58 and MAE 0.55 on test, against 0.52 and 0.61 for a TF-IDF
+ridge regression); with the encoder frozen it falls 7.4 points, below TF-IDF; other pseudo-label thresholds,
+pseudo-labels for the rating band and the naturally unlabeled reviews do not help either.
+
+## How the choices were made (validation set)
+
+Every choice was made on validation, with the expected outcome written down before running. Every number below
+comes from a file in `reports/`, and all of them are collected with their commits in
 [`reports/results_summary.md`](reports/results_summary.md).
 
 | Model | Recommendation Macro F1 | Balanced accuracy | Rating band Macro F1 | Balanced accuracy | Ordinal error |
@@ -185,6 +241,31 @@ for every model is in [`reports/required_metrics.json`](reports/required_metrics
   ([`reports/ensemble_plan.md`](reports/ensemble_plan.md), [`reports/decision_recheck_plan.md`](reports/decision_recheck_plan.md)).
 - **The probabilities are close to honest.** One temperature per head (1.12 and 1.11) brings the calibration
   error below 0.01 without changing the scores ([`reports/calibration_plan.md`](reports/calibration_plan.md)).
-- **Still to come:** the semi-supervised experiment as the project defines it (the pseudo-label pilot in
-  [`reports/semi_supervised_plan.md`](reports/semi_supervised_plan.md) differs from it), the offline prediction
-  script, and the single reading of the test set.
+
+## Notebooks and reports
+
+| | What |
+|---|---|
+| [`01_descriptive_analysis`](notebooks/01_descriptive_analysis.ipynb) | the data audit |
+| [`02_baselines`](notebooks/02_baselines.ipynb) | TF-IDF: tuning, experiments, the kept model |
+| [`03_transfer_learning_finetuning`](notebooks/03_transfer_learning_finetuning.ipynb) | the Transformer: model choice, training, the final system |
+| [`04_semi_supervised`](notebooks/04_semi_supervised.ipynb) | pseudo-labeling as the project defines it |
+| [`reports/final_report.md`](reports/final_report.md) | the final report: results, extensions, error analysis, limitations |
+| [`reports/results_summary.md`](reports/results_summary.md) | every result with the commit it was made with |
+| [`reports/release_report.json`](reports/release_report.json) | the delivered files with their hashes |
+
+## Reproduce
+
+Every step of the project is one script, in the order set in
+[`src/digikala_reviews/pipeline.py`](src/digikala_reviews/pipeline.py). The notebook
+[`notebooks/run_all.py`](notebooks/run_all.py) runs them: `uvx marimo edit notebooks/run_all.py` on your own machine,
+or on molab for the GPU steps (fill in the commit, click *Set up*, then download the outputs and bring them in with
+`uv run python scripts/import_colab_outputs.py <folder>`). A step is skipped when its outputs exist.
+`scripts/verify_standard_files.py` checks the split files against
+[`reports/split_manifest.json`](reports/split_manifest.json).
+
+## Licences
+
+The code is in this repository. The dataset is MIT-licensed; the split files and the TF-IDF model are assets of the
+GitHub release `v1.0`. FaBERT ([`sbunlp/fabert`](https://huggingface.co/sbunlp/fabert)) declares no licence, so its
+fine-tuned weights are not published; they are given privately with the submission.

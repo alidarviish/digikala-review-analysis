@@ -1,8 +1,8 @@
 # All results
 
 Written by `scripts/summarize_results.py` from the files in `reports/`; do not edit by hand.
-Macro F1 on the validation set. A difference is shown with its 95% bootstrap interval
-[low, high]: a change counts only when the whole interval is above zero.
+Macro F1 on the validation set, except where a section says test. A difference is shown with
+its 95% bootstrap interval [low, high]: a change counts only when the whole interval is above zero.
 
 ## TF-IDF stages 1 and 2 (no offsets)
 
@@ -343,9 +343,140 @@ Qwen/Qwen3-8B, zero-shot. Made with 59a3ce9.
 | two rates | 21 |
 | spacing | 8 |
 
+## The test set: the four official models (reports/final_evaluation_plan.md)
+
+Made with f2fd9cf. Test Macro F1 with offsets tuned on all of validation, its 95% interval drawing products, and the validation Macro F1 beside it.
+
+recommendation (788,717 reviews):
+
+| Model | Accuracy | Macro F1 [95%] | Balanced accuracy | Validation Macro F1 |
+|---|---|---|---|---|
+| tfidf | 0.8490 | 0.7021 [0.7005, 0.7036] | 0.7111 | 0.7017 |
+| fabert | 0.8732 | 0.7346 [0.7331, 0.7361] | 0.7374 | 0.7324 |
+| final system | 0.8734 | 0.7349 [0.7334, 0.7364] | 0.7382 | 0.7344 |
+| student | 0.8756 | 0.7330 [0.7314, 0.7345] | 0.7292 | 0.7310 |
+
+The final system answers "uncertain" on 10.0% of them; on the others accuracy 0.9189.
+
+rating_band (843,458 reviews):
+
+| Model | Accuracy | Macro F1 [95%] | Balanced accuracy | Validation Macro F1 |
+|---|---|---|---|---|
+| tfidf | 0.7765 | 0.6684 [0.6668, 0.6700] | 0.6617 | 0.6683 |
+| fabert | 0.7941 | 0.6918 [0.6903, 0.6934] | 0.6810 | 0.6922 |
+| final system | 0.7929 | 0.6927 [0.6911, 0.6942] | 0.6827 | 0.6935 |
+| student | 0.7916 | 0.6911 [0.6896, 0.6927] | 0.6807 | 0.6921 |
+
+The final system answers "uncertain" on 10.0% of them; on the others accuracy 0.8396.
+
+## Semi-supervised learning, the project's protocol (reports/semi_supervised_official_plan.md)
+
+Made with 2b57540. Threshold 0.9: 533,043 of 736,134 hidden reviews accepted, 96.9% of them right; the rule (more than 0.0012 over the control, interval above zero): pseudo-labels help = False. Checks kept (epochs): supervised 2.75, control 0.0, student 0.0; the student and the control kept their start, the teacher, because no later check was better, so the comparison uses both at the end of their epoch.
+
+| Model (validation) | recommendation | rating_band |
+|---|---|---|
+| supervised | 0.7324 | 0.6922 |
+| control | 0.7324 | 0.6922 |
+| student | 0.7324 | 0.6922 |
+| control at the end | 0.7300 | 0.6903 |
+| student at the end | 0.7310 | 0.6921 |
+
+| Recommendation difference | Macro F1 [95%] |
+|---|---|
+| student minus control | +0.0000 [+0.0000, +0.0000] |
+| student minus supervised | +0.0000 [+0.0000, +0.0000] |
+| control minus supervised | +0.0000 [+0.0000, +0.0000] |
+| student at the end minus control at the end | +0.0010 [+0.0002, +0.0017] |
+| student at the end minus supervised | -0.0015 [-0.0023, -0.0007] |
+| control at the end minus supervised | -0.0024 [-0.0033, -0.0016] |
+
+## The extensions (reports/extensions_plan.md)
+
+Validation made with 1c01e0e; the test set read a second and last time with b28f2c8 (D74). The exact rate is scored on the reviews with a valid rate (D75).
+
+Exact rate:
+
+| Model | Val MAE | Val RMSE | Val R2 | Val Spearman | Test MAE | Test RMSE | Test R2 | Test Spearman |
+|---|---|---|---|---|---|---|---|---|
+| FaBERT rate head | 0.546 | 0.740 | 0.584 | 0.674 | 0.547 | 0.741 | 0.582 | 0.672 |
+| TF-IDF ridge | 0.609 | 0.798 | 0.516 | 0.621 | 0.609 | 0.799 | 0.515 | 0.621 |
+| constant (training mean) | 0.877 | 1.146 | 0.000 | – | 0.877 | 1.147 | 0.000 | – |
+
+recommendation, Macro F1 with offsets:
+
+| Model | Validation | Test |
+|---|---|---|
+| fabert | 0.7324 | 0.7346 |
+| student 0.90 | 0.7310 | 0.7330 |
+| rate model | 0.7327 | 0.7338 |
+| frozen | 0.6592 | 0.6605 |
+| student 0.80 | 0.7308 | 0.7322 |
+| student 0.95 | 0.7310 | 0.7323 |
+| student both heads | 0.7299 | 0.7321 |
+| student natural | 0.7306 | 0.7325 |
+| tfidf | 0.7017 | 0.7021 |
+
+| Test difference | Macro F1 [95%] |
+|---|---|
+| rate model minus fabert | -0.0008 [-0.0017, +0.0001] |
+| frozen minus fabert | -0.0741 [-0.0756, -0.0726] |
+| frozen minus tfidf | -0.0416 [-0.0430, -0.0401] |
+| student 0.80 minus student 0.90 | -0.0008 [-0.0016, -0.0001] |
+| student 0.95 minus student 0.90 | -0.0007 [-0.0015, +0.0000] |
+| student both heads minus student 0.90 | -0.0009 [-0.0017, -0.0001] |
+| student natural minus student 0.90 | -0.0005 [-0.0012, +0.0003] |
+| student 0.80 minus fabert | -0.0024 [-0.0032, -0.0017] |
+| student 0.95 minus fabert | -0.0023 [-0.0031, -0.0015] |
+| student both heads minus fabert | -0.0025 [-0.0034, -0.0017] |
+| student natural minus fabert | -0.0020 [-0.0029, -0.0012] |
+
+rating_band, Macro F1 with offsets:
+
+| Model | Validation | Test |
+|---|---|---|
+| fabert | 0.6922 | 0.6918 |
+| student 0.90 | 0.6921 | 0.6911 |
+| rate model | 0.6926 | 0.6920 |
+| frozen | 0.6174 | 0.6167 |
+| student 0.80 | 0.6923 | 0.6910 |
+| student 0.95 | 0.6915 | 0.6912 |
+| student both heads | 0.6919 | 0.6908 |
+| student natural | 0.6922 | 0.6912 |
+| tfidf | 0.6683 | 0.6684 |
+
+| Test difference | Macro F1 [95%] |
+|---|---|
+| rate model minus fabert | +0.0002 [-0.0005, +0.0009] |
+| frozen minus fabert | -0.0751 [-0.0765, -0.0737] |
+| frozen minus tfidf | -0.0517 [-0.0530, -0.0503] |
+| student 0.80 minus student 0.90 | -0.0001 [-0.0007, +0.0005] |
+| student 0.95 minus student 0.90 | +0.0000 [-0.0006, +0.0006] |
+| student both heads minus student 0.90 | -0.0003 [-0.0009, +0.0002] |
+| student natural minus student 0.90 | +0.0001 [-0.0005, +0.0007] |
+| student 0.80 minus fabert | -0.0007 [-0.0014, -0.0001] |
+| student 0.95 minus fabert | -0.0006 [-0.0013, -0.0000] |
+| student both heads minus fabert | -0.0010 [-0.0016, -0.0003] |
+| student natural minus fabert | -0.0006 [-0.0013, +0.0001] |
+
+Pseudo-labels help by the rule (on validation): student 0.80 no, student 0.95 no, student both heads no, student natural no. Band guesses at 0.9: 45.2% kept, 92.4% right. Naturally unlabeled reviews at 0.9: 77.1%.
+
+## The service (CPU)
+
+| What | Measured | Made with |
+|---|---|---|
+| Models in memory | 1.04 GB | e66dbe2 |
+| Process after loading, peak while loading | 1.628 GB, 2.162 GB | e66dbe2 |
+| One review (median, 95th percentile) | 46 ms, 96 ms | e66dbe2 |
+| Docker image | 2.447 GB | 2aa5b29 |
+| Container ready after (models loaded in) | 33.3 s (29.2 s) | 2aa5b29 |
+| Health check; GPU inside | healthy; False | 2aa5b29 |
+| Requests answered as expected; review text in the log | True; False | 2aa5b29 |
+
 ## Not measured
 
 | What | Why |
 |---|---|
-| Test set | kept untouched until the end; scored once for each final model |
-| Semi-supervised learning as the project defines it | not run yet: the pseudo-label run above was a pilot that differs from the project's protocol (see reports/semi_supervised_plan.md) |
+| Class-balanced pseudo-labels | not part of the project's protocol or of the extensions plan (reports/extensions_plan.md) |
+| The quality of the naturally unlabeled reviews' pseudo-labels | those reviews have no label to check them against |
+| The service on a GPU | it is built and checked for the CPU only (reports/docker_check.json) |
+| The test set for any model outside the two fixed lists | read once for the four official models and once for the extensions (D73, D74) |
