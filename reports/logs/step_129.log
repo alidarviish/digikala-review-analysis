@@ -12,4 +12,4 @@ torch 2.14.1+cpu, GPU inside: False
   text too long            422 (expected 422)  5.0 ms
   unknown model            400 (expected 400)  4.2 ms
 all as expected: True; review text in the log: False
-saved /mnt/e/Boot Camp AI 145/digikala-review-analysis/reports/docker_check.json
+saved reports/docker_check.json
