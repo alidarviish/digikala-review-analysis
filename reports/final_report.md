@@ -7,6 +7,8 @@
 the recommendation (three classes) and **0.693** for the rating band on the held-out test set, with accuracy 87.3% and
 79.3%. The fine-tuned Transformer beats the TF-IDF baseline by 3.2 and 2.3 points. No for the second part: with the
 project's pseudo-labeling protocol, the unlabeled reviews did not improve the classifier (−0.16 point on the test set).
+The optional extensions (section 7) change neither answer: FaBERT also predicts the exact rate (R² 0.58, against 0.52
+for TF-IDF), no variant of pseudo-labeling helps, and the system runs as an HTTP service in a CPU-only Docker container.
 
 Every number in this report is read from a file in `reports/`; the main files are named in each section.
 `reports/release_report.json` lists the delivered files with their hashes.
@@ -37,7 +39,7 @@ Every number in this report is read from a file in `reports/`; the main files ar
   masked.
 - **Every choice was made on validation**, with the expected outcome written down before running (the plans in
   `reports/*_plan.md`; the main decisions are listed in the appendix). **The test set was read once**, at the end, for four models fixed before
-  (`reports/final_evaluation_plan.md`).
+  (`reports/final_evaluation_plan.md`); the extensions' models were scored on it once more, apart (section 7, D74).
 - **Offsets.** For every model, one offset per class is added to the log-probabilities before the class is chosen,
   tuned to maximize Macro F1. On validation each review is scored with offsets tuned on the other half (split by
   product); for the test set they are tuned once on all of validation.
@@ -88,7 +90,7 @@ What the test set shows:
   recommendation, where validation had shown +0.20. It was chosen on validation and is not changed after the test:
   on recommendation the final system is as good as FaBERT alone.
 - **The hard classes are `no_idea` and `medium`**, near F1 0.5 for every model. Missed `no_idea` reviews go mostly to
-  `recommended`, missed `medium` mostly to `high` (section 7).
+  `recommended`, missed `medium` mostly to `high` (section 8).
 
 **Answering "uncertain".** The final system answers "uncertain" when the mixed probability of its answer is under a
 threshold fixed on validation (the 10% least confident there; `reports/uncertain_plan.md`). On test it answers
@@ -130,7 +132,165 @@ and the latency. Checked against the saved validation predictions on 2,000 revie
 0.0003). One review takes about 45 ms on a laptop CPU (TF-IDF 1.6 ms). Examples of short, ambiguous, negative, mixed,
 negated, sarcastic, misspelled and long reviews: `reports/predict_demo.md`.
 
-## 7. Error analysis
+## 7. Extensions
+
+The project's optional extensions were all done, as planned in `reports/extensions_plan.md` before any of them was
+trained. They are reported apart from the official result, which does not change whatever they show. Everything about
+them was fixed on validation (`reports/extensions_validation.json`); then their models were scored on the test set a
+second and last time, all together, by one script (D74, `reports/final_evaluation_extensions.json`). The expectations
+below were written before each run; where one was wrong, it says so.
+
+![The extensions on the test set](figures/results_test_extensions.png)
+
+| Test, Macro F1 with offsets | Recommendation | Minus FaBERT, points [95%] | Rating band | Minus FaBERT, points [95%] |
+|---|---|---|---|---|
+| TF-IDF | 0.7021 | −3.25 | 0.6684 | −2.34 |
+| FaBERT (the kept run) | 0.7346 | | 0.6918 | |
+| FaBERT with a rate head | 0.7338 | −0.08 [−0.17, +0.01] | 0.6920 | +0.02 [−0.05, +0.09] |
+| FaBERT, encoder frozen | 0.6605 | −7.41 [−7.56, −7.26] | 0.6167 | −7.51 [−7.65, −7.37] |
+| Student 0.90 (the official one, section 5) | 0.7330 | −0.16 [−0.25, −0.08] | 0.6911 | −0.06 [−0.14, −0.00] |
+| Student 0.80 | 0.7322 | −0.24 [−0.32, −0.17] | 0.6910 | −0.07 [−0.14, −0.01] |
+| Student 0.95 | 0.7323 | −0.23 [−0.31, −0.15] | 0.6912 | −0.06 [−0.13, −0.00] |
+| Student, pseudo-labels for both heads | 0.7321 | −0.25 [−0.34, −0.17] | 0.6908 | −0.10 [−0.16, −0.03] |
+| Student, naturally unlabeled reviews added | 0.7325 | −0.20 [−0.29, −0.12] | 0.6912 | −0.06 [−0.13, +0.01] |
+
+**No extension beats the kept FaBERT run.** Every model is within a quarter point of its validation Macro F1 (−0.12 to
++0.22), as in section 4.
+
+### 7.1 Exact-rate regression
+
+FaBERT exactly as the kept run, plus a third linear head that predicts the rate (standardized with the training mean
+and spread); the three losses are added with weights 1, not tuned, and a rate of 0 is masked like a missing label. The
+best check was at epoch 3.0. The baseline is a ridge regression (alpha 1) on the final TF-IDF features, fitted on the
+3,270,531 training reviews with a rate (5.8 minutes and 3.0 GB on a laptop, `reports/extensions/rate_ridge.json`); a
+constant, the training mean (4.00), gives R² 0. Predictions are clipped to [0, 5] and scored on the reviews with a
+valid rate (843,458 in each of validation and test).
+
+| Exact rate | Validation: MAE | RMSE | MSE | R² | Spearman | Test: MAE | RMSE | MSE | R² | Spearman |
+|---|---|---|---|---|---|---|---|---|---|---|
+| FaBERT rate head | **0.546** | **0.740** | **0.547** | **0.584** | **0.674** | **0.547** | **0.741** | **0.550** | **0.582** | **0.672** |
+| TF-IDF ridge | 0.609 | 0.798 | 0.636 | 0.516 | 0.621 | 0.609 | 0.799 | 0.638 | 0.515 | 0.621 |
+| Constant (training mean) | 0.877 | 1.146 | 1.314 | 0.000 | – | 0.877 | 1.147 | 1.316 | 0.000 | – |
+
+**One invalid rate.** The first scoring on validation gave FaBERT an RMSE of 2.82 and an R² of 0.09 beside an MAE of
+0.55, which cannot happen when every rate is between 0 and 5. One validation review has a rate of 2,500 (the highest
+in train is 5); alone it added 7.4 to every model's MSE. The rule was then fixed, before the test set was read: a
+valid rate is above 0 and at most 5, as the rating band already defines it (`scripts/check_extensions.py`). The test
+set has no rate above 5, so the rule changed nothing there.
+
+![The exact rate on the test set](figures/results_test_rate.png)
+
+- **FaBERT explains 58% of the rate's variance, TF-IDF ridge 52%.** Both are far better than the constant (MAE 0.55
+  and 0.61 against 0.88).
+- **The predictions are pulled towards the middle,** since 71% of the rates are 4 or more: reviews rated 5 are
+  predicted 0.46 too low on average, reviews rated 1 to 2 are 0.74 too high (ridge 1.17), and the error is largest
+  for the rates from 1 to 4 (MAE 0.75 to 0.85, against 0.40 to 0.46 for 4 and above).
+- **FaBERT separates the low rates much better:** 54% of the reviews rated 1 get a prediction under 1.5, against 24%
+  for the ridge, which spreads them from 1 to 3 (left and middle panels).
+- By recommendation, the error is largest for `not_recommended` (MAE 0.66; ridge 0.95) and `no_idea` (0.68); by
+  length it hardly changes (0.48 for one word, 0.56 for 32 words and more).
+- **The third head does not change the classification heads:** −0.08 and +0.02 point against the kept run, both
+  intervals across zero.
+- Against the expectations: R² 0.45 to 0.60 (0.584, right); the ridge 0.05 to 0.10 lower (0.068, right); residuals
+  largest for rates 1 to 3 (right); the heads within 0.2 point (right); MAE 0.55 to 0.75 and Spearman 0.55 to 0.65
+  (0.546 and 0.674: both slightly better than expected).
+
+### 7.2 Frozen feature extraction
+
+The same network with the pretrained encoder frozen: only the two heads learn (learning rate 1e-3, four epochs, best
+check kept). On test it is **7.4 and 7.5 points below the fine-tuned FaBERT and 4.2 and 5.2 points below TF-IDF**
+(0.6605 and 0.6167). The pretrained first token does not summarize a review's opinion; the Transformer's gain comes from
+fine-tuning the whole encoder. As expected (0.60 to 0.66 and 0.56 to 0.62 on validation, below TF-IDF: 0.659 and
+0.617). Its best check was the last one, so more epochs might add a little; not enough to close a gap of 7 points.
+
+### 7.3 Other confidence thresholds
+
+Two more students, exactly as the official one, with the teacher's guesses accepted at 0.80 (587,492 reviews, 95.5%
+right) and at 0.95 (445,123, 98.0% right). On validation neither passes the official rule over the control (more
+than 0.12 point on recommendation, interval above zero): +0.08 [−0.00, +0.15] and +0.10 [+0.02, +0.17]. Both are
+within 0.1 point of the 0.90 student, and on test both are below FaBERT by 0.24 and 0.23 point. **The threshold is
+not what limits the pseudo-labels:** at every threshold they are mostly `recommended` (section 5). As expected.
+
+### 7.4 Pseudo-labels for the rating band
+
+The teacher also guessed the hidden reviews' rating band; a student learned from both kinds of guesses accepted at
+0.90 (534,100 reviews with at least one). Checked afterwards against the reference labels: 45.2% of the hidden
+reviews with a band were accepted and **92.4% of those are right, but 93.4% of them are `high`**, 6.6% `low` and
+almost none `medium` (0.003%), where the reference has 20% `medium`. The band guesses repeat the band the model already
+predicts best. On test the student's rating band is −0.03 point against the official student and −0.10 against
+FaBERT. Expected: 40 to 50% accepted, at least 90% right, over 90% `high`, band within 0.2 point of the official
+student: all right.
+
+### 7.5 The naturally unlabeled reviews
+
+The 625,700 training reviews whose buyers gave no recommendation (`natural_unlabeled.csv`) were guessed by the
+teacher: **77.1% reach 0.90**, more than in the artificial pool (72.4%), and the guesses are 85% `recommended`. Added
+to the official student's data (1,015,679 pseudo-labeled reviews in all), they change recommendation by −0.05 point
+on test against the official student and leave it 0.20 below FaBERT. Their quality cannot be checked: they have no
+label. The expectation of a smaller accepted share than in the hidden pool was **wrong**; the others (mostly
+`recommended`, no measurable gain) were right.
+
+### 7.6 Memory of the predictor
+
+`scripts/measure_predictor_memory.py` on a laptop CPU (`reports/predictor_memory.json`): the models take **1.04 GB**;
+the process uses 1.63 GB after loading and peaks at 2.16 GB while loading; answering 200 reviews adds 0.03 GB. Loading
+takes 23 seconds; one review takes 46 ms (median; 96 ms at the 95th percentile). Expected 1.0 to 1.6 GB: right for the
+models, the process is slightly above it and the peak while loading 0.5 GB above.
+
+### 7.7 The prediction service (FastAPI)
+
+`app/main.py` puts the same predictor (`src/digikala_reviews/predictor.py`) behind an HTTP API; the models are loaded
+once, when the service starts. Requests carry the review text only.
+
+| Endpoint | What it answers |
+|---|---|
+| `GET /health` | the service is alive |
+| `GET /ready` | the models are loaded (503 until they are) |
+| `POST /normalize` | the text and its normalized form |
+| `POST /tokenize` | FaBERT's tokens, ids, attention mask, token count, and whether the text was cut |
+| `POST /predict` | one model: `final` (the default), `tfidf` or `transformer`; both heads with probabilities, model version, token count, truncation and latency; for the final system also its best guess and confidence when it answers "uncertain" |
+| `POST /predict/tfidf`, `POST /predict/transformer` | the same for one model |
+| `POST /predict/compare` | the three side by side, whether they agree, and the words that pushed TF-IDF |
+
+Failures: **422** for an empty text or one longer than 5,000 characters, **400** for an unknown model, **503** when the
+models are not loaded, **500** for anything unexpected, without details. The review text is never logged: the log has
+the method, the path, the status and the time only. `tests/test_api.py` checks all of this with a stand-in predictor
+(8 tests).
+
+### 7.8 Docker
+
+`Dockerfile` and `compose.yaml` run the same service on the CPU: `python:3.13-slim`, the locked library versions
+(`requirements-service.txt`, exported from `uv.lock`, torch from its CPU index), the code and the two result files the
+final system reads. The models are not in the image: `artifacts/` is mounted read-only at run time, so the private
+FaBERT weights never enter an image. `docker compose up --build` starts it on port 8000; a health check inside the
+container asks `/ready` every 30 seconds.
+
+Checked from outside the running container by `scripts/check_docker.py` (`reports/docker_check.json`, Docker 29.9.3,
+on a laptop):
+
+- **Image: 2.45 GB**, without the models.
+- **Ready 33.3 seconds after start**, 29.2 of them loading the models; the health check then reports `healthy`.
+- **CPU only:** torch 2.14.1+cpu, no GPU inside the container.
+- **All 11 requests answered as expected:** 200 for the seven endpoints, 422 for an empty text and for one of 8,000
+  characters, 400 for an unknown model. The first prediction took 0.70 s (the models warm up); the next ones 80 to
+  100 ms. Each prediction endpoint runs all three models, so the TF-IDF endpoint is not faster than the others.
+- **No review text in the container's log.**
+
+Ways it can fail, and what happens:
+
+- **The models are missing or unreadable** (`artifacts/` not mounted, a file missing): the service still starts, logs
+  the error, answers 503 on `/ready` and the prediction endpoints, and the health check turns `unhealthy`. It does not
+  answer with half the models.
+- **Too little memory:** loading needs about 2.2 GB at its peak (section 7.6); a container limited to less is stopped
+  while loading.
+- **Long texts:** over 5,000 characters the answer is 422; over 128 tokens FaBERT reads only the start, and the answer
+  says `truncated`.
+- **Load:** one process on the CPU, about 0.1 s per review; it is a demonstration service, not one sized for many
+  requests at once.
+- **Building** needs network access to the Python and PyTorch package indexes. The library versions are pinned; the
+  base image `python:3.13-slim` is not, so a later build may get a newer Python 3.13 patch release.
+
+## 8. Error analysis
 
 The earlier hand reading of 100 rating band errors (`reports/error_sample_plan.md`) found that many of them are
 "good, but" reviews whose text itself reads medium, and that reviews rated high but read medium by FaBERT read medium
@@ -316,7 +476,7 @@ Against the expectations written before the cases were seen: label and text disa
 9 of 28: right); sarcasm and negation mostly wrong for both models (sarcasm 3 of 3, negation 2 of 3: right); FaBERT
 right more often than TF-IDF where they disagree (41,034 against 21,388: right).
 
-## 8. Limitations
+## 9. Limitations
 
 - **The labels set the ceiling.** The same short text often comes with different labels (`عالی`, "great", is `not_recommended`
   293 times against about 94,000 `recommended` in train), so no model that reads only the text can be right on all copies (`reports/text_ceiling_plan.md`). The
@@ -327,18 +487,21 @@ right more often than TF-IDF where they disagree (41,034 against 21,388: right).
 - **GPU training is not bit-for-bit repeatable**; decisions rest on intervals and on the spread over three seeds
   (0.12 and 0.07 point for FaBERT).
 - **FaBERT declares no licence**: its fine-tuned weights are given privately with the submission, not published.
-- **One protocol for semi-supervised learning** was tested, as the project defines it; other designs (a lower
-  threshold, class-balanced pseudo-labels, pseudo-labels for the rating band) were not part of the required
-  experiment.
+- **Other pseudo-labeling designs were tried as extensions** (thresholds 0.80 and 0.95, band guesses, the naturally
+  unlabeled reviews; section 7) and did not help either; class-balanced pseudo-labels were not tried.
+- **One rate in the data is invalid** (2,500, in validation): the exact-rate scores leave it out (D75). Other data
+  errors of this kind may exist in fields that were not scored.
+- **The service runs on the CPU only** and loads all three models in every process (about 1.6 GB after loading).
 - The error analysis reads 28 chosen cases and 100 earlier band errors, each with one reader.
 
-## 9. How to reproduce
+## 10. How to reproduce
 
 The README has the full instructions. In short: `uv sync --group transformer`; put the dataset's two CSV files in
 `data/raw/`; run the steps of `src/digikala_reviews/pipeline.py` in order with `uvx marimo edit notebooks/run_all.py`
 (the GPU steps on molab or any CUDA machine); `scripts/verify_standard_files.py` checks the split files against
 `reports/split_manifest.json`, and `reports/release_report.json` gives the hash of every delivered file. Prediction for
-one review: `uv run python scripts/predict.py "..."`.
+one review: `uv run python scripts/predict.py "..."`. The service: `uv sync --group api`, then
+`uv run uvicorn app.main:app --port 8000`, or `docker compose up --build` (both need the models in `artifacts/`).
 
 ## Appendix: the main decisions
 
@@ -363,3 +526,5 @@ Each was taken on validation, with the reason recorded at the time.
 | D69 | The first pseudo-label run counts as a pilot; the official run follows the project's protocol exactly | the pilot used calibrated probabilities and a smaller student |
 | D71 | Cleaning rule P7 kept | the right copy of a conflicting id cannot be told |
 | D73 | The test set read once for the four official models | every required choice was made |
+| D74 | The extensions' models read on the test set a second and last time, all together, reported apart | the official system was already fixed; the list was fixed before training |
+| D75 | A valid rate is above 0 and at most 5 (one validation review has 2,500) | the rating band's own definition; fixed before the test reading |
