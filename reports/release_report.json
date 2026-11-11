@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-11-10T16:02:27+00:00",
+  "created_at": "2026-11-11T21:33:14+00:00",
   "project": "Digikala review analysis: recommendation and rating band from the review text alone",
   "release_tag": "v1.0",
   "official_system": "final_system",
@@ -70,7 +70,7 @@
       "audit/masked_labels_reference.csv": 736134
     },
     "normalizer_version": "2",
-    "test_set_read": "once, by scripts/final_evaluation.py; nothing was chosen on it"
+    "test_set_read": "once for the four official models (scripts/final_evaluation.py), and once more for the extensions' models, reported apart (scripts/final_evaluation_extensions.py, D74); nothing was chosen on it"
   },
   "files": {
     "split_manifest": {
@@ -553,19 +553,320 @@
     },
     "demo": "reports/predict_demo.md"
   },
+  "extensions": {
+    "plan": "reports/extensions_plan.md",
+    "official_result_unchanged": true,
+    "exact_rate": {
+      "valid_rate": "0 < rate <= 5 (D75)",
+      "validation": {
+        "FaBERT rate head": {
+          "reviews": 843458,
+          "mae": 0.5458606196476027,
+          "mse": 0.5469244195080019,
+          "rmse": 0.7395433858185751,
+          "r2": 0.5837296238641818,
+          "spearman": 0.6735176602698756
+        },
+        "TF-IDF ridge": {
+          "reviews": 843458,
+          "mae": 0.6088250436345414,
+          "mse": 0.6363537361233367,
+          "rmse": 0.7977178298893266,
+          "r2": 0.5156639571336257,
+          "spearman": 0.6214174411508026
+        },
+        "constant (training mean)": {
+          "reviews": 843458,
+          "mae": 0.8765295827218746,
+          "mse": 1.3139212179227107,
+          "rmse": 1.146264026270872,
+          "r2": -4.033480446352655e-05,
+          "spearman": null
+        }
+      },
+      "test": {
+        "FaBERT rate head": {
+          "reviews": 843458,
+          "mae": 0.5467279368323238,
+          "mse": 0.5496673837214512,
+          "rmse": 0.7413955649459006,
+          "r2": 0.582322207769757,
+          "spearman": 0.6724512665455146
+        },
+        "TF-IDF ridge": {
+          "reviews": 843458,
+          "mae": 0.6089836181917683,
+          "mse": 0.6381072362583475,
+          "rmse": 0.7988161467185972,
+          "r2": 0.5151190892170678,
+          "spearman": 0.6213374741777148
+        },
+        "constant (training mean)": {
+          "reviews": 843458,
+          "mae": 0.8772319231380333,
+          "mse": 1.316064245279668,
+          "rmse": 1.1471984332623837,
+          "r2": -4.261609987321613e-05,
+          "spearman": null
+        }
+      }
+    },
+    "test_macro_f1": {
+      "recommendation": {
+        "fabert": 0.7345932812287921,
+        "student 0.90": 0.7329952919611364,
+        "rate model": 0.733753747443509,
+        "frozen": 0.6605274163250962,
+        "student 0.80": 0.7321570070048273,
+        "student 0.95": 0.7322572350639698,
+        "student both heads": 0.7321073792358278,
+        "student natural": 0.7325440798180426,
+        "tfidf": 0.7021203004037814
+      },
+      "rating_band": {
+        "fabert": 0.6917815438855967,
+        "student 0.90": 0.6911431774024258,
+        "rate model": 0.6919743801548394,
+        "frozen": 0.6166727746007278,
+        "student 0.80": 0.6910373502100372,
+        "student 0.95": 0.6911562259097496,
+        "student both heads": 0.6907939254355995,
+        "student natural": 0.6912017991441349,
+        "tfidf": 0.6683764232806313
+      }
+    },
+    "test_differences_macro_f1": {
+      "recommendation": {
+        "rate model minus fabert": {
+          "difference": -0.0008395337852831197,
+          "interval_95_products": [
+            -0.0017061725292714075,
+            8.191145691576473e-05
+          ]
+        },
+        "frozen minus fabert": {
+          "difference": -0.07406586490369593,
+          "interval_95_products": [
+            -0.07560760124019182,
+            -0.07263791738644854
+          ]
+        },
+        "frozen minus tfidf": {
+          "difference": -0.04159288407868522,
+          "interval_95_products": [
+            -0.04302054343030272,
+            -0.04014065508766369
+          ]
+        },
+        "student 0.80 minus student 0.90": {
+          "difference": -0.0008382849563091099,
+          "interval_95_products": [
+            -0.0015606260723969422,
+            -7.868706001213395e-05
+          ]
+        },
+        "student 0.95 minus student 0.90": {
+          "difference": -0.0007380568971666612,
+          "interval_95_products": [
+            -0.0015188442353475246,
+            3.319496695854684e-05
+          ]
+        },
+        "student both heads minus student 0.90": {
+          "difference": -0.0008879127253086372,
+          "interval_95_products": [
+            -0.0016947646101374502,
+            -0.00010946648647947603
+          ]
+        },
+        "student natural minus student 0.90": {
+          "difference": -0.0004512121430938487,
+          "interval_95_products": [
+            -0.0012295259009208388,
+            0.00032003779658110177
+          ]
+        },
+        "student 0.80 minus fabert": {
+          "difference": -0.0024362742239647517,
+          "interval_95_products": [
+            -0.003230847255630195,
+            -0.001658290255708639
+          ]
+        },
+        "student 0.95 minus fabert": {
+          "difference": -0.002336046164822303,
+          "interval_95_products": [
+            -0.003145892733319658,
+            -0.00150343558947387
+          ]
+        },
+        "student both heads minus fabert": {
+          "difference": -0.002485901992964279,
+          "interval_95_products": [
+            -0.0033819587549694637,
+            -0.0017188230038402087
+          ]
+        },
+        "student natural minus fabert": {
+          "difference": -0.0020492014107494905,
+          "interval_95_products": [
+            -0.002867521070140375,
+            -0.0012396322132441052
+          ]
+        }
+      },
+      "rating_band": {
+        "rate model minus fabert": {
+          "difference": 0.00019283626924271324,
+          "interval_95_products": [
+            -0.0005324906367740578,
+            0.0009154076507623896
+          ]
+        },
+        "frozen minus fabert": {
+          "difference": -0.07510876928486887,
+          "interval_95_products": [
+            -0.0765245815629733,
+            -0.07372505466653632
+          ]
+        },
+        "frozen minus tfidf": {
+          "difference": -0.05170364867990351,
+          "interval_95_products": [
+            -0.053020913436716555,
+            -0.050332508639161236
+          ]
+        },
+        "student 0.80 minus student 0.90": {
+          "difference": -0.00010582719238860783,
+          "interval_95_products": [
+            -0.000725528754065502,
+            0.0004863472654322629
+          ]
+        },
+        "student 0.95 minus student 0.90": {
+          "difference": 1.3048507323754066e-05,
+          "interval_95_products": [
+            -0.0005908522277158462,
+            0.0006328292963446308
+          ]
+        },
+        "student both heads minus student 0.90": {
+          "difference": -0.0003492519668263361,
+          "interval_95_products": [
+            -0.0008994901402669897,
+            0.0002474588360807495
+          ]
+        },
+        "student natural minus student 0.90": {
+          "difference": 5.862174170911949e-05,
+          "interval_95_products": [
+            -0.00051478164781118,
+            0.0006595302602827285
+          ]
+        },
+        "student 0.80 minus fabert": {
+          "difference": -0.0007441936755594458,
+          "interval_95_products": [
+            -0.001401827059468716,
+            -0.00010334492981339263
+          ]
+        },
+        "student 0.95 minus fabert": {
+          "difference": -0.0006253179758470839,
+          "interval_95_products": [
+            -0.0012810538106891173,
+            -5.426397248895078e-06
+          ]
+        },
+        "student both heads minus fabert": {
+          "difference": -0.000987618449997174,
+          "interval_95_products": [
+            -0.0016444253831854022,
+            -0.0003477340461293389
+          ]
+        },
+        "student natural minus fabert": {
+          "difference": -0.0005797447414617185,
+          "interval_95_products": [
+            -0.001261014393737389,
+            0.00011490893508012401
+          ]
+        }
+      }
+    },
+    "pseudo_labels_help_by_the_rule": {
+      "student 0.80": false,
+      "student 0.95": false,
+      "student both heads": false,
+      "student natural": false
+    },
+    "weights": "the extensions' FaBERT weights are not among the delivered files"
+  },
+  "service": {
+    "code": [
+      "app/main.py",
+      "Dockerfile",
+      "compose.yaml",
+      "requirements-service.txt"
+    ],
+    "endpoints": [
+      "/health",
+      "/ready",
+      "/normalize",
+      "/tokenize",
+      "/predict",
+      "/predict/tfidf",
+      "/predict/transformer",
+      "/predict/compare"
+    ],
+    "tests": "tests/test_api.py",
+    "memory_gb": {
+      "before_loading": {
+        "peak": 0.588,
+        "now": 0.588
+      },
+      "after_loading": {
+        "peak": 2.162,
+        "now": 1.628
+      },
+      "after_200_reviews": {
+        "peak": 2.162,
+        "now": 1.654
+      },
+      "models_alone": 1.04
+    },
+    "latency_ms_one_review": {
+      "median": 46.435,
+      "p95": 96.30749999999995
+    },
+    "docker": {
+      "image_size_gb": 2.447,
+      "seconds_until_ready": 33.3,
+      "models_loaded_seconds": 29.2,
+      "health_check": "healthy",
+      "torch_inside": "2.14.1+cpu",
+      "gpu_inside": false,
+      "all_as_expected": true,
+      "review_text_in_log": false
+    }
+  },
   "limitations": [
     "FaBERT declares no licence: its fine-tuned weights are not published",
     "on the test set the final system matches FaBERT on recommendation (+0.03 point, interval across zero) and leads it by 0.09 point on the rating band",
     "the middle classes (no_idea, medium) stay near F1 0.5: identical texts often carry other labels",
     "reviews longer than 128 tokens (about 0.2%) are cut for FaBERT",
-    "GPU training is not bit-for-bit repeatable; decisions rest on intervals and seed spread"
+    "GPU training is not bit-for-bit repeatable; decisions rest on intervals and seed spread",
+    "one validation review has a rate of 2,500; the exact-rate scores leave it out (D75)",
+    "the service is built and checked for the CPU only"
   ],
   "reproduce": [
     "uv sync --group transformer",
     "put the dataset's two CSV files in data/raw (see README)",
     "uvx marimo edit notebooks/run_all.py  # the steps of src/digikala_reviews/pipeline.py",
     "uv run python scripts/verify_standard_files.py  # the split files must match the hashes above",
-    "uv run python scripts/predict.py \"<review text>\"  # after scripts/save_fabert_files.py, once"
+    "uv run python scripts/predict.py \"<review text>\"  # after scripts/save_fabert_files.py, once",
+    "uv sync --all-groups && uv run uvicorn app.main:app  # or: docker compose up --build"
   ],
   "environment": {
     "python": "3.13.17",
@@ -583,7 +884,7 @@
     "torch": "2.14.1+cpu"
   },
   "code": {
-    "commit": "761ceecfbb4175efa89e6c7c6a25124ea7968ae6",
+    "commit": "cdf884fd86579ad0a9821b4c4ca95e4baa1ba132",
     "uncommitted_changes": false
   }
 }
