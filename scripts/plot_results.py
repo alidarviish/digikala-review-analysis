@@ -15,6 +15,8 @@ Charts are written to reports/figures/results_*.png:
   results_test_models          the four models of the final evaluation, validation against test
   results_test_confusion       the final system's confusion matrices on the test set
   results_test_semi            what the pseudo-labels changed on the test set, score by score
+  results_test_rate            the exact rate on the test set: predicted against true, and the residuals
+  results_test_extensions      the extensions' Macro F1 on the test set (the second reading)
 
 Usage:
     uv run python scripts/plot_results.py
@@ -691,6 +693,119 @@ def test_semi(evaluation):
     plotting.save(fig, "results_test_semi")
 
 
+RATE_MODELS = {"FaBERT rate head": "FaBERT rate head", "TF-IDF ridge": "TF-IDF ridge"}
+RATE_BIN_ORDER = ["0 to 1", "1 to 2", "2 to 3", "3 to 4", "4 to 5", "5"]
+
+
+def test_rate(extensions):
+    fig, axes = plt.subplots(1, 3, figsize=(14, 4.4), gridspec_kw={"width_ratios": [1, 1, 1.1]})
+    for ax, name in zip(axes[:2], RATE_MODELS, strict=True):
+        found = extensions["rate"][name]
+        hist = found["histogram"]
+        counts = np.array(hist["counts"], dtype=float)  # rows: true rate, columns: predicted rate
+        shares = counts / np.maximum(counts.sum(axis=1, keepdims=True), 1) * 100
+        true_edges, predicted_edges = hist["true_edges"], hist["predicted_edges"]
+        ax.imshow(
+            shares.T,
+            origin="lower",
+            aspect="auto",
+            cmap="Blues",
+            vmin=0,
+            vmax=40,
+            extent=[true_edges[0], true_edges[-1], predicted_edges[0], predicted_edges[-1]],
+        )
+        ax.plot([0.75, 5.25], [0.75, 5.25], color=plotting.SERIES[1], linewidth=1.2, linestyle="--")
+        ax.grid(False)
+        ax.set_xlabel("True rate")
+        ax.set_ylabel("Predicted rate")
+        scores = found["scores"]
+        ax.set_title(f"{RATE_MODELS[name]} · R² {scores['r2']:.3f}, MAE {scores['mae']:.3f}", fontsize=10.5)
+    ax = axes[2]
+    x = np.arange(len(RATE_BIN_ORDER))
+    names = [*RATE_MODELS, "constant (training mean)"]
+    colors = [plotting.SERIES[0], plotting.SERIES[1], plotting.NEUTRAL]
+    width = 0.27
+    for k, (name, color) in enumerate(zip(names, colors, strict=True)):
+        residuals = extensions["rate"][name]["residuals_by_true_rate"]
+        values = [residuals[b]["mean_residual"] for b in RATE_BIN_ORDER]
+        ax.bar(
+            x + (k - 1) * width, values, width=width, color=color, label=name.replace("constant", "Constant")
+        )
+    ax.axhline(0, color=plotting.AXIS, linewidth=1)
+    reviews = extensions["rate"]["FaBERT rate head"]["residuals_by_true_rate"]
+    ax.set_xticks(
+        x, [f"{b}\n{plotting.compact(reviews[b]['reviews'])}" for b in RATE_BIN_ORDER], fontsize=8.5
+    )
+    ax.set_xlabel("True rate (reviews)")
+    ax.set_ylabel("Mean of predicted minus true")
+    ax.grid(axis="x", visible=False)
+    ax.legend(fontsize=8, loc="upper right")
+    ax.set_title("Residuals by true rate", fontsize=10.5)
+    fig.suptitle(
+        "The exact rate on the test set: where the predictions fall (% of each true rate), and their bias",
+        x=0.01,
+        ha="left",
+        fontsize=12,
+        fontweight="bold",
+    )
+    fig.tight_layout()
+    plotting.save(fig, "results_test_rate")
+
+
+EXTENSION_MODELS = {
+    "tfidf": "TF-IDF",
+    "fabert": "FaBERT (kept run)",
+    "rate model": "FaBERT with a rate head",
+    "frozen": "FaBERT, encoder frozen",
+    "student 0.90": "Student 0.90 (official)",
+    "student 0.80": "Student 0.80",
+    "student 0.95": "Student 0.95",
+    "student both heads": "Student, both heads",
+    "student natural": "Student, natural pool added",
+}
+
+
+def test_extensions(extensions, validation):
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.8), sharey=True)
+    for ax, head in zip(axes, HEADS, strict=True):
+        models = extensions["heads"][head]["models"]
+        y = np.arange(len(EXTENSION_MODELS))
+        reference = models["fabert"]["macro_f1"]
+        for i, key in enumerate(EXTENSION_MODELS):
+            test = models[key]["macro_f1"]
+            valid = validation["heads"][head]["models"][key]["macro_f1"]
+            color = plotting.NEUTRAL if key == "tfidf" else plotting.SERIES[0]
+            ax.barh(i, test, height=0.55, color=color if key in ("tfidf", "fabert") else color + "88")
+            ax.plot(valid, i, marker="D", markersize=5, color=plotting.SERIES[1], linestyle="none")
+            ax.text(
+                max(test, valid) + 0.003,
+                i,
+                f"{test:.4f}",
+                va="center",
+                fontsize=8,
+                color=plotting.INK_SECONDARY,
+            )
+        ax.axvline(reference, color=plotting.INK_SECONDARY, linewidth=0.9, linestyle=":")
+        ax.set_yticks(y, list(EXTENSION_MODELS.values()))
+        ax.set_xlim(0.60, 0.76)
+        ax.set_xlabel("Macro F1 with offsets")
+        ax.grid(axis="y", visible=False)
+        ax.set_title(HEAD_TITLES[head])
+    axes[0].invert_yaxis()  # shared y axis: inverting it once turns both
+    axes[1].plot([], [], marker="D", color=plotting.SERIES[1], linestyle="none", label="validation")
+    axes[1].plot([], [], color=plotting.INK_SECONDARY, linewidth=0.9, linestyle=":", label="FaBERT, test")
+    axes[1].legend(loc="lower right", fontsize=8.5)
+    fig.suptitle(
+        "The extensions on the test set (its second and last reading): bars are test, diamonds validation",
+        x=0.01,
+        ha="left",
+        fontsize=12,
+        fontweight="bold",
+    )
+    fig.tight_layout()
+    plotting.save(fig, "results_test_extensions")
+
+
 def main():
     plotting.apply_style()
     comparison = load("transformer_final/vs_tfidf.json")
@@ -708,6 +823,9 @@ def main():
     test_models(evaluation)
     test_confusion(evaluation)
     test_semi(evaluation)
+    extensions = load("final_evaluation_extensions.json")
+    test_rate(extensions)
+    test_extensions(extensions, load("extensions_validation.json"))
     print("Charts written to", plotting.FIGURES_DIR)
 
 

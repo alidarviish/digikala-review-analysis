@@ -1247,6 +1247,15 @@ STEPS = [
         files("reports/predictor_memory.json"),
         "loads the models on the CPU of your machine",
     ),
+    Step(
+        129,
+        "Extensions: the service inside its Docker container",
+        ["scripts/check_docker.py"],
+        "local",
+        [104, 105],
+        files("reports/docker_check.json"),
+        "needs Docker and the image built first (docker compose build)",
+    ),
 ]
 
 
