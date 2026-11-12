@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-11-12T06:53:19+00:00",
+  "created_at": "2026-11-12T07:09:34+00:00",
   "project": "Digikala review analysis: recommendation and rating band from the review text alone",
   "release_tag": "v1.0",
   "official_system": "final_system",
@@ -131,6 +131,12 @@
       "path": "artifacts/semi_supervised_student/model_last.pt",
       "bytes": 248962396,
       "sha256": "deaf0d82b5ccff109931d0c2021e89c7584efe22faab5351994ff7bb80edfc77",
+      "availability": "private: given to the reviewer with the submission (FaBERT declares no licence)"
+    },
+    "rate_model_weights": {
+      "path": "artifacts/transformer_rate/model.pt",
+      "bytes": 248950655,
+      "sha256": "645fe7b5873698262f7315f3bb026b9bf96dd85a5a9a01160ffea857bad4593d",
       "availability": "private: given to the reviewer with the submission (FaBERT declares no licence)"
     },
     "fabert_tokenizer/config.json": {
@@ -808,7 +814,7 @@
       "student both heads": false,
       "student natural": false
     },
-    "weights": "the extensions' FaBERT weights are not among the delivered files"
+    "weights": "the rate model's weights are delivered (privately) for predicted_rate; the other extensions' weights are not"
   },
   "service": {
     "code": [
@@ -895,7 +901,7 @@
     "torch": "2.14.1+cpu"
   },
   "code": {
-    "commit": "b050ff94a71b70e59c41dee60698f42776f5d52e",
+    "commit": "2823727dcdedd50c020a98160ec07c8c784e531f",
     "uncommitted_changes": false
   }
 }
