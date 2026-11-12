@@ -8,7 +8,8 @@ Where the files are (decided before writing this report):
 - public, as assets of the GitHub release RELEASE_TAG: the split files and their manifest
   (the dataset is MIT-licensed) and the TF-IDF model;
 - private, given to the reviewer with the submission: the fine-tuned FaBERT weights, the
-  semi-supervised student and FaBERT's tokenizer files (FaBERT declares no licence).
+  semi-supervised student, the rate model (for predicted_rate) and FaBERT's tokenizer files
+  (FaBERT declares no licence).
 
 Usage:
     uv run python scripts/write_release_report.py
@@ -92,11 +93,13 @@ def main():
     files["semi_supervised_student_weights"] = entry(
         ARTIFACTS_DIR / "semi_supervised_student" / "model_last.pt", PRIVATE
     )
+    files["rate_model_weights"] = entry(ARTIFACTS_DIR / "transformer_rate" / "model.pt", PRIVATE)
     for name, digest in tokenizer["files"].items():
         files[f"fabert_tokenizer/{name}"] = entry(ARTIFACTS_DIR / "fabert_files" / name, PRIVATE, digest)
     assert files["fabert_weights"]["sha256"] == final["scoring"]["fabert"]["weights_sha256"]
     assert files["semi_supervised_student_weights"]["sha256"] == final["scoring"]["student"]["weights_sha256"]
     assert files["tfidf_model"]["sha256"] == final["tfidf_sha256"]
+    assert files["rate_model_weights"]["sha256"] == predictor["version"]["rate_model_sha256"]
 
     models = {
         "tfidf": {
@@ -166,7 +169,8 @@ def main():
         },
         "test_differences_macro_f1": {head: extensions_test["heads"][head]["differences"] for head in HEADS},
         "pseudo_labels_help_by_the_rule": extensions_validation["rule_pseudo_labels_help"],
-        "weights": "the extensions' FaBERT weights are not among the delivered files",
+        "weights": "the rate model's weights are delivered (privately) for predicted_rate; the other "
+        "extensions' weights are not",
     }
     report = {
         "created_at": datetime.now(UTC).isoformat(timespec="seconds"),
