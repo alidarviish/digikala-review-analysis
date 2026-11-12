@@ -1,10 +1,10 @@
 """The prediction service inside its Docker container (reports/extensions_plan.md, extension 8).
 
 Starts the container of compose.yaml, waits until /ready answers, sends the requests below from
-outside the container, reads the image size, the health check's state, the loading time from the
-service's log and whether torch sees a GPU inside, checks that no review text reached the log, and
-stops the container. The image must be built first. The review texts are made up; no data file is
-read.
+outside the container, asks /health and /ready from inside it too, reads the image size, the
+health check's state, the loading time from the service's log and whether torch sees a GPU
+inside, checks that no review text reached the log, and stops the container. The image must be
+built first. The review texts are made up; no data file is read.
 
 Writes reports/docker_check.json and prints the numbers.
 
@@ -100,6 +100,7 @@ def main():
             }
             if name == "predict (final system)" and status == 200:
                 labels = {head: answer[head]["label"] for head in ("recommendation", "rating_band")}
+                labels["predicted_rate"] = answer["predicted_rate"]
         container = run("docker", "compose", "ps", "-q", "api")
         state = health_state(container)
         inside = run(
@@ -112,6 +113,10 @@ def main():
             "-c",
             "import torch; print(torch.__version__, torch.cuda.is_available())",
         ).split()
+        from_inside = {}
+        for path in ("/health", "/ready"):
+            asked = f"import urllib.request; print(urllib.request.urlopen('{URL}{path}').status)"
+            from_inside[path] = int(run("docker", "compose", "exec", "-T", "api", "python", "-c", asked))
         log = run("docker", "compose", "logs", "api")
     finally:
         run("docker", "compose", "down")
@@ -130,7 +135,9 @@ def main():
         "torch_inside": inside[0],
         "gpu_inside": inside[1] == "True",
         "requests": checks,
-        "all_as_expected": all(c["status"] == c["expected"] for c in checks.values()),
+        "from_inside": from_inside,
+        "all_as_expected": all(c["status"] == c["expected"] for c in checks.values())
+        and all(status == 200 for status in from_inside.values()),
         "example_answer": labels,
         "review_text_in_log": REVIEW in log or "خوب خوب" in log,
         "code": git_commit(),
@@ -138,7 +145,7 @@ def main():
     save_json(OUTPUT, result)
     print(f"image {result['image_size_gb']} GB, ready after {seconds_until_ready} s", end="")
     print(f" (models loaded in {result['models_loaded_seconds']} s), health check: {state}")
-    print(f"torch {inside[0]}, GPU inside: {result['gpu_inside']}")
+    print(f"torch {inside[0]}, GPU inside: {result['gpu_inside']}; from inside: {from_inside}")
     for name, c in checks.items():
         print(f"  {name:24} {c['status']} (expected {c['expected']})  {c['ms']} ms")
     print(f"all as expected: {result['all_as_expected']}; review text in the log: ", end="")

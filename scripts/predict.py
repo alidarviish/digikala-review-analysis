@@ -59,6 +59,8 @@ def show(result: dict) -> None:
         e = result["explanation"][head]
         words = ", ".join(w["term"] for w in e["tfidf_words_for_its_answer"]) or "none"
         print(f"  models agree: {'yes' if e['models_agree'] else 'no'}; TF-IDF words for its answer: {words}")
+    if result["predicted_rate"] is not None:
+        print(f"predicted rate (extension, 0 to 5): {result['predicted_rate']:.2f}")
     latency = ", ".join(f"{k} {v:.1f} ms" for k, v in result["latency_ms"].items())
     print(f"latency: {latency}\n")
 
@@ -78,8 +80,10 @@ def demo_report(predictor: Predictor) -> str:
         r = predictor.predict(text)
         lines += [f"## {kind}: {text}", ""]
         lines.append(
-            f"{r['token_count']} tokens{' (cut at 128)' if r['truncated'] else ''}; latency: TF-IDF "
-            f"{r['latency_ms']['tfidf']:.1f} ms, FaBERT {r['latency_ms']['fabert']:.1f} ms."
+            f"{r['token_count']} tokens{' (cut at 128)' if r['truncated'] else ''}; predicted rate "
+            f"{r['predicted_rate']:.2f} (FaBERT with a rate head, an extension); latency: TF-IDF "
+            f"{r['latency_ms']['tfidf']:.1f} ms, FaBERT {r['latency_ms']['fabert']:.1f} ms, rate model "
+            f"{r['latency_ms']['rate']:.1f} ms."
         )
         lines += [
             "",

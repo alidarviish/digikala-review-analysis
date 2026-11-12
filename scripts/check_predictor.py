@@ -10,7 +10,9 @@ src/digikala_reviews/predictor.py is run and compared with what was saved during
   absolute difference of the probabilities under 0.005 (the saved ones were made on the GPU
   with bfloat16, these on the CPU with float32, so they are close but not equal);
 - the final system: its best guess the same on at least 99.5% (from the saved probabilities
-  with the same weight, offsets and threshold).
+  with the same weight, offsets and threshold);
+- the exact rate (an extension): the mean absolute difference from the rate model's saved
+  prediction under 0.01 (GPU and bfloat16 there, CPU and float32 here).
 
 Also: the share of reviews longer than 128 tokens, and the latency of each model, one review
 at a time, on 200 of them. The test set is not read.
@@ -43,6 +45,7 @@ RULES = {
     "fabert_same_label": 0.995,
     "fabert_mean_difference": 0.005,
     "final_same_label": 0.995,
+    "rate_mean_difference": 0.01,
 }
 
 
@@ -57,6 +60,9 @@ def main():
         saved = pd.read_parquet(ARTIFACTS_DIR / folder / "validation_predictions.parquet")
         saved = saved.drop(columns=[c for c in saved if c != "id" and "__log_proba__" not in c])
         table = table.merge(saved.add_prefix(f"{name}:").rename(columns={f"{name}:id": "id"}), on="id")
+    if predictor.rate_model is not None:  # pipeline step 113 is done
+        saved = pd.read_parquet(ARTIFACTS_DIR / "transformer_rate" / "validation_predictions.parquet")
+        table = table.merge(saved[["id", "rate__predicted"]], on="id")
     assert len(table) == SAMPLE, "a sampled review is missing from the saved predictions"
 
     texts = [normalize(b) for b in table["body"]]
@@ -67,6 +73,14 @@ def main():
     log_fabert = predictor.fabert_scores(texts)
     fabert_seconds = time.perf_counter() - start
     lengths = np.array([len(ids) for ids in predictor.tokenizer(texts)["input_ids"]])
+    rate = None
+    if predictor.rate_model is not None:
+        difference = np.abs(predictor.rate_scores(texts) - table["rate__predicted"].to_numpy(dtype=float))
+        rate = {
+            "mean_difference": float(difference.mean()),
+            "max_difference": float(difference.max()),
+            "passed": bool(difference.mean() < RULES["rate_mean_difference"]),
+        }
 
     heads = {}
     for head, spec in HEADS.items():
@@ -101,7 +115,7 @@ def main():
         }
         heads[head] = found
 
-    timings = {"normalize": [], "tfidf": [], "fabert": []}
+    timings = {name: [] for name in predictor.predict("خوب")["latency_ms"]}
     for body in table["body"].iloc[:TIMED]:
         for name, ms in predictor.predict(body)["latency_ms"].items():
             timings[name].append(ms)
@@ -119,7 +133,9 @@ def main():
             "rules": RULES,
             "same_normalized_text": same_text,
             "heads": heads,
-            "passed": all(all(h["passed"].values()) for h in heads.values()),
+            "rate": rate,
+            "passed": all(all(h["passed"].values()) for h in heads.values())
+            and (rate is None or rate["passed"]),
             "tokens": {
                 "median": float(np.median(lengths)),
                 "share_over_128": float(np.mean(lengths > predictor.max_length)),
@@ -149,9 +165,12 @@ def main():
             f"{s['same_uncertain']:.2%}, 'uncertain' {s['uncertain_share']:.1%}"
         )
         print("  passed: " + ", ".join(f"{k} {'yes' if v else 'NO'}" for k, v in e["passed"].items()))
-    print(
-        f"\ntokens: median {np.median(lengths):.0f}, over 128: {np.mean(lengths > predictor.max_length):.1%}"
-    )
+    if rate is not None:
+        print(
+            f"\nexact rate: difference mean {rate['mean_difference']:.4f}, "
+            f"largest {rate['max_difference']:.4f}; passed: {'yes' if rate['passed'] else 'NO'}"
+        )
+    print(f"tokens: median {np.median(lengths):.0f}, over 128: {np.mean(lengths > predictor.max_length):.1%}")
     print(f"FaBERT on {SAMPLE:,} reviews in batches: {fabert_seconds:.0f}s")
     print(
         "latency, one review: "

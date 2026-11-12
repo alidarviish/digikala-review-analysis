@@ -12,6 +12,9 @@ same code as scripts/predict.py). Requests carry the review text only, never a l
   POST /predict/transformer    the fine-tuned FaBERT model
   POST /predict/compare        the three side by side, with each one's latency
 
+Every prediction also has predicted_rate: the exact rate (0 to 5) from FaBERT with a rate head,
+an extension (reports/extensions_plan.md) that changes no label.
+
 Failures: 422 for an empty text or one longer than MAX_CHARACTERS, 400 for an unknown model,
 503 when the models are not ready, 500 for anything unexpected. The review text is never logged:
 the log has the method, the path, the status and the time only.
@@ -69,6 +72,7 @@ def one_model(result: dict, model: str) -> dict:
         "model_version": result["version"],
         "token_count": result["token_count"],
         "truncated": result["truncated"],
+        "predicted_rate": result["predicted_rate"],
     }
     for head in HEADS:
         found = result["models"][key][head]
@@ -79,7 +83,7 @@ def one_model(result: dict, model: str) -> dict:
     answer["latency_ms"] = {
         "tfidf": latency["normalize"] + latency["tfidf"],
         "transformer": latency["normalize"] + latency["fabert"],
-        "final": sum(latency.values()),
+        "final": latency["normalize"] + latency["tfidf"] + latency["fabert"],
     }[model]
     return answer
 
@@ -151,6 +155,7 @@ def create_app(loader=load_predictor) -> FastAPI:
         result = predictor().predict(request.text)
         return {
             "models": {model: one_model(result, model) for model in MODELS},
+            "predicted_rate": {"value": result["predicted_rate"], "latency_ms": result["latency_ms"]["rate"]},
             "models_agree": {h: e["models_agree"] for h, e in result["explanation"].items()},
             "tfidf_words": {h: e["tfidf_words_for_its_answer"] for h, e in result["explanation"].items()},
         }

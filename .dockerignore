@@ -12,3 +12,4 @@ scripts
 reports/**
 !reports/uncertain.json
 !reports/transformer_final/fabert_no_early_stop.json
+!reports/transformer_final/rate.json

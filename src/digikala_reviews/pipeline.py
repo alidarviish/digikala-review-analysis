@@ -1019,7 +1019,7 @@ STEPS = [
         "local",
         [17, 33, 103, 104],
         files("reports/predictor_check.json"),
-        "runs FaBERT on the CPU of your machine; a few minutes",
+        "FaBERT on the CPU of your machine, a few minutes; the rate model too once step 113 is done",
     ),
     # The final evaluation (reports/final_evaluation_plan.md): the test texts on the GPU, then
     # the test labels read once on your machine
@@ -1243,7 +1243,7 @@ STEPS = [
         "Extensions: memory of the offline predictor",
         ["scripts/measure_predictor_memory.py"],
         "local",
-        [104, 105],
+        [104, 105, 113],
         files("reports/predictor_memory.json"),
         "loads the models on the CPU of your machine",
     ),
@@ -1252,7 +1252,7 @@ STEPS = [
         "Extensions: the service inside its Docker container",
         ["scripts/check_docker.py"],
         "local",
-        [104, 105],
+        [104, 105, 113],
         files("reports/docker_check.json"),
         "needs Docker and the image built first (docker compose build)",
     ),

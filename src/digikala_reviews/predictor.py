@@ -7,7 +7,10 @@ Only the review text goes in. It is normalized as in training, then scored by:
   come from artifacts/fabert_files (scripts/save_fabert_files.py), so nothing is downloaded;
 - the final system: the weighted mean of both models' probabilities and its offsets, with
   "uncertain" when the mixed probability of its answer is under the threshold
-  (reports/uncertain.json, "for_test").
+  (reports/uncertain.json, "for_test");
+- the exact rate (an extension, reports/extensions_plan.md): FaBERT with a rate head
+  (artifacts/transformer_rate/model.pt, pipeline step 113), its prediction clipped to [0, 5].
+  Only its rate is used; it changes no label. Without that file the predicted rate is None.
 
 The explanation is the words of the review that pushed the TF-IDF model most towards its
 answer (weight of the word for that class, minus its mean weight over the classes, times
@@ -35,6 +38,8 @@ from digikala_reviews.tfidf import HEADS
 TFIDF_MODEL = ARTIFACTS_DIR / "tfidf_final" / "model.joblib"
 FABERT_MODEL = ARTIFACTS_DIR / FINAL_TRANSFORMER_DIR / "model.pt"
 FABERT_FILES = ARTIFACTS_DIR / "fabert_files"
+RATE_MODEL = ARTIFACTS_DIR / "transformer_rate" / "model.pt"
+RATE_RESULT = REPORTS_DIR / "transformer_final" / "rate.json"
 UNCERTAIN = REPORTS_DIR / "uncertain.json"
 UNCERTAIN_LABEL = "uncertain"
 TOP_WORDS = 5
@@ -93,15 +98,26 @@ class Predictor:
             f = final[head]["for_test"]
             self.final[head] = (f["fabert_weight"], offsets_array(f["offsets"], labels), f["threshold"])
 
-        saved = torch.load(FABERT_MODEL, map_location="cpu", weights_only=False)
-        settings = saved["settings"]
-        self.max_length = settings["max_length"]
         self.tokenizer = AutoTokenizer.from_pretrained(FABERT_FILES)
         config = AutoConfig.from_pretrained(FABERT_FILES)
-        self.model = build_model(torch, settings["model"], settings["dropout"], list(HEADS), config=config)
-        self.model.load_state_dict({k: v.float() for k, v in saved["weights"].items()})
-        self.model.eval()
-        del saved
+
+        def load(path, rate_head):
+            saved = torch.load(path, map_location="cpu", weights_only=False)
+            settings = saved["settings"]
+            model = build_model(
+                torch, settings["model"], settings["dropout"], list(HEADS), config=config, rate_head=rate_head
+            )
+            model.load_state_dict({k: v.float() for k, v in saved["weights"].items()})
+            model.eval()
+            return model, settings
+
+        self.model, settings = load(FABERT_MODEL, rate_head=False)
+        self.max_length = settings["max_length"]
+        self.rate_model = None
+        if RATE_MODEL.exists():
+            self.rate_model, rate = load(RATE_MODEL, rate_head=True)
+            assert rate["max_length"] == self.max_length and rate["model"] == settings["model"]
+            self.rate_scale = (rate["rate_mean"], rate["rate_std"])
         self.version = {
             "code": git_commit(),
             "normalizer_version": NORMALIZER_VERSION,
@@ -109,6 +125,11 @@ class Predictor:
             "fabert_sha256": file_sha256(FABERT_MODEL),
             "fabert_kept_epoch": fabert_report["kept_epoch"],
         }
+        if self.rate_model is not None:
+            self.version["rate_model_sha256"] = file_sha256(RATE_MODEL)
+            self.version["rate_model_kept_epoch"] = json.loads(RATE_RESULT.read_text(encoding="utf-8"))[
+                "kept_epoch"
+            ]
 
     def tfidf_scores(self, texts):
         """Log-probabilities of each head, in the order of HEADS' labels, and the features."""
@@ -120,23 +141,38 @@ class Predictor:
             )
         return found, x
 
+    def batches(self, texts, batch_size):
+        for i in range(0, len(texts), batch_size):
+            yield self.tokenizer(
+                list(texts[i : i + batch_size]),
+                truncation=True,
+                max_length=self.max_length,
+                padding=True,
+                return_tensors="pt",
+            )
+
     def fabert_scores(self, texts, batch_size=64):
         """Log-probabilities of each head, in the order of HEADS' labels."""
         torch = self.torch
         parts = {head: [] for head in HEADS}
         with torch.no_grad():
-            for i in range(0, len(texts), batch_size):
-                batch = self.tokenizer(
-                    list(texts[i : i + batch_size]),
-                    truncation=True,
-                    max_length=self.max_length,
-                    padding=True,
-                    return_tensors="pt",
-                )
+            for batch in self.batches(texts, batch_size):
                 outputs = self.model(batch["input_ids"], batch["attention_mask"])
-                for head, logits in outputs.items():
-                    parts[head].append(torch.log_softmax(logits.float(), dim=-1).numpy())
+                for head in HEADS:
+                    parts[head].append(torch.log_softmax(outputs[head].float(), dim=-1).numpy())
         return {head: np.vstack(p).astype(float) for head, p in parts.items()}
+
+    def rate_scores(self, texts, batch_size=64):
+        """The predicted rate of each text, on the 0 to 5 scale."""
+        torch = self.torch
+        mean, std = self.rate_scale
+        parts = []
+        with torch.no_grad():
+            for batch in self.batches(texts, batch_size):
+                parts.append(
+                    self.rate_model(batch["input_ids"], batch["attention_mask"])["rate"].float().numpy()
+                )
+        return np.clip(np.concatenate(parts).astype(float) * std + mean, 0, 5)
 
     def tokenize(self, body: str) -> dict:
         """The review as FaBERT reads it: normalized, cut at max_length tokens."""
@@ -165,6 +201,9 @@ class Predictor:
         start = time.perf_counter()
         log_fabert = self.fabert_scores([text])
         fabert_ms = (time.perf_counter() - start) * 1000
+        start = time.perf_counter()
+        predicted_rate = None if self.rate_model is None else round(float(self.rate_scores([text])[0]), 2)
+        rate_ms = (time.perf_counter() - start) * 1000
 
         models = {"tfidf": {}, "fabert": {}, "final_system": {}}
         explanation = {}
@@ -201,11 +240,13 @@ class Predictor:
             "token_count": len(ids),
             "truncated": len(ids) > self.max_length,
             "models": models,
+            "predicted_rate": predicted_rate,
             "explanation": explanation,
             "latency_ms": {
                 "normalize": round(normalize_ms, 2),
                 "tfidf": round(tfidf_ms, 2),
                 "fabert": round(fabert_ms, 2),
+                "rate": round(rate_ms, 2),
             },
             "version": self.version,
         }

@@ -34,8 +34,9 @@ class FakePredictor:
             "token_count": 4,
             "truncated": False,
             "models": models,
+            "predicted_rate": 4.2,
             "explanation": {h: {"models_agree": True, "tfidf_words_for_its_answer": []} for h in LABELS},
-            "latency_ms": {"normalize": 0.1, "tfidf": 1.0, "fabert": 40.0},
+            "latency_ms": {"normalize": 0.1, "tfidf": 1.0, "fabert": 40.0, "rate": 40.0},
             "version": self.version,
         }
 
@@ -84,6 +85,15 @@ def test_predict_gives_both_heads_with_probabilities():
     for head, labels in LABELS.items():
         assert set(found[head]["probabilities"]) == set(labels)
     assert {"model_version", "token_count", "latency_ms"} <= set(found)
+
+
+def test_predicted_rate_and_latency_of_each_model():
+    with client() as c:
+        final = c.post("/predict", json={"text": "عالی"}).json()
+        tfidf = c.post("/predict/tfidf", json={"text": "عالی"}).json()
+        both = c.post("/predict/compare", json={"text": "عالی"}).json()
+    assert final["predicted_rate"] == 4.2 and both["predicted_rate"]["value"] == 4.2
+    assert final["latency_ms"] == 41.1 and tfidf["latency_ms"] == 1.1  # the rate model is not counted
 
 
 def test_each_model_and_the_comparison():
