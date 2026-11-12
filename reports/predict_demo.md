@@ -1,10 +1,10 @@
 # Offline prediction: examples
 
-Made by `scripts/predict.py --demo` on 2026-11-10, code 8a38c72. The reviews were written for this demonstration; none is from the data. Labels with each model's offsets for the test set; the final system answers `uncertain` when its confidence is under the threshold fitted on validation (`reports/uncertain.json`), and its best guess is shown in brackets.
+Made by `scripts/predict.py --demo` on 2026-11-12, code 5a0c528. The reviews were written for this demonstration; none is from the data. Labels with each model's offsets for the test set; the final system answers `uncertain` when its confidence is under the threshold fitted on validation (`reports/uncertain.json`), and its best guess is shown in brackets.
 
 ## short: عالی
 
-3 tokens; latency: TF-IDF 33.2 ms, FaBERT 252.7 ms.
+3 tokens; predicted rate 4.84 (FaBERT with a rate head, an extension); latency: TF-IDF 47.1 ms, FaBERT 491.6 ms, rate model 52.1 ms.
 
 | Head | TF-IDF | FaBERT | Final system | TF-IDF words for its answer |
 |---|---|---|---|---|
@@ -13,7 +13,7 @@ Made by `scripts/predict.py --demo` on 2026-11-10, code 8a38c72. The reviews wer
 
 ## short: بد بود
 
-4 tokens; latency: TF-IDF 1.5 ms, FaBERT 50.6 ms.
+4 tokens; predicted rate 1.56 (FaBERT with a rate head, an extension); latency: TF-IDF 2.2 ms, FaBERT 46.9 ms, rate model 47.2 ms.
 
 | Head | TF-IDF | FaBERT | Final system | TF-IDF words for its answer |
 |---|---|---|---|---|
@@ -22,7 +22,7 @@ Made by `scripts/predict.py --demo` on 2026-11-10, code 8a38c72. The reviews wer
 
 ## ambiguous: معمولیه، فعلا دارم استفاده می‌کنم ببینم چطوره
 
-11 tokens; latency: TF-IDF 1.3 ms, FaBERT 62.6 ms.
+11 tokens; predicted rate 3.22 (FaBERT with a rate head, an extension); latency: TF-IDF 5.5 ms, FaBERT 51.3 ms, rate model 50.6 ms.
 
 | Head | TF-IDF | FaBERT | Final system | TF-IDF words for its answer |
 |---|---|---|---|---|
@@ -31,7 +31,7 @@ Made by `scripts/predict.py --demo` on 2026-11-10, code 8a38c72. The reviews wer
 
 ## negative: بعد از دو هفته خراب شد و پشتیبانی هم جواب نداد. پولم هدر رفت.
 
-18 tokens; latency: TF-IDF 1.4 ms, FaBERT 63.9 ms.
+18 tokens; predicted rate 1.25 (FaBERT with a rate head, an extension); latency: TF-IDF 13.5 ms, FaBERT 104.5 ms, rate model 55.7 ms.
 
 | Head | TF-IDF | FaBERT | Final system | TF-IDF words for its answer |
 |---|---|---|---|---|
@@ -40,7 +40,7 @@ Made by `scripts/predict.py --demo` on 2026-11-10, code 8a38c72. The reviews wer
 
 ## mixed: کیفیتش خوبه ولی برای این قیمت خیلی گرونه
 
-11 tokens; latency: TF-IDF 3.6 ms, FaBERT 52.2 ms.
+11 tokens; predicted rate 3.57 (FaBERT with a rate head, an extension); latency: TF-IDF 5.1 ms, FaBERT 48.5 ms, rate model 50.0 ms.
 
 | Head | TF-IDF | FaBERT | Final system | TF-IDF words for its answer |
 |---|---|---|---|---|
@@ -49,7 +49,7 @@ Made by `scripts/predict.py --demo` on 2026-11-10, code 8a38c72. The reviews wer
 
 ## mixed: صداش عالیه ولی باتریش زود تموم میشه و شارژرش هم داغ میکنه
 
-16 tokens; latency: TF-IDF 1.5 ms, FaBERT 57.0 ms.
+16 tokens; predicted rate 3.66 (FaBERT with a rate head, an extension); latency: TF-IDF 6.8 ms, FaBERT 51.0 ms, rate model 51.7 ms.
 
 | Head | TF-IDF | FaBERT | Final system | TF-IDF words for its answer |
 |---|---|---|---|---|
@@ -58,7 +58,7 @@ Made by `scripts/predict.py --demo` on 2026-11-10, code 8a38c72. The reviews wer
 
 ## negation: بد نیست
 
-4 tokens; latency: TF-IDF 1.1 ms, FaBERT 48.3 ms.
+4 tokens; predicted rate 3.27 (FaBERT with a rate head, an extension); latency: TF-IDF 1.5 ms, FaBERT 41.6 ms, rate model 44.5 ms.
 
 | Head | TF-IDF | FaBERT | Final system | TF-IDF words for its answer |
 |---|---|---|---|---|
@@ -67,7 +67,7 @@ Made by `scripts/predict.py --demo` on 2026-11-10, code 8a38c72. The reviews wer
 
 ## negation: اصلا ارزش خرید نداره
 
-6 tokens; latency: TF-IDF 1.2 ms, FaBERT 48.4 ms.
+6 tokens; predicted rate 1.19 (FaBERT with a rate head, an extension); latency: TF-IDF 2.5 ms, FaBERT 47.1 ms, rate model 46.3 ms.
 
 | Head | TF-IDF | FaBERT | Final system | TF-IDF words for its answer |
 |---|---|---|---|---|
@@ -76,7 +76,7 @@ Made by `scripts/predict.py --demo` on 2026-11-10, code 8a38c72. The reviews wer
 
 ## sarcasm: واقعا عالی بود، روز دوم شکست!
 
-10 tokens; latency: TF-IDF 1.3 ms, FaBERT 47.2 ms.
+10 tokens; predicted rate 4.12 (FaBERT with a rate head, an extension); latency: TF-IDF 4.5 ms, FaBERT 55.2 ms, rate model 56.5 ms.
 
 | Head | TF-IDF | FaBERT | Final system | TF-IDF words for its answer |
 |---|---|---|---|---|
@@ -85,7 +85,7 @@ Made by `scripts/predict.py --demo` on 2026-11-10, code 8a38c72. The reviews wer
 
 ## spelling: خیلی خوبع دستتون درد نکنه
 
-8 tokens; latency: TF-IDF 1.4 ms, FaBERT 47.0 ms.
+8 tokens; predicted rate 4.85 (FaBERT with a rate head, an extension); latency: TF-IDF 2.5 ms, FaBERT 46.2 ms, rate model 55.5 ms.
 
 | Head | TF-IDF | FaBERT | Final system | TF-IDF words for its answer |
 |---|---|---|---|---|
@@ -94,7 +94,7 @@ Made by `scripts/predict.py --demo` on 2026-11-10, code 8a38c72. The reviews wer
 
 ## long: این گوشی رو حدود سه ماه پیش خریدم و تا الان تجربهٔ نسبتاً خوبی داشتم. صفحه‌نمایشش روشن و رنگ‌هاش طبیعیه و زیر نور آفتاب هم به‌خوبی دیده میشه. دوربینش در روز عکس‌های خوبی می‌گیره ولی در شب نویز زیادی داره و جزئیات از بین میره. باتریش با استفادهٔ معمولی یک روز کامل دوام میاره، اما وقتی بازی می‌کنم زود داغ میشه و شارژش سریع کم میشه. بلندگوش صدای بلندی داره ولی کیفیتش متوسطه. نرم‌افزارش گاهی کند میشه و چند تا برنامهٔ اضافه داره که نمیشه پاکشون کرد. بسته‌بندی سالم بود و ارسال هم به‌موقع انجام شد. در کل برای این قیمت انتخاب بدی نیست، ولی اگه بودجهٔ بیشتری دارید شاید مدل بالاتر ارزشش رو داشته باشه.
 
-146 tokens (cut at 128); latency: TF-IDF 2.3 ms, FaBERT 249.4 ms.
+146 tokens (cut at 128); predicted rate 3.55 (FaBERT with a rate head, an extension); latency: TF-IDF 38.5 ms, FaBERT 333.1 ms, rate model 199.4 ms.
 
 | Head | TF-IDF | FaBERT | Final system | TF-IDF words for its answer |
 |---|---|---|---|---|

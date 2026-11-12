@@ -1,0 +1,19 @@
+normalized text equal to the cache: 100.0%
+
+=== recommendation
+  TF-IDF: same label 100.00%, largest probability difference 0.0e+00
+  FaBERT: same label 100.00%, probability difference mean 0.0002, largest 0.0047
+  final system: same best guess 100.00%, same 'uncertain' 99.90%, 'uncertain' 9.4%
+  passed: tfidf yes, fabert yes, final_system yes
+
+=== rating_band
+  TF-IDF: same label 100.00%, largest probability difference 0.0e+00
+  FaBERT: same label 100.00%, probability difference mean 0.0003, largest 0.0037
+  final system: same best guess 100.00%, same 'uncertain' 100.00%, 'uncertain' 9.3%
+  passed: tfidf yes, fabert yes, final_system yes
+
+exact rate: difference mean 0.0012, largest 0.0095; passed: yes
+tokens: median 9, over 128: 0.2%
+FaBERT on 2,000 reviews in batches: 172s
+latency, one review: normalize median 0.1 ms (95%: 0.2), tfidf median 2.3 ms (95%: 7.4), fabert median 46.3 ms (95%: 103.7), rate median 48.0 ms (95%: 98.2)
+saved reports/predictor_check.json

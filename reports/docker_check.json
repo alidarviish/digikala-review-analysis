@@ -1,14 +1,14 @@
 {
-  "created_at": "2026-11-11T20:07:50+00:00",
+  "created_at": "2026-11-12T06:15:42+00:00",
   "plan": "reports/extensions_plan.md",
   "image": "digikala-review-api",
   "image_size_gb": 2.447,
   "image_list": {
     "Containers": "0",
-    "CreatedAt": "2026-11-11 23:36:57 +0330 +0330",
-    "CreatedSince": "53 seconds ago",
+    "CreatedAt": "2026-11-12 09:44:16 +0330 +0330",
+    "CreatedSince": "About a minute ago",
     "Digest": "<none>",
-    "ID": "9e7248f0621b",
+    "ID": "433fbc481e6b",
     "Repository": "digikala-review-api",
     "SharedSize": "N/A",
     "Size": "2.45GB",
@@ -16,8 +16,8 @@
     "UniqueSize": "N/A"
   },
   "docker_version": "29.9.3",
-  "seconds_until_ready": 33.3,
-  "models_loaded_seconds": 29.2,
+  "seconds_until_ready": 43.3,
+  "models_loaded_seconds": 38.9,
   "health_check": "healthy",
   "torch_inside": "2.14.1+cpu",
   "gpu_inside": false,
@@ -25,67 +25,72 @@
     "health": {
       "status": 200,
       "expected": 200,
-      "ms": 6.2
+      "ms": 5.1
     },
     "ready": {
       "status": 200,
       "expected": 200,
-      "ms": 4.3
+      "ms": 3.0
     },
     "normalize": {
       "status": 200,
       "expected": 200,
-      "ms": 11.9
+      "ms": 12.2
     },
     "tokenize": {
       "status": 200,
       "expected": 200,
-      "ms": 27.0
+      "ms": 34.3
     },
     "predict (final system)": {
       "status": 200,
       "expected": 200,
-      "ms": 698.0
+      "ms": 1089.0
     },
     "predict tfidf": {
       "status": 200,
       "expected": 200,
-      "ms": 100.4
+      "ms": 204.9
     },
     "predict transformer": {
       "status": 200,
       "expected": 200,
-      "ms": 88.8
+      "ms": 114.7
     },
     "compare": {
       "status": 200,
       "expected": 200,
-      "ms": 80.2
+      "ms": 172.6
     },
     "empty text": {
       "status": 422,
       "expected": 422,
-      "ms": 21.7
+      "ms": 21.2
     },
     "text too long": {
       "status": 422,
       "expected": 422,
-      "ms": 5.0
+      "ms": 10.0
     },
     "unknown model": {
       "status": 400,
       "expected": 400,
-      "ms": 4.2
+      "ms": 4.5
     }
+  },
+  "from_inside": {
+    "/health": 200,
+    "/ready": 200
   },
   "all_as_expected": true,
   "example_answer": {
     "recommendation": "recommended",
-    "rating_band": "uncertain"
+    "rating_band": "uncertain",
+    "predicted_rate": 3.82
   },
   "review_text_in_log": false,
   "code": {
-    "commit": "2aa5b295ef1ad0bdc0dc2cef96323e38d572322d",
+    "commit": "5a0c52883b53e6b6fb9167988c1b95bbbee87122",
     "uncommitted_changes": false
   }
 }

@@ -1,12 +1,13 @@
 {
-  "created_at": "2026-11-10T09:51:00+00:00",
+  "created_at": "2026-11-12T06:07:43+00:00",
   "plan": "reports/predictor_plan.md",
   "reviews": 2000,
   "rules": {
     "tfidf_max_difference": 1e-06,
     "fabert_same_label": 0.995,
     "fabert_mean_difference": 0.005,
-    "final_same_label": 0.995
+    "final_same_label": 0.995,
+    "rate_mean_difference": 0.01
   },
   "same_normalized_text": 1.0,
   "heads": {
@@ -55,35 +56,46 @@
       }
     }
   },
+  "rate": {
+    "mean_difference": 0.0011613253854079032,
+    "max_difference": 0.009525796052266333,
+    "passed": true
+  },
   "passed": true,
   "tokens": {
     "median": 9.0,
     "share_over_128": 0.0025
   },
-  "fabert_batched_seconds": 167.6,
+  "fabert_batched_seconds": 171.9,
   "latency_one_review": {
     "normalize": {
-      "median_ms": 0.05,
-      "p95_ms": 0.14
+      "median_ms": 0.06,
+      "p95_ms": 0.17049999999999985
     },
     "tfidf": {
-      "median_ms": 1.61,
-      "p95_ms": 3.9674999999999976
+      "median_ms": 2.255,
+      "p95_ms": 7.410499999999983
     },
     "fabert": {
-      "median_ms": 44.379999999999995,
-      "p95_ms": 87.14549999999986
+      "median_ms": 46.345,
+      "p95_ms": 103.672
+    },
+    "rate": {
+      "median_ms": 48.0,
+      "p95_ms": 98.22049999999997
     }
   },
   "version": {
     "code": {
-      "commit": "233e53aac4954351c404a3092e4ff2fb49f1a9f9",
+      "commit": "5a0c52883b53e6b6fb9167988c1b95bbbee87122",
       "uncommitted_changes": false
     },
     "normalizer_version": "2",
     "tfidf_sha256": "54116e1f9058ee06abd916fd3d9eace6018d69fa000c11f3cdbc3b347f1e32fe",
     "fabert_sha256": "2828ba578eb13e09deace624e83e509aca924ee014d8461ceac6ff76383ebee0",
-    "fabert_kept_epoch": 2.75
+    "fabert_kept_epoch": 2.75,
+    "rate_model_sha256": "645fe7b5873698262f7315f3bb026b9bf96dd85a5a9a01160ffea857bad4593d",
+    "rate_model_kept_epoch": 3.0
   },
   "data": {
     "normalizer_version": "2",
@@ -106,7 +118,7 @@
     "machine": "DESKTOP-5P8IBHG"
   },
   "code": {
-    "commit": "233e53aac4954351c404a3092e4ff2fb49f1a9f9",
+    "commit": "5a0c52883b53e6b6fb9167988c1b95bbbee87122",
     "uncommitted_changes": false
   }
 }

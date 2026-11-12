@@ -1,25 +1,25 @@
 {
-  "created_at": "2026-11-10T18:24:28+00:00",
+  "created_at": "2026-11-12T06:09:28+00:00",
   "plan": "reports/extensions_plan.md",
   "memory_gb": {
     "before_loading": {
-      "peak": 0.588,
-      "now": 0.588
+      "peak": 0.59,
+      "now": 0.59
     },
     "after_loading": {
-      "peak": 2.162,
-      "now": 1.628
+      "peak": 2.707,
+      "now": 2.175
     },
     "after_200_reviews": {
-      "peak": 2.162,
-      "now": 1.654
+      "peak": 2.707,
+      "now": 2.188
     },
-    "models_alone": 1.04
+    "models_alone": 1.585
   },
-  "load_seconds": 22.6,
+  "load_seconds": 26.7,
   "latency_ms_one_review": {
-    "median": 46.435,
-    "p95": 96.30749999999995
+    "median": 102.52000000000001,
+    "p95": 202.26199999999986
   },
   "environment": {
     "python": "3.13.17",
@@ -37,7 +37,7 @@
     "torch": "2.14.1+cpu"
   },
   "code": {
-    "commit": "e66dbe2870d63403077ae5bb639437281cc5262e",
+    "commit": "5a0c52883b53e6b6fb9167988c1b95bbbee87122",
     "uncommitted_changes": false
   }
 }

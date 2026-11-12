@@ -1,15 +1,15 @@
-image 2.447 GB, ready after 33.3 s (models loaded in 29.2 s), health check: healthy
-torch 2.14.1+cpu, GPU inside: False
-  health                   200 (expected 200)  6.2 ms
-  ready                    200 (expected 200)  4.3 ms
-  normalize                200 (expected 200)  11.9 ms
-  tokenize                 200 (expected 200)  27.0 ms
-  predict (final system)   200 (expected 200)  698.0 ms
-  predict tfidf            200 (expected 200)  100.4 ms
-  predict transformer      200 (expected 200)  88.8 ms
-  compare                  200 (expected 200)  80.2 ms
-  empty text               422 (expected 422)  21.7 ms
-  text too long            422 (expected 422)  5.0 ms
-  unknown model            400 (expected 400)  4.2 ms
+image 2.447 GB, ready after 43.3 s (models loaded in 38.9 s), health check: healthy
+torch 2.14.1+cpu, GPU inside: False; from inside: {'/health': 200, '/ready': 200}
+  health                   200 (expected 200)  5.1 ms
+  ready                    200 (expected 200)  3.0 ms
+  normalize                200 (expected 200)  12.2 ms
+  tokenize                 200 (expected 200)  34.3 ms
+  predict (final system)   200 (expected 200)  1089.0 ms
+  predict tfidf            200 (expected 200)  204.9 ms
+  predict transformer      200 (expected 200)  114.7 ms
+  compare                  200 (expected 200)  172.6 ms
+  empty text               422 (expected 422)  21.2 ms
+  text too long            422 (expected 422)  10.0 ms
+  unknown model            400 (expected 400)  4.5 ms
 all as expected: True; review text in the log: False
 saved reports/docker_check.json

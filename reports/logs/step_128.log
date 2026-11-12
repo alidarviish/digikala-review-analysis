@@ -1,0 +1,4 @@
+before loading: 0.59 GB
+after loading: 2.175 GB (models 1.585 GB, 26.7s)
+after 200 reviews: 2.188 GB, peak 2.707 GB
+saved reports/predictor_memory.json
