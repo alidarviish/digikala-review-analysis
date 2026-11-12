@@ -206,7 +206,12 @@ def main():
         },
         "offline_prediction": {
             "script": "scripts/predict.py",
-            "check": {"passed": predictor["passed"], "reviews": predictor["reviews"]},
+            "check": {
+                "passed": predictor["passed"],
+                "reviews": predictor["reviews"],
+                "rate": predictor["rate"],
+            },
+            "predicted_rate": "from the rate model (an extension); it changes no label",
             "latency_one_review_ms": {k: v["median_ms"] for k, v in predictor["latency_one_review"].items()},
             "demo": "reports/predict_demo.md",
         },
@@ -233,6 +238,7 @@ def main():
                     "seconds_until_ready",
                     "models_loaded_seconds",
                     "health_check",
+                    "from_inside",
                     "torch_inside",
                     "gpu_inside",
                     "all_as_expected",

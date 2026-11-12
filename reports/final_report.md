@@ -23,6 +23,8 @@ Every number in this report is read from a file in `reports/`; the main files ar
 - **A rating of 0 means "no rating recorded", not "very bad"** (notebook 01, section 4): 80% of the 528,914 zero-rated
   reviews are `recommended`, zeros appear in bursts over time, and their texts read positive. They get no rating band
   (`RATE_ZERO_POLICY = "invalid"`).
+- **One rating is outside 0 to 5:** 2,500, on a short positive review (notebook 01). Rule P4 gives it no rating band;
+  every other rating is a valid number.
 - **Targets.** Recommendation: `recommended`, `not_recommended`, `no_idea` (the file already uses exactly these). Rating
   band: low [0, 2.5), medium [2.5, 4.0), high [4.0, 5.0]. Both are imbalanced: `recommended` is 79% of the labeled
   reviews and `high` 71% of the banded ones.
@@ -127,10 +129,12 @@ never pass the threshold. The rating band, which saw no pseudo-labels, is almost
 
 `scripts/predict.py` takes one review text, normalizes and tokenizes it, runs TF-IDF, FaBERT and the final system,
 and prints both heads with probabilities, the words that pushed TF-IDF most, the token count, whether the text was cut,
-and the latency. Checked against the saved validation predictions on 2,000 reviews from the raw body
-(`reports/predictor_check.json`): TF-IDF identical, FaBERT the same label on every review (mean probability difference
-0.0003). One review takes about 45 ms on a laptop CPU (TF-IDF 1.6 ms). Examples of short, ambiguous, negative, mixed,
-negated, sarcastic, misspelled and long reviews: `reports/predict_demo.md`.
+the latency, and the exact rate from the rate model of section 7.1 (an extension; it changes no label). Checked against
+the saved validation predictions on 2,000 reviews from the raw body (`reports/predictor_check.json`): TF-IDF
+identical, FaBERT the same label on every review (mean probability difference 0.0003), the predicted rate 0.0012 from
+the saved one on average. One review takes about 0.1 s on a laptop CPU: FaBERT 46 ms, the rate model 48 ms, TF-IDF
+2 ms. Examples of short, ambiguous, negative, mixed, negated, sarcastic, misspelled and long reviews:
+`reports/predict_demo.md`.
 
 ## 7. Extensions
 
@@ -173,10 +177,11 @@ valid rate (843,458 in each of validation and test).
 | Constant (training mean) | 0.877 | 1.146 | 1.314 | 0.000 | – | 0.877 | 1.147 | 1.316 | 0.000 | – |
 
 **One invalid rate.** The first scoring on validation gave FaBERT an RMSE of 2.82 and an R² of 0.09 beside an MAE of
-0.55, which cannot happen when every rate is between 0 and 5. One validation review has a rate of 2,500 (the highest
-in train is 5); alone it added 7.4 to every model's MSE. The rule was then fixed, before the test set was read: a
-valid rate is above 0 and at most 5, as the rating band already defines it (`scripts/check_extensions.py`). The test
-set has no rate above 5, so the rule changed nothing there.
+0.55, which cannot happen when every rate is between 0 and 5. One validation review has a rate of 2,500, the only rate
+outside 0 to 5 in the data; the data audit had found it and rule P4 of the cleaning gives it no rating band
+(section 1). The exact-rate scoring had not applied that rule, and this one review added 7.4 to every model's MSE. The
+scoring now applies it (D75, `scripts/check_extensions.py`), fixed before the test set was read: a valid rate is above
+0 and at most 5. The test set has no rate above 5, so the rule changed nothing there.
 
 ![The exact rate on the test set](figures/results_test_rate.png)
 
@@ -232,10 +237,13 @@ label. The expectation of a smaller accepted share than in the hidden pool was *
 
 ### 7.6 Memory of the predictor
 
-`scripts/measure_predictor_memory.py` on a laptop CPU (`reports/predictor_memory.json`): the models take **1.04 GB**;
-the process uses 1.63 GB after loading and peaks at 2.16 GB while loading; answering 200 reviews adds 0.03 GB. Loading
-takes 23 seconds; one review takes 46 ms (median; 96 ms at the 95th percentile). Expected 1.0 to 1.6 GB: right for the
-models, the process is slightly above it and the peak while loading 0.5 GB above.
+`scripts/measure_predictor_memory.py` on a laptop CPU (`reports/predictor_memory.json`), with the rate model loaded:
+the models take **1.59 GB**; the process uses 2.18 GB after loading and peaks at 2.71 GB while loading; answering 200
+reviews adds 0.01 GB. Loading takes 27 seconds; one review takes 103 ms (median; 202 ms at the 95th percentile).
+The expectation, 1.0 to 1.6 GB, was written for the predictor without the rate model. Measured first without it
+(commit e66dbe2): 1.04 GB for the models, 1.63 GB after loading, a peak of 2.16 GB, 46 ms per review; right for the
+models, the process slightly above and the peak while loading 0.5 GB above. The rate model adds 0.55 GB and doubles
+the time per review.
 
 ### 7.7 The prediction service (FastAPI)
 
@@ -248,40 +256,57 @@ once, when the service starts. Requests carry the review text only.
 | `GET /ready` | the models are loaded (503 until they are) |
 | `POST /normalize` | the text and its normalized form |
 | `POST /tokenize` | FaBERT's tokens, ids, attention mask, token count, and whether the text was cut |
-| `POST /predict` | one model: `final` (the default), `tfidf` or `transformer`; both heads with probabilities, model version, token count, truncation and latency; for the final system also its best guess and confidence when it answers "uncertain" |
+| `POST /predict` | one model: `final` (the default), `tfidf` or `transformer`; both heads with probabilities, model version, token count, truncation, latency and `predicted_rate`; for the final system also its best guess and confidence when it answers "uncertain" |
 | `POST /predict/tfidf`, `POST /predict/transformer` | the same for one model |
-| `POST /predict/compare` | the three side by side, whether they agree, and the words that pushed TF-IDF |
+| `POST /predict/compare` | the three side by side, whether they agree, the words that pushed TF-IDF, and `predicted_rate` with its latency |
+
+`predicted_rate` is the exact rate from the rate model of section 7.1, between 0 and 5; it is the same for every
+model choice and changes no label. Each model's latency leaves the rate model out.
 
 Failures: **422** for an empty text or one longer than 5,000 characters, **400** for an unknown model, **503** when the
 models are not loaded, **500** for anything unexpected, without details. The review text is never logged: the log has
 the method, the path, the status and the time only. `tests/test_api.py` checks all of this with a stand-in predictor
-(8 tests).
+(9 tests).
 
 ### 7.8 Docker
 
 `Dockerfile` and `compose.yaml` run the same service on the CPU: `python:3.13-slim`, the locked library versions
-(`requirements-service.txt`, exported from `uv.lock`, torch from its CPU index), the code and the two result files the
-final system reads. The models are not in the image: `artifacts/` is mounted read-only at run time, so the private
-FaBERT weights never enter an image. `docker compose up --build` starts it on port 8000; a health check inside the
-container asks `/ready` every 30 seconds.
+(`requirements-service.txt`, exported from `uv.lock`, torch from its CPU index), the code and the three result files
+the predictor reads. The project asks for the libraries of `requirements.txt`; that file has neither torch nor FastAPI,
+so the image installs `requirements-service.txt`, the same lock with the `transformer` and `api` groups. The models are
+not in the image: `artifacts/` is mounted read-only at run time, so the private FaBERT weights never enter an image.
+`docker compose up --build` starts it on port 8000; a health check inside the container asks `/ready` every 30
+seconds.
 
-Checked from outside the running container by `scripts/check_docker.py` (`reports/docker_check.json`, Docker 29.9.3,
-on a laptop):
+Checked by `scripts/check_docker.py` (`reports/docker_check.json`, Docker 29.9.3, on a laptop):
 
 - **Image: 2.45 GB**, without the models.
-- **Ready 33.3 seconds after start**, 29.2 of them loading the models; the health check then reports `healthy`.
+- **Ready 43.3 seconds after start**, 38.9 of them loading the models; the health check then reports `healthy`.
+- **`/health` and `/ready` asked from inside the container:** both 200.
 - **CPU only:** torch 2.14.1+cpu, no GPU inside the container.
-- **All 11 requests answered as expected:** 200 for the seven endpoints, 422 for an empty text and for one of 8,000
-  characters, 400 for an unknown model. The first prediction took 0.70 s (the models warm up); the next ones 80 to
-  100 ms. Each prediction endpoint runs all three models, so the TF-IDF endpoint is not faster than the others.
+- **All 11 requests from outside answered as expected:** 200 for the seven endpoints, 422 for an empty text and for
+  one of 8,000 characters, 400 for an unknown model. The first prediction took 1.1 s (the models warm up); the next
+  ones 115 to 205 ms. Each prediction endpoint runs all three models and the rate model, so the TF-IDF endpoint is not
+  faster than the others.
 - **No review text in the container's log.**
 
 Ways it can fail, and what happens:
 
 - **The models are missing or unreadable** (`artifacts/` not mounted, a file missing): the service still starts, logs
   the error, answers 503 on `/ready` and the prediction endpoints, and the health check turns `unhealthy`. It does not
-  answer with half the models.
-- **Too little memory:** loading needs about 2.2 GB at its peak (section 7.6); a container limited to less is stopped
+  answer with half the models; only the rate model is optional, and without it `predicted_rate` is `null`.
+- **A wrong working directory:** every path is built from the place of the code (`src/digikala_reviews/config.py`),
+  not from the directory the service is started in, so starting it elsewhere finds the same files; `PYTHONPATH` is set
+  in the image.
+- **Incompatible libraries:** every version is pinned by `uv.lock` and installed as exported from it; the image was
+  built and checked with those versions. A model saved with other versions of torch or transformers would fail to load
+  and the service would answer 503.
+- **A port mismatch:** the service listens on 8000 on all interfaces (`--host 0.0.0.0`), the image exposes 8000,
+  `compose.yaml` maps 8000 to 8000 and the health check asks 8000. Mapping another host port (`-p 9000:8000`) works;
+  changing the port inside the container alone would leave the health check failing.
+- **A model that expects CUDA on a CPU:** the weights were saved on a GPU; they are loaded with `map_location="cpu"` and
+  turned to float32, and torch in the image is the CPU build. No GPU is needed or used.
+- **Too little memory:** loading needs about 2.7 GB at its peak (section 7.6); a container limited to less is stopped
   while loading.
 - **Long texts:** over 5,000 characters the answer is 422; over 128 tokens FaBERT reads only the start, and the answer
   says `truncated`.
@@ -491,7 +516,8 @@ right more often than TF-IDF where they disagree (41,034 against 21,388: right).
   unlabeled reviews; section 7) and did not help either; class-balanced pseudo-labels were not tried.
 - **One rate in the data is invalid** (2,500, in validation): the exact-rate scores leave it out (D75). Other data
   errors of this kind may exist in fields that were not scored.
-- **The service runs on the CPU only** and loads all three models in every process (about 1.6 GB after loading).
+- **The service runs on the CPU only** and loads FaBERT, the rate model and TF-IDF in every process (2.2 GB after
+  loading, about 0.1 s per review).
 - The error analysis reads 28 chosen cases and 100 earlier band errors, each with one reader.
 
 ## 10. How to reproduce
@@ -501,7 +527,9 @@ The README has the full instructions. In short: `uv sync --group transformer`; p
 (the GPU steps on molab or any CUDA machine); `scripts/verify_standard_files.py` checks the split files against
 `reports/split_manifest.json`, and `reports/release_report.json` gives the hash of every delivered file. Prediction for
 one review: `uv run python scripts/predict.py "..."`. The service: `uv sync --group api`, then
-`uv run uvicorn app.main:app --port 8000`, or `docker compose up --build` (both need the models in `artifacts/`).
+`uv run uvicorn app.main:app --port 8000`, or `docker compose up --build` (both need the models in `artifacts/`;
+without `compose.yaml`, mount them: `docker run --rm -p 8000:8000 -v "$PWD/artifacts:/app/artifacts:ro"
+digikala-review-api`).
 
 ## Appendix: the main decisions
 
@@ -527,4 +555,4 @@ Each was taken on validation, with the reason recorded at the time.
 | D71 | Cleaning rule P7 kept | the right copy of a conflicting id cannot be told |
 | D73 | The test set read once for the four official models | every required choice was made |
 | D74 | The extensions' models read on the test set a second and last time, all together, reported apart | the official system was already fixed; the list was fixed before training |
-| D75 | A valid rate is above 0 and at most 5 (one validation review has 2,500) | the rating band's own definition; fixed before the test reading |
+| D75 | The exact-rate scoring applies cleaning rule P4: a valid rate is above 0 and at most 5 (one validation review has 2,500) | the audit had found it; fixed before the test reading |

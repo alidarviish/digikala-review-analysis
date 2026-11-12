@@ -813,11 +813,18 @@ def extensions():
 def service():
     """Memory of the predictor and the service inside Docker (reports/extensions_plan.md, 6 to 8)."""
     memory_path, docker_path = REPORTS_DIR / "predictor_memory.json", REPORTS_DIR / "docker_check.json"
-    if not memory_path.exists() or not docker_path.exists():
+    check_path = REPORTS_DIR / "predictor_check.json"
+    if not memory_path.exists() or not docker_path.exists() or not check_path.exists():
         return []
-    memory, docker = load(memory_path), load(docker_path)
+    memory, docker, check = load(memory_path), load(docker_path), load(check_path)
     m, latency = memory["memory_gb"], memory["latency_ms_one_review"]
+    rate = check.get("rate") or {}
     rows = [
+        [
+            "Predictor against the saved predictions: passed; predicted rate, mean difference",
+            f"{check['passed']}; {rate.get('mean_difference', float('nan')):.4f}",
+            short(check["code"]),
+        ],
         ["Models in memory", f"{m['models_alone']} GB", short(memory["code"])],
         [
             "Process after loading, peak while loading",
@@ -836,8 +843,8 @@ def service():
             short(docker["code"]),
         ],
         [
-            "Health check; GPU inside",
-            f"{docker['health_check']}; {docker['gpu_inside']}",
+            "Health check; /health and /ready from inside; GPU inside",
+            f"{docker['health_check']}; {docker.get('from_inside')}; {docker['gpu_inside']}",
             short(docker["code"]),
         ],
         [

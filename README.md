@@ -53,7 +53,8 @@ uv run python scripts/predict.py --demo         # examples, written to reports/p
 For each head it prints the label and probabilities of TF-IDF, FaBERT and the final system
 (both combined; `uncertain` when its confidence is under the threshold of
 `reports/uncertain.json`), the words that pushed TF-IDF most, the token count and whether the
-text was cut at 128 tokens, and the latency of each model.
+text was cut at 128 tokens, the latency of each model, and the exact rate predicted by the rate model (an
+extension; it changes no label).
 
 ## Prediction service
 
@@ -64,17 +65,25 @@ uv run uvicorn app.main:app --port 8000      # then http://localhost:8000/docs
 docker compose up --build                     # or in a CPU-only container; artifacts/ is mounted read-only
 ```
 
+Without `compose.yaml`, mount the models yourself (the image does not contain them):
+
+```bash
+docker build -t digikala-review-api .
+docker run --rm -p 8000:8000 -v "$PWD/artifacts:/app/artifacts:ro" digikala-review-api
+```
+
 | Endpoint | What it answers |
 |---|---|
 | `GET /health`, `GET /ready` | the service is alive; the models are loaded (503 until they are) |
 | `POST /normalize`, `POST /tokenize` | the normalized text; FaBERT's tokens, token count and truncation |
-| `POST /predict` | `{"text": "...", "model": "final"}` (or `tfidf`, `transformer`): both heads with probabilities |
+| `POST /predict` | `{"text": "...", "model": "final"}` (or `tfidf`, `transformer`): both heads with probabilities, and `predicted_rate` |
 | `POST /predict/tfidf`, `POST /predict/transformer` | the same for one model |
 | `POST /predict/compare` | the three models side by side |
 
 An empty text or one longer than 5,000 characters gets 422, an unknown model 400, a request before the models are
-loaded 503. Review texts are never logged. In the container the service is ready 33 seconds after start; the image is
-2.45 GB without the models ([`reports/docker_check.json`](reports/docker_check.json)).
+loaded 503. Review texts are never logged. In the container the service is ready 43 seconds after start and
+answers `/health` and `/ready` from inside too; the image is 2.45 GB without the models
+([`reports/docker_check.json`](reports/docker_check.json)).
 
 ## Data
 

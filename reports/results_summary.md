@@ -464,13 +464,14 @@ Pseudo-labels help by the rule (on validation): student 0.80 no, student 0.95 no
 
 | What | Measured | Made with |
 |---|---|---|
-| Models in memory | 1.04 GB | e66dbe2 |
-| Process after loading, peak while loading | 1.628 GB, 2.162 GB | e66dbe2 |
-| One review (median, 95th percentile) | 46 ms, 96 ms | e66dbe2 |
-| Docker image | 2.447 GB | 2aa5b29 |
-| Container ready after (models loaded in) | 33.3 s (29.2 s) | 2aa5b29 |
-| Health check; GPU inside | healthy; False | 2aa5b29 |
-| Requests answered as expected; review text in the log | True; False | 2aa5b29 |
+| Predictor against the saved predictions: passed; predicted rate, mean difference | True; 0.0012 | 5a0c528 |
+| Models in memory | 1.585 GB | 5a0c528 |
+| Process after loading, peak while loading | 2.175 GB, 2.707 GB | 5a0c528 |
+| One review (median, 95th percentile) | 103 ms, 202 ms | 5a0c528 |
+| Docker image | 2.447 GB | 5a0c528 |
+| Container ready after (models loaded in) | 43.3 s (38.9 s) | 5a0c528 |
+| Health check; /health and /ready from inside; GPU inside | healthy; {'/health': 200, '/ready': 200}; False | 5a0c528 |
+| Requests answered as expected; review text in the log | True; False | 5a0c528 |
 
 ## Not measured
 
