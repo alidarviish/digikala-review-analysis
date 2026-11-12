@@ -1,5 +1,5 @@
 {
-  "created_at": "2026-11-11T21:33:14+00:00",
+  "created_at": "2026-11-12T06:53:19+00:00",
   "project": "Digikala review analysis: recommendation and rating band from the review text alone",
   "release_tag": "v1.0",
   "official_system": "final_system",
@@ -544,12 +544,19 @@
     "script": "scripts/predict.py",
     "check": {
       "passed": true,
-      "reviews": 2000
+      "reviews": 2000,
+      "rate": {
+        "mean_difference": 0.0011613253854079032,
+        "max_difference": 0.009525796052266333,
+        "passed": true
+      }
     },
+    "predicted_rate": "from the rate model (an extension); it changes no label",
     "latency_one_review_ms": {
-      "normalize": 0.05,
-      "tfidf": 1.61,
-      "fabert": 44.379999999999995
+      "normalize": 0.06,
+      "tfidf": 2.255,
+      "fabert": 46.345,
+      "rate": 48.0
     },
     "demo": "reports/predict_demo.md"
   },
@@ -823,28 +830,32 @@
     "tests": "tests/test_api.py",
     "memory_gb": {
       "before_loading": {
-        "peak": 0.588,
-        "now": 0.588
+        "peak": 0.59,
+        "now": 0.59
       },
       "after_loading": {
-        "peak": 2.162,
-        "now": 1.628
+        "peak": 2.707,
+        "now": 2.175
       },
       "after_200_reviews": {
-        "peak": 2.162,
-        "now": 1.654
+        "peak": 2.707,
+        "now": 2.188
       },
-      "models_alone": 1.04
+      "models_alone": 1.585
     },
     "latency_ms_one_review": {
-      "median": 46.435,
-      "p95": 96.30749999999995
+      "median": 102.52000000000001,
+      "p95": 202.26199999999986
     },
     "docker": {
       "image_size_gb": 2.447,
-      "seconds_until_ready": 33.3,
-      "models_loaded_seconds": 29.2,
+      "seconds_until_ready": 43.3,
+      "models_loaded_seconds": 38.9,
       "health_check": "healthy",
+      "from_inside": {
+        "/health": 200,
+        "/ready": 200
+      },
       "torch_inside": "2.14.1+cpu",
       "gpu_inside": false,
       "all_as_expected": true,
@@ -884,7 +895,7 @@
     "torch": "2.14.1+cpu"
   },
   "code": {
-    "commit": "cdf884fd86579ad0a9821b4c4ca95e4baa1ba132",
+    "commit": "b050ff94a71b70e59c41dee60698f42776f5d52e",
     "uncommitted_changes": false
   }
 }
